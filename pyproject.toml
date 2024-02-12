@@ -1,0 +1,206 @@
+[project]
+
+# PEP 621 project metadata
+# See https://www.python.org/dev/peps/pep-0621/
+
+# For the standard reference on Python packaging, including using
+# ``pyproject.toml`` for build definition and configuration see:
+#
+#     https://packaging.python.org/en/latest/tutorials/packaging-projects/
+#
+name = "continuedfractions"
+description = "Object-oriented continued fractions"
+
+# In principle, all contributors/committers should be listed, in (ascending)
+# alphabetical order of surname, but the maintainer(s) may restrict this to
+# only frequent or substantial contributors.
+authors = [
+    {name = "Sandeep R. Murthy", email = "s.murthy@tutanota.com"},
+]
+
+# Ideally, there should be at least two maintainers, in case one is
+# unavailable.
+maintainers = [
+  {name = "Sandeep R. Murthy", email = "s.murthy@tutanota.com"}
+]
+
+dynamic = ["version"]
+
+requires-python = ">=3.9"
+
+# The license file could be renamed to `LICENSE` (without a suffix)
+license = {file = "LICENSE",text = "GPLv3"}
+
+# The package "production" dependencies - this is treated by PDM as the default
+# set of dependencies that must be installed in order to develop the project -
+# additional dev. dependencies are defined in the
+# ``[tool.pdm.dev-dependencies]`` section
+dependencies = [
+    "click",
+    "tabulate",
+]
+readme = "README.md"
+keywords = [
+    "continued fractions",
+    "rational numbers",
+    "real numbers",
+    "irrational numbers",
+    "approximation"
+]
+classifiers = [
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.1",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Development Status :: 5 - Production/Stable",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS",
+        "Operating System :: Microsoft :: Windows",
+]
+version = "0.1.0"
+
+[project.optional-dependencies]
+user = [
+    "jupyter",
+]
+
+[project.scripts]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.urls]
+#Homepage
+#Documentation
+Repository = "https://github.com/sr-murthy/continuedfractions"
+
+# For working with PDM, including configuration and usage see:
+#
+#     https://pdm.fming.dev/latest/
+#     https://pdm.fming.dev/latest/reference/pep621/
+#     https://pdm.fming.dev/latest/reference/cli/
+#
+[tool.pdm]
+distribution = true
+[tool.pdm.build]
+package-dir = "src"
+includes = [
+    "src/continuedfractions",
+]
+# File patterns to exclude, the paths are relative to the project root.
+excludes = [
+    "docs",
+    "build",
+    "dist",
+    "tests",
+    ".pytest_cache",
+    "*.pyc",
+    "*.env",
+    "*__pycache__*",
+]
+source-includes = [
+    "LICENSE",
+    "README.rst",
+]
+editable-backend = "path"
+
+[tool.pdm.dev-dependencies]
+build = [
+    "pip>=23.1.2",
+]
+dev = [
+    "coverage[toml]",
+    "ipython",
+    "ipdb",
+    "ruff",
+    "pytest",
+]
+docs = [
+    "pydata-sphinx-theme",
+    "Sphinx",
+    "sphinx-autobuild",
+    "sphinx-copybutton",
+    "pylint>=2.17.5",
+    "nb2plots>=0.7.1",
+    "sphinx-gallery>=0.14.0",
+    "jupyter-sphinx>=0.4.0",
+    "numpydoc>=1.5.0",
+    "sphinx-design>=0.5.0",
+]
+lint = [
+    "ruff",
+]
+test = [
+    "coverage[toml]",
+    "flake8",
+    "jinja2",
+    "pdm",
+    "pytest",
+    "tox>=4.6.0",
+    "tox-pdm>=0.6.1",
+]
+deploy = [
+    "twine>=4.0.2",
+]
+
+[tool.pdm.scripts]
+
+[tool.pdm.version]
+source = "file"
+path = "src/continuedfractions/version.py"
+
+# For ``pytest`` configuration, including TOML-specific configuration see:
+#
+#     https://docs.pytest.org/en/7.3.x/reference/customize.html#configuration
+#     https://docs.pytest.org/en/7.3.x/reference/customize.html#pyproject-toml
+#
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = """\
+    --cache-clear 
+    --code-highlight=yes \
+    --color=yes \
+    --doctest-modules \
+    -ra \
+    --tb=native \
+    --verbosity=3\
+"""
+filterwarnings = [
+    "ignore::DeprecationWarning"
+]
+python_files = ["test_*.py",]
+python_classes = ["Test", "Acceptance",]
+python_functions = ["test"]
+testpaths = [
+    "tests/",
+]
+markers = [
+    # Test tags/labels/markers - not using any currently
+]
+
+# For ``coverage`` configuration see:
+#
+#     https://coverage.readthedocs.io/en/stable/config.html#configuration-reference
+#
+[tool.coverage.run]
+branch = true
+omit = [
+    "./docs",
+    "./build",
+    "./dist",
+    "*/tests*",
+    ".pytest_cache",
+    "*.pyc",
+    "*.env",
+    "*__pycache__*",
+]
+source = ["src"]

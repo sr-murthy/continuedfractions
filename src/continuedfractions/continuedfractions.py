@@ -10,6 +10,8 @@ __all__ = [
 import decimal
 import fractions
 
+from typing import Generator
+
 # -- 3rd party libraries --
 
 # -- Internal libraries --

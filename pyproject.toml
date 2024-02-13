@@ -18,8 +18,6 @@ authors = [
     {name = "Sandeep R. Murthy", email = "s.murthy@tutanota.com"},
 ]
 
-# Ideally, there should be at least two maintainers, in case one is
-# unavailable.
 maintainers = [
   {name = "Sandeep R. Murthy", email = "s.murthy@tutanota.com"}
 ]
@@ -39,7 +37,7 @@ dependencies = [
     "click",
     "tabulate",
 ]
-readme = "README.md"
+readme = "README.rst"
 keywords = [
     "continued fractions",
     "rational numbers",
@@ -49,14 +47,6 @@ keywords = [
 ]
 classifiers = [
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.1",
-        "Programming Language :: Python :: 3.2",
-        "Programming Language :: Python :: 3.3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

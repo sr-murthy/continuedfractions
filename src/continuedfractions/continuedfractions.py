@@ -210,7 +210,7 @@ class ContinuedFraction(Fraction):
         return len(self._elements[1:])
 
     @property
-    def convergents(self) -> MappingProxyType:
+    def convergents(self) -> MappingProxyType[int, Fraction]:
         return self._convergents
 
     def segment(self, k: int) -> ContinuedFraction:

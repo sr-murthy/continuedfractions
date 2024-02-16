@@ -2,7 +2,7 @@ __all__ = [
     'ContinuedFraction',
     'continued_fraction_real',
     'continued_fraction_rational',
-    'elements_to_fraction',
+    'fraction_from_elements',
     'kth_convergent',
 ]
 
@@ -33,6 +33,12 @@ def continued_fraction_rational(x: int, y: int, /) -> Generator[int, None, None]
     The number of elements generated minus 1 is called the order of the
     continued fraction, and as the function applies only to rational fractions
     the order will always be finite.
+
+    Negative rational fractions can be represented, but in accordance with
+    convention and to ensure uniqueness only the numerator can be negative,
+    while the denominator cannot - in case of inputs such as `x/-y`, where
+    `x` and `y` are positive integers, the negative sign is "transferred" from
+    the denominator `y` to the numerator `x`.
 
     For a definition of "continued fraction", "element", "order",
     "finite continued fraction", "simple continued fraction", please consult:
@@ -201,7 +207,7 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
         yield elem
 
 
-def elements_to_fraction(*elements: int) -> Fraction:
+def fraction_from_elements(*elements: int) -> Fraction:
     """
     Returns a `fractions.Fraction` object representing the rational fraction
     constructed from an ordered sequence of the (integer) elements of a
@@ -319,7 +325,7 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
             "elements of the continued fraction"
         )
 
-    return elements_to_fraction(*elements[:k + 1])
+    return fraction_from_elements(*elements[:k + 1])
 
 
 class ContinuedFraction(Fraction):
@@ -385,7 +391,7 @@ class ContinuedFraction(Fraction):
         Returns a ``ContinuedFraction`` instance from an arbitrary sequence of
         the (integer) elements of a continued fraction.
         """
-        return cls(elements_to_fraction(*elements))
+        return cls(fraction_from_elements(*elements))
 
     def __init__(self, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
         super().__init__()
@@ -408,7 +414,12 @@ class ContinuedFraction(Fraction):
             raise ValueError(f"Invalid inputs - please check and try again")
 
         _kth_convergent = partial(kth_convergent, *self._elements)
-        self._convergents = MappingProxyType({k: _kth_convergent(k=k) for k in range(len(self._elements))})
+        self._convergents = MappingProxyType(
+            {
+                k: _kth_convergent(k=k)
+                for k in range(len(self._elements))
+            }
+        )
 
     def __add__(self, other: Fraction) -> Fraction:
         return self.__class__(super().__add__(other))

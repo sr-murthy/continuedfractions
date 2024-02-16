@@ -24,7 +24,7 @@ maintainers = [
 
 dynamic = ["version"]
 
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 # The license file could be renamed to `LICENSE` (without a suffix)
 license = {file = "LICENSE",text = "GPLv3"}

@@ -131,12 +131,8 @@ lint = [
 ]
 test = [
     "coverage[toml]",
-    "flake8",
     "jinja2",
-    "pdm",
     "pytest",
-    "tox>=4.6.0",
-    "tox-pdm>=0.6.1",
 ]
 deploy = [
     "twine>=4.0.2",

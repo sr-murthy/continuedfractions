@@ -27,7 +27,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test and generate coverage report with pytest + coverage
       run: |
+        pip install -r requirements_test.txt
         make test_units

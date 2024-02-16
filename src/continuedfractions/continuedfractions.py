@@ -10,12 +10,12 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+import math
 import re
 
 from decimal import Decimal
 from fractions import Fraction
 from functools import partial
-import math
 from types import MappingProxyType
 from typing import Any, Generator
 
@@ -34,10 +34,11 @@ def continued_fraction_rational(x: int, y: int, /) -> Generator[int, None, None]
     continued fraction, and as the function applies only to rational fractions
     the order will always be finite.
 
-    For a definition of "continued fraction", "element",
+    For a definition of "continued fraction", "element", "order",
     "finite continued fraction", "simple continued fraction", please consult:
 
         https://en.wikipedia.org/wiki/Continued_fraction
+        https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/
 
     Parameters
     ----------
@@ -184,8 +185,10 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
     such as `"1/3"`, would be processed succesfully, but this is not the case,
     as the key step in the function is to use the string representation of `x`
     to construct a `decimal.Decimal` object, which, however, does not treat
-    strings such as `"x/y"` where `x` and `y` are numbers, as numeric. See
-    the CPython library source for more information:
+    strings such as `"x/y"` where `x` and `y` are integers or floats, as
+    numeric.
+
+    See the CPython library source for more information:
 
     https://github.com/python/cpython/blob/main/Lib/_pydecimal.py#L557
 

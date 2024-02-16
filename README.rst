@@ -1,2 +1,4 @@
-# continuedfractions
-Object-oriented continued fractions
+continuedfractions
+==================
+
+Object-oriented continued fractions.

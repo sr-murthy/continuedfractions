@@ -237,16 +237,16 @@ def fraction_from_elements(*elements: int) -> Fraction:
     Examples
     --------
 
-    >>> elements_to_fraction(3, 4, 12, 4)
+    >>> fraction_from_elements(3, 4, 12, 4)
     Fraction(649, 200)
 
-    >>> elements_to_fraction(-4, 1, 3, 12, 4)
+    >>> fraction_from_elements(-4, 1, 3, 12, 4)
     Fraction(-649, 200)
 
-    >>> elements_to_fraction(4, 2, 6, 7)
+    >>> fraction_from_elements(4, 2, 6, 7)
     >>> Fraction(415, 93)
 
-    >>> elements_to_fraction(4.5, -2, 6, 7)
+    >>> fraction_from_elements(4.5, -2, 6, 7)
     ...
     ValueError: Continued fraction elements must be integers
     """
@@ -254,9 +254,9 @@ def fraction_from_elements(*elements: int) -> Fraction:
         raise ValueError("Continued fraction elements must be integers")
 
     if len(elements) == 1:
-        return elements[0]
+        return Fraction(elements[0], 1)
 
-    return elements[0] + Fraction(1, elements_to_fraction(*elements[1:]))
+    return elements[0] + Fraction(1, fraction_from_elements(*elements[1:]))
 
 
 def kth_convergent(*elements: int, k: int = 1) -> Fraction:

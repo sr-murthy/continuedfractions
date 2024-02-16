@@ -184,13 +184,14 @@ markers = [
 [tool.coverage.run]
 branch = true
 omit = [
-    "./docs",
     "./build",
     "./dist",
+    "./docs",
     "*/tests*",
     ".pytest_cache",
     "*.pyc",
     "*.env",
     "*__pycache__*",
+    "version.py"
 ]
 source = ["src"]

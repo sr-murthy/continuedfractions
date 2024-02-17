@@ -84,18 +84,15 @@ def continued_fraction_rational(x: int, y: int, /) -> Generator[int, None, None]
     [4, 2, 6, 7]
 
     >> list(continued_fraction_rational(2.5, 3))
+    Traceback (most recent call last):
     ...
     ValueError: `x` and `y` must be integers
-
-    >>> list(continued_fraction_rational(1/0))
-    ...
-    ZeroDivisionError: `y` must be non-zero
 
     >>> list(continued_fraction_rational(-649, 200))
     [-4, 1, 3, 12, 4]
 
     >>> list(continued_fraction_rational(123235, 334505))
-    >>> [0, 2, 1, 2, 1, 1, 250, 1, 13]
+    [0, 2, 1, 2, 1, 1, 250, 1, 13]
 
     Notes
     -----
@@ -168,19 +165,21 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
     --------
     A few examples are given below of how this function can be used.
 
-    >>> list(continued_fraction(2/5))
+    >>> list(continued_fraction_real(2/5))
     [0, 2, 2]
 
-    >>> list(continued_fraction(2984.0495684))
+    >>> list(continued_fraction_real(2984.0495684))
     [2984, 20, 5, 1, 2, 1, 7, 2, 9, 6, 1, 4]
 
-    >>> list(continued_fraction_real(1/1j)
+    >>> list(continued_fraction_real(1/1j))
+    Traceback (most recent call last):
     ...
-    ValueError: `x` and `y` must be integers
+    decimal.InvalidOperation: [<class 'decimal.ConversionSyntax'>]
 
     >>> list(continued_fraction_real('-1/3'))
+    Traceback (most recent call last):
     ...
-    InvalidOperation: [<class 'decimal.ConversionSyntax'>]
+    decimal.InvalidOperation: [<class 'decimal.ConversionSyntax'>]
 
     >>> list(continued_fraction_real(-649/200))
     [-4, 1, 3, 12, 4]
@@ -244,12 +243,13 @@ def fraction_from_elements(*elements: int) -> Fraction:
     Fraction(-649, 200)
 
     >>> fraction_from_elements(4, 2, 6, 7)
-    >>> Fraction(415, 93)
+    Fraction(415, 93)
 
     >>> fraction_from_elements(*[4, 2, 6, 7])
-    >>> Fraction(415, 93)
+    Fraction(415, 93)
 
     >>> fraction_from_elements(4.5, 2, 6, 7)
+    Traceback (most recent call last):
     ...
     ValueError: Continued fraction elements must be integers
     """
@@ -303,7 +303,7 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
     --------
 
     >>> kth_convergent(3, 4, 12, 4, k=0)
-    3
+    Fraction(3, 1)
 
     >>> kth_convergent(3, 4, 12, 4, k=1)
     Fraction(13, 4)
@@ -315,12 +315,14 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
     Fraction(649, 200)
 
     >>> kth_convergent(3, 4, 12, 4, k=-1)
-    ValueError: `k` must be a non-negative integer less than the number of
-    elements of the continued fraction
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer less than the number of elements of the continued fraction
 
     >>> kth_convergent(3, 4, 12, 4, k=4)
-    ValueError: `k` must be a non-negative integer less than the number of
-    elements of the continued fraction
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer less than the number of elements of the continued fraction
     """
     if not isinstance(k, int) or k < 0 or k >= len(elements):
         raise ValueError(
@@ -370,6 +372,43 @@ class ContinuedFraction(Fraction):
         continued fraction and a second fraction (`other`). The resulting
         fraction has the property that its value lies between its two
         constituents.
+
+    Examples
+    --------
+
+    Construct the continued fraction for the rational `649/200`.
+
+    >>> cf = ContinuedFraction(649, 200)
+    >>> cf
+    ContinuedFraction(649, 200)
+
+    Inspect the elements, order, convergents, segments and remainders
+
+    >>> cf.elements
+    (3, 4, 12, 4)
+    >>> cf.order
+    3
+    >>> cf.convergents
+    mappingproxy({0: Fraction(3, 1), 1: Fraction(13, 4), 2: Fraction(159, 49), 3: Fraction(649, 200)})
+    >>> cf.segment(1)
+    ContinuedFraction(13, 4)
+    >>> cf.remainder(1)
+    ContinuedFraction(200, 49)
+
+    Check some properties of the segments and remainders
+
+    >>> assert cf.remainder(1) == 1 / (cf - cf.convergents[0])
+
+    Construct continued fractions from element sequences.
+
+    >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
+    >>> cf_inverse
+    ContinuedFraction(200, 649)
+    >>> assert cf * cf_inverse == 1
+    >>> cf_negative_inverse = ContinuedFraction.from_elements(-1, 1, 2, 4, 12, 4)
+    >>> cf_negative_inverse
+    ContinuedFraction(-200, 649)
+    >>> assert cf * cf_negative_inverse == -1
     """
 
     @classmethod
@@ -701,3 +740,13 @@ class ContinuedFraction(Fraction):
             self.numerator + other.numerator,
             self.denominator + other.denominator
         )
+
+
+
+if __name__ == "__main__":      # pragma: no cover
+    # Doctest the module from the project root using
+    #
+    #     python -m src.continuedfractions.continuedfractions
+    #
+    import doctest
+    doctest.testmod()

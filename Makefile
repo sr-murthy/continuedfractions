@@ -36,6 +36,11 @@ version_extract:
 	echo "$(PACKAGE_VERSION)"
 
 # Running tests
+test_docstrings: clean
+	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running doctests in all core libraries\n"
+	cd "$(PROJECT_ROOT)" && \
+	python -m doctest --verbose src/continuedfractions/*.py
+
 test_units: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running package unit tests + measuring coverage\n"
 	cd "$(PROJECT_ROOT)" && \
@@ -46,7 +51,6 @@ test_units: clean
 			--capture=no \
 			--code-highlight=yes \
 			--color=yes \
-			--doctest-modules \
 			--tb=native \
 			--verbosity=3 \
  		tests/units \

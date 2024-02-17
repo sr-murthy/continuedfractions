@@ -31,3 +31,7 @@ jobs:
       run: |
         pip install -r requirements_test.txt
         make test_units
+    - name: Run docstring tests
+      run: |
+        pip install -r requirements_test.txt
+        make test_docstrings

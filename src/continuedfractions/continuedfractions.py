@@ -231,7 +231,6 @@ def fraction_from_elements(*elements: int) -> Fraction:
 
     Raises
     ------
-
     ValueError
         If any elements are not integers.
 
@@ -297,7 +296,6 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
 
     Raises
     ------
-
     ValueError
         If `k` < the number of elements.
 
@@ -339,12 +337,45 @@ class ContinuedFraction(Fraction):
     instances of the standard library ``fractions.Fraction`` class, with
     various properties for the continued fraction, including its elements
     (or coefficients), the order, convergents, segments, and remainders.
+
+    Attributes
+    ----------
+    elements : tuple[int]
+        The ordered sequence of elements of the continued fraction.
+
+    order : int
+        The order of the continued fraction, defined as the number of
+        elements - 1.
+
+    convergents : types.MappingProxyType
+        An immutable map of all the `k`-order convergents of the continued
+        fraction, keyed by `k`.
+
+    Methods
+    -------
+    segment(k: int)
+        The `k`th segment of the continued fraction, defined as the continued
+        fraction given by its `k`-order convergent, whose elements consist of
+        the first `k + 1` two elements of the original continued fraction.
+
+    remainder(k: int)
+        The `k`th remainder of the continued fraction, defined as the continued
+        fraction given by the difference between the original continued
+        fraction and its `(k - 1)`-order convergent (equivalently, the
+        `(k - 1)` order segment, as defined above).
+
+    mediant(other: Fraction)
+        The continued fraction of the rational number formed by taking the
+        pairwise sum of the numerators and denominators of the original
+        continued fraction and a second fraction (`other`). The resulting
+        fraction has the property that its value lies between its two
+        constituents.
     """
 
     @classmethod
     def validate(cls, *args: int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
         """
-        Validate that the numeric arguments are one of the following types:
+        Checks whether the arguments are one of the following types:
 
         * a single integer or a non-nan float
         * a single numeric string
@@ -356,6 +387,19 @@ class ContinuedFraction(Fraction):
         * two numbers, at least one of which is a `fractions.Fraction` object
           and the other an integer, representing the numerator and denominator
           of a rational fraction
+
+        Parameters
+        ----------
+        *args: int or float or str or fractions.Fraction or decimal.Decimal
+            Exactly one argument of the type described above, or two arguments
+            which can be either integers or floats, or a fractions.Fraction and
+            and an integer. Non-nan floats and non-numeric strings will trigger
+            errors.
+
+        Raises
+        ------
+        ValueError
+            If validation fails.
         """
         if any(
             type(arg) not in [int, float, str, Fraction, Decimal] or
@@ -376,7 +420,8 @@ class ContinuedFraction(Fraction):
 
     def __new__(cls, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> Fraction:
         """
-        Creates instances of this class.
+        Creates instances of this class, which represent finite, simple
+        continued fractions.
 
         Arguments must be one of the following types:
 
@@ -390,6 +435,23 @@ class ContinuedFraction(Fraction):
         * two numbers, at least one of which is a `fractions.Fraction` object
           and the other an integer, representing the numerator and non-zero
           denominator of a rational fraction
+
+        Parameters
+        ----------
+        *args: int or float or str or fractions.Fraction or decimal.Decimal
+            Exactly one argument of the type described above, or two arguments
+            which can be either integers or floats, or a fractions.Fraction and
+            and an integer. Non-nan floats and non-numeric strings will trigger
+            errors.
+
+        **kwargs
+            Any valid keyword arguments for the superclass fractions.Fraction
+
+        Returns
+        -------
+        ContinuedFraction
+            A new instance of `ContinuedFraction`, but not yet initialised with
+            the class-specific attributes and properties.
         """
         try:
             cls.validate(*args, **kwargs)
@@ -401,12 +463,61 @@ class ContinuedFraction(Fraction):
     @classmethod
     def from_elements(cls, *elements: int) -> Fraction:
         """
-        Returns a ``ContinuedFraction`` instance from a sequence of (integer)
+        Returns a `ContinuedFraction` instance from a sequence of (integer)
         elements of a continued fraction.
+
+        Parameters
+        ----------
+        *elements: int
+            An ordered sequence of elements of a (finite) continued fraction.
+
+        Returns
+        -------
+        ContinuedFraction
+            A new and fully initialised instance of `ContinuedFraction` with
+            the given element sequence.
+
+        Examples
+        --------
+        Constructing a continued fraction for the rational `649/200` using the
+        element sequence `(3, 4, 12, 4)`.
+
+        >>> c1 = ContinuedFraction.from_elements(3, 4, 12, 4)
+        >>> c1
+        ContinuedFraction(649, 200)
+
+        Constructing the continued fraction of the inverse rational `200/649`
+        using the element sequence `(0, 3, 4, 12, 4)`.
+
+        >>> c2 = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
+        >>> c2
+        ContinuedFraction(200, 649)
         """
         return cls(fraction_from_elements(*elements))
 
     def __init__(self, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
+        """
+        Initialises new `ContinuedFraction` instances with attributes and
+        properties for their elements, order, convergents, segments and
+        remainders.
+
+        Parameters
+        ----------
+        *args : int or float or str or fractions.Fraction or decimal.Decimal
+            Exactly one argument of the type described above, or two arguments
+            which can be either integers or floats, or a fractions.Fraction and
+            and an integer. Non-nan floats and non-numeric strings will trigger
+            errors.
+
+        **kwargs
+            Any valid keyword arguments for the superclass fractions.Fraction
+
+        Raises
+        ------
+        ValueError
+            If there are arguments that have somehow passed the validation
+            check, but do not fall into one of the types described above.
+        """
         super().__init__()
 
         if len(args) == 1 and type(args[0]) == int:
@@ -488,18 +599,105 @@ class ContinuedFraction(Fraction):
 
     @property
     def elements(self) -> tuple[int]:
+        """
+        Property: the element sequence of the continued fraction.
+
+        Returns
+        -------
+        tuple[int]
+            The element sequence of the continued fraction.
+        """
         return self._elements
 
     @property
     def order(self) -> int:
+        """
+        Property: the order of the continued fraction, which is the number
+                  of its elements + `1`.
+
+        Returns
+        -------
+        int
+            The order of the continued fraction, which is the number of its
+            elements + `1`.
+        """
         return len(self._elements[1:])
 
     @property
     def convergents(self) -> MappingProxyType[int, Fraction]:
+        """
+        Property: the map of all convergents of the continued fraction, keyed
+                  by the orders `0`,`1`,...,`n`, where `n` is the order of
+                  the continued fraction.
+
+        Returns
+        -------
+        types.MappingProxyType[int, fractions.Fraction]
+            The map of all convergents of the continued fraction, keyed
+            by their orders.
+        """
         return self._convergents
 
     def segment(self, k: int, /) -> Fraction:
+        """
+        The `k`th segment of the continued fraction, defined as the continued
+        fraction given by its `k`-order convergent, whose elements consist of
+        the first `k + 1` two elements of the original continued fraction.
+
+        Parameters
+        ----------
+        k : int
+            The index of the segment, as described above.
+
+        Returns
+        -------
+        ContinuedFraction
+            A new `ContinuedFraction` instance representing the `k`th segment
+            of the original continued fraction, as described above.
+        """
         return self.__class__.from_elements(*self._elements[:k + 1])
 
     def remainder(self, k: int, /) -> Fraction:
+        """
+        The `k`th remainder of the continued fraction, defined as the continued
+        fraction given by the difference between the original continued
+        fraction and its `(k - 1)`-order convergent (equivalently, the
+        `(k - 1)`-order segment, as defined above).
+
+        Parameters
+        ----------
+        k : int
+            The index of the remainder, as described above.
+
+        Returns
+        -------
+        ContinuedFraction
+            A new `ContinuedFraction` instance representing the `k`th remainder
+            of the original continued fraction, as described above.
+        """
         return self.__class__.from_elements(*self._elements[k:])
+
+    def mediant(self, other: Fraction) -> Fraction:
+        """
+        The continued fraction of the rational number formed by taking the
+        pairwise sum of the numerators and denominators of the original
+        continued fraction and a second fraction (`other`). The resulting
+        fraction has the property that its value lies between its two
+        constituents.        
+
+        Parameters
+        ----------
+        other : fractions.Fraction or ContinuedFraction
+            The second fraction to use to calculate the mediant with the
+            first.
+
+        Returns
+        -------
+        ContinuedFraction
+            The mediant of the original and the second fractions, as a
+            `ContinuedFraction` instance.
+        """
+        return self.__class__(
+            self.numerator + other.numerator,
+            self.denominator + other.denominator
+        )

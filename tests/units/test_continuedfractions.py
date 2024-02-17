@@ -203,7 +203,8 @@ class TestContinuedFraction:
 	       expected_fraction_obj,
 	       expected_elements,
 	       expected_order,
-	       expected_convergents""",
+	       expected_convergents,
+	       expected_ref_mediant""",
 	    [
 	    	# Case #1
 	        (
@@ -214,7 +215,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
-	        	})
+	        	}),
+	        	ContinuedFraction(4, 3)
 	        ),
 	        # Case #2
 	        (
@@ -225,7 +227,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
-	        	})
+	        	}),
+	        	ContinuedFraction(4, 3)
 	        ),
 	        # Case #3
 	        (
@@ -235,7 +238,8 @@ class TestContinuedFraction:
 	        	0,
 	        	MappingProxyType({
 	        		0: Fraction(-5000, 1)
-	        	})
+	        	}),
+	        	ContinuedFraction(-4999, 2)
 	        ),
 	        # Case #4
 	        (
@@ -248,7 +252,8 @@ class TestContinuedFraction:
 	        		1: Fraction(13, 4),
 	        		2: Fraction(159, 49),
 	        		3: Fraction(649, 200)
-	        	})
+	        	}),
+	        	ContinuedFraction(650, 201)
 	        ),
 	        # Case #5
 	        (
@@ -262,7 +267,8 @@ class TestContinuedFraction:
 	              	2: Fraction(-13, 4),
 	              	3: Fraction(-159, 49),
 	              	4: Fraction(-649, 200)
-				})
+				}),
+				ContinuedFraction(-216, 67)
 	        ),
 	        # Case #6
 	        (
@@ -275,7 +281,8 @@ class TestContinuedFraction:
 	        		1: Fraction(13, 4),
 	        		2: Fraction(159, 49),
 	        		3: Fraction(649, 200)
-	        	})
+	        	}),
+	        	ContinuedFraction(650, 201)
 	        ),
 	        # Case #7
 	        (
@@ -287,7 +294,8 @@ class TestContinuedFraction:
 	        		0: Fraction(0, 1),
 	        		1: Fraction(1, 3),
 	        		2: Fraction(3333, 10000)
-	        	})
+	        	}),
+	        	ContinuedFraction(3334, 10001)
 	        ),
 	        # Case #8
 	        (
@@ -300,7 +308,8 @@ class TestContinuedFraction:
 	              	1: Fraction(0, 1),
 	              	2: Fraction(-1, 3),
 	              	3: Fraction(-3333, 10000)
-	        	})
+	        	}),
+	        	ContinuedFraction(-3332, 10001)
 	        ),
 	        # Case #9
 	        (
@@ -312,7 +321,8 @@ class TestContinuedFraction:
 	        		0: Fraction(-6, 1),
 	        		1: Fraction(-5, 1),
 	        		2: Fraction(-21, 4)
-	        	})
+	        	}),
+	        	ContinuedFraction(-4, 1)
 	        ),
 	        # Case #10
 	        (
@@ -322,7 +332,8 @@ class TestContinuedFraction:
 	        	0,
 	        	MappingProxyType({
 	        		0: Fraction(123456789, 1)
-	        	})
+	        	}),
+	        	ContinuedFraction(61728395, 1)
 	        ),
 	        # Case #11
 	        (
@@ -334,7 +345,8 @@ class TestContinuedFraction:
 	        		0: Fraction(0, 1),
 	        		1: Fraction(1, 3),
 	        		2: Fraction(3, 10)	
-	        	})
+	        	}),
+	        	ContinuedFraction(4, 11)
 	        ),
 	        # Case #12
 	        (
@@ -345,7 +357,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(0, 1),
 	        		1: Fraction(1, 10)
-	        	})
+	        	}),
+	        	ContinuedFraction(2, 11)
 	        ),
 	        # Case #13
 	        (
@@ -359,7 +372,8 @@ class TestContinuedFraction:
 					2: Fraction(-13, 4),
 					3: Fraction(-159, 49),
 					4: Fraction(-649, 200)
-	        	})
+	        	}),
+	        	ContinuedFraction(-216, 67)
 	        ),
 	        # Case #14
 	        (
@@ -369,7 +383,8 @@ class TestContinuedFraction:
 	        	0,
 	        	MappingProxyType({
 	        		0: Fraction(123456789, 1)
-	        	})
+	        	}),
+	        	ContinuedFraction(61728395, 1)
 	        ),
 	        # Case #15
 	        (
@@ -380,7 +395,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
-	        	})
+	        	}),
+	        	ContinuedFraction(4, 3)
 	        ),
 	        # Case #16
 	        (
@@ -391,7 +407,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(-4, 1),
 	        		1: Fraction(-15, 4)
-	        	})
+	        	}),
+	        	ContinuedFraction(-14, 5)
 	        ),
 	        # Case #17
 	        (
@@ -404,7 +421,8 @@ class TestContinuedFraction:
 	        		1: Fraction(13, 4),
 	        		2: Fraction(159, 49),
 	        		3: Fraction(649, 200)
-	        	})
+	        	}),
+	        	ContinuedFraction(650, 201)
 	        )
 	    ],
 	)
@@ -415,6 +433,7 @@ class TestContinuedFraction:
 		expected_elements,
 		expected_order,
 		expected_convergents,
+		expected_ref_mediant
 	):
 		expected = expected_fraction_obj
 
@@ -445,6 +464,8 @@ class TestContinuedFraction:
 			received.remainder(k) == ContinuedFraction.from_elements(*expected_elements[k:])
 			for k in range(received.order + 1)
 		)
+
+		assert received.mediant(1) == expected_ref_mediant
 
 	def test_ContinuedFraction__operations(self):
 		f1 = ContinuedFraction(649, 200)

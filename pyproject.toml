@@ -81,6 +81,7 @@ Repository = "https://github.com/sr-murthy/continuedfractions"
 #
 [tool.pdm]
 distribution = true
+
 [tool.pdm.build]
 package-dir = "src"
 includes = [

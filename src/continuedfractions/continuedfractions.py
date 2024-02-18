@@ -345,7 +345,7 @@ class ContinuedFraction(Fraction):
         The order of the continued fraction, defined as the number of
         elements - 1.
 
-    convergents : types.MappingProxyType
+    convergents : types.MappingProxyType[int, Fraction]
         An immutable map of all the `k`-order convergents of the continued
         fraction, keyed by `k`.
 
@@ -366,7 +366,7 @@ class ContinuedFraction(Fraction):
         The continued fraction of the rational number formed by taking the
         pairwise sum of the numerators and denominators of the original
         continued fraction and a second fraction (`other`). The resulting
-        fraction has the property that its value lies between its two
+        fraction has the property that its value lies between the two
         constituents.
 
     Examples
@@ -399,12 +399,22 @@ class ContinuedFraction(Fraction):
     >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
     >>> cf_inverse
     ContinuedFraction(200, 649)
+    >>> assert cf_inverse == 1/cf
     >>> assert cf * cf_inverse == 1
     >>> cf_negative_inverse = ContinuedFraction.from_elements(-1, 1, 2, 4, 12, 4)
     >>> cf_negative_inverse
     ContinuedFraction(-200, 649)
+    >>> assert cf_negative_inverse == -1/cf
     >>> assert cf * cf_negative_inverse == -1
     """
+
+    # Class attribute to store an error message for input errors
+    __valid_inputs_msg__ = (
+        "Only single integers, non-nan floats, numeric strings, \n"
+        "`fractions.Fraction`, or `decimal.Decimal` objects; or two \n"
+        "integers or two `fractions.Fraction` objects or a pairwise \n"
+        "combination of these, are valid."
+    )
 
     @classmethod
     def validate(cls, *args: int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
@@ -414,43 +424,84 @@ class ContinuedFraction(Fraction):
         * a single integer or a non-nan float
         * a single numeric string
         * a single `fractions.Fraction` or `decimal.Decimal` object
-        * two integers representing the numerator and non-zero denominator of
-          rational fraction
-        * two numbers, which could be integers or floats, representing the
-          numerator and non-zero denominator of a real fraction
-        * two numbers, at least one of which is a `fractions.Fraction` object
-          and the other an integer, representing the numerator and denominator
-          of a rational fraction
+        * two integers or `fractions.Fraction` objects, or a combination of an
+          integer and a `fractions.Fraction` object, representing the numerator
+          and non-zero denominator of a rational fraction
 
         Parameters
         ----------
         *args: int or float or str or fractions.Fraction or decimal.Decimal
-            Exactly one argument of the type described above, or two arguments
-            which can be either integers or floats, or a fractions.Fraction and
-            and an integer. Non-nan floats and non-numeric strings will trigger
-            errors.
+            Arguments of the type described above.
 
         Raises
         ------
         ValueError
             If validation fails.
+
+        Notes
+        -----
+        To avoid recursion errors validation excludes `ContinuedFraction`
+        instances, and for the same reason convergents of a
+        `ContinuedFraction` instance are given as `fractions.Fraction`
+        instances.
+
+        Examples
+        --------
+        >>> ContinuedFraction.validate(100)
+        >>> ContinuedFraction.validate(3, -2)
+
+        >>> ContinuedFraction.validate(1, -2.0)
+        Traceback (most recent call last):
+        ...
+        ValueError: Only single integers, non-nan floats, numeric strings, 
+        `fractions.Fraction`, or `decimal.Decimal` objects; or two 
+        integers or two `fractions.Fraction` objects or a pairwise 
+        combination of these, are valid.
+
+        >>> ContinuedFraction.validate(-.123456789)
+        >>> ContinuedFraction.validate('-.123456789')
+        >>> ContinuedFraction.validate('-649/200')
+        >>> ContinuedFraction.validate(-3/2)
+
+        >>> ContinuedFraction.validate(.3, -2)
+        Traceback (most recent call last):
+        ...
+        ValueError: Only single integers, non-nan floats, numeric strings, 
+        `fractions.Fraction`, or `decimal.Decimal` objects; or two 
+        integers or two `fractions.Fraction` objects or a pairwise 
+        combination of these, are valid.
+
+        >>> ContinuedFraction.validate(Fraction(-415, 93))
+        >>> ContinuedFraction.validate(Decimal('12345.6789'))
+        >>> ContinuedFraction.validate(Decimal(12345.6789))
+
+        >>> ContinuedFraction.validate(Fraction(3, 2), 2.5)
+        Traceback (most recent call last):
+        ...
+        ValueError: Only single integers, non-nan floats, numeric strings, 
+        `fractions.Fraction`, or `decimal.Decimal` objects; or two 
+        integers or two `fractions.Fraction` objects or a pairwise 
+        combination of these, are valid.
         """
-        if any(
-            type(arg) not in [int, float, str, Fraction, Decimal] or
-            (type(arg) == float and math.isnan(arg)) or
-            (type(arg) == str and not _RATIONAL_FORMAT.match(arg)) or
-            len(args) not in [1, 2]
-            for arg in args
-        ) or (len(args) == 2 and Decimal in set(map(type, args))):
-            raise ValueError(
-                "Only integers, non-nan floats, numeric strings, "
-                "`fractions.Fraction`, or `decimal.Decimal` objects are "
-                "valid, and there must be at least one, and at most two, "
-                "positional arguments."
-                "\n"
-                "Also, only a single `fractions.Fraction` object or a single "
-                "`decimal.Decimal` object may be given."
+        if len(args) not in [1, 2]:
+            raise ValueError(cls.__valid_inputs_msg__)
+
+        if (
+            len(args) == 1 and
+            not set(map(type, args)).issubset(
+                [int, float, str, Fraction, Decimal]
             )
+        ):
+            raise ValueError(cls.__valid_inputs_msg__)
+
+        if any(type(arg) == float and math.isnan(arg) for arg in args):
+            raise ValueError(cls.__valid_inputs_msg__)
+
+        if len(args) == 1 and type(args[0]) == str and not _RATIONAL_FORMAT.match(args[0]):
+            raise ValueError(cls.__valid_inputs_msg__)
+
+        if len(args) == 2 and not set(map(type, args)).issubset([int, Fraction]):
+            raise ValueError(cls.__valid_inputs_msg__)
 
     def __new__(cls, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> Fraction:
         """
@@ -462,30 +513,51 @@ class ContinuedFraction(Fraction):
         * a single integer or a non-nan float
         * a single numeric string
         * a single `fractions.Fraction` or `decimal.Decimal` object
-        * two integers representing the numerator and non-zero denominator of
-          rational fraction
-        * two numbers, which could be integers or floats, representing the
-          numerator and non-zero denominator of a real fraction
-        * two numbers, at least one of which is a `fractions.Fraction` object
-          and the other an integer, representing the numerator and non-zero
-          denominator of a rational fraction
+        * two integers or `fractions.Fraction` objects, or a combination of an
+          integer and a `fractions.Fraction` object, representing the numerator
+          and non-zero denominator of a rational fraction
 
         Parameters
         ----------
         *args: int or float or str or fractions.Fraction or decimal.Decimal
-            Exactly one argument of the type described above, or two arguments
-            which can be either integers or floats, or a fractions.Fraction and
-            and an integer. Non-nan floats and non-numeric strings will trigger
-            errors.
+            Arguments of the type described above.
 
         **kwargs
-            Any valid keyword arguments for the superclass fractions.Fraction
+            Any valid keyword arguments for the superclass
+            `fractions.Fraction`.
 
         Returns
         -------
         ContinuedFraction
             A new instance of `ContinuedFraction`, but not yet initialised with
             the class-specific attributes and properties.
+
+        Examples
+        --------
+        >>> ContinuedFraction(100, 2)
+        ContinuedFraction(50, 1)
+
+        >>> ContinuedFraction(1, -2.0)
+        Traceback (most recent call last):
+        ...
+        ValueError: Only single integers, non-nan floats, numeric strings, 
+        `fractions.Fraction`, or `decimal.Decimal` objects; or two 
+        integers or two `fractions.Fraction` objects or a pairwise 
+        combination of these, are valid.
+
+        >>> ContinuedFraction('-.123456789')
+        ContinuedFraction(-123456789, 1000000000)
+
+        >>> ContinuedFraction(.3, -2)
+        Traceback (most recent call last):
+        ...
+        ValueError: Only single integers, non-nan floats, numeric strings, 
+        `fractions.Fraction`, or `decimal.Decimal` objects; or two 
+        integers or two `fractions.Fraction` objects or a pairwise 
+        combination of these, are valid.
+
+        >>> ContinuedFraction(Fraction(-415, 93))
+        ContinuedFraction(-415, 93)
         """
         try:
             cls.validate(*args, **kwargs)
@@ -539,9 +611,9 @@ class ContinuedFraction(Fraction):
         ----------
         *args : int or float or str or fractions.Fraction or decimal.Decimal
             Exactly one argument of the type described above, or two arguments
-            which can be either integers or floats, or a fractions.Fraction and
-            and an integer. Non-nan floats and non-numeric strings will trigger
-            errors.
+            which can be either integers or fractions.Fraction objects. Any
+            other case, including non-nan floats and non-numeric strings, will
+            trigger errors.
 
         **kwargs
             Any valid keyword arguments for the superclass fractions.Fraction
@@ -551,6 +623,31 @@ class ContinuedFraction(Fraction):
         ValueError
             If there are arguments that have somehow passed the validation
             check, but do not fall into one of the types described above.
+
+        Examples
+        --------
+        Construct the continued fraction for the rational `415/93`.
+
+        >>> cf = ContinuedFraction(415, 93)
+        >>> cf
+        ContinuedFraction(415, 93)
+
+        Inspect the elements, order, convergents, segments and remainders
+
+        >>> cf.elements
+        (4, 2, 6, 7)
+        >>> cf.order
+        3
+        >>> cf.convergents
+        mappingproxy({0: Fraction(4, 1), 1: Fraction(9, 2), 2: Fraction(58, 13), 3: Fraction(415, 93)})
+        >>> cf.segment(0), cf.segment(1), cf.segment(2), cf.segment(3)
+        (ContinuedFraction(4, 1), ContinuedFraction(9, 2), ContinuedFraction(58, 13), ContinuedFraction(415, 93))
+        >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
+        (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
+
+        Check some properties of the segments and remainders
+
+        >>> assert cf.remainder(1) == 1 / (cf - cf.convergents[0])
         """
         super().__init__()
 
@@ -569,7 +666,7 @@ class ContinuedFraction(Fraction):
         elif len(args) == 2 and set(map(type, args)).issubset([int, Fraction]):
             self._elements = tuple(continued_fraction_rational(*self.as_integer_ratio()))
         else:      # pragma: no cover
-            raise ValueError(f"Invalid inputs - please check and try again")
+            raise ValueError(self.__class__.__valid_inputs_msg__)
 
         _kth_convergent = partial(kth_convergent, *self._elements)
         self._convergents = MappingProxyType(
@@ -628,6 +725,9 @@ class ContinuedFraction(Fraction):
     def __pos__(self) -> Fraction:
         return self.__class__(super().__pos__())
 
+    def __neg__(self) -> Fraction:
+        return self.__class__(super().__neg__())
+
     def __abs__(self) -> Fraction:
         return self.__class__(super().__abs__())
 
@@ -640,6 +740,14 @@ class ContinuedFraction(Fraction):
         -------
         tuple[int]
             The element sequence of the continued fraction.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> cf.elements
+        (0, 8, 9, 1, 21, 1, 1, 5)
         """
         return self._elements
 
@@ -654,6 +762,14 @@ class ContinuedFraction(Fraction):
         int
             The order of the continued fraction, which is the number of its
             elements + `1`.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> cf.order
+        7
         """
         return len(self._elements[1:])
 
@@ -669,6 +785,14 @@ class ContinuedFraction(Fraction):
         types.MappingProxyType[int, fractions.Fraction]
             The map of all convergents of the continued fraction, keyed
             by their orders.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> cf.convergents
+        mappingproxy({0: Fraction(0, 1), 1: Fraction(1, 8), 2: Fraction(9, 73), 3: Fraction(10, 81), 4: Fraction(219, 1774), 5: Fraction(229, 1855), 6: Fraction(448, 3629), 7: Fraction(2469, 20000)})
         """
         return self._convergents
 
@@ -688,6 +812,14 @@ class ContinuedFraction(Fraction):
         ContinuedFraction
             A new `ContinuedFraction` instance representing the `k`th segment
             of the original continued fraction, as described above.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> cf.segment(2)
+        ContinuedFraction(9, 73)
         """
         return self.__class__.from_elements(*self._elements[:k + 1])
 
@@ -708,6 +840,14 @@ class ContinuedFraction(Fraction):
         ContinuedFraction
             A new `ContinuedFraction` instance representing the `k`th remainder
             of the original continued fraction, as described above.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> cf.remainder(2)
+        ContinuedFraction(2469, 248)
         """
         return self.__class__.from_elements(*self._elements[k:])
 
@@ -730,6 +870,14 @@ class ContinuedFraction(Fraction):
         ContinuedFraction
             The mediant of the original and the second fractions, as a
             `ContinuedFraction` instance.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> cf.mediant(Fraction('.1235'))
+        ContinuedFraction(679, 5500)
         """
         return self.__class__(
             self.numerator + other.numerator,

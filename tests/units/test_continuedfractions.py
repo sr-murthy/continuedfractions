@@ -182,6 +182,7 @@ class TestContinuedFraction:
 	    [
 	    	('not a number',),
 	    	('-1 2',),
+	    	(1, float("nan")),
 	    	('-1 + 2',),
 	    	(None,),
 	    	([-1, '2'],),
@@ -190,8 +191,9 @@ class TestContinuedFraction:
 	    	([],),
 	    	((1, 2, 3,)),
 	    	(dict(a=1, b=2,)),
+	    	(-2, .3),
 	    	(Fraction(1, -2), Decimal(3)),
-	    	(Decimal(1), 2),
+	    	(Decimal('-1'), 2),
 	    ],
 	)
 	def test_ContinuedFraction__creation_and_initialisation__invalid_inputs__value_error_raised(self, invalid_inputs):
@@ -514,5 +516,7 @@ class TestContinuedFraction:
 		assert f1.__rpow__(2) == Fraction(2) ** f1
 
 		assert +f1 == f1
+
+		assert -f1 == ContinuedFraction(-f1.numerator, f1.denominator) == ContinuedFraction(Fraction(-f1))
 
 		assert abs(f2) == f1

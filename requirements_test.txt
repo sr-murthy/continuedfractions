@@ -5,4 +5,6 @@ click
 coverage[toml]
 jinja2
 pytest
+pytest-cov
+pytest-xdist
 tabulate

@@ -36,23 +36,26 @@ version_extract:
 	echo "$(PACKAGE_VERSION)"
 
 # Running tests
-test_docstrings: clean
+doctests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running doctests in all core libraries\n"
 	cd "$(PROJECT_ROOT)" && \
 	python -m doctest --verbose src/continuedfractions/*.py
 
-test_units: clean
+unittests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running package unit tests + measuring coverage\n"
 	cd "$(PROJECT_ROOT)" && \
 	python -m \
-		coverage run --branch --source=src \
-		-m pytest \
+		pytest \
 			--cache-clear \
 			--capture=no \
 			--code-highlight=yes \
 			--color=yes \
+			--cov=src \
+			--cov-config=pyproject.toml \
+			--cov-report=xml \
+			--dist worksteal \
+			--numprocesses=auto \
 			--tb=native \
 			--verbosity=3 \
  		tests/units \
- 	&& \
- 	python -m coverage report --skip-empty --show-missing --omit="*/tests*" --precision=3
+ 		| tee pytest-coverage.txt

@@ -96,7 +96,6 @@ def continued_fraction_rational(x: int, y: int, /) -> Generator[int, None, None]
 
     Notes
     -----
-
     It is known that every rational number has exactly two finite continued
     fraction representations, one of which has an additional element of `1`
     as its last element. Any such continued fraction can be translated into a
@@ -186,7 +185,6 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
 
     Notes
     -----
-
     It might be expected that numeric strings expressing rational fractions,
     such as `"1/3"`, would be processed succesfully, but this is not the case,
     as the key step in the function is to use the string representation of `x`
@@ -235,7 +233,6 @@ def fraction_from_elements(*elements: int) -> Fraction:
 
     Examples
     --------
-
     >>> fraction_from_elements(3, 4, 12, 4)
     Fraction(649, 200)
 
@@ -301,7 +298,6 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
 
     Examples
     --------
-
     >>> kth_convergent(3, 4, 12, 4, k=0)
     Fraction(3, 1)
 
@@ -375,7 +371,6 @@ class ContinuedFraction(Fraction):
 
     Examples
     --------
-
     Construct the continued fraction for the rational `649/200`.
 
     >>> cf = ContinuedFraction(649, 200)
@@ -573,7 +568,7 @@ class ContinuedFraction(Fraction):
             self._elements = tuple(continued_fraction_rational(args[0], args[1]))
         elif len(args) == 2 and set(map(type, args)).issubset([int, Fraction]):
             self._elements = tuple(continued_fraction_rational(*self.as_integer_ratio()))
-        else:
+        else:      # pragma: no cover
             raise ValueError(f"Invalid inputs - please check and try again")
 
         _kth_convergent = partial(kth_convergent, *self._elements)
@@ -742,11 +737,10 @@ class ContinuedFraction(Fraction):
         )
 
 
-
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m src.continuedfractions.continuedfractions
+    #     python -m doctest -v src/continuedfractions/continuedfractions.py
     #
     import doctest
     doctest.testmod()

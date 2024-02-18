@@ -413,7 +413,8 @@ class ContinuedFraction(Fraction):
         "Only single integers, non-nan floats, numeric strings, \n"
         "`fractions.Fraction`, or `decimal.Decimal` objects; or two \n"
         "integers or two `fractions.Fraction` objects or a pairwise \n"
-        "combination of these, are valid."
+        "combination of these, representing the numerator and non-zero \n"
+        "denominator, respectively, of a rational fraction, are valid."
     )
 
     @classmethod
@@ -456,20 +457,22 @@ class ContinuedFraction(Fraction):
         ValueError: Only single integers, non-nan floats, numeric strings, 
         `fractions.Fraction`, or `decimal.Decimal` objects; or two 
         integers or two `fractions.Fraction` objects or a pairwise 
-        combination of these, are valid.
+        combination of these, representing the numerator and non-zero 
+        denominator, respectively, of a rational fraction, are valid.
 
         >>> ContinuedFraction.validate(-.123456789)
         >>> ContinuedFraction.validate('-.123456789')
         >>> ContinuedFraction.validate('-649/200')
         >>> ContinuedFraction.validate(-3/2)
 
-        >>> ContinuedFraction.validate(.3, -2)
+        >>> ContinuedFraction.validate(-3, 0)
         Traceback (most recent call last):
         ...
         ValueError: Only single integers, non-nan floats, numeric strings, 
         `fractions.Fraction`, or `decimal.Decimal` objects; or two 
         integers or two `fractions.Fraction` objects or a pairwise 
-        combination of these, are valid.
+        combination of these, representing the numerator and non-zero 
+        denominator, respectively, of a rational fraction, are valid.
 
         >>> ContinuedFraction.validate(Fraction(-415, 93))
         >>> ContinuedFraction.validate(Decimal('12345.6789'))
@@ -481,7 +484,8 @@ class ContinuedFraction(Fraction):
         ValueError: Only single integers, non-nan floats, numeric strings, 
         `fractions.Fraction`, or `decimal.Decimal` objects; or two 
         integers or two `fractions.Fraction` objects or a pairwise 
-        combination of these, are valid.
+        combination of these, representing the numerator and non-zero 
+        denominator, respectively, of a rational fraction, are valid.
         """
         if len(args) not in [1, 2]:
             raise ValueError(cls.__valid_inputs_msg__)
@@ -501,6 +505,9 @@ class ContinuedFraction(Fraction):
             raise ValueError(cls.__valid_inputs_msg__)
 
         if len(args) == 2 and not set(map(type, args)).issubset([int, Fraction]):
+            raise ValueError(cls.__valid_inputs_msg__)
+
+        if len(args) == 2 and args[1] == 0:
             raise ValueError(cls.__valid_inputs_msg__)
 
     def __new__(cls, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> Fraction:
@@ -543,7 +550,8 @@ class ContinuedFraction(Fraction):
         ValueError: Only single integers, non-nan floats, numeric strings, 
         `fractions.Fraction`, or `decimal.Decimal` objects; or two 
         integers or two `fractions.Fraction` objects or a pairwise 
-        combination of these, are valid.
+        combination of these, representing the numerator and non-zero 
+        denominator, respectively, of a rational fraction, are valid.
 
         >>> ContinuedFraction('-.123456789')
         ContinuedFraction(-123456789, 1000000000)
@@ -554,7 +562,8 @@ class ContinuedFraction(Fraction):
         ValueError: Only single integers, non-nan floats, numeric strings, 
         `fractions.Fraction`, or `decimal.Decimal` objects; or two 
         integers or two `fractions.Fraction` objects or a pairwise 
-        combination of these, are valid.
+        combination of these, representing the numerator and non-zero 
+        denominator, respectively, of a rational fraction, are valid.
 
         >>> ContinuedFraction(Fraction(-415, 93))
         ContinuedFraction(-415, 93)
@@ -610,10 +619,7 @@ class ContinuedFraction(Fraction):
         Parameters
         ----------
         *args : int or float or str or fractions.Fraction or decimal.Decimal
-            Exactly one argument of the type described above, or two arguments
-            which can be either integers or fractions.Fraction objects. Any
-            other case, including non-nan floats and non-numeric strings, will
-            trigger errors.
+            Arguments of the type described above.
 
         **kwargs
             Any valid keyword arguments for the superclass fractions.Fraction

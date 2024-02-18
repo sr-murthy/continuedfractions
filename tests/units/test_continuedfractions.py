@@ -184,6 +184,8 @@ class TestContinuedFraction:
 	    	('-1 2',),
 	    	(1, float("nan")),
 	    	('-1 + 2',),
+	    	(1, 0),
+	    	(-1, Fraction(0, 1)),
 	    	(None,),
 	    	([-1, '2'],),
 	    	(1, 2, 3,),

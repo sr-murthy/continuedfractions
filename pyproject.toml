@@ -157,6 +157,7 @@ addopts = """\
     --cov=src \
     --cov-config=pyproject.toml \
     --cov-report=xml \
+    --cov-report=html \
     --dist worksteal \
     --numprocesses=auto \
     -ra \

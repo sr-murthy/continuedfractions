@@ -50,6 +50,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+pytest-coverage.txt
 
 # Translations
 *.mo
@@ -161,3 +162,4 @@ cython_debug/
 
 # PDM
 .pdm.python
+pdm.lock.dev

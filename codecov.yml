@@ -8,7 +8,6 @@ coverage:
           - unit
         paths: 
           - "src"
-       # advanced settings
         branches: 
           - main
         if_ci_failed: error

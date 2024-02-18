@@ -64,7 +64,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.arch }}
-        allow-prereleases: true
+        allow-prereleases: false
 
     - name: Set Variables
       id: set_variables
@@ -79,15 +79,42 @@ jobs:
         path: ${{ steps.set_variables.outputs.PIP_CACHE }}
         key: ${{ runner.os }}-pip-${{ steps.set_variables.outputs.PY }}
 
-    - name: Run docstring tests
-      run: |
-        pip install -r requirements_test.txt
-        make doctests
+    - name: Cache venv
+      uses: actions/cache@v3
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
+        restore-keys: |
+          venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-
 
-    - name: Run tests + Measure coverage
+    - name: Install current PDM via pip
+      if: matrix.install-via == 'pip'
       run: |
-        pip install -r requirements_test.txt
-        make unittests
+        python -m pip install pdm
+        pdm use -f .venv
+        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "GITHUB_PATH=$GITHUB_PATH"
+        echo "GITHUB_ENV=$GITHUB_ENV"
+
+    - name: Install current PDM via install script
+      if: matrix.install-via == 'script'
+      run: |
+        curl -sSLO https://pdm-project.org/install-pdm.py
+        curl -sSL https://pdm-project.org/install-pdm.py.sha256 | shasum -a 256 -c -
+        python3 install-pdm.py
+        pdm use -f .venv
+        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "GITHUB_PATH=$GITHUB_PATH"
+        echo "GITHUB_ENV=$GITHUB_ENV"
+
+    - name: Run tests + measure coverage
+      run: |
+        pdm use -f .venv
+        pdm install -v -dGtest --no-self --no-isolation
+        pdm run -v doctests
+        pdm run -v unittests
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1

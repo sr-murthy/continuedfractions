@@ -23,7 +23,7 @@ dynamic = ["version"]
 
 requires-python = ">=3.10"
 
-license = {file = "LICENSE",text = "GPLv3"}
+license = {file = "LICENSE"}
 
 dependencies = [
 ]
@@ -38,7 +38,7 @@ keywords = [
 classifiers = [
         "Development Status :: 4 - Beta",
         "Environment :: Console",
-        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
@@ -48,7 +48,6 @@ classifiers = [
         "Operating System :: MacOS",
         "Operating System :: Microsoft :: Windows",
 ]
-version = "0.1.0"
 
 [project.optional-dependencies]
 user = [
@@ -102,11 +101,9 @@ build = [
     "pip>=23.1.2",
 ]
 dev = [
-    "coverage[toml]",
     "ipython",
     "ipdb",
-    "ruff",
-    "pytest",
+    "virtualenv",
 ]
 docs = [
     "pydata-sphinx-theme",
@@ -125,16 +122,22 @@ lint = [
 ]
 test = [
     "coverage[toml]",
-    "jinja2",
     "pytest",
     "pytest-cov",
     "pytest-xdist",
+]
+tox = [
+    "tox",
+    "tox-pdm",
 ]
 deploy = [
     "twine>=4.0.2",
 ]
 
 [tool.pdm.scripts]
+
+doctests = {shell = "make doctests", help = "Run doctests"}
+unittests = {shell = "make unittests", help = "Run unit tests & measure coverage"}
 
 [tool.pdm.version]
 source = "file"
@@ -152,7 +155,8 @@ addopts = """\
     --code-highlight=yes \
     --color=yes \
     --cov=src \
-    --cov-report=term-missing:skip-covered \
+    --cov-config=pyproject.toml \
+    --cov-report=xml \
     --dist worksteal \
     --numprocesses=auto \
     -ra \

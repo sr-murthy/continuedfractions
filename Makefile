@@ -5,7 +5,7 @@ REPO := https://github.com/sr-murthy/continuedfractions
 PACKAGE_NAME := continuedfractions
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 HEAD := $(shell git rev-parse --short=8 HEAD)
-PACKAGE_VERSION := $(shell grep __version__ src/version.py | cut -d '=' -f 2 | xargs)
+PACKAGE_VERSION := $(shell grep __version__ src/continuedfractions/version.py | cut -d '=' -f 2 | xargs)
 
 ROOT := $(PWD)
 
@@ -39,23 +39,21 @@ version_extract:
 doctests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running doctests in all core libraries\n"
 	cd "$(PROJECT_ROOT)" && \
-	python -m doctest --verbose src/continuedfractions/*.py
+	python3 -m doctest --verbose src/continuedfractions/*.py
 
 unittests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running package unit tests + measuring coverage\n"
 	cd "$(PROJECT_ROOT)" && \
-	python -m \
-		pytest \
-			--cache-clear \
-			--capture=no \
-			--code-highlight=yes \
-			--color=yes \
-			--cov=src \
-			--cov-config=pyproject.toml \
-			--cov-report=xml \
-			--dist worksteal \
-			--numprocesses=auto \
-			--tb=native \
-			--verbosity=3 \
- 		tests/units \
- 		| tee pytest-coverage.txt
+	python3 -m pytest \
+				--cache-clear \
+				--capture=no \
+				--code-highlight=yes \
+				--color=yes \
+				--cov=src \
+				--cov-report=term-missing:skip-covered \
+				--dist worksteal \
+				--numprocesses=auto \
+				--tb=native \
+				--verbosity=3 \
+				tests/units \
+				| tee pytest-coverage.txt

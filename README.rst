@@ -4,7 +4,7 @@ continuedfractions
 |CI|
 |Codecov|
 |pdm-managed|
-|License: GPL v3|
+|License: MIT|
 
 .. |CI| image:: https://github.com/sr-murthy/continuedfractions/actions/workflows/ci.yml/badge.svg?branch=main
    :target: https://github.com/sr-murthy/continuedfractions/actions/workflows/ci.yml
@@ -15,7 +15,7 @@ continuedfractions
 .. |pdm-managed| image:: https://img.shields.io/badge/pdm-managed-blueviolet
    :target: https://pdm-project.org
 
-.. |License: GPL v3| image:: https://img.shields.io/badge/License-GPLv3-blue.svg
-   :target: https://www.gnu.org/licenses/gpl-3.0
+.. |License: MIT| image:: https://img.shields.io/badge/License-MIT-yellow.svg
+   :target: https://opensource.org/licenses/MIT
 
 Object-oriented continued fractions.

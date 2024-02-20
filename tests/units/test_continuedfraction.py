@@ -47,7 +47,8 @@ class TestContinuedFraction:
 	       expected_elements,
 	       expected_order,
 	       expected_convergents,
-	       expected_ref_mediant""",
+	       expected_ref_mediant,
+	       expected_float_value""",
 	    [
 	    	# Case #1
 	        (
@@ -59,7 +60,8 @@ class TestContinuedFraction:
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
 	        	}),
-	        	ContinuedFraction(4, 3)
+	        	ContinuedFraction(4, 3),
+	        	3 / 2
 	        ),
 	        # Case #2
 	        (
@@ -71,7 +73,8 @@ class TestContinuedFraction:
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
 	        	}),
-	        	ContinuedFraction(4, 3)
+	        	ContinuedFraction(4, 3),
+	        	3 / 2
 	        ),
 	        # Case #3
 	        (
@@ -82,7 +85,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(-5000, 1)
 	        	}),
-	        	ContinuedFraction(-4999, 2)
+	        	ContinuedFraction(-4999, 2),
+	        	-5000.0
 	        ),
 	        # Case #4
 	        (
@@ -96,7 +100,9 @@ class TestContinuedFraction:
 	        		2: Fraction(159, 49),
 	        		3: Fraction(649, 200)
 	        	}),
-	        	ContinuedFraction(650, 201)
+	        	ContinuedFraction(650, 201),
+	        	3.245
+
 	        ),
 	        # Case #5
 	        (
@@ -111,7 +117,8 @@ class TestContinuedFraction:
 	              	3: Fraction(-159, 49),
 	              	4: Fraction(-649, 200)
 				}),
-				ContinuedFraction(-216, 67)
+				ContinuedFraction(-216, 67),
+				-3.245
 	        ),
 	        # Case #6
 	        (
@@ -125,7 +132,8 @@ class TestContinuedFraction:
 	        		2: Fraction(159, 49),
 	        		3: Fraction(649, 200)
 	        	}),
-	        	ContinuedFraction(650, 201)
+	        	ContinuedFraction(650, 201),
+	        	3.245
 	        ),
 	        # Case #7
 	        (
@@ -138,7 +146,8 @@ class TestContinuedFraction:
 	        		1: Fraction(1, 3),
 	        		2: Fraction(3333, 10000)
 	        	}),
-	        	ContinuedFraction(3334, 10001)
+	        	ContinuedFraction(3334, 10001),
+	        	0.3333
 	        ),
 	        # Case #8
 	        (
@@ -152,7 +161,8 @@ class TestContinuedFraction:
 	              	2: Fraction(-1, 3),
 	              	3: Fraction(-3333, 10000)
 	        	}),
-	        	ContinuedFraction(-3332, 10001)
+	        	ContinuedFraction(-3332, 10001),
+	        	-0.3333
 	        ),
 	        # Case #9
 	        (
@@ -165,7 +175,8 @@ class TestContinuedFraction:
 	        		1: Fraction(-5, 1),
 	        		2: Fraction(-21, 4)
 	        	}),
-	        	ContinuedFraction(-4, 1)
+	        	ContinuedFraction(-4, 1),
+	        	-5.25
 	        ),
 	        # Case #10
 	        (
@@ -176,7 +187,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(123456789, 1)
 	        	}),
-	        	ContinuedFraction(61728395, 1)
+	        	ContinuedFraction(61728395, 1),
+	        	123456789.0
 	        ),
 	        # Case #11
 	        (
@@ -189,7 +201,8 @@ class TestContinuedFraction:
 	        		1: Fraction(1, 3),
 	        		2: Fraction(3, 10)	
 	        	}),
-	        	ContinuedFraction(4, 11)
+	        	ContinuedFraction(4, 11),
+	        	0.3
 	        ),
 	        # Case #12
 	        (
@@ -201,7 +214,8 @@ class TestContinuedFraction:
 	        		0: Fraction(0, 1),
 	        		1: Fraction(1, 10)
 	        	}),
-	        	ContinuedFraction(2, 11)
+	        	ContinuedFraction(2, 11),
+	        	0.1
 	        ),
 	        # Case #13
 	        (
@@ -216,7 +230,8 @@ class TestContinuedFraction:
 					3: Fraction(-159, 49),
 					4: Fraction(-649, 200)
 	        	}),
-	        	ContinuedFraction(-216, 67)
+	        	ContinuedFraction(-216, 67),
+	        	-3.245
 	        ),
 	        # Case #14
 	        (
@@ -227,7 +242,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: Fraction(123456789, 1)
 	        	}),
-	        	ContinuedFraction(61728395, 1)
+	        	ContinuedFraction(61728395, 1),
+	        	123456789.0
 	        ),
 	        # Case #15
 	        (
@@ -239,7 +255,8 @@ class TestContinuedFraction:
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
 	        	}),
-	        	ContinuedFraction(4, 3)
+	        	ContinuedFraction(4, 3),
+	        	1.5
 	        ),
 	        # Case #16
 	        (
@@ -251,7 +268,8 @@ class TestContinuedFraction:
 	        		0: Fraction(-4, 1),
 	        		1: Fraction(-15, 4)
 	        	}),
-	        	ContinuedFraction(-14, 5)
+	        	ContinuedFraction(-14, 5),
+	        	-3.75
 	        ),
 	        # Case #17
 	        (
@@ -265,7 +283,8 @@ class TestContinuedFraction:
 	        		2: Fraction(159, 49),
 	        		3: Fraction(649, 200)
 	        	}),
-	        	ContinuedFraction(650, 201)
+	        	ContinuedFraction(650, 201),
+	        	3.245
 	        )
 	    ],
 	)
@@ -276,7 +295,8 @@ class TestContinuedFraction:
 		expected_elements,
 		expected_order,
 		expected_convergents,
-		expected_ref_mediant
+		expected_ref_mediant,
+		expected_float_value
 	):
 		expected = expected_fraction_obj
 
@@ -286,6 +306,9 @@ class TestContinuedFraction:
 		# Compare the received and expected objects AS ``fractions.Fraction``
 		# objects
 		assert received == expected
+
+		# Compare the float values
+		assert received.as_float() == expected.numerator / expected.denominator
 
 		# Compare the element sequences
 		assert received.elements == expected_elements

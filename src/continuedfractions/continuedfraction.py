@@ -52,6 +52,10 @@ class ContinuedFraction(Fraction):
 
     Methods
     -------
+    as_float()
+        The `float` value of the fraction, as given by standard division of
+        the numerator by the denominator.
+
     segment(k: int)
         The `k`th segment of the continued fraction, defined as the continued
         fraction given by its `k`-order convergent, whose elements consist of
@@ -77,6 +81,8 @@ class ContinuedFraction(Fraction):
     >>> cf = ContinuedFraction(649, 200)
     >>> cf
     ContinuedFraction(649, 200)
+    >>> cf.as_float()
+    3.245
 
     Inspect the elements, order, convergents, segments and remainders
 
@@ -438,6 +444,34 @@ class ContinuedFraction(Fraction):
     def __abs__(self) -> Fraction:
         return self.__class__(super().__abs__())
 
+
+    def as_float(self) -> float:
+        """
+        Returns the `float` value of the continued fraction, using standard
+        division (`/`) of the numerator by the denominator.
+
+        Returns
+        -------
+        float
+            The `float` representation of the continued fraction.
+
+        Examples
+        --------
+        >>> import math
+        >>> math.pi
+        3.141592653589793
+
+        Now construct a `ContinuedFraction` object from it, and check the 
+        `float` value.
+
+        >>> cf = ContinuedFraction(math.pi)
+        >>> cf
+        ContinuedFraction(884279719003555, 281474976710656)
+        >>> cf.as_float()
+        3.141592653589793
+        """
+        return self.numerator / self.denominator
+
     @property
     def elements(self) -> tuple[int]:
         """
@@ -592,10 +626,11 @@ class ContinuedFraction(Fraction):
         )
 
 
+
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/continuedfractions.py
+    #     python -m doctest -v src/continuedfractions/continuedfraction.py
     #
     import doctest
     doctest.testmod()

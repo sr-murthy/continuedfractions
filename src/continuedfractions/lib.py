@@ -321,3 +321,12 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
         )
 
     return fraction_from_elements(*elements[:k + 1])
+
+
+if __name__ == "__main__":      # pragma: no cover
+    # Doctest the module from the project root using
+    #
+    #     python -m doctest -v src/continuedfractions/lib.py
+    #
+    import doctest
+    doctest.testmod()

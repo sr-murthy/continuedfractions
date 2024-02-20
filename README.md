@@ -361,7 +361,7 @@ For more information on PDM lockfiles and installing requirements see the [PDM d
 
 ### Makefile and Tests
 
-The [`Makefile`](Makefile) defines two main targets: `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and `unittests` for running unittests and measuring coverage, using `pytest` and `pytest-cov`:
+The [`Makefile`](Makefile) defines three main targets: `lint` for Ruff linting, `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and `unittests` for running unittests and measuring coverage, using `pytest` and the `pytest-cov` plugin:
 
 ```bash
 make doctests
@@ -372,11 +372,11 @@ The doctests serve as acceptance tests, and should be run first, before the unit
 
 ### Continous Integration and Deployment (CI/CD)
 
-There CI
+The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and the pipeline for all branches includes a tests stage, consisting of Ruff linting, Python doctests, and unit tests.
 
 ### Versioning & Package Publishing
 
-TODO
+The package is currently at version `0.0.1`, and packages are published manually to PyPI. There is currently no release pipeline - this will be added later.
 
 ## License
 

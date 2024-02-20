@@ -7,7 +7,6 @@ __all__ = [
 
 # -- Standard libraries --
 import math
-import re
 import sys
 
 from decimal import Decimal
@@ -205,10 +204,10 @@ class ContinuedFraction(Fraction):
         ):
             raise ValueError(cls.__valid_inputs_msg__)
 
-        if any(type(arg) == float and math.isnan(arg) for arg in args):
+        if any(isinstance(arg, float) and math.isnan(arg) for arg in args):
             raise ValueError(cls.__valid_inputs_msg__)
 
-        if len(args) == 1 and type(args[0]) == str and not _RATIONAL_FORMAT.match(args[0]):
+        if len(args) == 1 and isinstance(args[0], str) and not _RATIONAL_FORMAT.match(args[0]):
             raise ValueError(cls.__valid_inputs_msg__)
 
         if len(args) == 2 and not set(map(type, args)).issubset([int, Fraction]):
@@ -364,15 +363,15 @@ class ContinuedFraction(Fraction):
         """
         super().__init__()
 
-        if len(args) == 1 and type(args[0]) == int:
+        if len(args) == 1 and isinstance(args[0], int):
             self._elements = tuple(continued_fraction_rational(args[0], 1))
-        elif len(args) == 1 and type(args[0]) == float:
+        elif len(args) == 1 and isinstance(args[0], float):
             self._elements = tuple(continued_fraction_real(args[0]))
-        elif len(args) == 1 and type(args[0]) == str and _RATIONAL_FORMAT.match(args[0]) and '/' in args[0]:
+        elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' in args[0]:
             self._elements = tuple(continued_fraction_rational(*self.as_integer_ratio()))
-        elif len(args) == 1 and type(args[0]) == str and _RATIONAL_FORMAT.match(args[0]) and '/' not in args[0]:
+        elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' not in args[0]:
             self._elements = tuple(continued_fraction_real(args[0]))
-        elif len(args) == 1 and type(args[0]) in [Fraction, Decimal]:
+        elif len(args) == 1 and (isinstance(args[0], Fraction) or isinstance(args[0], Decimal)):
             self._elements = tuple(continued_fraction_rational(*args[0].as_integer_ratio()))
         elif len(args) == 2 and set(map(type, args)) == set([int]):
             self._elements = tuple(continued_fraction_rational(args[0], args[1]))

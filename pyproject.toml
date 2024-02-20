@@ -136,6 +136,7 @@ deploy = [
 
 [tool.pdm.scripts]
 
+lint = {shell = "make lint", help = "Linting code with Ruff"}
 doctests = {shell = "make doctests", help = "Run doctests"}
 unittests = {shell = "make unittests", help = "Run unit tests & measure coverage"}
 

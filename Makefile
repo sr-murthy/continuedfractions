@@ -35,6 +35,11 @@ version_check:
 version_extract:
 	echo "$(PACKAGE_VERSION)"
 
+# Linting
+lint: clean
+	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Linting source code with Ruff\n"
+	cd "$(PROJECT_ROOT)" && ruff check
+
 # Running tests
 doctests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running doctests in all core libraries\n"
@@ -55,5 +60,4 @@ unittests: clean
 				--numprocesses=auto \
 				--tb=native \
 				--verbosity=3 \
-				tests/units \
-				| tee pytest-coverage.txt
+				tests/units

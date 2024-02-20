@@ -59,48 +59,50 @@ ContinuedFraction(81, 50)
 The package does not use any 3rd party (production) dependencies, only Python standard libraries, and is supported on Python versions `3.10`-`3.12`. It is CI-tested on Ubuntu Linux (22.04.3 LTS), Mac OS (12.7.3) and Windows (Windows Server 2022), but should also install on any other platform supporting these Python versions.
 
 The simplest way of installing it is a standard `pip`/`pip3` install:
+
 ```python
 pip install continuedfractions
 ```
 
-For contributors there are development requirements which are specified in the [project TOML](pyproject.toml) - contribution guidelines are described in more detail in the [Contributing](#contributing) section.
+For contributors there are development requirements which are specified in the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml) - contribution guidelines are described in more detail later.
 
 ## Working with Continued Fractions
 
-Continued fractions are beautiful and interesting mathematical objects, with deep connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
+[Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
 
-The `continuedfractions` package is designed to make it easy to construct (finite) continued fractions as Python objects, explore their properties - elements/coefficients, convergents, segments, remainders - and operate on them as instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class, of which they are automatically instances.
+The `continuedfractions` package is designed to make it easy to construct (finite) continued fractions as Python objects, and explore their key properties, such as elements/coefficients, convergents, segments, remainders, and others. They have been implemented as instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class, of which they are automatically instances, and are thus fully operable as rational numbers.
 
 ### Package Structure
 
 The `continuedfractions` package consists of two libraries:
 
-* [`continuedfractions.lib`](src/continuedfractions/lib.py) - this contains the core functionality of (1) generating continued fraction representations (as ordered element sequences) of any valid Python number, given as an integer, non-nan `float`, valid numeric string, a `fractions.Fraction` or `decimal.Decimal` object, or as a pair of integers and/or `fractions.Fraction` objects; and conversely (2) reconstructing rational fractions from continued fraction representations (again, given as ordered element sequences).
+* [`continuedfractions.lib`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/lib.py) - this contains the core functionality of (1) generating continued fraction representations (as ordered element sequences) of any valid Python number, given as an integer, non-nan `float`, valid numeric string, a `fractions.Fraction` or `decimal.Decimal` object, or as a pair of integers and/or `fractions.Fraction` objects; and conversely (2) reconstructing rational fractions from continued fraction representations (again, given as ordered element sequences).
 
-* [`continuedfractions.continuedFraction`](src/continuedfractions/continuedfraction.py) - this contains a simple `ContinuedFraction` class, extending from `fractions.Fraction`, which makes it possible to construct and operate on continued fractions as Python objects, and encapsulates a number of key properties, such as sequences of elements and convergents. Utility methods are also provided to compute segments, remainders, and mediants with any other `fractions.Fraction` instances.
+* [`continuedfractions.continuedfraction`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/continuedfraction.py) - this contains the main `ContinuedFraction` class, which subclasses `fractions.Fraction`. The `ContinuedFraction` objects encapsulate a number of key properties, such as the sequences of their elements and convergents, and provide other utility methods.
 
 The functions in `continuedfractions.lib` are standalone and thus useful on their own, but it is easiest to work with objects created from the `continuedfraction.ContinuedFraction` class.
 
 ### A Simple Introduction with Examples
 
-From a user perspective it is easiest to use the [`continuedfractions.continuedfraction.ContinuedFraction`](src/continuedfraction.py) class. A simple introduction is given below with a variety of examples.
+From a user perspective it is easiest to use the [`continuedfractions.continuedfraction.ContinuedFraction`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfraction.py) class. A simple introduction is given below with a variety of examples.
 
 #### Importing the `ContinuedFraction` Class
 
 Import the core class from `continuedfractions.continuedfraction`.
+
 ```python
 >>> from continuedfractions.continuedfraction import ContinuedFraction
 ```
 
 #### Creating Continued Fractions from Numbers
 
-We can take a simple rational number[^2] $`\frac{649}{200} = \frac{600 + 49}{200} = 3.245`$, which has the following finite, unique simple continued fraction representation:
+We can take a simple rational number[^2] $\frac{649}{200} = \frac{600 + 49}{200} = 3.245$, which has the following finite continued fraction representation:
 
 $$
 \frac{649}{200} = 3 + \frac{1}{4 + \frac{12}{1 + \frac{1}{4}}}
 $$
 
-The continued fraction object for $\frac{649}{200}$ can be created as follows.
+This representation is called **simple** because all of the numerators in the fractional terms are equal to $1$, which makes the fractions irreducible. The continued fraction object for $\frac{649}{200}$ can be created as follows.
 
 ```python
 >>> cf = ContinuedFraction(649, 200)
@@ -128,7 +130,7 @@ ContinuedFraction(6369051672525773, 4503599627370496)
 1.4142135623730951
 ```
 
-and the fractional part of the float value displayed above is an [approximation](https://docs.python.org/3/tutorial/floatingpoint.html) based on the most precise binary fractional representation possible on the system. This means that in the case of irrationals such as $\sqrt{2}$ the continued fraction representations obtained with `ContinuedFraction` are only approximate, not exact. 
+and the fractional part of the float value displayed above is an [approximation](https://docs.python.org/3/tutorial/floatingpoint.html) based on the most precise binary fractional representation possible on the system. So `ContinuedFraction(x)` for irrational numbers $x$ will only be approximate, not exact.
 
 ### Inspecting Properties
 
@@ -136,18 +138,14 @@ A number of key properties of (finite) continued fractions can be explored using
 
 #### Elements and Orders
 
-The (ordered) sequence of **elements** (or coefficients) of this continued fraction object, which is written mathematically as $[3; 4, 12, 4]$ in modern notation, can be obtained via the `.elements` property.
-
+The **elements** (or coefficients) of a continued fraction $[a_0;a_1,\cdots,a_n]$ representation of a real number $x$ include the leading integer $a_0 = \lfloor x \rfloor$, and the whole number parts of the denominators of the fractional terms. For `ContinuedFraction` objects the `.elements` property can be used to look at their elements, e.g. for `ContinuedFraction(649, 200)` we have:
 ```python
+>>> cf = ContinuedFraction(649, 200)
 >>> cf.elements
 (3, 4, 12, 4)
 ```
 
-**Note**: The continued fraction representation given above is called "simple", because the numerators of the reciprocals are always $1$, thus making the reciprocals irreducible (simple).[^3] We will only discuss simple continued fractions.
-
-The elements $a_0,a_1,...$ of a continued fraction representation of a real number $x$, which we may assume is positive, start with the number $\lfloor x \rfloor = a_0$, and the rest are the whole number parts of the denominators of the reciprocals in the representation.
-
-The **order** of a continued fraction is defined to be number of its elements **after** the first. Thus, for $\frac{649}{200}$ we can verify that it is indeed $3$, using the `.order` property.
+The **order** of a continued fraction is defined to be number of its elements **after** the first. Thus, for `ContinuedFraction(649, 200)` the order is `3`:
 
 ```python
 >>> cf.order
@@ -212,19 +210,21 @@ A related concept is that of **remainders** of continued fractions, which are (p
 (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 ```
 
-An another interesting feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The mediant of two rational numbers $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d \neq 0$, is given by the fraction:
+Another feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The mediant of two rational numbers $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d \neq 0$, is given by the fraction:
 
 $$
 \frac{a + c}{b + d}
 $$
 
-It has a number of interesting properties, including the inequality:
+and has the property that:
 
 $$
 \frac{a}{b} < \frac{a + c}{b + d} < \frac{c}{d}
 $$
 
-The `ContinuedFraction` class provides a `.mediant()` method for objects to compute their mediants with a given fraction, which could be another `ContinuedFraction` or `fractions.Fraction` object. A few examples are given below.
+assuming $\frac{a}{b} < \frac{c}{d}$ and $cd > 0$.
+
+The `ContinuedFraction` class provides a `.mediant()` method for objects to compute their mediants with a given fraction, which could be another `ContinuedFraction` or `fractions.Fraction` object. The result is also a `ContinuedFraction` object. A few examples are given below.
 
 
 ```python
@@ -232,14 +232,14 @@ The `ContinuedFraction` class provides a `.mediant()` method for objects to comp
 >>> ContinuedFraction(3, 5)
 >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
 >>> ContinuedFraction(3, 5)
->>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(1) < 1
+>>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
 # True
-
 ````
 
 ### Constructing Continued Fractions from Element Sequences
 
 Continued fractions can also be constructed from element sequences, using the `ContinuedFraction.from_elements()` class method. Because `ContinuedFraction` is a subclass of `fractions.Fraction` all `ContinuedFraction` objects are fully operable as rational numbers, including as negative rationals.
+
 ```python
 >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
 >>> cf_inverse
@@ -283,10 +283,10 @@ mappingproxy({0: Fraction(-5, 1), 1: Fraction(-4, 1), 2: Fraction(-9, 2), 3: Fra
 -4.462365591397849
 >>> ContinuedFraction(415, 93).as_float()
 4.462365591397849
-
 ```
 
 **Note** As negation of numbers is a unary operation, the minus sign in a "negative" `ContinuedFraction` object must be attached to the fraction, before enclosure in parentheses.
+
 ```python
 >>> -ContinuedFraction(415, 93).elements
 ...
@@ -302,7 +302,7 @@ TypeError: bad operand type for unary -: 'tuple'
 
 ### Input Validation
 
-The `ContinuedFraction` class validates all inputs during object creation - in the `.__new__()` class method, not instance initialisation - using the `.validate()` class method. Any inputs that do not meet the following conditions trigger a `ValueError`.
+The `ContinuedFraction` class validates all inputs during object creation - in the `.__new__()` class method, not instance initialisation - using the `.validate()` class method. Inputs that do not meet the following conditions trigger a `ValueError`.
 
 * a single integer or a non-nan float
 * a single numeric string
@@ -310,6 +310,7 @@ The `ContinuedFraction` class validates all inputs during object creation - in t
 * two integers or `fractions.Fraction` objects, or a combination of an integer and a `fractions.Fraction` object, representing the numerator and non-zero denominator of a rational fraction
 
 A number of examples are given below of validation passes and fails.
+
 ```python
 >>> ContinuedFraction.validate(100)
 >>> ContinuedFraction.validate(3, -2)
@@ -358,6 +359,7 @@ Contributors and contributions are welcome via pull requests from a fork targeti
 ### SSH and Cloning
 
 If you wish to contribute please first ensure you have [SSH access to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh). If you do then this should work:
+
 ```bash
 ssh -vT git@github.com
 ```
@@ -411,7 +413,7 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.1`, and packages are published manually to PyPI. There is currently no release pipeline - this will be added later.
+The package is currently at version `0.0.1`, and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/). There is currently no release pipeline - this will be added later.
 
 ## License
 

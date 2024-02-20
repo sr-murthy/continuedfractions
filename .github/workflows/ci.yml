@@ -112,10 +112,11 @@ jobs:
     - name: Lint + Run tests + Measure code coverage
       run: |
         pdm use -f .venv
-        pdm install -v -dGlint -dGtest --no-self --no-isolation
+        pdm install -v -dGlint --no-self --no-isolation
         pdm run -v lint
         pdm run -v doctests
-        pdm run -v unittests
+        pdm install -v -dGtest --no-self --no-isolation
+        pdm run -v pytest
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1

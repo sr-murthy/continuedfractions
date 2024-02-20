@@ -265,7 +265,7 @@ ContinuedFraction(-200, 649)
 
 ### Continued Fractions with Negative Terms
 
-Continued fractions representations with negative terms are valid, provided we use the [Euclidean integer division algorithm](https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations) to calculate the successive quotients and remainders in each step. For example, $\frac{-415}{93} = \frac{-5\dot93 + 50}{93}$ has the continued fraction representation $[-5; 1, 1, 6, 7]$. Compare this with $[4; 2, 6, 7]$, which is the continued fraction representation of $\frac{415}{93}$.
+Continued fractions representations with negative terms are valid, provided we use the [Euclidean integer division algorithm](https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations) to calculate the successive quotients and remainders in each step. For example, $\frac{-415}{93} = \frac{-5 \cdot 93 + 50}{93}$ has the continued fraction representation $[-5; 1, 1, 6, 7]$. Compare this with $[4; 2, 6, 7]$, which is the continued fraction representation of $\frac{415}{93}$.
 
 `ContinuedFraction` objects for negative numbers are constructed in the same way as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is "transferred" to the numerator. A few examples are given below.
 
@@ -414,7 +414,7 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.1`, and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/). There is currently no release pipeline - this will be added later.
+The package is currently at version `0.0.3`, and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/). There is currently no release pipeline - this will be added later.
 
 ## License
 

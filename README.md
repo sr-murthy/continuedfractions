@@ -6,7 +6,7 @@
 [![License: MPL
 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 <a href="https://trackgit.com">
-<img src="https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/lstbybzreip1xu8hdsls" alt="trackgit-views" />
+<img src="https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/lsudelfvcxb7f1xm6i4l" alt="trackgit-views" />
 </a>
 
 </div>
@@ -364,15 +364,16 @@ For more information on PDM lockfiles and installing requirements see the [PDM d
 The [`Makefile`](Makefile) defines three main targets: `lint` for Ruff linting, `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and `unittests` for running unittests and measuring coverage, using `pytest` and the `pytest-cov` plugin:
 
 ```bash
+make lint
 make doctests
 make unittests
 ```
 
-The doctests serve as acceptance tests, and should be run first, before the unit tests.
+Linting warnings should be addressed first. The doctests serve as acceptance tests, and should be run first, before the unit tests.
 
 ### Continous Integration and Deployment (CI/CD)
 
-The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and the pipeline for all branches includes a tests stage, consisting of Ruff linting, Python doctests, and unit tests.
+The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and pipelines for all branches include a tests stage, consisting of Ruff linting, Python doctests, and unit tests. This will be amended in the future to ensure that tests are only run on updates to PRs targeting `main`, to avoid duplication.
 
 ### Versioning & Package Publishing
 

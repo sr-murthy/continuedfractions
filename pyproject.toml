@@ -9,7 +9,7 @@
 #     https://packaging.python.org/en/latest/tutorials/packaging-projects/
 #
 name = "continuedfractions"
-description = "Object-oriented continued fractions"
+description = "Continued fractions with Python"
 
 authors = [
     {name = "Sandeep R. Murthy", email = "s.murthy@tutanota.com"},
@@ -92,7 +92,7 @@ excludes = [
 ]
 source-includes = [
     "LICENSE",
-    "README.rst",
+    "README.md",
 ]
 editable-backend = "path"
 

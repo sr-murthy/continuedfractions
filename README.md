@@ -97,7 +97,7 @@ Import the core class (inserting `'src'` into `sys.path` beforehand, if necessar
 We start with the rational number[^2] $`\frac{649}{200} = \frac{600 + 49}{200} = 3.245`$, which has the following finite, unique simple continued fraction representation:
 
 $$
-\frac{649}{200} = 3 + \frac{4}{1 + \frac{12}{1 + \frac{1}{4}}}
+\frac{649}{200} = 3 + \frac{1}{4 + \frac{12}{1 + \frac{1}{4}}}
 $$
 
 We can construct the continued fraction object for $\frac{649}{200}$ as follows.
@@ -131,9 +131,9 @@ The (ordered) sequence of **elements** (or coefficients) of this continued fract
 (3, 4, 12, 4)
 ```
 
-**Note**: The continued fraction representation given above is called "simple", because the last element is always a positive integer $> 1$.[^3]
+**Note**: The continued fraction representation given above is called "simple", because the numerators of the reciprocals are always $1$, thus making the reciprocals irreducible (simple).[^3]
 
-The elements $a_0,a_1,...$ of a continued fraction representation of a real number $x$, which we may assume is positive, consist of the number $\lfloor x \rfloor = a_0$ and the whole number parts of the denominators of the reciprocals in the representation.
+The elements $a_0,a_1,...$ of a continued fraction representation of a real number $x$, which we may assume is positive, start with the number $\lfloor x \rfloor = a_0$, and the rest are the whole number parts of the denominators of the reciprocals in the representation.
 
 The **order** of a continued fraction is defined to be number of its elements **after** the first. Thus, for $\frac{649}{200}$ we can verify that it is indeed $3$, using the `.order` property.
 
@@ -144,7 +144,7 @@ The **order** of a continued fraction is defined to be number of its elements **
 
 #### Convergents
 
-For a non-negative integer $k > 0$ the $k$-th **convergent** of a (possibly infinite) continued fraction represented by $[a_0, a_1,\ldots]$ is defined to be the rational number and finite continued fraction represented by $[a_0, a_1,\ldots,a_k]$, which is formed from the first $k + 1$ elements of the original. The convergents have the property that they form a strictly increasing sequence of rational numbers which is bounded by and converges to a real number $x$ - each convergent represents a closer / better rational approximation to $x$ than the previous one.
+For an integer $k >= 0$ the $k$-th **convergent** of a (possibly infinite) continued fraction represented by $[a_0, a_1,\ldots]$ is defined to be the rational number and finite continued fraction represented by $[a_0, a_1,\ldots,a_k]$, which is formed from the first $k + 1$ elements of the original. The convergents have the property that they form a strictly increasing sequence of rational numbers which is bounded by and converges to a real number $x$ - each convergent represents a closer / better rational approximation to $x$ than the previous one.
 
 The `ContinuedFraction` class provides a `.convergents` property for objects, which returns an immutable map ([`types.MappingProxyType`](https://docs.python.org/3/library/types.html#types.MappingProxyType)) of all $k$-order convergents, indexed or keyed by integers $k=0,1,\ldots,n$, where $n$ is the (finite) order of the continued fraction.
 
@@ -157,7 +157,7 @@ Fraction(159, 49)
 # True
 ```
 
-**Note**: As the convergents are determined during `ContinuedFraction` object initialisation, the objects that represent them cannot be of type `ContinuedFraction`, due to recursion errors. Thus, it was decided to keep them as `fractions.Fraction` objects.
+**Note**: As the convergents are constructed during `ContinuedFraction` object initialisation, the objects that represent them cannot be of type `ContinuedFraction`, due to recursion errors. Thus, it was decided to keep them as `fractions.Fraction` objects.
 
 
 #### Segments and Remainders
@@ -178,7 +178,7 @@ A related concept is that of **remainders** of continued fractions, which are (p
 (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 ```
 
-An another interesting feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The mediant of two fractions $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d > 0$, is given by the fraction:
+An another interesting feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The mediant of two fractions $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d \neq 0$, is given by the fraction:
 
 $$
 \frac{a + c}{b + d}
@@ -228,19 +228,45 @@ ContinuedFraction(-200, 649)
 # True
 ```
 
-"Negative" continued fractions are supported but for attribute accesss to work the minus sign must be attached to the fraction, before enclosure in parentheses.
+### Continued Fractions with Negative Terms
+
+Continued fractions representations with negative terms are valid, provided we use the Euclidean algorithm to calculate the successive quotients and remainders in each step. For example, $\frac{-415}{93} = \frac{-5\dot93 + 50}{93}$ has the continued fraction representation $[-5, 1, 1, 6, 7]$. Compare this with $[4, 2, 6, 7]$, which is the continued fraction representation of $\frac{415}{93}$.
+
+`ContinuedFraction` objects for negative numbers are constructed in the same way as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is "transferred" to the numerator. A few examples are given below.
+
 ```python
->>> -cf.elements
+>>> ContinuedFraction(415, -93)
+ContinuedFraction(-415, 93)
+>>> ContinuedFraction(-415, 93)
+ContinuedFraction(-415, 93)
+>>> -ContinuedFraction(415, 93)
+ContinuedFraction(-415, 93)
+>>> ContinuedFraction(-415, 93).elements
+(-5, 1, 1, 6, 7)
+>>> ContinuedFraction(-415, 93).convergents 
+mappingproxy({0: Fraction(-5, 1), 1: Fraction(-4, 1), 2: Fraction(-9, 2), 3: Fraction(-58, 13), 4: Fraction(-415, 93)})
+>>> ContinuedFraction(-415, 93).as_float()
+-4.462365591397849
+>>> ContinuedFraction(415, 93).as_float()
+4.462365591397849
+
+```
+
+**Note** For attribute accesss to work the minus sign must be attached to the fraction, before enclosure in parentheses.
+```python
+>>> -ContinuedFraction(415, 93).elements
 ...
 TypeError: bad operand type for unary -: 'tuple'
->>> -(cf).elements
+>>> -(ContinuedFraction(415, 93)).elements
 ...
 TypeError: bad operand type for unary -: 'tuple'
->>> (-cf).elements
-(-4, 1, 3, 12, 4)
->>> assert cf + (-cf) == 0
+>>> (-ContinuedFraction(415, 93)).elements
+(-5, 1, 1, 6, 7)
+>>> assert ContinuedFraction(415, 93) + (-ContinuedFraction(415, 93)) == 0
 # True
 ```
+
+#### Input Validation
 
 Finally, it should be noted that `ContinuedFraction` validates all inputs during object creation (`.__new__()` class method) - not initialisation - using the `.validate()` class method. Any inputs that do not meet the following conditions trigger `ValueError`.
 

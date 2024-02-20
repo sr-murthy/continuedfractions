@@ -83,24 +83,24 @@ The functions in `continuedfractions.lib` are standalone and thus useful on thei
 
 ### A Simple Walkthrough with Examples
 
-From a user point of view the core package interaction should/would occur via the [`continuedfractions.continuedfraction.ContinuedFraction`](src/continuedfraction.py) class. An example walkthrough is given below illustrating how to use it.
+From a user perspective it is easiest to use the [`continuedfractions.continuedfraction.ContinuedFraction`](src/continuedfraction.py) class. An example walkthrough is given below illustrating how to use it.
 
-### Importing the `ContinuedFraction` Class
+#### Importing the `ContinuedFraction` Class
 
 Import the core class (inserting `'src'` into `sys.path` beforehand, if necessary) from `continuedfractions.continuedfraction`.
 ```python
 >>> from continuedfractions.continuedfraction import ContinuedFraction
 ```
 
-### Creating Continued Fractions from Numbers
+#### Creating Continued Fractions from Numbers
 
-We start with the rational number[^2] $`\frac{649}{200} = \frac{600 + 49}{200} = 3.245`$, which has the following finite, unique simple continued fraction representation:
+We can take a simple rational number[^2] $`\frac{649}{200} = \frac{600 + 49}{200} = 3.245`$, which has the following finite, unique simple continued fraction representation:
 
 $$
 \frac{649}{200} = 3 + \frac{1}{4 + \frac{12}{1 + \frac{1}{4}}}
 $$
 
-We can construct the continued fraction object for $\frac{649}{200}$ as follows.
+The continued fraction object for $\frac{649}{200}$ can be created as follows.
 
 ```python
 >>> cf = ContinuedFraction(649, 200)
@@ -178,7 +178,7 @@ A related concept is that of **remainders** of continued fractions, which are (p
 (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 ```
 
-An another interesting feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The mediant of two fractions $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d \neq 0$, is given by the fraction:
+An another interesting feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The mediant of two rational numbers $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d \neq 0$, is given by the fraction:
 
 $$
 \frac{a + c}{b + d}
@@ -266,9 +266,9 @@ TypeError: bad operand type for unary -: 'tuple'
 # True
 ```
 
-#### Input Validation
+### Input Validation
 
-Finally, it should be noted that `ContinuedFraction` validates all inputs during object creation (`.__new__()` class method) - not initialisation - using the `.validate()` class method. Any inputs that do not meet the following conditions trigger `ValueError`.
+The `ContinuedFraction` class validates all inputs during object creation - in the `.__new__()` class method, not instance initialisation - using the `.validate()` class method. Any inputs that do not meet the following conditions trigger a `ValueError`.
 
 * a single integer or a non-nan float
 * a single numeric string
@@ -328,17 +328,7 @@ If you wish to contribute please first ensure you have [SSH access to GitHub](ht
 ssh -vT git@github.com
 ```
 
-If not please follow the SSH instructions linked above. This should include ensuring that your SSH config file defines your SSH private key file, and specifies agent forwarding, and public key authentication as the preferred mode. For Linux and Mac OS users the file should look like something below.
-
-```bash
-Host github.com
-  AddKeysToAgent yes
-  UseKeychain yes
-  ForwardAgent yes
-  Preferredauthentications publickey
-  IdentityFile /path/to/your/ssh/private/keyfile
-  PasswordAuthentication no
-```
+If not please follow the SSH instructions linked above. This should include ensuring that your SSH config file defines your SSH private key file, and specifies agent forwarding, and public key authentication as the preferred mode.
 
 Once you've forked the repository, it is recommended to clone your fork over SSH:
 
@@ -367,6 +357,8 @@ There are no `requirements*.txt` files - however, a [PDM lockfile](`pdm.lock`) w
 pdm install -v
 ```
 
+For more information on PDM lockfiles and installing requirements see the [PDM documentation](https://pdm-project.org/latest/usage/venv/).
+
 ### Makefile and Tests
 
 The [`Makefile`](Makefile) defines two main targets: `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and `unittests` for running unittests and measuring coverage, using `pytest` and `pytest-cov`:
@@ -380,7 +372,7 @@ The doctests serve as acceptance tests, and should be run first, before the unit
 
 ### Continous Integration and Deployment (CI/CD)
 
-TODO
+There CI
 
 ### Versioning & Package Publishing
 

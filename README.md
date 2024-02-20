@@ -434,5 +434,3 @@ The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https:
 [^1]: Due to the nature of [binary floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html) it is not always possible to exactly represent a given [real number](https://en.wikipedia.org/wiki/Real_number). For the same reason, the continued fraction representations produced by the package will necessarily be [finite](https://en.wikipedia.org/wiki/Continued_fraction#Finite_continued_fractions).
 
 [^2]: The definition of "rational number" used here is standard: an irreducible ratio $\frac{a}{b}$ of integers $a$ and $b \neq 0$.
-
-[^3]: See any reference on finite continued fractions, e.g. https://en.wikipedia.org/wiki/Continued_fraction#Finite_continued_fractions.

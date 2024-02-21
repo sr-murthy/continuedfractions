@@ -12,11 +12,11 @@ name = "continuedfractions"
 description = "Continued fractions with Python"
 
 authors = [
-    {name = "Sandeep R. Murthy", email = "s.murthy@tutanota.com"},
+    {name = "S. R. Murthy", email = "s.murthy@tutanota.com"},
 ]
 
 maintainers = [
-  {name = "Sandeep R. Murthy", email = "s.murthy@tutanota.com"}
+  {name = "S. R. Murthy", email = "s.murthy@tutanota.com"}
 ]
 
 dynamic = ["version"]

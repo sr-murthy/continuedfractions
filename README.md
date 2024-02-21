@@ -229,7 +229,7 @@ $$
 \frac{a + c}{b + d}
 $$
 
-Assuming that $\frac{a}{b} < \frac{c}{d}$ and $cd > 0$ the mediant above has the property that:
+Assuming that $\frac{a}{b} < \frac{c}{d}$ and $bd > 0$ the mediant above has the property that:
 
 $$
 \frac{a}{b} < \frac{a + c}{b + d} < \frac{c}{d}
@@ -256,7 +256,7 @@ $$
 \frac{a + kc}{b + kd}
 $$ 
 
-Assuming that $\frac{a}{b} < \frac{c}{d}$ and $cd > 0$ we have, as $k$ increases, a strictly increasing sequence of fractions bounded by $\frac{a}{b}$ and $\frac{c}{d}$ on either side:
+Assuming that $\frac{a}{b} < \frac{c}{d}$ and $bd > 0$ we have, as $k$ increases, a strictly increasing sequence of fractions bounded by $\frac{a}{b}$ and $\frac{c}{d}$ on either side:
 
 $$
 \frac{a}{b} < \frac{a + c}{b + d} < \frac{a + 2c}{b + 2d} < \frac{a + 3c}{b + 3d} < \cdots < \frac{c}{d}
@@ -466,7 +466,7 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.7` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
+The package is currently at version `0.0.8` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
 
 ## License
 

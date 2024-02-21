@@ -103,7 +103,9 @@ $$
 \frac{649}{200} = 3 + \frac{1}{4 + \frac{1}{12 + \frac{1}{4}}}
 $$
 
-This representation is called **simple** because all of the numerators in the fractional terms are equal to $1$, which makes the fractions irreducible. The continued fraction object for $\frac{649}{200}$ can be created as follows.
+This representation is called **simple** because all of the numerators in the fractional terms are equal to $1$, which makes the fractions irreducible. Mathematically, the continued fraction is written as $[3; 4, 12, 4]$.
+
+The continued fraction object for $\frac{649}{200}$ can be created as follows.
 
 ```python
 >>> cf = ContinuedFraction(649, 200)
@@ -111,7 +113,7 @@ This representation is called **simple** because all of the numerators in the fr
 ContinuedFraction(649, 200)
 ```
 
-**Note**: The same object can also be constructed using `ContinuedFraction('649/200')`, `ContinuedFraction('3.245')`, `ContinuedFraction(Fraction(649, 200))`, `ContinuedFraction((649), 200))`, `ContinuedFraction(649, Fraction(200)))`, and `ContinuedFraction(Decimal('3.245'))`. But passing a numeric literal such as `649/200` will result in an evaluation of the decimal integer division using [binary floating point division](https://docs.python.org/3/tutorial/floatingpoint.html), thus producing a fractional approximation, in this case, `ContinuedFraction(3653545197704315, 1125899906842624)`.
+**Note**: The same object can also be constructed using `ContinuedFraction('649/200')`, `ContinuedFraction('3.245')`, `ContinuedFraction(Fraction(649, 200))`, `ContinuedFraction(Fraction(649), 200))`, `ContinuedFraction(649, Fraction(200)))`, and `ContinuedFraction(Decimal('3.245'))`. But passing a numeric literal such as `649/200` will result in an evaluation of the decimal integer division using [binary floating point division](https://docs.python.org/3/tutorial/floatingpoint.html), thus producing a fractional approximation, in this case, `ContinuedFraction(3653545197704315, 1125899906842624)`.
 
 The float value of `ContinuedFraction(649, 200)` is available via the `.as_float()` method, in this case, an exact value of $3.245$.
 
@@ -119,9 +121,9 @@ The float value of `ContinuedFraction(649, 200)` is available via the `.as_float
 >>> cf.as_float()
 3.245
 ```
-**Note**: the `.as_float()` is unique to `ContinuedFraction` - it is not defined in the superclass, fractions.Fraction`.
+**Note**: the `.as_float()` is unique to `ContinuedFraction` - it is not defined in the superclass, `fractions.Fraction`.
 
-It is known that every finite continued fraction represents a rational number, and conversely that every rational number can be represented as a finite continued fraction. On the other infinite continued fractions represent irrationals, which cannot therefore be represented exactly as binary fractions. Thus, `ContinuedFraction` objects for irrational numbers will always have a finite sequence of elements, whose length is determined by the smallest binary fraction that can be represented on the given platform. For example $\sqrt{2}$, which is given by a periodic continued fraction representation $[1; 2, 2, 2, \ldots]$, we have:
+It is known that every finite continued fraction represents a rational number, and conversely that every rational number can be represented as a finite continued fraction. On the other infinite continued fractions represent irrationals, which cannot therefore be represented exactly as binary fractions. Thus, `ContinuedFraction` objects for irrational numbers will always have a finite sequence of elements, whose length is determined by the smallest binary fraction that can be represented on the given platform. For example $\sqrt{2}$, which is given by a periodic continued fraction $[1; 2, 2, 2, \ldots]$, we have:
 
 ```python
 >>> sqrt2 = ContinuedFraction(math.sqrt(2))
@@ -139,7 +141,7 @@ A number of key properties of (finite) continued fractions can be explored using
 
 #### Elements and Orders
 
-The **elements** (or coefficients) of a continued fraction $[a_0;a_1,\cdots,a_n]$ representation of a real number $x$ include the leading integer $a_0 = \lfloor x \rfloor$, and the whole number parts of the denominators of the fractional terms. For `ContinuedFraction` objects the `.elements` property can be used to look at their elements, e.g. for `ContinuedFraction(649, 200)` we have:
+The **elements** (or coefficients) of a (possibly infinite) continued fraction $[a_0;a_1,a_2\cdots]$  of a real number $x$ include the leading integer $a_0 = \lfloor x \rfloor$ (largest integer part of $x$), and the whole numbers $a_1,a_2,\cdots$ in the denominators of the fractional terms. For `ContinuedFraction` objects the `.elements` property can be used to look at their elements, e.g. for `ContinuedFraction(649, 200)` we have:
 ```python
 >>> cf = ContinuedFraction(649, 200)
 >>> cf.elements
@@ -153,19 +155,27 @@ The **order** of a continued fraction is defined to be number of its elements **
 3
 ```
 
-#### Convergents
+#### Convergents and Rational Approximations
 
-For an integer $k >= 0$ the $k$-th **convergent** $C_k$ of a (possibly infinite) continued fraction representation $[a_0; a_1,\ldots]$ of a real number $x$ is defined to be the rational number and finite continued fraction represented by $[a_0; a_1,\ldots,a_k]$, formed from the first $k + 1$ elements of the original.
+For an integer $k >= 0$ the $k$-th **convergent** $C_k$ of a continued fraction $[a_0; a_1,\ldots]$ of a real number $x$ is defined to be the rational number and finite continued fraction represented by $[a_0; a_1,\ldots,a_k]$, formed from the first $k + 1$ elements of the original.
 
 $$
 C_k = a_0 + \frac{1}{a_1 + \frac{1}{\ddots \frac{1}{a_{k-1} + \frac{1}{a_k}}}}
 $$
 
-If we assume $x > 0$ then the convergents form a strictly increasing sequence of rational numbers, bounded by and converging to $x$ as $n \longrightarrow \infty$:
+Each convergent $C_k$ represents a rational approximation $\frac{p_k}{q_k}$ of $x$, and we can define an error term $\epsilon_k = x - C_k = x - \frac{p_k}{q_k}$. If we assume $x > 0$ then the convergents form a strictly increasing sequence of rational numbers, bounded by, and thus converging to, $x$, as $n \longrightarrow \infty$.[^3] So, formally:
 
 $$
-C_0 < C_1 < \cdots C_n < \cdots \longrightarrow x
+\frac{p_0}{q_0} < \frac{p_1}{q_1} < \cdots \frac{p_n}{q_n} < \cdots \leq x
 $$
+
+where the equality on the right holds if and only if $x$ is rational. If $x$ is irrational then we have the limit:
+
+$$
+\lim_{n \to \infty} \frac{p_n}{q_n} = x
+$$
+
+This is equivalent to the limit $\lim_{n \to \infty} \epsilon_n = 0$.
 
 The `ContinuedFraction` class provides a `.convergents` property for objects, which returns an immutable map ([`types.MappingProxyType`](https://docs.python.org/3/library/types.html#types.MappingProxyType)) of all $k$-order convergents, indexed (keyed) by integers $k=0,1,\ldots,n$, where $n$ is the order of the continued fraction.
 
@@ -308,7 +318,7 @@ The `ContinuedFraction` class validates all inputs during object creation - in t
 * a single integer or a non-nan float
 * a single numeric string
 * a single `fractions.Fraction` or `decimal.Decimal` object
-* two integers or `fractions.Fraction` objects, or a combination of an integer and a `fractions.Fraction` object, representing the numerator and non-zero denominator of a rational fraction
+* two integers or `fractions.Fraction` objects, or a combination of an integer and a `fractions.Fraction` object, representing the numerator and non-zero denominator of a rational number
 
 A number of examples are given below of validation passes and fails.
 
@@ -433,4 +443,6 @@ The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https:
 
 [^1]: Due to the nature of [binary floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html) it is not always possible to exactly represent a given [real number](https://en.wikipedia.org/wiki/Real_number). For the same reason, the continued fraction representations produced by the package will necessarily be [finite](https://en.wikipedia.org/wiki/Continued_fraction#Finite_continued_fractions).
 
-[^2]: The definition of "rational number" used here is standard: an irreducible ratio $\frac{a}{b}$ of integers $a$ and $b \neq 0$.
+[^2]: The definition of "rational number" used here is standard: a ratio $\frac{a}{b}$ of integers $a$ and $b \neq 0$. If $a$ and $b$ have no common denominator then \frac{a}{b} is irreducible and unique.
+
+[^3]: This is due to the [theorem](https://en.wikipedia.org/wiki/Monotone_convergence_theorem) that every bounded monotonic sequence of real numbers converges.

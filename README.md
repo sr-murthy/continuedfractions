@@ -97,10 +97,10 @@ Import the core class from `continuedfractions.continuedfraction`.
 
 #### Creating Continued Fractions from Numbers
 
-We can take a simple rational number[^2] $\frac{649}{200} = \frac{600 + 49}{200} = 3.245$, which has the following finite continued fraction representation:
+We can take a simple rational number[^2] $\frac{649}{200} = \frac{3 \times 200 + 49}{200} = 3.245$, which has the following finite continued fraction representation:
 
 $$
-\frac{649}{200} = 3 + \frac{1}{4 + \frac{12}{1 + \frac{1}{4}}}
+\frac{649}{200} = 3 + \frac{1}{4 + \frac{1}{12 + \frac{1}{4}}}
 $$
 
 This representation is called **simple** because all of the numerators in the fractional terms are equal to $1$, which makes the fractions irreducible. The continued fraction object for $\frac{649}{200}$ can be created as follows.
@@ -158,13 +158,13 @@ The **order** of a continued fraction is defined to be number of its elements **
 For an integer $k >= 0$ the $k$-th **convergent** $C_k$ of a (possibly infinite) continued fraction representation $[a_0; a_1,\ldots]$ of a real number $x$ is defined to be the rational number and finite continued fraction represented by $[a_0; a_1,\ldots,a_k]$, formed from the first $k + 1$ elements of the original.
 
 $$
-C_k = a_0 + \frac{1}{a_1 + \frac{1}{a_2 + \cdots \frac{1}{a_k}}}
+C_k = a_0 + \frac{1}{a_1 + \frac{1}{\ddots \frac{1}{a_{k-1} + \frac{1}{a_k}}}}
 $$
 
-If we assume $x > 0$ then the convergents form a strictly increasing sequence of rational numbers, bounded by and converging to $x$:
+If we assume $x > 0$ then the convergents form a strictly increasing sequence of rational numbers, bounded by and converging to $x$ as $n \longrightarrow \infty$:
 
 $$
-C_0 < C_1 < \cdots C_n < \cdots \rightarrow x
+C_0 < C_1 < \cdots C_n < \cdots \longrightarrow x
 $$
 
 The `ContinuedFraction` class provides a `.convergents` property for objects, which returns an immutable map ([`types.MappingProxyType`](https://docs.python.org/3/library/types.html#types.MappingProxyType)) of all $k$-order convergents, indexed (keyed) by integers $k=0,1,\ldots,n$, where $n$ is the order of the continued fraction.
@@ -265,7 +265,7 @@ ContinuedFraction(-200, 649)
 
 ### Continued Fractions with Negative Terms
 
-Continued fractions representations with negative terms are valid, provided we use the [Euclidean integer division algorithm](https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations) to calculate the successive quotients and remainders in each step. For example, $\frac{-415}{93} = \frac{-5\dot93 + 50}{93}$ has the continued fraction representation $[-5; 1, 1, 6, 7]$. Compare this with $[4; 2, 6, 7]$, which is the continued fraction representation of $\frac{415}{93}$.
+Continued fractions representations with negative terms are valid, provided we use the [Euclidean integer division algorithm](https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations) to calculate the successive quotients and remainders in each step. For example, $\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}$ has the continued fraction representation $[-5; 1, 1, 6, 7]$. Compare this with $[4; 2, 6, 7]$, which is the continued fraction representation of $\frac{415}{93}$.
 
 `ContinuedFraction` objects for negative numbers are constructed in the same way as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is "transferred" to the numerator. A few examples are given below.
 
@@ -414,7 +414,7 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.1`, and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/). There is currently no release pipeline - this will be added later.
+The package is currently at version `0.0.4`, and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/). There is currently no release pipeline - this will be added later.
 
 ## License
 

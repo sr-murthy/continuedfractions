@@ -2,7 +2,8 @@ __all__ = [
     'continued_fraction_real',
     'continued_fraction_rational',
     'fraction_from_elements',
-    'kth_convergent',
+    'convergent',
+    'mediant',
 ]
 
 
@@ -253,7 +254,7 @@ def fraction_from_elements(*elements: int) -> Fraction:
     return elements[0] + Fraction(1, fraction_from_elements(*elements[1:]))
 
 
-def kth_convergent(*elements: int, k: int = 1) -> Fraction:
+def convergent(*elements: int, k: int = 1) -> Fraction:
     """
     Returns a `fractions.Fraction` object representing the `k`-th convergent of
     a (finite) continued fraction given by an ordered sequence of its (integer)
@@ -292,24 +293,24 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
 
     Examples
     --------
-    >>> kth_convergent(3, 4, 12, 4, k=0)
+    >>> convergent(3, 4, 12, 4, k=0)
     Fraction(3, 1)
 
-    >>> kth_convergent(3, 4, 12, 4, k=1)
+    >>> convergent(3, 4, 12, 4, k=1)
     Fraction(13, 4)
 
-    >>> kth_convergent(3, 4, 12, 4, k=2)
+    >>> convergent(3, 4, 12, 4, k=2)
     Fraction(159, 49)
 
-    >>> kth_convergent(3, 4, 12, 4, k=3)
+    >>> convergent(3, 4, 12, 4, k=3)
     Fraction(649, 200)
 
-    >>> kth_convergent(3, 4, 12, 4, k=-1)
+    >>> convergent(3, 4, 12, 4, k=-1)
     Traceback (most recent call last):
     ...
     ValueError: `k` must be a non-negative integer less than the number of elements of the continued fraction
 
-    >>> kth_convergent(3, 4, 12, 4, k=4)
+    >>> convergent(3, 4, 12, 4, k=4)
     Traceback (most recent call last):
     ...
     ValueError: `k` must be a non-negative integer less than the number of elements of the continued fraction
@@ -321,6 +322,58 @@ def kth_convergent(*elements: int, k: int = 1) -> Fraction:
         )
 
     return fraction_from_elements(*elements[:k + 1])
+
+
+def mediant(r: Fraction, s: Fraction, k: int = 1) -> Fraction:
+    """
+    Returns the `k-th mediant of two rational numbers `r = a / b` and
+    `s = c / d`, given as `fractions.Fraction` objects, where it is
+    assumed that the denominators `b` and `d` are non-zero. The `k`-th mediant
+    of `r` and `s` is defined as:
+    ::
+
+         (a + kc) / (b + kd)
+
+    The 1st mediant is given by `(a + c) / (b + d)`.
+
+    Assuming that `a / b` < `c / d` and `cd > 0` their `k`-order mediants have
+    the property that:
+    ::
+
+        a / b < (a + c) / (b + d) < (a + 2c) / (a + 2d) < ... c / d
+
+    As `k` goes to infinity the sequence of these mediants converges to
+    `s = c / d`, by the bounded monotone convergence theorem for real numbers.
+
+    Parameters
+    ----------
+    r : fractions.Fraction
+        The first rational number.
+
+    s : fractions.Fraction
+        The second rational number.
+
+    k : int, default=1
+        The order of the mediant, as defined above.
+
+    Returns
+    -------
+    fractions.Fraction
+        The `k`-th mediant of the two given rational numbers.
+
+    Examples
+    --------
+    >>> mediant(Fraction(1, 2), Fraction(3, 5))
+    Fraction(4, 7)
+    >>> mediant(Fraction(1, 2), Fraction(3, 5), k=2)
+    Fraction(7, 12)
+    >>> mediant(Fraction(1, 2), Fraction(3, 5), k=3)
+    Fraction(10, 17)
+    """
+    a, b = r.as_integer_ratio()
+    c, d = s.as_integer_ratio()
+
+    return Fraction(a + k * c, b + k * d)
 
 
 if __name__ == "__main__":      # pragma: no cover

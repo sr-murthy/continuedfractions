@@ -25,7 +25,8 @@ from continuedfractions.lib import (
     continued_fraction_rational,
     continued_fraction_real,
     fraction_from_elements,
-    kth_convergent,
+    convergent,
+    mediant,
 )
 
 
@@ -380,10 +381,10 @@ class ContinuedFraction(Fraction):
         else:      # pragma: no cover
             raise ValueError(self.__class__.__valid_inputs_msg__)
 
-        _kth_convergent = partial(kth_convergent, *self._elements)
+        _convergent = partial(convergent, *self._elements)
         self._convergents = MappingProxyType(
             {
-                k: _kth_convergent(k=k)
+                k: _convergent(k=k)
                 for k in range(len(self._elements))
             }
         )
@@ -591,39 +592,59 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__.from_elements(*self._elements[k:])
 
-    def mediant(self, other: Fraction) -> Fraction:
+    def mediant(self, other: Fraction, k: int = 1) -> Fraction:
         """
-        The continued fraction of the rational number formed by taking the
-        pairwise sum of the numerators and denominators of the original
-        continued fraction and a second fraction (`other`). The resulting
-        fraction has the property that its value lies between its two
-        constituents.        
+        Returns a `ContinuedFraction` object of the `fractions.Fraction`
+        objects representing two rational numbers `r = a / b` and `s = c / d`,
+        by taking their `k`-the mediant, for a positive integer `k`.
+
+        The `k`-th mediant of rationals `r = a / b` and `s = c / d`, where of
+        course the denominators are assumed to be non-zero and `k` is a 
+        positive integer, is given by
+        ::
+        
+            (a + kc) / (b + kd)
+
+        The 1st mediant is the fraction `(a + c) / (b + d)`.
+
+        Assuming that `a / b` < `c / d` and `cd > 0` their `k`-order mediants
+        have the property that:
+        ::
+
+            a / b < (a + c) / (b + d) < (a + 2c) / (a + 2d) < ... c / d
+        
+        As `k` goes to infinity the sequence of these mediants converges to
+        `s = c / d`, by the bounded monotone convergence theorem for real numbers.
 
         Parameters
         ----------
         other : fractions.Fraction or ContinuedFraction
-            The second fraction to use to calculate the mediant with the
-            first.
+            The second fraction to use to calculate the `k`-th mediant with
+            the first.
+        
+        k : int, default=1
+            The order of the mediant, as defined above.        
 
         Returns
         -------
         ContinuedFraction
-            The mediant of the original and the second fractions, as a
-            `ContinuedFraction` instance.
+            The `k`-th mediant of the original fraction and the second
+            fraction, as a `ContinuedFraction` instance.
 
         Examples
         --------
-        >>> cf = ContinuedFraction('.12345')
-        >>> cf
-        ContinuedFraction(2469, 20000)
-        >>> cf.mediant(Fraction('.1235'))
-        ContinuedFraction(679, 5500)
+        >>> c1 = ContinuedFraction('.5')
+        >>> c2 = ContinuedFraction(3, 5)
+        >>> c1, c2
+        (ContinuedFraction(1, 2), ContinuedFraction(3, 5))
+        >>> c1.mediant(c2)
+        ContinuedFraction(4, 7)
+        >>> c1.mediant(c2, k=2)
+        ContinuedFraction(7, 12)
+        >>> c1.mediant(c2, k=3)
+        ContinuedFraction(10, 17)
         """
-        return self.__class__(
-            self.numerator + other.numerator,
-            self.denominator + other.denominator
-        )
-
+        return self.__class__(mediant(self, other, k=k))
 
 
 if __name__ == "__main__":      # pragma: no cover

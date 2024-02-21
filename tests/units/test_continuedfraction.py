@@ -333,6 +333,25 @@ class TestContinuedFraction:
 
 		assert received.mediant(1) == expected_ref_mediant
 
+	@pytest.mark.parametrize(
+	    "cf1, cf2, k, expected_mediant",
+	    [
+	        (ContinuedFraction(1, 2), Fraction(3, 5), 1, ContinuedFraction(4, 7)),
+	        (ContinuedFraction(1, 2), ContinuedFraction(3, 5), 2, ContinuedFraction(7, 12)),
+	        (ContinuedFraction(1, 2), Fraction(3, 5), 3, ContinuedFraction(10, 17)),
+	        (ContinuedFraction(1, 2), ContinuedFraction(0), 1, ContinuedFraction(1, 3)),
+	        (ContinuedFraction(1, 2), Fraction(1, 2), 1, ContinuedFraction(1, 2)),
+	        (ContinuedFraction(1, -2), ContinuedFraction(1, 2), 1, ContinuedFraction(0, 1)),
+	        (ContinuedFraction(-1, 2), Fraction(1), 1, ContinuedFraction(0, 1)),
+	        (ContinuedFraction(-1, 2), ContinuedFraction(-1), 1, ContinuedFraction(-2, 3)),
+	        (ContinuedFraction(-1, 2), Fraction(1, -2), 1, ContinuedFraction(-1, 2)),
+	        (ContinuedFraction(1, 2), Fraction(3, 5), 10 ** 6, ContinuedFraction(3000001, 5000002)),
+	    ],
+	)
+	def test_mediant__two_ordered_fractions__correct_mediant_continued_fraction_returned(self, cf1, cf2, k, expected_mediant):
+	
+		assert cf1.mediant(cf2, k=k) == expected_mediant
+
 	def test_ContinuedFraction__operations(self):
 		f1 = ContinuedFraction(649, 200)
 		f2 = ContinuedFraction(-649, 200)

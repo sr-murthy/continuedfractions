@@ -19,7 +19,7 @@ A simple extension of the Python [`fractions`](https://docs.python.org/3/library
 ## Prelude
 
 $$
-\pi = 3 + \frac{1}{7 + \frac{1}{15 + \frac{1}{1 + \frac{1}{292 + \cdots}}}}
+\pi = 3 + \frac{1}{7 + \frac{1}{15 + \frac{1}{1 + \frac{1}{292 + \ddots}}}}
 $$
 
 ```python
@@ -43,7 +43,7 @@ ContinuedFraction(355, 113)
 >>> math.pi - pi_approx.as_float()
 -2.667641894049666e-07
 >>> import pytest
->>> pytest.approx(pi_approx.as_float(), rel=decimal.getcontext().prec) == math.pi
+>>> pytest.approx(pi_approx.as_float(), rel=1e-12) == math.pi
 True
 >>> ContinuedFraction('3.245')
 ContinuedFraction(649, 200)
@@ -85,7 +85,7 @@ The functions in `continuedfractions.lib` are standalone and thus useful on thei
 
 ### A Simple Introduction with Examples
 
-From a user perspective it is easiest to use the [`continuedfractions.continuedfraction.ContinuedFraction`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfraction.py) class. A simple introduction is given below with a variety of examples.
+The starting point is the [`continuedfractions.continuedfraction.ContinuedFraction`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfraction.py) class. A simple introduction is given below of it can be used, with a variety of examples.
 
 #### Importing the `ContinuedFraction` Class
 
@@ -221,31 +221,73 @@ A related concept is that of **remainders** of continued fractions, which are (p
 (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 ```
 
-Another feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The mediant of two rational numbers $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d \neq 0$, is given by the fraction:
+#### Mediants
+
+Another feature which the package includes is [mediants](https://en.wikipedia.org/wiki/Mediant_(mathematics)). The (simple) mediant of two rational numbers $\frac{a}{b}$ and $\frac{c}{d}$, where $b, d \neq 0$, is defined as the rational number:
 
 $$
 \frac{a + c}{b + d}
 $$
 
-and has the property that:
+Assuming that $\frac{a}{b} < \frac{c}{d}$ and $cd > 0$ the mediant above has the property that:
 
 $$
 \frac{a}{b} < \frac{a + c}{b + d} < \frac{c}{d}
 $$
 
-assuming $\frac{a}{b} < \frac{c}{d}$ and $cd > 0$.
+Mediants can give good rational approximations to real numbers of interest.
 
-The `ContinuedFraction` class provides a `.mediant()` method for objects to compute their mediants with a given fraction, which could be another `ContinuedFraction` or `fractions.Fraction` object. The result is also a `ContinuedFraction` object. A few examples are given below.
-
+The `ContinuedFraction` class provides a `.mediant()` method which can be used to calculate mediants with other `ContinuedFraction` or `fractions.Fraction` objects. The result is also a `ContinuedFraction` object. A few examples are given below of how to calculate mediants.
 
 ```python
 >>> ContinuedFraction('0.5').mediant(Fraction(2, 3))
 >>> ContinuedFraction(3, 5)
+>>> ContinuedFraction('0.6').elements
+(0, 1, 1, 2)
 >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
 >>> ContinuedFraction(3, 5)
 >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
 # True
 ````
+
+The concept of the simple mediant of two fractions $\frac{a}{b}$ and $\frac{c}{d}$ as given above can be generalised to $k$-th mediants, which can be defined as follows:
+
+$$
+\frac{a + kc}{b + kd}
+$$ 
+
+Assuming that $\frac{a}{b} < \frac{c}{d}$ and $cd > 0$ we have, as $k$ increases, a strictly increasing sequence of fractions bounded by $\frac{a}{b}$ and $\frac{c}{d}$ on either side:
+
+$$
+\frac{a}{b} < \frac{a + c}{b + d} < \frac{a + 2c}{b + 2d} < \frac{a + 3c}{b + 3d} < \cdots < \frac{c}{d}
+$$
+
+Thus, the sequence of mediants as defined above converges to $\frac{c}{d}$ as $k$ increases.
+
+$$
+\lim_{k \to \infty} \frac{a + kc}{b + kd} = \frac{c}{d}
+$$
+
+We can illustrate this using `ContinuedFraction.mediant` using increasing values of the mediant order `k`, which defaults to `k=1`.
+
+```python
+>>> c1 = ContinuedFraction(1, 2)
+>>> c2 = ContinuedFraction(3, 5)
+>>> c1.mediant(c2)
+ContinuedFraction(4, 7)
+>>> c1.mediant(c2).as_float()
+0.5714285714285714
+>>> c1.mediant(c2, k=10)
+0.5961538461538461
+>>> c1.mediant(c2, k=100)
+0.599601593625498
+>>> c1.mediant(c2, k=10 ** 6)
+ContinuedFraction(3000001, 5000002)
+>>> c1.mediant(c2, k=10 ** 6).as_float()
+0.599999960000016
+```
+
+Mediants have other [interesting connections](https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree), including to sequences and orderings of rational numbers.
 
 ### Constructing Continued Fractions from Element Sequences
 
@@ -424,22 +466,27 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.4`, and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/). There is currently no release pipeline - this will be added later.
+The package is currently at version `0.0.6` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
 
 ## License
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 
-
 ## References
 
-[1] Barrow, John D. “Chaos in Numberland: The secret life of continued fractions.” plus.maths.org, 1 June 2000, https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsURL.
+[1] Baker, Alan. A concise introduction to the theory of numbers. Cambridge: Cambridge Univ. Pr., 2002.
 
-[2] Emory University Math Center. “Continued Fractions.” The Department of Mathematics and Computer Science, https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/. Accessed 19 Feb 2024.
+[2] Barrow, John D. “Chaos in Numberland: The secret life of continued fractions.” plus.maths.org, 1 June 2000, https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsURL.
 
-[3] Python 3.12.2 Docs. "Floating Point Arithmetic: Issues and Limitations." https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
+[3] Emory University Math Center. “Continued Fractions.” The Department of Mathematics and Computer Science, https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/. Accessed 19 Feb 2024.
 
-[4] Wikipedia. "Continued Fraction". https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
+[4] Python 3.12.2 Docs. "Floating Point Arithmetic: Issues and Limitations." https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
+
+[5] Python 3.12.2 Docs. "fractions - Rational numbers." https://docs.python.org/3/library/fractions.html. Accessed 21 February 2024.
+
+[6] Python 3.12.2 Docs. "decimal - Decimal fixed point and floating point arithmetic." https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
+
+[7] Wikipedia. "Continued Fraction". https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
 
 [^1]: Due to the nature of [binary floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html) it is not always possible to exactly represent a given [real number](https://en.wikipedia.org/wiki/Real_number). For the same reason, the continued fraction representations produced by the package will necessarily be [finite](https://en.wikipedia.org/wiki/Continued_fraction#Finite_continued_fractions).
 

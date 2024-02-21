@@ -466,26 +466,27 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.4`, and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/). There is currently no release pipeline - this will be added later.
+The package is currently at version `0.0.6` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
 
 ## License
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 
-
 ## References
 
-[1] Barrow, John D. “Chaos in Numberland: The secret life of continued fractions.” plus.maths.org, 1 June 2000, https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsURL.
+[1] Baker, Alan. A concise introduction to the theory of numbers. Cambridge: Cambridge Univ. Pr., 2002.
 
-[2] Emory University Math Center. “Continued Fractions.” The Department of Mathematics and Computer Science, https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/. Accessed 19 Feb 2024.
+[2] Barrow, John D. “Chaos in Numberland: The secret life of continued fractions.” plus.maths.org, 1 June 2000, https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsURL.
 
-[3] Python 3.12.2 Docs. "Floating Point Arithmetic: Issues and Limitations." https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
+[3] Emory University Math Center. “Continued Fractions.” The Department of Mathematics and Computer Science, https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/. Accessed 19 Feb 2024.
 
-[4] Python 3.12.2 Docs. "fractions - Rational numbers." https://docs.python.org/3/library/fractions.html. Accessed 21 February 2024.
+[4] Python 3.12.2 Docs. "Floating Point Arithmetic: Issues and Limitations." https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
 
-[5] Python 3.12.2 Docs. "decimal - Decimal fixed point and floating point arithmetic." https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
+[5] Python 3.12.2 Docs. "fractions - Rational numbers." https://docs.python.org/3/library/fractions.html. Accessed 21 February 2024.
 
-[6] Wikipedia. "Continued Fraction". https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
+[6] Python 3.12.2 Docs. "decimal - Decimal fixed point and floating point arithmetic." https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
+
+[7] Wikipedia. "Continued Fraction". https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
 
 [^1]: Due to the nature of [binary floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html) it is not always possible to exactly represent a given [real number](https://en.wikipedia.org/wiki/Real_number). For the same reason, the continued fraction representations produced by the package will necessarily be [finite](https://en.wikipedia.org/wiki/Continued_fraction#Finite_continued_fractions).
 

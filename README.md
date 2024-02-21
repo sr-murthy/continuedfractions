@@ -163,19 +163,19 @@ $$
 C_k = a_0 + \frac{1}{a_1 + \frac{1}{\ddots \frac{1}{a_{k-1} + \frac{1}{a_k}}}}
 $$
 
-Each convergent $C_k$ represents a rational approximation $\frac{p_k}{q_k}$ of $x$, and we can define an error term $\epsilon_k = x - C_k = x - \frac{p_k}{q_k}$. If we assume $x > 0$ then the convergents form a strictly increasing sequence of rational numbers, bounded by, and thus converging to, $x$, as $n \longrightarrow \infty$.[^3] So, formally:
+Each convergent $C_k$ represents a rational approximation $\frac{p_k}{q_k}$ of $x$, and we can define an error term $\epsilon_k = x - C_k = x - \frac{p_k}{q_k}$. If we assume $x > 0$ then the convergents form a strictly increasing sequence of rational numbers converging to $x$ as $n \longrightarrow \infty$. So, formally:
 
 $$
-\frac{p_0}{q_0} < \frac{p_1}{q_1} < \cdots \frac{p_n}{q_n} < \cdots \leq x
+\frac{p_0}{q_0} < \frac{p_1}{q_1} < \cdots \frac{p_n}{q_n} < \cdots
 $$
 
-where the equality on the right holds if and only if $x$ is rational. If $x$ is irrational then we have the limit:
+where
 
 $$
 \lim_{n \to \infty} \frac{p_n}{q_n} = x
 $$
 
-This is equivalent to the limit $\lim_{n \to \infty} \epsilon_n = 0$.
+This is equivalent to the limit $\lim_{n \to \infty} \epsilon_n = 0$. If $x$ is irrational then the convergents may alternate about $x$, but still converge to it. If and only if $x$ is rational do we have the case that the convergent sequence is finite and terminates in $x$.
 
 The `ContinuedFraction` class provides a `.convergents` property for objects, which returns an immutable map ([`types.MappingProxyType`](https://docs.python.org/3/library/types.html#types.MappingProxyType)) of all $k$-order convergents, indexed (keyed) by integers $k=0,1,\ldots,n$, where $n$ is the order of the continued fraction.
 
@@ -262,7 +262,7 @@ $$
 \frac{a}{b} < \frac{a + c}{b + d} < \frac{a + 2c}{b + 2d} < \frac{a + 3c}{b + 3d} < \cdots < \frac{c}{d}
 $$
 
-Thus, the sequence of mediants as defined above converges to $\frac{c}{d}$ as $k$ increases.
+Thus, the sequence of mediants as defined above converges to $\frac{c}{d}$ as $k$ increases.[^3]
 
 $$
 \lim_{k \to \infty} \frac{a + kc}{b + kd} = \frac{c}{d}
@@ -466,7 +466,7 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.6` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
+The package is currently at version `0.0.7` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
 
 ## License
 

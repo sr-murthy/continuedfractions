@@ -11,7 +11,8 @@ from continuedfractions.lib import (
 	continued_fraction_rational,
 	continued_fraction_real,
 	fraction_from_elements,
-	kth_convergent,
+	convergent,
+	mediant,
 )
 
 
@@ -143,12 +144,12 @@ class TestKthConvergent:
 	        ([1, 2], 2),
 	    ],
 	)
-	def test_kth_convergent__invalid_elements__value_error_raised(self, elements, k):
+	def test_convergent__invalid_elements__value_error_raised(self, elements, k):
 		with pytest.raises(ValueError):
-			kth_convergent(*elements, k=k)
+			convergent(*elements, k=k)
 
 	@pytest.mark.parametrize(
-	    "elements, k, convergent",
+	    "elements, k, expected_convergent",
 	    [
 	        ([1, 2], 1, Fraction(3, 2)),
 	        ([-5000], 0, Fraction(-5000, 1)),
@@ -163,8 +164,29 @@ class TestKthConvergent:
 	        ([3, 2, 5, 4, 2], 3, Fraction(159, 46)),
 	    ],
 	)
-	def test_kth_convergent__valid_elements__correct_convergent_returned(self, elements, k, convergent):
-		
-		expected = convergent
+	def test_convergent__valid_elements__correct_convergent_returned(self, elements, k, expected_convergent):
+	
+		assert convergent(*elements, k=k) == expected_convergent
 
-		assert kth_convergent(*elements, k=k) == expected
+class TestKthMediant:
+
+	@pytest.mark.parametrize(
+	    "rational1, rational2, k, expected_mediant",
+	    [
+	        (Fraction(1, 2), Fraction(3, 5), 1, Fraction(4, 7)),
+	        (Fraction(1, 2), Fraction(3, 5), 2, Fraction(7, 12)),
+	        (Fraction(1, 2), Fraction(3, 5), 3, Fraction(10, 17)),
+	        (Fraction(1, 2), Fraction(0), 1, Fraction(1, 3)),
+	        (Fraction(1, 2), Fraction(1, 2), 1, Fraction(1, 2)),
+	        (Fraction(1, -2), Fraction(1, 2), 1, Fraction(0, 1)),
+	        (Fraction(-1, 2), Fraction(1), 1, Fraction(0, 1)),
+	        (Fraction(-1, 2), Fraction(-1), 1, Fraction(-2, 3)),
+	        (Fraction(-1, 2), Fraction(1, -2), 1, Fraction(-1, 2)),
+	        (Fraction(1, 2), Fraction(3, 5), 10 ** 6, Fraction(3000001, 5000002)),
+	    ],
+	)
+	def test_mediant__two_ordered_rationals__correct_mediant_returned(self, rational1, rational2, k, expected_mediant):
+	
+
+		assert mediant(rational1, rational2, k=k) == expected_mediant
+

@@ -35,7 +35,7 @@ ContinuedFraction(884279719003555, 281474976710656)
 mappingproxy({0: Fraction(3, 1), 1: Fraction(22, 7), 2: Fraction(333, 106), 3: Fraction(355, 113), 4: Fraction(103993, 33102), 5: Fraction(104348, 33215), 6: Fraction(208341, 66317), 7: Fraction(312689, 99532), 8: Fraction(833719, 265381), 9: Fraction(1146408, 364913), 10: Fraction(4272943, 1360120), 11: Fraction(5419351, 1725033), 12: Fraction(80143857, 25510582), 13: Fraction(325994779, 103767361), 14: Fraction(732133415, 233045304), 15: Fraction(2522395024, 802903273), 16: Fraction(3254528439, 1035948577), 17: Fraction(41576736292, 13234286197), 18: Fraction(211138209899, 67207379562), 19: Fraction(252714946191, 80441665759), 20: Fraction(1474712940854, 469415708357), 21: Fraction(29746973763271, 9468755832899), 22: Fraction(31221686704125, 9938171541256), 23: Fraction(373185527508646, 118788642786715), 24: Fraction(404407214212771, 128726814327971), 25: Fraction(777592741721417, 247515457114686), 26: Fraction(1181999955934188, 376242271442657), 27: Fraction(3141592653589793, 1000000000000000)})
 >>> cf.order
 27
->>> pi_approx = cf.from_elements(3, 7, 15, 1)
+>>> pi_approx = ContinuedFraction.from_elements(3, 7, 15, 1)
 >>> pi_approx
 ContinuedFraction(355, 113)
 >>> pi_approx.as_float()
@@ -45,14 +45,6 @@ ContinuedFraction(355, 113)
 >>> import pytest
 >>> pytest.approx(pi_approx.as_float(), rel=1e-12) == math.pi
 True
->>> ContinuedFraction('3.245')
-ContinuedFraction(649, 200)
->>> (ContinuedFraction(649/200) + ContinuedFraction('-1/200'))
-ContinuedFraction(81, 25)
->>> (ContinuedFraction(649, 200) - ContinuedFraction(Fraction('1/200'))).elements
-(3, 4, 6)
->>> ContinuedFraction(649, 200).mediant(Fraction(-1, 200))
-ContinuedFraction(81, 50)
 ```
 
 ## Installation & Dependencies
@@ -85,7 +77,7 @@ The functions in `continuedfractions.lib` are standalone and thus useful on thei
 
 ### A Simple Introduction with Examples
 
-The starting point is the [`continuedfractions.continuedfraction.ContinuedFraction`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfraction.py) class. A simple introduction is given below of it can be used, with a variety of examples.
+The starting point is the [`continuedfractions.continuedfraction.ContinuedFraction`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfraction.py) class. A simple introduction is given below of how it can be used, with a variety of examples.
 
 #### Importing the `ContinuedFraction` Class
 
@@ -241,36 +233,51 @@ The `ContinuedFraction` class provides a `.mediant()` method which can be used t
 
 ```python
 >>> ContinuedFraction('0.5').mediant(Fraction(2, 3))
->>> ContinuedFraction(3, 5)
+ContinuedFraction(3, 5)
 >>> ContinuedFraction('0.6').elements
 (0, 1, 1, 2)
 >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
->>> ContinuedFraction(3, 5)
+ContinuedFraction(3, 5)
 >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
 # True
 ````
 
-The concept of the simple mediant of two fractions $\frac{a}{b}$ and $\frac{c}{d}$ as given above can be generalised to $k$-th mediants, which can be defined as follows:
+The concept of the simple mediant of two fractions of $\frac{a}{b}$ and $\frac{c}{d}$ as given above can be generalised to $k$-th left- and right-mediants, for positive integers $k$: the $k$-th left mediant of $\frac{a}{b}$ and $\frac{c}{d}$ can be defined as:
 
 $$
-\frac{a + kc}{b + kd}
-$$ 
+\frac{ka + c}{kb + d}
+$$
 
-Assuming that $\frac{a}{b} < \frac{c}{d}$ and $bd > 0$ we have, as $k$ increases, a strictly increasing sequence of fractions bounded by $\frac{a}{b}$ and $\frac{c}{d}$ on either side:
+while the $k$-th right mediant can be defined as:
+
+$$
+\frac{a + nc}{b + nd}
+$$
+
+For $k = 1$ the left- and right-mediants are identical, but as $k \longrightarrow \infty$ they separate into two distinct strictly monotonic sequences with opposite limits: the left-mediants form a strictly decreasing sequence lower-bounded by $\frac{a}{b}$, thus converging to $\frac{a}{b}$:
+
+$$
+\frac{a}{b} < \cdots < \frac{3a + c}{3b + d} < \frac{2a + c}{2b + d} < \frac{a + c}{b + d} < \frac{c}{d}
+$$
+
+$$
+\lim_{k \to \infty} \frac{ka + c}{kb + d} = \frac{a}{b}
+$$
+
+while the right-mediants form a strictly increasing sequence upper-bounded by $\frac{c}{d}$, thus converging to $\frac{c}{d}$: 
 
 $$
 \frac{a}{b} < \frac{a + c}{b + d} < \frac{a + 2c}{b + 2d} < \frac{a + 3c}{b + 3d} < \cdots < \frac{c}{d}
 $$
 
-Thus, the sequence of mediants as defined above converges to $\frac{c}{d}$ as $k$ increases.[^3]
-
 $$
 \lim_{k \to \infty} \frac{a + kc}{b + kd} = \frac{c}{d}
 $$
 
-We can illustrate this using `ContinuedFraction.mediant` using increasing values of the mediant order `k`, which defaults to `k=1`.
+We can illustrate this using `ContinuedFraction.mediant` method using the `dir` option to set the "direction" of the mediant - either `'left'` or `'right` (default) - and using `k` to set the mediant order, which defaults to `k=1`.
 
 ```python
+# Right mediants
 >>> c1 = ContinuedFraction(1, 2)
 >>> c2 = ContinuedFraction(3, 5)
 >>> c1.mediant(c2)
@@ -285,6 +292,22 @@ ContinuedFraction(4, 7)
 ContinuedFraction(3000001, 5000002)
 >>> c1.mediant(c2, k=10 ** 6).as_float()
 0.599999960000016
+
+# Left mediants
+>>> c1.mediant(c2, dir='left')
+ContinuedFraction(4, 7)
+>>> c1.mediant(c2, dir='left', k=10)
+ContinuedFraction(13, 25)
+>>> c1.mediant(c2, dir='left', k=10).as_float()
+0.52
+>>> c1.mediant(c2, dir='left', k=100)
+ContinuedFraction(103, 205)
+>>> c1.mediant(c2, dir='left', k=100).as_float()
+0.5024390243902439
+>>> c1.mediant(c2, dir='left', k=10 ** 6)
+ContinuedFraction(1000003, 2000005)
+>>> c1.mediant(c2, dir='left', k=10 ** 6).as_float()
+0.500000249999375
 ```
 
 Mediants have other [interesting connections](https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree), including to sequences and orderings of rational numbers.
@@ -353,7 +376,7 @@ TypeError: bad operand type for unary -: 'tuple'
 # True
 ```
 
-### Input Validation
+### Validation
 
 The `ContinuedFraction` class validates all inputs during object creation - in the `.__new__()` class method, not instance initialisation - using the `.validate()` class method. Inputs that do not meet the following conditions trigger a `ValueError`.
 
@@ -466,7 +489,7 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.8` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
+The package is currently at version `0.0.9` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
 
 ## License
 
@@ -490,6 +513,6 @@ The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https:
 
 [^1]: Due to the nature of [binary floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html) it is not always possible to exactly represent a given [real number](https://en.wikipedia.org/wiki/Real_number). For the same reason, the continued fraction representations produced by the package will necessarily be [finite](https://en.wikipedia.org/wiki/Continued_fraction#Finite_continued_fractions).
 
-[^2]: The definition of "rational number" used here is standard: a ratio $\frac{a}{b}$ of integers $a$ and $b \neq 0$. If $a$ and $b$ have no common denominator then \frac{a}{b} is irreducible and unique.
+[^2]: The definition of "rational number" used here is standard: a ratio $\frac{a}{b}$ of integers $a$ and $b \neq 0$. If $a$ and $b$ have no common denominator then $\frac{a}{b}$ is irreducible and unique.
 
 [^3]: This is due to the [theorem](https://en.wikipedia.org/wiki/Monotone_convergence_theorem) that every bounded monotonic sequence of real numbers converges.

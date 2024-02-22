@@ -592,29 +592,38 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__.from_elements(*self._elements[k:])
 
-    def mediant(self, other: Fraction, k: int = 1) -> Fraction:
+    def mediant(self, other: Fraction, /, *, dir='right', k: int = 1) -> Fraction:
         """
-        Returns a `ContinuedFraction` object of the `fractions.Fraction`
-        objects representing two rational numbers `r = a / b` and `s = c / d`,
-        by taking their `k`-the mediant, for a positive integer `k`.
+        Returns the `k`-th left- or right-mediant of this `ContinuedFraction`
+        object with another `fractions.Fraction` object. The "direction" of the
+        mediant is specified with `dir`, and can only be one of `"left"` or 
+        `"right"`.
 
-        The `k`-th mediant of rationals `r = a / b` and `s = c / d`, where of
-        course the denominators are assumed to be non-zero and `k` is a 
-        positive integer, is given by
+        For a positive integer `k`, the `k`-th left-mediant of rational numbers
+        `r = a / b` and `s = c / d`, where `b` and `d` are non-zero, can be defined
+        as:
         ::
-        
+
+            (ka + c) / (kb + d)
+
+        while the `k`-th right mediant can be defined as:
+        ::
+
             (a + kc) / (b + kd)
 
-        The 1st mediant is the fraction `(a + c) / (b + d)`.
-
-        Assuming that `a / b` < `c / d` and `cd > 0` their `k`-order mediants
-        have the property that:
+        If we assume that `r < s` and `bd > 0` then the `k`-th left mediants have
+        the property that:
         ::
+            a / b < ... < (3a + c) / (3b + d) < (2a + c) / (2b + d) < (a + c) / (b + d) < c / d
+            a / b < (a + c) / (b + d) < (a + 2c) / (b + 2d) < (a + 3c) / (b + 3d) < ... c / d
 
-            a / b < (a + c) / (b + d) < (a + 2c) / (a + 2d) < ... c / d
-        
-        As `k` goes to infinity the sequence of these mediants converges to
-        `s = c / d`, by the bounded monotone convergence theorem for real numbers.
+        That is, the left mediants form a strictly decreasing sequence, actually
+        converging to `a / b`, while the right mediants form a strictly increasing
+        sequence of, actually converging to `c / d`.
+
+        For the left mediant use `dir='left'`, while for the right use
+        `dir='right'`. The default is `dir='right'`. For `k = 1` the left and right
+        mediants are the same.
 
         Parameters
         ----------
@@ -644,7 +653,7 @@ class ContinuedFraction(Fraction):
         >>> c1.mediant(c2, k=3)
         ContinuedFraction(10, 17)
         """
-        return self.__class__(mediant(self, other, k=k))
+        return self.__class__(mediant(self, other, dir=dir, k=k))
 
 
 if __name__ == "__main__":      # pragma: no cover

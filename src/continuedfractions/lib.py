@@ -324,26 +324,36 @@ def convergent(*elements: int, k: int = 1) -> Fraction:
     return fraction_from_elements(*elements[:k + 1])
 
 
-def mediant(r: Fraction, s: Fraction, k: int = 1) -> Fraction:
+def mediant(r: Fraction, s: Fraction, /, *, dir='right', k: int = 1) -> Fraction:
     """
-    Returns the `k-th mediant of two rational numbers `r = a / b` and
-    `s = c / d`, given as `fractions.Fraction` objects, where it is
-    assumed that the denominators `b` and `d` are non-zero. The `k`-th mediant
-    of `r` and `s` is defined as:
+    Returns the `k`-th left- or right-mediant of two rational numbers, given as
+    `fractions.Fraction` objects.
+
+    For a positive integer `k`, the `k`-th left-mediant of rational numbers
+    `r = a / b` and `s = c / d`, where `b` and `d` are non-zero, can be defined
+    as:
     ::
 
-         (a + kc) / (b + kd)
+        (ka + c) / (kb + d)
 
-    The 1st mediant is given by `(a + c) / (b + d)`.
+    while the `k`-th right mediant can be defined as:
+    ::
 
-    Assuming that `a / b` < `c / d` and `cd > 0` their `k`-order mediants have
+        (a + kc) / (b + kd)
+
+    If we assume that `r < s` and `bd > 0` then the `k`-th left mediants have
     the property that:
     ::
+        a / b < ... < (3a + c) / (3b + d) < (2a + c) / (2b + d) < (a + c) / (b + d) < c / d
+        a / b < (a + c) / (b + d) < (a + 2c) / (b + 2d) < (a + 3c) / (b + 3d) < ... c / d
 
-        a / b < (a + c) / (b + d) < (a + 2c) / (a + 2d) < ... c / d
+    That is, the left mediants form a strictly decreasing sequence, actually
+    converging to `a / b`, while the right mediants form a strictly increasing
+    sequence of, actually converging to `c / d`.
 
-    As `k` goes to infinity the sequence of these mediants converges to
-    `s = c / d`, by the bounded monotone convergence theorem for real numbers.
+    For the left mediant use `dir='left'`, while for the right use
+    `dir='right'`. The default is `dir='right'`. For `k = 1` the left and right
+    mediants are the same.
 
     Parameters
     ----------
@@ -353,25 +363,44 @@ def mediant(r: Fraction, s: Fraction, k: int = 1) -> Fraction:
     s : fractions.Fraction
         The second rational number.
 
+    dir : str, default='right'
+        The "direction" of the mediant - `'left'` or `'right'`, as defined
+        above.
+
     k : int, default=1
         The order of the mediant, as defined above.
 
     Returns
     -------
     fractions.Fraction
-        The `k`-th mediant of the two given rational numbers.
+        The `k`-th left- or right-mediant of the two given rational numbers.
 
     Examples
     --------
     >>> mediant(Fraction(1, 2), Fraction(3, 5))
     Fraction(4, 7)
+    >>> mediant(Fraction(1, 2), Fraction(3, 5), dir='left')
+    Fraction(4, 7)
     >>> mediant(Fraction(1, 2), Fraction(3, 5), k=2)
     Fraction(7, 12)
-    >>> mediant(Fraction(1, 2), Fraction(3, 5), k=3)
+    >>> mediant(Fraction(1, 2), Fraction(3, 5), dir='left', k=2)
+    Fraction(5, 9)
+    >>> mediant(Fraction(1, 2), Fraction(3, 5), k=3, dir='right')
     Fraction(10, 17)
+    >>> mediant(Fraction(1, 2), Fraction(3, 5), k=3, dir='left')
+    Fraction(6, 11)
     """
+    if not (dir in ['left', 'right'] and isinstance(k, int) and k > 0):
+        raise ValueError(
+            "The mediant direction must be 'left' or 'right' and the order "
+            "`k` must be a positive integer"
+        )
+
     a, b = r.as_integer_ratio()
     c, d = s.as_integer_ratio()
+
+    if dir == 'left':
+        return Fraction(k * a + c, k * b + d)
 
     return Fraction(a + k * c, b + k * d)
 

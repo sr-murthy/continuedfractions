@@ -132,7 +132,7 @@ class TestFractionFromElements:
 		assert fraction_from_elements(*elements) == expected
 
 
-class TestKthConvergent:
+class TestConvergent:
 
 	@pytest.mark.parametrize(
 	    "elements, k",
@@ -168,25 +168,66 @@ class TestKthConvergent:
 	
 		assert convergent(*elements, k=k) == expected_convergent
 
-class TestKthMediant:
+class TestMediant:
+
+
+	@pytest.mark.parametrize(
+		"rational1, rational2, dir, k",
+		[
+			(Fraction(1, 2), Fraction(3, 5), "left", 0),
+			(Fraction(1, 2), Fraction(3, 5), "not left", 1),
+			(Fraction(1, 2), Fraction(3, 5), "right", 0),
+			(Fraction(1, 2), Fraction(3, 5), "not right", 1),
+			(Fraction(1, 2), Fraction(3, 5), "not left", 0),
+			(Fraction(1, 2), Fraction(3, 5), "not right", 0),
+		]
+	)
+	def test_mediant__invalid_dir_or_order__value_error_raised(self, rational1, rational2, dir, k):
+		with pytest.raises(ValueError):
+			mediant(rational1, rational2, dir=dir, k=k)
 
 	@pytest.mark.parametrize(
 	    "rational1, rational2, k, expected_mediant",
 	    [
 	        (Fraction(1, 2), Fraction(3, 5), 1, Fraction(4, 7)),
-	        (Fraction(1, 2), Fraction(3, 5), 2, Fraction(7, 12)),
-	        (Fraction(1, 2), Fraction(3, 5), 3, Fraction(10, 17)),
+	        (Fraction(1, 2), Fraction(3, 5), 2, Fraction(5, 9)),
+	        (Fraction(1, 2), Fraction(3, 5), 3, Fraction(6, 11)),
 	        (Fraction(1, 2), Fraction(0), 1, Fraction(1, 3)),
 	        (Fraction(1, 2), Fraction(1, 2), 1, Fraction(1, 2)),
+	        (Fraction(1, 2), Fraction(1, 2), 2, Fraction(1, 2)),
 	        (Fraction(1, -2), Fraction(1, 2), 1, Fraction(0, 1)),
+	        (Fraction(1, -2), Fraction(1, 2), 2, Fraction(-1, 6)),
+	        (Fraction(1, -2), Fraction(1, 2), 3, Fraction(-1, 4)),
+	        (Fraction(1, -2), Fraction(1, 2), 10, Fraction(-9, 22)),
 	        (Fraction(-1, 2), Fraction(1), 1, Fraction(0, 1)),
+	        (Fraction(-1, 2), Fraction(1), 2, Fraction(-1, 5)),
+	        (Fraction(-1, 2), Fraction(1), 2, Fraction(-1, 5)),
 	        (Fraction(-1, 2), Fraction(-1), 1, Fraction(-2, 3)),
+	        (Fraction(-1, 2), Fraction(-1), 2, Fraction(-3, 5)),
 	        (Fraction(-1, 2), Fraction(1, -2), 1, Fraction(-1, 2)),
-	        (Fraction(1, 2), Fraction(3, 5), 10 ** 6, Fraction(3000001, 5000002)),
+	        (Fraction(-1, 2), Fraction(1, -2), 2, Fraction(-1, 2)),
+	        (Fraction(1, 2), Fraction(3, 5), 10 ** 6, Fraction(1000003, 2000005)),
 	    ],
 	)
-	def test_mediant__two_ordered_rationals__correct_mediant_returned(self, rational1, rational2, k, expected_mediant):
+	def test_left_mediant__two_ordered_rationals__correct_mediant_returned(self, rational1, rational2, k, expected_mediant):
 	
+		assert mediant(rational1, rational2, dir='left', k=k) == expected_mediant
 
-		assert mediant(rational1, rational2, k=k) == expected_mediant
-
+	@pytest.mark.parametrize(
+	    "rational1, rational2, dir_, k, expected_mediant",
+	    [
+	        (Fraction(1, 2), Fraction(3, 5), 'right', 1, Fraction(4, 7)),
+	        (Fraction(1, 2), Fraction(3, 5), 'right', 2, Fraction(7, 12)),
+	        (Fraction(1, 2), Fraction(3, 5), 'right', 3, Fraction(10, 17)),
+	        (Fraction(1, 2), Fraction(0), 'right', 1, Fraction(1, 3)),
+	        (Fraction(1, 2), Fraction(1, 2), 'right', 1, Fraction(1, 2)),
+	        (Fraction(1, -2), Fraction(1, 2), 'right', 1, Fraction(0, 1)),
+	        (Fraction(-1, 2), Fraction(1), 'right', 1, Fraction(0, 1)),
+	        (Fraction(-1, 2), Fraction(-1), 'right', 1, Fraction(-2, 3)),
+	        (Fraction(-1, 2), Fraction(1, -2), 'right', 1, Fraction(-1, 2)),
+	        (Fraction(1, 2), Fraction(3, 5), 'right', 10 ** 6, Fraction(3000001, 5000002)),
+	    ],
+	)
+	def test_right_mediant__two_ordered_rationals__correct_mediant_returned(self, rational1, rational2, dir_, k, expected_mediant):
+	
+		assert mediant(rational1, rational2, dir=dir_, k=k) == expected_mediant

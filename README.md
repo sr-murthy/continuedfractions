@@ -49,7 +49,7 @@ True
 
 ## Installation & Dependencies
 
-The package does not use any 3rd party (production) dependencies, only Python standard libraries, and is supported on Python versions `3.10`-`3.12`. It is CI-tested on Ubuntu Linux (22.04.3 LTS), Mac OS (12.7.3) and Windows (Windows Server 2022), but should also install on any other platform supporting these Python versions.
+The package uses only Python standard libraries, and is supported on Python versions `3.10`-`3.12`. It is CI-tested on Ubuntu Linux (22.04.3 LTS), Mac OS (12.7.3) and Windows (Windows Server 2022), but should also install on any other platform supporting these Python versions.
 
 The simplest way of installing it is a standard `pip`/`pip3` install:
 
@@ -63,11 +63,15 @@ For contributors there are development requirements which are specified in the [
 
 [Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
 
-The `continuedfractions` package is designed to make it easy to construct (finite) continued fractions as Python objects, and explore their key properties, such as elements/coefficients, convergents, segments, remainders, and others. They have been implemented as instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class, of which they are automatically instances, and are thus fully operable as rational numbers.
+The `continuedfractions` package is designed to:
+
+* make it easy to construct (finite) continued fractions as Python objects
+* explore their key properties, such as elements/coefficients, convergents, segments, remainders, and others
+* operate on them as rationals and instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class
 
 ### Package Structure
 
-The `continuedfractions` package consists of two libraries:
+The `continuedfractions` package consists of two core libraries:
 
 * [`continuedfractions.lib`](https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/lib.py) - this contains the core functionality of (1) generating continued fraction representations (as ordered element sequences) of any valid Python number, given as an integer, non-nan `float`, valid numeric string, a `fractions.Fraction` or `decimal.Decimal` object, or as a pair of integers and/or `fractions.Fraction` objects; and conversely (2) reconstructing rational fractions from continued fraction representations (again, given as ordered element sequences).
 
@@ -147,12 +151,25 @@ The **order** of a continued fraction is defined to be number of its elements **
 3
 ```
 
+The elements and order of `ContinuedFraction` objects are well behaved with respect to all rational operations supported by `fractions.Fraction`:
+
+```python
+>>> ContinuedFraction(415, 93).elements
+(4, 2, 6, 7)
+>>> ContinuedFraction(649, 200) + ContinuedFraction(415, 93)
+ContinuedFraction(143357, 18600)
+>>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements
+(7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
+>>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).order
+10
+```
+
 #### Convergents and Rational Approximations
 
 For an integer $k >= 0$ the $k$-th **convergent** $C_k$ of a continued fraction $[a_0; a_1,\ldots]$ of a real number $x$ is defined to be the rational number and finite continued fraction represented by $[a_0; a_1,\ldots,a_k]$, formed from the first $k + 1$ elements of the original.
 
 $$
-C_k = a_0 + \frac{1}{a_1 + \frac{1}{\ddots \frac{1}{a_{k-1} + \frac{1}{a_k}}}}
+C_k = a_0 + \frac{1}{a_1 + \frac{1}{a_2 \ddots \frac{1}{a_{k-1} + \frac{1}{a_k}}}}
 $$
 
 Each convergent $C_k$ represents a rational approximation $\frac{p_k}{q_k}$ of $x$, and we can define an error term $\epsilon_k = x - C_k = x - \frac{p_k}{q_k}$. If we assume $x > 0$ then the convergents form a strictly increasing sequence of rational numbers converging to $x$ as $n \longrightarrow \infty$. So, formally:
@@ -254,7 +271,7 @@ $$
 \frac{a + nc}{b + nd}
 $$
 
-For $k = 1$ the left- and right-mediants are identical, but as $k \longrightarrow \infty$ they separate into two distinct strictly monotonic sequences with opposite limits: the left-mediants form a strictly decreasing sequence lower-bounded by $\frac{a}{b}$, thus converging to $\frac{a}{b}$:
+For $k = 1$ the left- and right-mediants are identical, but as $k \longrightarrow \infty$ they separate into two distinct, strictly monotonic, sequences converging to opposite limits[^3]: the left-mediants form a strictly decreasing sequence lower-bounded by $\frac{a}{b}$, converging to $\frac{a}{b}$:
 
 $$
 \frac{a}{b} < \cdots < \frac{3a + c}{3b + d} < \frac{2a + c}{2b + d} < \frac{a + c}{b + d} < \frac{c}{d}
@@ -264,7 +281,7 @@ $$
 \lim_{k \to \infty} \frac{ka + c}{kb + d} = \frac{a}{b}
 $$
 
-while the right-mediants form a strictly increasing sequence upper-bounded by $\frac{c}{d}$, thus converging to $\frac{c}{d}$: 
+while the right-mediants form a strictly increasing sequence upper-bounded by $\frac{c}{d}$, converging to $\frac{c}{d}$: 
 
 $$
 \frac{a}{b} < \frac{a + c}{b + d} < \frac{a + 2c}{b + 2d} < \frac{a + 3c}{b + 3d} < \cdots < \frac{c}{d}
@@ -274,7 +291,7 @@ $$
 \lim_{k \to \infty} \frac{a + kc}{b + kd} = \frac{c}{d}
 $$
 
-We can illustrate this using `ContinuedFraction.mediant` method using the `dir` option to set the "direction" of the mediant - either `'left'` or `'right` (default) - and using `k` to set the mediant order, which defaults to `k=1`.
+We can illustrate this using the `ContinuedFraction.mediant` method using the `dir` option to set the "direction" of the mediant - either `'left'` or `'right` (default) - and using `k` to set the mediant order, which defaults to `k=1`.
 
 ```python
 # Right mediants
@@ -285,7 +302,7 @@ ContinuedFraction(4, 7)
 >>> c1.mediant(c2).as_float()
 0.5714285714285714
 >>> c1.mediant(c2, k=10)
-0.5961538461538461
+ContinuedFraction(31, 52)
 >>> c1.mediant(c2, k=100)
 0.599601593625498
 >>> c1.mediant(c2, k=10 ** 6)
@@ -310,7 +327,7 @@ ContinuedFraction(1000003, 2000005)
 0.500000249999375
 ```
 
-Mediants have other [interesting connections](https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree), including to sequences and orderings of rational numbers.
+Mediants have very interesting connections to other areas of number, including sequences and orderings of rational numbers - for example, see the [Stern-Brocot tree](https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree).
 
 ### Constructing Continued Fractions from Element Sequences
 
@@ -340,7 +357,18 @@ ContinuedFraction(-200, 649)
 
 ### Continued Fractions with Negative Terms
 
-Continued fractions representations with negative terms are valid, provided we use the [Euclidean integer division algorithm](https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations) to calculate the successive quotients and remainders in each step. For example, $\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}$ has the continued fraction representation $[-5; 1, 1, 6, 7]$. Compare this with $[4; 2, 6, 7]$, which is the continued fraction representation of $\frac{415}{93}$.
+Continued fractions representations with negative terms are valid, provided we use the [Euclidean integer division algorithm](https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations) to calculate the successive quotients and remainders in each step. For example, $\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}$ has the continued fraction representation $[-5; 1, 1, 6, 7]$:
+
+$$
+-\frac{415}{93} = -5 + \frac{1}{1 + \frac{1}{1 + \frac{1}{6 + \frac{1}{7}}}}
+$$
+
+Compare this with $[4; 2, 6, 7]$, which is the continued fraction representation of $\frac{415}{93}$:
+
+$$
+\frac{415}{93} = 4 + \frac{1}{2 + \frac{1}{6 + \frac{1}{7}}}
+$$
+
 
 `ContinuedFraction` objects for negative numbers are constructed in the same way as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is "transferred" to the numerator. A few examples are given below.
 
@@ -489,7 +517,7 @@ The CI/CD pipelines are defined in the [CI YML](.github/workflows/ci.yml), and p
 
 ### Versioning & Package Publishing
 
-The package is currently at version `0.0.9` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
+The package is currently at version `0.10.0` ([semantic versioning](https://semver.org/) is used), and packages are published manually to [PyPI](https://pypi.org/project/continuedfractions/) using [twine](https://twine.readthedocs.io/en/stable/). There is currently no CI release pipeline - this will be added later.
 
 ## License
 
@@ -509,7 +537,9 @@ The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https:
 
 [6] Python 3.12.2 Docs. "decimal - Decimal fixed point and floating point arithmetic." https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
 
-[7] Wikipedia. "Continued Fraction". https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
+[7] Wikipedia. "Stern-Brocot Tree". https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.
+
+[8] Wikipedia. "Continued Fraction". https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
 
 [^1]: Due to the nature of [binary floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html) it is not always possible to exactly represent a given [real number](https://en.wikipedia.org/wiki/Real_number). For the same reason, the continued fraction representations produced by the package will necessarily be [finite](https://en.wikipedia.org/wiki/Continued_fraction#Finite_continued_fractions).
 

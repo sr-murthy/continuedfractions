@@ -124,6 +124,12 @@ class ContinuedFraction(Fraction):
         "denominator, respectively, of a rational fraction, are valid."
     )
 
+    def __str__(self) -> str:
+        return (
+            f"{super().__str__()}: [{self.elements[0]}" +
+            (f";{','.join(map(str, self.elements[1:]))}]" if self.order > 0 else ";]")
+        )
+
     @classmethod
     def validate(cls, *args: int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
         """
@@ -365,19 +371,19 @@ class ContinuedFraction(Fraction):
         super().__init__()
 
         if len(args) == 1 and isinstance(args[0], int):
-            self._elements = tuple(continued_fraction_rational(args[0], 1))
+            self._elements = tuple(continued_fraction_rational(Fraction(args[0])))
         elif len(args) == 1 and isinstance(args[0], float):
             self._elements = tuple(continued_fraction_real(args[0]))
         elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' in args[0]:
-            self._elements = tuple(continued_fraction_rational(*self.as_integer_ratio()))
+            self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
         elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' not in args[0]:
             self._elements = tuple(continued_fraction_real(args[0]))
         elif len(args) == 1 and (isinstance(args[0], Fraction) or isinstance(args[0], Decimal)):
-            self._elements = tuple(continued_fraction_rational(*args[0].as_integer_ratio()))
+            self._elements = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
         elif len(args) == 2 and set(map(type, args)) == set([int]):
-            self._elements = tuple(continued_fraction_rational(args[0], args[1]))
+            self._elements = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
         elif len(args) == 2 and set(map(type, args)).issubset([int, Fraction]):
-            self._elements = tuple(continued_fraction_rational(*self.as_integer_ratio()))
+            self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
         else:      # pragma: no cover
             raise ValueError(self.__class__.__valid_inputs_msg__)
 

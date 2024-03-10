@@ -87,6 +87,64 @@ Continued fractions can also be constructed from sequences of elements, using th
    >>> assert cf + (-cf) == cf_inverse + cf_negative_inverse == 0
    # True
 
+.. _creating-continued-fractions.irrationals-from-elements:
+
+Approximating Irrationals
+-------------------------
+
+Using ``ContinuedFraction.from_elements()`` can be very useful when trying to approximate irrational numbers with (finite) continued fractions. We know, for example, that the square root :math:`sqrt(n)` of any non-square (positive) integer :math:`n` is irrational. This can be proved quite easily by writing :math:`n = a^2 + r`, for integers :math:`a, r > 0`, from which we have:
+
+.. math::
+   :nowrap:
+
+   \begin{alignat*}{1}
+   & r &&= n - a^2 = \left(\sqrt{n} + a\right)\left(\sqrt{n} - a\right) \\
+   & \sqrt{n} &&= a + \frac{r}{a + \sqrt{n}}
+   \end{alignat*}
+
+Expanding the expression for :math:`\sqrt{n}` recursively we have the following infinite periodic continued fraction representation for :math:`\sqrt{n}`:
+
+.. math::
+
+   \sqrt{n} = a + \cfrac{r}{2a + \cfrac{r}{2a + \cfrac{r}{2a + \ddots}}}
+
+With :math:`a = r = 1` we can represent :math:`\sqrt{2}` as the continued fraction:
+
+.. math::
+
+   \sqrt{2} = 1 + \cfrac{1}{2 + \cfrac{1}{2 + \cfrac{1}{2 + \ddots}}}
+
+written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents an infinite sequence :math:`2, 2, 2, \ldots`.
+
+We can start with a more precise representation of :math:`\sqrt{2}` in Python as a `decimal.Decimal` object:
+
+.. code:: python
+   
+   >>> Decimal(math.sqrt(2))
+   >>> Decimal('1.4142135623730951454746218587388284504413604736328125')
+
+Then we can iteratively construct more accurate ``ContinuedFraction`` approximations of :math:`\sqrt{n}` by taking more complete sequences of the elements of the completed continued fraction representation:
+
+.. code:: python
+
+   >>> ContinuedFraction.from_elements(1, 2).as_float()
+   >>> 1.5
+
+   >>> ContinuedFraction.from_elements(1, 2, 2).as_float()
+   >>> 1.4
+
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2).as_float()
+   >>> 1.4137931034482758
+
+   ...
+
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_float()
+   >>> 1.4142136248948696
+
+   ...
+
+With the first :math:`10` elements of the complete sequence of elements of the continued fraction representation of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places. We'd ideally like to have as few elements as possible in our ``ContinuedFraction`` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a continued fraction representation are called convergents, and will be discussed in more detail later on.
+
 .. _creating-continued-fractions.validation:
 
 Validation

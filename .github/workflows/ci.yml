@@ -72,13 +72,13 @@ jobs:
         echo "PIP_CACHE=$(pip cache dir)" >> $GITHUB_OUTPUT
 
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.set_variables.outputs.PIP_CACHE }}
         key: ${{ runner.os }}-pip-${{ steps.set_variables.outputs.PY }}
 
     - name: Cache venv
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
@@ -89,6 +89,8 @@ jobs:
       if: matrix.install-via == 'pip'
       run: |
         python -m pip install pdm
+        pdm info -v
+        pdm venv list -v
         pdm use -f .venv
         echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
         echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
@@ -101,6 +103,8 @@ jobs:
         curl -sSLO https://pdm-project.org/install-pdm.py
         curl -sSL https://pdm-project.org/install-pdm.py.sha256 | shasum -a 256 -c -
         python3 install-pdm.py
+        pdm info -v
+        pdm venv list -v
         pdm use -f .venv
         echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
         echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV

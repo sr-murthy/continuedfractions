@@ -11,6 +11,10 @@ ROOT := $(PWD)
 
 TESTS_ROOT := $(ROOT)/tests
 
+DOCS_ROOT := $(PROJECT_ROOT)/docs
+DOCS_BUILD := $(DOCS_ROOT)/_build
+DOCS_BUILD_HTML := $(DOCS_ROOT)/_build/html
+
 
 # Make everything (possible)
 all:
@@ -38,7 +42,7 @@ version_extract:
 # Linting
 lint: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Linting source code with Ruff\n"
-	cd "$(PROJECT_ROOT)" && ruff check
+	cd "$(PROJECT_ROOT)" && ruff check src
 
 # Running tests
 doctests: clean

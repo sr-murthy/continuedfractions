@@ -42,7 +42,7 @@ version_extract:
 # Linting
 lint: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Linting source code with Ruff\n"
-	cd "$(PROJECT_ROOT)" && ruff check
+	cd "$(PROJECT_ROOT)" && ruff check src
 
 # Running tests
 doctests: clean

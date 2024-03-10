@@ -71,6 +71,13 @@ The `Makefile <Makefile>`_ defines three main targets: ``lint`` for Ruff linting
 
 Linting warnings should be addressed first. The doctests serve as acceptance tests, and should be run first, before the unit tests.
 
+.. _contributing.documentation
+
+Documentation
+=============
+
+`Project documentation <https://continuedfractions.readthedocs.io/en/latest/>`_ is defined and built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_, and deployed to `Read The Docs <https://readthedocs.org>`_. Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
+
 .. _contributing.ci-cd:
 
 Continuous Integration and Deployment (CI/CD)

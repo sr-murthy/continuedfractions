@@ -77,6 +77,18 @@ The ``ContinuedFraction`` class provides a ``.convergents`` property for objects
    >>> operator.truediv(*cf.convergents[2].as_integer_ratio())
    3.2448979591836733
 
+Using the continued fraction representation :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` we can verify that these convergents are correct.
+
+.. math::
+   :nowrap:
+
+   \begin{alignat*}{2}
+   & C_0 &&= [3;] = 3 = \frac{3}{1} = 3.0 \\
+   & C_1 &&= [3; 4] = 3 + \cfrac{1}{4} = \frac{13}{4} = 3.25 \\
+   & C_2 &&= [3; 4, 12] = 3 + \cfrac{1}{4 + \cfrac{1}{12}} = \frac{159}{49} = 3.2448979591836733 \\
+   & C_3 &&= [3; 4, 12, 4] = 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{649}{200} = 3.245
+   \end{alignat*}
+
 Obviously, we can only handle finite continued fractions in Python, so the convergents produced by ``ContinuedFraction`` will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. We can verify some of these properties for convergents, e.g. that :math:`C_0 < C_1 < \cdots < C_n`, for ``ContinuedFraction(649, 200)`` and also ``ContinuedFraction(math.pi)``:
 
 .. code:: python
@@ -125,11 +137,11 @@ Using the continued fraction representation of :math:`\frac{649}{200}` we can ve
 .. math::
    :nowrap:
 
-   \begin{alignat*}{4}
-   & R_0 &&= [3; 4, 12, 4] &&= 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} &&= \frac{649}{200} \\
-   & R_1 &&= [4; 12, 4] &&= {4 + \cfrac{1}{12 + \cfrac{1}{4}}} &&= \frac{200}{49} \\
-   & R_2 &&= [12; 4] &&= {12 + \frac{1}{4}} &&= \frac{49}{4} \\
-   & R_3 &&= [4;] &&= 4 &&= \frac{4}{1}
+   \begin{alignat*}{2}
+   & R_0 &&= [3; 4, 12, 4] = 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{649}{200} \\
+   & R_1 &&= [4; 12, 4] = {4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{200}{49} \\
+   & R_2 &&= [12; 4] = {12 + \frac{1}{4}} = \frac{49}{4} \\
+   & R_3 &&= [4;] = 4 = \frac{4}{1}
    \end{alignat*}
 
 .. _properties-of-continued-fractions.references:

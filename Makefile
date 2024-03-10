@@ -11,6 +11,10 @@ ROOT := $(PWD)
 
 TESTS_ROOT := $(ROOT)/tests
 
+DOCS_ROOT := $(PROJECT_ROOT)/docs
+DOCS_BUILD := $(DOCS_ROOT)/_build
+DOCS_BUILD_HTML := $(DOCS_ROOT)/_build/html
+
 
 # Make everything (possible)
 all:

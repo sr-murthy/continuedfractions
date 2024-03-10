@@ -242,8 +242,3 @@ html_copy_source = True
 
 # Output file base name for HTML help builder - use the project name
 htmlhelp_basename = 'continuedfractions'
-
-#mathjax3_config = {
-#    "jax": ["input/TeX","output/HTML-CSS"],
-#    "displayAlign": "left"
-#}

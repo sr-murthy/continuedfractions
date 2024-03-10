@@ -9,6 +9,7 @@
 <a href="https://trackgit.com">
 <img src="https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/lsudelfvcxb7f1xm6i4l" alt="trackgit-views" />
 </a>
+[![Downloads](https://static.pepy.tech/badge/continuedfractions/week)](https://pepy.tech/project/continuedfractions)
 
 </div>
 
@@ -26,4 +27,4 @@ The `continuedfractions` package is designed to:
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 
-See the documentation for more details.
+See the [project docs](https://continuedfractions.readthedocs.io/en/latest) for more details.

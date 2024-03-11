@@ -2,7 +2,7 @@
 Properties of Continued Fractions
 =================================
 
-A number of basic properties of continued fractions are encapsulated in ``ContinuedFraction``, as described below.
+Python objects of the ``continuedfraction.ContinuedFraction`` class encapsluate a number of basic and useful properties of continued fractions.
 
 .. _properties-of-continued-fractions.elements-and-orders:
 
@@ -24,7 +24,9 @@ The **order** of a continued fraction is defined to be number of its elements **
    >>> cf.order
    3
 
-The elements and order of ``ContinuedFraction`` objects are well behaved with respect to all rational operations supported by
+All ``ContinuedFraction`` objects will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational.
+
+The elements and orders of ``ContinuedFraction`` objects are well behaved with respect to all rational operations supported by
 ``fractions.Fraction``:
 
 .. code:: python
@@ -119,7 +121,7 @@ The segments of ``ContinuedFraction`` objects can be obtained via the ``.segment
 
 **Note**: Unlike the :math:`k`-order convergents the segments are ``ContinuedFraction`` objects and uniquely represent them as such.
 
-A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting a given element. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction represented by :math:`[a_0; a_1,\ldots]` as the sequence of elements :math:`a_k,a_{k + 1},\ldots` starting from the :math:`k`-th element.
+A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction given by :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, whose elements form the segment :math:`S_k = a_k,a_{k + 1},\ldots`, as defined above.
 
 .. math::
 

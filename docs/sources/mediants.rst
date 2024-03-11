@@ -2,14 +2,14 @@
 Mediants
 ========
 
-Another feature which the package includes is `mediants <https://en.wikipedia.org/wiki/Mediant_(mathematics)>`_, which are useful not for only approximations but also have very interesting connections to other areas of number, including sequences and orderings of rational numbers - for example, see the `Stern-Brocot tree <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>`_.
+Another feature which the package includes is `mediants <https://en.wikipedia.org/wiki/Mediant_(mathematics)>`_, which are useful not for only approximations but also have very interesting connections to other areas of number theory, including ordered sequences of rational numbers.
 
 .. _mediants.mediants-and-their-properties:
 
 Mediants and their Properties
 -----------------------------
 
-The (simple) mediant of two rational numbers :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, where :math:`b, d \neq 0`, is defined as the rational number:
+The (simple) **mediant** of two rational numbers :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, where :math:`b, d \neq 0`, is defined as the rational number:
 
 .. math::
 
@@ -45,7 +45,7 @@ This is an ordering property that links mediants to ordered sequences of rationa
 Generalised Mediants
 --------------------
 
-The concept of the simple mediant of two fractions of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` as given above can be generalised to :math:`k`-th left- and right-mediants, for positive integers :math:`k`: the :math:`k`-th left mediant of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` can be defined as:
+The concept of the simple mediant of two fractions of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` as given above can be generalised to :math:`k`-th **left-** and **right-mediants**: for a positive integer :math:`k` the :math:`k`-th left mediant of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` can be defined as:
 
 .. math::
 
@@ -57,7 +57,7 @@ while the :math:`k`-th right mediant can be defined as:
 
    \frac{a + kc}{b + kd}
 
-For :math:`k = 1` the left- and right-mediants are identical, but as :math:`k \longrightarrow \infty` they separate into two different, strictly monotonic, sequences converging to opposite limits: the left-mediants form a strictly decreasing sequence lower-bounded by :math:`\frac{a}{b}`, converging to :math:`\frac{a}{b}`:
+For :math:`k = 1` the left- and right-mediants are identical, but as :math:`k \longrightarrow \infty` they separate into two different, strictly monotonic, sequences converging to opposite limits: the left-mediants form a strictly decreasing sequence lower-bounded by :math:`\frac{a}{b}`, thus converging to :math:`\frac{a}{b}`:
 
 .. math::
 
@@ -67,7 +67,7 @@ For :math:`k = 1` the left- and right-mediants are identical, but as :math:`k \l
 
    \lim_{k \to \infty} \frac{ka + c}{kb + d} = \frac{a}{b}
 
-while the right-mediants form a strictly increasing sequence upper-bounded by :math:`\frac{c}{d}`, converging to :math:`\frac{c}{d}`:
+while the right-mediants form a strictly increasing sequence upper-bounded by :math:`\frac{c}{d}`, thus converging to :math:`\frac{c}{d}`:
 
 .. math::
 

@@ -36,9 +36,13 @@ The ``ContinuedFraction`` class provides a ``.mediant()`` method which can be us
    >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
    # True
 
-In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})` with denominator :math:`>= b + d`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`.
+<<<<<<< Updated upstream
+In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}` but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`.
+=======
+In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`.
+>>>>>>> Stashed changes
 
-This is an ordering property that links mediants to ordered sequences of rational numbers such as `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_ and the `Stern-Brocot tree <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>`_.
+This is an ordering property that links mediants to ordered sequences of rational numbers such as `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_, and tree orderings such as the `Stern-Brocot tree <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>`_.
 
 .. _mediants.generalised-mediants:
 
@@ -65,7 +69,7 @@ For :math:`k = 1` the left- and right-mediants are identical, but as :math:`k \l
 
 .. math::
 
-   \lim_{k \to \infty} \frac{ka + c}{kb + d} = \frac{a}{b}
+   \lim_{k \to \infty} \frac{ka + c}{kb + d} = \lim_{k \to \infty} \frac{a + \frac{c}{k}}{b + \frac{d}{k}} = \frac{a}{b}
 
 while the right-mediants form a strictly increasing sequence upper-bounded by :math:`\frac{c}{d}`, thus converging to :math:`\frac{c}{d}`:
 
@@ -75,7 +79,7 @@ while the right-mediants form a strictly increasing sequence upper-bounded by :m
 
 .. math::
 
-   \lim_{k \to \infty} \frac{a + kc}{b + kd} = \frac{c}{d}
+   \lim_{k \to \infty} \frac{a + kc}{b + kd} = \lim_{k \to \infty} \frac{\frac{a}{k} + c}{\frac{b}{k} + d} = \frac{c}{d}
 
 We can illustrate this using the ``ContinuedFraction.mediant`` method using the ``dir`` option to set the “direction” of the mediant, starting with the right mediants, which don't need to specified with ``dir='right'`` as that is the default value, and using ``k`` to set the mediant order, which defaults to ``k=1``.
 
@@ -86,16 +90,16 @@ We can illustrate this using the ``ContinuedFraction.mediant`` method using the 
    >>> c2 = ContinuedFraction(3, 5)
    >>> c1.mediant(c2)
    ContinuedFraction(4, 7)
-   >>> c1.mediant(c2).as_float()
-   0.5714285714285714
+   >>> c1.mediant(c2).as_decimal()
+   Decimal('0.5714285714285714285714285714')
    >>> c1.mediant(c2, k=10)
    ContinuedFraction(31, 52)
-   >>> c1.mediant(c2, k=100)
-   0.599601593625498
+   >>> c1.mediant(c2, k=100).as_decimal()
+   Decimal('0.5996015936254980079681274900')
    >>> c1.mediant(c2, k=10 ** 6)
    ContinuedFraction(3000001, 5000002)
-   >>> c1.mediant(c2, k=10 ** 6).as_float()
-   0.599999960000016
+   >>> c1.mediant(c2, k=10 ** 6).as_decimal()
+   Decimal('0.5999999600000159999936000026')
 
 And then the left mediants, specified with ``dir='left'``.
 
@@ -106,16 +110,16 @@ And then the left mediants, specified with ``dir='left'``.
    ContinuedFraction(4, 7)
    >>> c1.mediant(c2, dir='left', k=10)
    ContinuedFraction(13, 25)
-   >>> c1.mediant(c2, dir='left', k=10).as_float()
-   0.52
+   >>> c1.mediant(c2, dir='left', k=10).as_decimal()
+   Decimal('0.52')
    >>> c1.mediant(c2, dir='left', k=100)
    ContinuedFraction(103, 205)
-   >>> c1.mediant(c2, dir='left', k=100).as_float()
-   0.5024390243902439
+   >>> c1.mediant(c2, dir='left', k=100).as_decimal()
+   Decimal('0.5024390243902439024390243902'
    >>> c1.mediant(c2, dir='left', k=10 ** 6)
    ContinuedFraction(1000003, 2000005)
-   >>> c1.mediant(c2, dir='left', k=10 ** 6).as_float()
-   0.500000249999375
+   >>> c1.mediant(c2, dir='left', k=10 ** 6).as_decimal()
+   Decimal('0.5000002499993750015624960938')
 
 .. _mediants.references:
 

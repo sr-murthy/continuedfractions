@@ -7,6 +7,7 @@ __all__ = [
 
 # -- Standard libraries --
 import math
+import statistics
 import sys
 
 from decimal import Decimal
@@ -45,6 +46,10 @@ class ContinuedFraction(Fraction):
     order : int
         The order of the continued fraction, defined as the number of
         elements - 1.
+
+    khinchin_mean : decimal.Decimal
+        The geometric mean of all elements of the continued fraction, starting
+        from ``a_1``, excluding the leading element ``a_0``.
 
     convergents : types.MappingProxyType[int, Fraction]
         An immutable map of all the `k`-order convergents of the continued
@@ -542,11 +547,60 @@ class ContinuedFraction(Fraction):
         return len(self._elements[1:])
 
     @property
+    def khinchin_mean(self) -> Decimal | None:
+        """
+        Property: the Khinchin mean of the continued fraction, which we define
+                  as the geometric mean of all its elements starting from
+                  ``a_1``, so that is,:
+                  ::
+
+                    a_1, a_2, ...
+
+                  The leading element ``a_0`` is excluded.
+
+                  As in practice all ``ContinuedFraction`` objects will have a
+                  finite sequence of elements the Khinchin mean as defined
+                  above will always have a computable value.
+
+                  In the special case of integers or fractions representing
+                  integers, whose continued fraction representations consist of
+                  only a single element, a null value is returned.
+
+        Returns
+        -------
+        decimal.Decimal
+            The geometric mean of all elements of the continued fraction,
+            excluding the leading term ``a_0``, so the geometric mean of
+            the sequence ``a_1, a2, ...``.
+
+        Examples
+        --------
+        >>> ContinuedFraction(649, 200).elements
+        (3, 4, 12, 4)
+        >>> ContinuedFraction(649, 200).khinchin_mean
+        Decimal('5.76899828122963409526846589869819581508636474609375')
+        >>> ContinuedFraction(415, 93).elements
+        (4, 2, 6, 7)
+        >>> ContinuedFraction(415, 93).khinchin_mean
+        Decimal('4.37951913988788898990378584130667150020599365234375')
+        >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements
+        (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
+        >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).khinchin_mean
+        Decimal('2.15015313349074244086978069390170276165008544921875')
+        >>> ContinuedFraction(5000).khinchin_mean
+        
+        """
+        try:
+            return Decimal(statistics.geometric_mean(self.elements[1:]))
+        except statistics.StatisticsError:
+            return
+
+    @property
     def convergents(self) -> MappingProxyType[int, Fraction]:
         """
-        Property: the map of all convergents of the continued fraction, keyed
-                  by the orders `0`,`1`,...,`n`, where `n` is the order of
-                  the continued fraction.
+        Property: the map of all the (simple) convergents of the continued
+                  fraction, keyed by the orders `0`,`1`,...,`n`, where `n` is
+                  the order of the continued fraction.
 
         Returns
         -------
@@ -566,9 +620,13 @@ class ContinuedFraction(Fraction):
 
     def segment(self, k: int, /) -> Fraction:
         """
-        The `k`-th segment of the continued fraction, defined as the continued
-        fraction given by its `k`-order convergent, whose elements consist of
-        the first `k + 1` two elements of the original continued fraction.
+        Returns a ``ContinuedFraction`` object for the `k`-th segment of
+        the continued fraction, which is defined as the sequence of its
+        first ``k + 1`` elements ``a_0, a_1, ... , a_k``. As this sequence
+        uniquely determines the ``k``-th convergent of the continued
+        fraction, the ``k``-th segments may be used as a proxy for the
+        convergents, which in this implementation are represented using
+        ``fractions.Fraction``.
 
         Parameters
         ----------

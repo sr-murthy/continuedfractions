@@ -45,7 +45,7 @@ The elements and orders of ``ContinuedFraction`` objects are well behaved with r
 Convergents and Rational Approximations
 =======================================
 
-For an integer :math:`k >= 0` the :math:`k`-th **convergent** :math:`C_k` of a continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is defined to be the rational number and finite continued fraction represented by :math:`[a_0; a_1,\ldots,a_k]`, formed from the first :math:`k + 1` elements of the original.
+For an integer :math:`k >= 0` the (simple) :math:`k`-th **convergent** :math:`C_k` of a continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is defined to be the rational number and finite, simple continued fraction represented by :math:`[a_0; a_1,\ldots,a_k]`, formed from the first :math:`k + 1` elements of the original.
 
 .. math::
 
@@ -104,7 +104,7 @@ Obviously, we can only handle finite continued fractions in Python, so the conve
 Segments and Remainders
 =======================
 
-Convergents are linked to the concept of **segments**, which are finite subsequences of elements of a given continued fraction. More precisely, we can define the :math:`k`-th segment :math:`S_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the sequence of its first :math:`k + 1` elements, namely :math:`a_0,a_1,\ldots,a_k`, which uniquely determines the :math:`k`-order convergent :math:`C_k` of the continued fraction, as defined above.
+Convergents are linked to the concept of **segments**, which are finite subsequences of elements of a given continued fraction. More precisely, we can define the :math:`k`-th segment :math:`S_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the sequence :math:`(a_0,a_1,\ldots,a_k)` of its first :math:`k + 1` elements, which uniquely determines the :math:`k`-order (simple) convergent :math:`C_k` of the continued fraction, as defined above.
 
 The segments of ``ContinuedFraction`` objects can be obtained via the ``.segment()`` method, which takes a non-negative integer not exceeding the order.
 
@@ -115,7 +115,7 @@ The segments of ``ContinuedFraction`` objects can be obtained via the ``.segment
 
 **Note**: Unlike the :math:`k`-order convergents the segments are ``ContinuedFraction`` objects.
 
-A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction given by :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, whose elements form the segment :math:`S_k = a_k,a_{k + 1},\ldots`, as defined above.
+A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained by "removing" the elements of the :math:`k`-th segment :math:`S_k = (a_0,a_1,\ldots,a_k)` from :math:`[a_0; a_1,\ldots]`.
 
 .. math::
 
@@ -140,11 +140,11 @@ Using the continued fraction representation of :math:`\frac{649}{200}` we can ve
    & R_3 &&= [4;] = 4 = \frac{4}{1}
    \end{alignat*}
 
-Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_1,R_2,\ldots` satisfy the following relation:
+Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_1,R_2,\ldots` satisfy the following relation, for integers :math:`k > 0`:
 
 .. math::
 
-   R_{k - 1} = a_{k - 1} + \frac{1}{R_k}
+   R_k = \frac{1}{R_{k - 1} - a_{k - 1}}
 
 .. _properties-of-continued-fractions.references:
 
@@ -158,15 +158,17 @@ https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsU
 
 [3] Emory University Math Center. “Continued Fractions.” The Department of Mathematics and Computer Science, https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/. Accessed 19 Feb 2024.
 
-[4] Wikipedia. “Mediant (mathematics)”. https://en.wikipedia.org/wiki/Mediant_(mathematics). Accessed 23 February 2024.
+[4] Khinchin, A. Ya. Continued Fractions. Dover Publications, 1997.
 
-[5] Python 3.12.2 Docs. “Floating Point Arithmetic: Issues and Limitations.” https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
+[5] Python 3.12.2 Docs. “decimal - Decimal fixed point and floating point arithmetic.” https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
 
-[6] Python 3.12.2 Docs. “fractions - Rational numbers.” https://docs.python.org/3/library/fractions.html. Accessed 21 February
+[6] Python 3.12.2 Docs. “Floating Point Arithmetic: Issues and Limitations.” https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
+
+[7] Python 3.12.2 Docs. “fractions - Rational numbers.” https://docs.python.org/3/library/fractions.html. Accessed 21 February
 2024.
-
-[7] Python 3.12.2 Docs. “decimal - Decimal fixed point and floating point arithmetic.” https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
 
 [8] Wikipedia. “Continued Fraction”. https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
 
-[9] Wikipedia. “Stern-Brocot Tree”. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.
+[9] Wikipedia. “Mediant (mathematics)”. https://en.wikipedia.org/wiki/Mediant_(mathematics). Accessed 23 February 2024.
+
+[10] Wikipedia. “Stern-Brocot Tree”. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.

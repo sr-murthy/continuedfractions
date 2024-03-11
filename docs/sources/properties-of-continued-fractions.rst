@@ -51,19 +51,15 @@ For an integer :math:`k >= 0` the :math:`k`-th **convergent** :math:`C_k` of a c
 
    C_k = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 \ddots \cfrac{1}{a_{k-1} + \cfrac{1}{a_k}}}}
 
-Each convergent :math:`C_k` represents a **rational approximation** :math:`\frac{p_k}{q_k}` of :math:`x`, and we can define an error term :math:`\epsilon_k = x - C_k = x - \frac{p_k}{q_k}`. If we assume :math:`x > 0` then the convergents form a strictly increasing sequence of rational numbers converging to :math:`x` as :math:`n \longrightarrow \infty`. So, formally:
+We note that if a continued fraction :math:`[a_0; a_1,\ldots]` has a finite order :math:`n` then :math:`C_n` is just the rational number represented by :math:`[a_0; a_1,\ldots,a_n]`, and :math:`C_k = a_k + C_{k - 1}` for :math:`k > 0`.
+
+Each convergent :math:`C_k` represents a **rational approximation** :math:`\frac{p_k}{q_k}` of the given real number :math:`x`, and we can define an error term :math:`\epsilon_k = x - C_k = x - \frac{p_k}{q_k}`. If we assume :math:`x > 0` then the convergents form a sequence of rational numbers converging to :math:`x` as :math:`k \longrightarrow \infty`. So, formally:
 
 .. math::
 
-   \frac{p_0}{q_0} < \frac{p_1}{q_1} < \cdots \frac{p_n}{q_n} < \cdots
+   \lim_{k \to \infty} C_k = \lim_{k \to \infty} \frac{p_k}{q_k} = x
 
-where
-
-.. math::
-
-   \lim_{n \to \infty} \frac{p_n}{q_n} = x
-
-This is equivalent to the limit :math:`\lim_{n \to \infty} \epsilon_n = 0`. If :math:`x` is irrational then the convergents may alternate about :math:`x`, but still converge to it. If and only if :math:`x` is rational do we have the case that the convergent sequence is finite and terminates in :math:`x`.
+This is equivalent to the limit :math:`\lim_{k \to \infty} \epsilon_k = 0`: if :math:`x` is rational the error term will vanish for some :math:`k >= 0` at which point the convergent :math:`C_k = x`. But if :math:`x` is irrational there will be infinitely many convergents, and their sequence may alternate about :math:`x`, but still converge to it.
 
 The ``ContinuedFraction`` class provides a ``.convergents`` property for objects, which returns an immutable map
 (`types.MappingProxyType <https://docs.python.org/3/library/types.html#types.MappingProxyType>`_) of all :math:`k`-order convergents, indexed (keyed) by integers :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
@@ -91,16 +87,14 @@ Using the continued fraction representation :math:`[3; 4, 12, 4]` of :math:`\fra
    & C_3 &&= [3; 4, 12, 4] = 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{649}{200} = 3.245
    \end{alignat*}
 
-Obviously, we can only handle finite continued fractions in Python, so the convergents produced by ``ContinuedFraction`` will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. We can verify some of these properties for convergents, e.g. that :math:`C_0 < C_1 < \cdots < C_n`, for ``ContinuedFraction(649, 200)`` and also ``ContinuedFraction(math.pi)``:
+Obviously, we can only handle finite continued fractions in Python, so the convergents produced by ``ContinuedFraction`` will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. We can verify the convergents for ``ContinuedFraction(math.pi)`` approach ``math.pi``:
 
 .. code:: python
 
-   >>> assert cf.convergents[0] < cf.convergents[1] < cf.convergents[2] < cf.convergents[3] == cf
-   # True
    >>> pi_cf = ContinuedFraction(math.pi)
    >>> pi_cf.convergents
    mappingproxy({0: Fraction(3, 1), 1: Fraction(22, 7), 2: Fraction(333, 106), 3: Fraction(355, 113), ... , 27: Fraction(3141592653589793, 1000000000000000)})
-   >>> assert pi_cf.convergents[27] < math.pi
+   >>> assert pytest.approx(pi_cf.convergents[27], abs=1e-28) == math.pi
    # True
 
 **Note**: As the convergents are constructed during ``ContinuedFraction`` object initialisation, the objects that represent them cannot be of type ``ContinuedFraction``, due to recursion errors. Thus, it was decided to keep them as ``fractions.Fraction`` objects.
@@ -145,6 +139,12 @@ Using the continued fraction representation of :math:`\frac{649}{200}` we can ve
    & R_2 &&= [12; 4] = {12 + \frac{1}{4}} = \frac{49}{4} \\
    & R_3 &&= [4;] = 4 = \frac{4}{1}
    \end{alignat*}
+
+Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_1,R_2,\ldots` satisfy the following relation:
+
+.. math::
+
+   R_{k - 1} = a_{k - 1} + \frac{1}{R_k}
 
 .. _properties-of-continued-fractions.references:
 

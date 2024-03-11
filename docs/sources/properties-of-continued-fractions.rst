@@ -2,14 +2,14 @@
 Properties of Continued Fractions
 =================================
 
-Python objects of the ``continuedfraction.ContinuedFraction`` class encapsluate a number of basic and useful properties of continued fractions.
+Python objects of the ``continuedfraction.ContinuedFraction`` class encapsluate a number of basic and interesting properties of continued fractions.
 
 .. _properties-of-continued-fractions.elements-and-orders:
 
 Elements and Orders
 ===================
 
-The **elements** (or coefficients) of a (possibly infinite) continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the leading integer :math:`a_0 = \lfloor x \rfloor` (largest integer part of :math:`x`), and the whole numbers :math:`a_1,a_2,\cdots` in the denominators of the fractional terms. For ``ContinuedFraction`` objects the ``.elements`` property can be used to look at their elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
+The **elements** (or coefficients) of a (possibly infinite) continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the leading element :math:`a_0 = \lfloor x \rfloor` (the largest integer :math:`a` such that :math:`|a| \leq |x|`), and the whole numbers :math:`a_1,a_2,\cdots` in the denominators of the fractional terms. For ``ContinuedFraction`` objects the ``.elements`` property can be used to look at their elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
 
 .. code:: python
 
@@ -24,7 +24,12 @@ The **order** of a continued fraction is defined to be number of its elements **
    >>> cf.order
    3
 
-All ``ContinuedFraction`` objects will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational.
+All ``ContinuedFraction`` objects will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational. The integers represent the special case of zero-order continued fractions.
+
+.. code:: python
+
+   >> ContinuedFraction(3).order
+   0
 
 The elements and orders of ``ContinuedFraction`` objects are well behaved with respect to all rational operations supported by
 ``fractions.Fraction``:
@@ -115,7 +120,7 @@ The segments of ``ContinuedFraction`` objects can be obtained via the ``.segment
 
 **Note**: Unlike the :math:`k`-order convergents the segments are ``ContinuedFraction`` objects.
 
-A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained by "removing" the elements of the :math:`k`-th segment :math:`S_k = (a_0,a_1,\ldots,a_k)` from :math:`[a_0; a_1,\ldots]`.
+A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained by "removing" the elements of the :math:`(k - 1)`-st segment :math:`S_{k - 1} = (a_0,a_1,\ldots,a_{k - 1})` from :math:`[a_0; a_1,\ldots]`.
 
 .. math::
 
@@ -146,6 +151,74 @@ Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` th
 
    R_k = \frac{1}{R_{k - 1} - a_{k - 1}}
 
+
+Khinchin Means & Khinchin's Constant
+====================================
+
+For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` elements starting from :math:`a_1` (excluding the leading element :math:`a_0`), so, the geometric mean of the sequence :math:`(a_1, a_2,\ldots,a_n)`:
+
+.. math::
+
+   K_n := \sqrt[n]{a_1a_2 \cdots a_n} = \left( a_1a_2 \cdots a_n \right)^{\frac{1}{n}}, \hskip{1em} n \geq 1
+
+It has been proved that for irrational numbers, which have infinite continued fraction representations, there are infinitely many for which the quantity :math:`K_n` approaches a constant :math:`K_0 \approx 2.6854\ldots`, called `Khinchin's constant <https://en.wikipedia.org/wiki/Khinchin%27s_constant>`_, independent of the number. So:
+
+.. math::
+
+   \lim_{n \to \infty} K_n = \lim_{n \to \infty} \sqrt[n]{a_1a_2 \cdots a_n} = K_0 \approx 2.6854\ldots
+
+The ``ContinuedFraction`` class provides a way of examining the behaviour of :math:`K_n` via the ``.khinchin_mean`` property, as indicated in the examples below.
+
+.. code:: python
+
+   >>> ContinuedFraction(649, 200).elements
+   (3, 4, 12, 4)
+   >>> ContinuedFraction(649, 200).khinchin_mean
+   Decimal('5.76899828122963409526846589869819581508636474609375')
+   >>> ContinuedFraction(415, 93).elements
+   (4, 2, 6, 7)
+   >>> ContinuedFraction(415, 93).khinchin_mean
+   Decimal('4.37951913988788898990378584130667150020599365234375')
+   >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements
+   (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
+   >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).khinchin_mean
+   Decimal('2.15015313349074244086978069390170276165008544921875')
+   >>> ContinuedFraction(5000).khinchin_mean
+
+For rational numbers, which have finite continued fraction representations, the Khinchin means are not defined for all :math:`n`, so this property is not all that useful for rationals. However, for approximations of irrationals the property is useful as given in the examples below using continued fraction approximations for :math:`\pi = [3; 7, 15, 1, 292, \ldots]`.
+
+.. code:: python
+
+   # 4th Khinchin mean for `\pi` using a 5-element continued fraction approximation
+   >>> ContinuedFraction.from_elements(3, 7, 15, 1, 292).khinchin_mean
+   Decimal('13.2325345812843568893413248588331043720245361328125')
+   # 19th Khinchin mean for `\pi` using a 20-element continued fraction approximation
+   >>> ContinuedFraction.from_elements(3, 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, 1, 14, 2, 1, 1, 2, 2, 2, 2).khinchin_mean
+   Decimal('2.60994679070748158977721686824224889278411865234375')
+
+and :math:`\gamma = [0; 1, 1, 2, 1,\ldots]`, the `Euler-Mascheroni constant <https://en.wikipedia.org/wiki/Euler%27s_constant>`_:
+
+.. code:: python
+
+   # 4th Khinchin mean for `\gamma` using a 5-element continued fraction approximation
+   >>> ContinuedFraction.from_elements(0, 1, 1, 2, 1).khinchin_mean
+   Decimal('1.4422495703074085238171164746745489537715911865234375')
+   # 19th Khinchin mean for `\gamma` using a 20-element continued fraction approximation
+   >>> ContinuedFraction.from_elements(0, 1, 1, 2, 1, 2, 1, 4, 3, 13, 5, 1, 1, 8, 1, 2, 4, 1, 1, 40).khinchin_mean
+   Decimal('2.308255739839563336346373034757561981678009033203125')
+
+The constant :math:`\gamma`, which has not been proved to be irrational, is defined as:
+
+.. math::
+
+   \begin{align}
+   \gamma &= \lim_{n\to\infty} \left( H_n - \log n \right) \\
+          &= \lim_{n\to\infty} \left(\sum_{k=1}^n \frac1{k} -\log n\right) \\
+          &=\int_1^\infty\left(\frac1{\lfloor x\rfloor} -\frac1x\right)\,dx
+   \end{align}
+
+where :math:`H_n = \sum_{k=1}^n \frac1{k} = 1 + \frac{1}{2} + \frac{1}{3} + \cdots \frac{1}{n}` is the :math:`n`-th harmonic number.
+
 .. _properties-of-continued-fractions.references:
 
 References
@@ -158,7 +231,7 @@ https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsU
 
 [3] Emory University Math Center. “Continued Fractions.” The Department of Mathematics and Computer Science, https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/. Accessed 19 Feb 2024.
 
-[4] Khinchin, A. Ya. Continued Fractions. Dover Publications, 1997.
+[4] Khinchin, A. Ya. Continued Fractions. New York: Dover Publications, 1997.
 
 [5] Python 3.12.2 Docs. “decimal - Decimal fixed point and floating point arithmetic.” https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
 
@@ -169,6 +242,10 @@ https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsU
 
 [8] Wikipedia. “Continued Fraction”. https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
 
-[9] Wikipedia. “Mediant (mathematics)”. https://en.wikipedia.org/wiki/Mediant_(mathematics). Accessed 23 February 2024.
+[9] Wikipedia. "Euler's constant". https://en.wikipedia.org/wiki/Euler%27s_constant. Accessed 11 March 2024.
 
-[10] Wikipedia. “Stern-Brocot Tree”. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.
+[10] Wikipedia. "Khinchin's constant". https://en.wikipedia.org/wiki/Khinchin%27s_constant. Accessed 11 March 2024.
+
+[11] Wikipedia. “Mediant (mathematics)”. https://en.wikipedia.org/wiki/Mediant_(mathematics). Accessed 23 February 2024.
+
+[12] Wikipedia. “Stern-Brocot Tree”. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.

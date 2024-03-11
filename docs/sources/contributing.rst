@@ -71,7 +71,7 @@ The `Makefile <Makefile>`_ defines three main targets: ``lint`` for Ruff linting
 
 Linting warnings should be addressed first. The doctests serve as acceptance tests, and should be run first, before the unit tests.
 
-.. _contributing.documentation
+.. _contributing.documentation:
 
 Documentation
 =============
@@ -90,7 +90,7 @@ The CI/CD pipelines are defined in the `CI YML <.github/workflows/ci.yml>`_, and
 Versioning and Releases
 =======================
 
-The package is currently at version ``0.11.3`` - `semantic versioning <https://semver.org/>`_ is used.
+The package is currently at version ``0.11.4`` - `semantic versioning <https://semver.org/>`_ is used.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 

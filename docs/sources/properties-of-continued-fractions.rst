@@ -51,7 +51,7 @@ For an integer :math:`k >= 0` the :math:`k`-th **convergent** :math:`C_k` of a c
 
    C_k = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 \ddots \cfrac{1}{a_{k-1} + \cfrac{1}{a_k}}}}
 
-We note that if a continued fraction :math:`[a_0; a_1,\ldots]` has a finite order :math:`n` then :math:`C_n` is just the rational number represented by :math:`[a_0; a_1,\ldots,a_n]`, and :math:`C_k = a_k + C_{k - 1}` for :math:`k > 0`.
+We note that if a continued fraction :math:`[a_0; a_1,\ldots]` has a finite order :math:`n` then :math:`C_n` is just the rational number represented by :math:`[a_0; a_1,\ldots,a_n]`.
 
 Each convergent :math:`C_k` represents a **rational approximation** :math:`\frac{p_k}{q_k}` of the given real number :math:`x`, and we can define an error term :math:`\epsilon_k = x - C_k = x - \frac{p_k}{q_k}`. If we assume :math:`x > 0` then the convergents form a sequence of rational numbers converging to :math:`x` as :math:`k \longrightarrow \infty`. So, formally:
 
@@ -113,7 +113,7 @@ The segments of ``ContinuedFraction`` objects can be obtained via the ``.segment
    >>> cf.segment(0), cf.segment(1), cf.segment(2), cf.segment(3)
    (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))3
 
-**Note**: Unlike the :math:`k`-order convergents the segments are ``ContinuedFraction`` objects and uniquely represent them as such.
+**Note**: Unlike the :math:`k`-order convergents the segments are ``ContinuedFraction`` objects.
 
 A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction given by :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, whose elements form the segment :math:`S_k = a_k,a_{k + 1},\ldots`, as defined above.
 

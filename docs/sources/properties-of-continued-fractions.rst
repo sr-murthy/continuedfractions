@@ -155,17 +155,19 @@ Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` th
 Khinchin Means & Khinchin's Constant
 ====================================
 
-For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` elements starting from :math:`a_1` (excluding the leading element :math:`a_0`), so, the geometric mean of the sequence :math:`(a_1, a_2,\ldots,a_n)`:
+For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and a positive integer :math:`n` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` elements starting from :math:`a_1` (excluding the leading element :math:`a_0`):
 
 .. math::
 
    K_n := \sqrt[n]{a_1a_2 \cdots a_n} = \left( a_1a_2 \cdots a_n \right)^{\frac{1}{n}}, \hskip{1em} n \geq 1
 
-It has been proved that for irrational numbers, which have infinite continued fraction representations, there are infinitely many for which the quantity :math:`K_n` approaches a constant :math:`K_0 \approx 2.6854\ldots`, called `Khinchin's constant <https://en.wikipedia.org/wiki/Khinchin%27s_constant>`_, independent of the number. So:
+So :math:`K_n` is simply the geometric mean of the sequence :math:`(a_1, a_2,\ldots,a_n)` for :math:`n \geq 1`.
+
+It has been proved that for irrational numbers, which have infinite continued fraction representations, there are infinitely many for which the quantity :math:`K_n` approaches a constant :math:`K_0 \approx 2.685452\ldots`, called `Khinchin's constant <https://en.wikipedia.org/wiki/Khinchin%27s_constant>`_, independent of the number. So:
 
 .. math::
 
-   \lim_{n \to \infty} K_n = \lim_{n \to \infty} \sqrt[n]{a_1a_2 \cdots a_n} = K_0 \approx 2.6854\ldots
+   \lim_{n \to \infty} K_n = \lim_{n \to \infty} \sqrt[n]{a_1a_2 \cdots a_n} = K_0 \approx 2.685452\ldots
 
 The ``ContinuedFraction`` class provides a way of examining the behaviour of :math:`K_n` via the ``.khinchin_mean`` property, as indicated in the examples below.
 

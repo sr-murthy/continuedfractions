@@ -90,7 +90,7 @@ The CI/CD pipelines are defined in the `CI YML <.github/workflows/ci.yml>`_, and
 Versioning and Releases
 =======================
 
-The package is currently at version ``0.11.4`` - `semantic versioning <https://semver.org/>`_ is used.
+The package is currently at version ``0.11.5`` - `semantic versioning <https://semver.org/>`_ is used.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 

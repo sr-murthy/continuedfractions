@@ -33,7 +33,7 @@ The continued fraction object for :math:`\frac{649}{200}` can be created as foll
 **Note**: The same object can also be constructed using ``ContinuedFraction('649/200')``, ``ContinuedFraction('3.245')``, ``ContinuedFraction(Fraction(649, 200))``, ``ContinuedFraction(Fraction(649), 200))``, ``ContinuedFraction(649, Fraction(200)))``, and ``ContinuedFraction(Decimal('3.245'))``. But passing a numeric literal such as ``649/200`` will result in an evaluation of the decimal integer division using `binary floating point division <https://docs.python.org/3/tutorial/floatingpoint.html>`_,
 thus producing a fractional approximation, in this case, ``ContinuedFraction(3653545197704315, 1125899906842624)``.
 
-The float value of ``ContinuedFraction(649, 200)`` is available via the ``.as_float()`` method, in this case, an exact value of :math:`3.245`.
+The float value of ``ContinuedFraction(649, 200)`` is available via the ``.as_float()`` method, in this case, a value of :math:`3.245`.
 
 .. code:: python
 
@@ -46,8 +46,6 @@ A ``decimal.Decimal`` value of ``ContinuedFraction(649, 200)`` is also available
 
    >>> cf.as_decimal()
    Decimal('3.245')
-
-**Note**: the ``.as_float()`` and ``.as_decimal`` methods are unique to ``ContinuedFraction`` - they are not defined in the ``fractions.Fraction`` superclass.
 
 Every finite continued fraction represents a rational number, and conversely every rational number can be represented as a finite continued fraction. On the other hand, infinite continued fractions can only represent `irrational numbers <https://en.wikipedia.org/wiki/Irrational_number>`_ and conversely every infinite continued fraction represents an irrational number.
 
@@ -99,7 +97,7 @@ Continued fractions can also be constructed from sequences of elements, using th
 Approximating Irrationals
 -------------------------
 
-Using ``ContinuedFraction.from_elements()`` can be very useful when trying to approximate irrational numbers with (finite) continued fractions. We know, for example, that the square root :math:`sqrt(n)` of any non-square (positive) integer :math:`n` is irrational. This can be proved quite easily by writing :math:`n = a^2 + r`, for integers :math:`a, r > 0`, from which we have:
+Using ``ContinuedFraction.from_elements()`` can be very useful when trying to approximate irrational numbers with (finite) continued fractions. We know, for example, that the square root :math:`\sqrt{n}` of any non-square (positive) integer :math:`n` is irrational. This can be proved quite easily by writing :math:`n = a^2 + r`, for integers :math:`a, r > 0`, from which we have:
 
 .. math::
    :nowrap:
@@ -275,15 +273,17 @@ https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsU
 
 [3] Emory University Math Center. “Continued Fractions.” The Department of Mathematics and Computer Science, https://mathcenter.oxford.emory.edu/site/math125/continuedFractions/. Accessed 19 Feb 2024.
 
-[4] Wikipedia. “Mediant (mathematics)”. https://en.wikipedia.org/wiki/Mediant_(mathematics). Accessed 23 February 2024.
+[4] Khinchin, A. Ya. Continued Fractions. Dover Publications, 1997.
 
-[5] Python 3.12.2 Docs. “Floating Point Arithmetic: Issues and Limitations.” https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
+[5] Python 3.12.2 Docs. “decimal - Decimal fixed point and floating point arithmetic.” https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
 
-[6] Python 3.12.2 Docs. “fractions - Rational numbers.” https://docs.python.org/3/library/fractions.html. Accessed 21 February
+[6] Python 3.12.2 Docs. “Floating Point Arithmetic: Issues and Limitations.” https://docs.python.org/3/tutorial/floatingpoint.html. Accessed 20 February 2024.
+
+[7] Python 3.12.2 Docs. “fractions - Rational numbers.” https://docs.python.org/3/library/fractions.html. Accessed 21 February
 2024.
-
-[7] Python 3.12.2 Docs. “decimal - Decimal fixed point and floating point arithmetic.” https://docs.python.org/3/library/decimal.html. Accessed 21 February 2024.
 
 [8] Wikipedia. “Continued Fraction”. https://en.wikipedia.org/wiki/Continued_fraction. Accessed 19 February 2024.
 
-[9] Wikipedia. “Stern-Brocot Tree”. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.
+[9] Wikipedia. “Mediant (mathematics)”. https://en.wikipedia.org/wiki/Mediant_(mathematics). Accessed 23 February 2024.
+
+[10] Wikipedia. “Stern-Brocot Tree”. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.

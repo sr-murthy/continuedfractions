@@ -45,59 +45,58 @@ class TestContinuedFraction:
 	    """valid_inputs,
 	       expected_fraction_obj,
 	       expected_elements,
-	       expected_str,
 	       expected_order,
 	       expected_convergents,
 	       expected_ref_right_order1_mediant,
-	       expected_float_value""",
+	       expected_float_value,
+	       expected_decimal_value""",
 	    [
 	    	# Case #1
 	        (
 	        	(3, 2,),
 	        	Fraction(3, 2),
 	        	(1, 2,),
-	        	"3/2: [1;2]",
 	        	1,
 	        	MappingProxyType({
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
 	        	}),
 	        	ContinuedFraction(4, 3),
-	        	3 / 2
+	        	3 / 2,
+	        	Decimal(3) / Decimal(2)
 	        ),
 	        # Case #2
 	        (
 	        	('1.5',),
 	        	Fraction(3, 2),
 	        	(1, 2,),
-	        	"3/2: [1;2]",
 	        	1,
 	        	MappingProxyType({
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
 	        	}),
 	        	ContinuedFraction(4, 3),
-	        	3 / 2
+	        	3 / 2,
+	        	Decimal('1.5')
 	        ),
 	        # Case #3
 	        (
 	        	('-5000',),
 	        	Fraction(-5000),
 	        	(-5000,),
-	        	"-5000: [-5000;]",
 	        	0,
 	        	MappingProxyType({
 	        		0: Fraction(-5000, 1)
 	        	}),
 	        	ContinuedFraction(-4999, 2),
-	        	-5000.0
+	        	-5000.0,
+	        	Decimal('-5000')
 	        ),
 	        # Case #4
 	        (
 	        	('3.245',),
 	        	Fraction(649, 200),
 	        	(3, 4, 12, 4),
-	        	"649/200: [3;4,12,4]",
 	        	3,
 	        	MappingProxyType({
 	        		0: Fraction(3, 1),
@@ -106,7 +105,8 @@ class TestContinuedFraction:
 	        		3: Fraction(649, 200)
 	        	}),
 	        	ContinuedFraction(650, 201),
-	        	3.245
+	        	3.245,
+	        	Decimal('3.245')
 
 	        ),
 	        # Case #5
@@ -114,7 +114,6 @@ class TestContinuedFraction:
 	        	('-649/200',),
 	        	Fraction(-649, 200),
 	        	(-4, 1, 3, 12, 4),
-	        	"-649/200: [-4;1,3,12,4]",
 				4,
 				MappingProxyType({
 					0: Fraction(-4, 1),
@@ -124,14 +123,14 @@ class TestContinuedFraction:
 	              	4: Fraction(-649, 200)
 				}),
 				ContinuedFraction(-216, 67),
-				-3.245
+				-3.245,
+				Decimal('-3.245')
 	        ),
 	        # Case #6
 	        (
 	        	(-649, -200),
 	        	Fraction(649, 200),
 	        	(3, 4, 12, 4),
-	        	"649/200: [3;4,12,4]",
 	        	3,
 	        	MappingProxyType({
 	        		0: Fraction(3, 1),
@@ -140,14 +139,14 @@ class TestContinuedFraction:
 	        		3: Fraction(649, 200)
 	        	}),
 	        	ContinuedFraction(650, 201),
-	        	3.245
+	        	3.245,
+	        	Decimal('3.245')
 	        ),
 	        # Case #7
 	        (
 	        	('0.3333',),
 	        	Fraction(3333, 10000),
 	        	(0, 3, 3333),
-	        	"3333/10000: [0;3,3333]",
 	        	2,
 	        	MappingProxyType({
 	        		0: Fraction(0, 1),
@@ -155,14 +154,14 @@ class TestContinuedFraction:
 	        		2: Fraction(3333, 10000)
 	        	}),
 	        	ContinuedFraction(3334, 10001),
-	        	0.3333
+	        	0.3333,
+	        	Decimal('0.3333')
 	        ),
 	        # Case #8
 	        (
 	        	('-0.3333',),
 	        	Fraction(-3333, 10000),
 	        	(-1, 1, 2, 3333),
-	        	"-3333/10000: [-1;1,2,3333]",
 	        	3,
 	        	MappingProxyType({
 					0: Fraction(-1, 1),
@@ -171,14 +170,14 @@ class TestContinuedFraction:
 	              	3: Fraction(-3333, 10000)
 	        	}),
 	        	ContinuedFraction(-3332, 10001),
-	        	-0.3333
+	        	-0.3333,
+	        	Decimal('-0.3333')
 	        ),
 	        # Case #9
 	        (
 	        	('-5.25',),
 	        	Fraction(-21, 4),
 	        	(-6, 1, 3),
-	        	"-21/4: [-6;1,3]",
 	        	2,
 	        	MappingProxyType({
 	        		0: Fraction(-6, 1),
@@ -186,27 +185,27 @@ class TestContinuedFraction:
 	        		2: Fraction(-21, 4)
 	        	}),
 	        	ContinuedFraction(-4, 1),
-	        	-5.25
+	        	-5.25,
+	        	Decimal('-5.25')
 	        ),
 	        # Case #10
 	        (
 	        	('123456789',),
 	        	Fraction(123456789, 1),
 	        	(123456789,),
-	        	"123456789: [123456789;]",
 	        	0,
 	        	MappingProxyType({
 	        		0: Fraction(123456789, 1)
 	        	}),
 	        	ContinuedFraction(61728395, 1),
-	        	123456789.0
+	        	123456789.0,
+	        	Decimal('123456789')
 	        ),
 	        # Case #11
 	        (
 	        	('0.3',),
 	        	Fraction(3, 10),
 	        	(0, 3, 3),
-	        	"3/10: [0;3,3]",
 	        	2,
 	        	MappingProxyType({
 	        		0: Fraction(0, 1),
@@ -214,28 +213,28 @@ class TestContinuedFraction:
 	        		2: Fraction(3, 10)	
 	        	}),
 	        	ContinuedFraction(4, 11),
-	        	0.3
+	        	0.3,
+	        	Decimal('0.3')
 	        ),
 	        # Case #12
 	        (
 	        	(1, 10,),
 	        	Fraction(1, 10),
 	        	(0, 10),
-	        	"1/10: [0;10]",
 	        	1,
 	        	MappingProxyType({
 	        		0: Fraction(0, 1),
 	        		1: Fraction(1, 10)
 	        	}),
 	        	ContinuedFraction(2, 11),
-	        	0.1
+	        	0.1,
+	        	Decimal('0.1')
 	        ),
 	        # Case #13
 	        (
 	        	('-3.245',),
 	        	Fraction(-649, 200),
 	        	(-4, 1, 3, 12, 4),
-	        	"-649/200: [-4;1,3,12,4]",
 	        	4,
 	        	MappingProxyType({
 					0: Fraction(-4, 1),
@@ -245,55 +244,55 @@ class TestContinuedFraction:
 					4: Fraction(-649, 200)
 	        	}),
 	        	ContinuedFraction(-216, 67),
-	        	-3.245
+	        	-3.245,
+	        	Decimal('-3.245')
 	        ),
 	        # Case #14
 	        (
 	        	(123456789,),
 	        	Fraction(123456789, 1),
 	        	(123456789,),
-	        	"123456789: [123456789;]",
 	        	0,
 	        	MappingProxyType({
 	        		0: Fraction(123456789, 1)
 	        	}),
 	        	ContinuedFraction(61728395, 1),
-	        	123456789.0
+	        	123456789.0,
+	        	Decimal('123456789')
 	        ),
 	        # Case #15
 	        (
 	        	(1.5,),
 	        	Fraction(3, 2),
 	        	(1, 2,),
-	        	"3/2: [1;2]",
 	        	1,
 	        	MappingProxyType({
 	        		0: Fraction(1, 1),
 	        		1: Fraction(3, 2)
 	        	}),
 	        	ContinuedFraction(4, 3),
-	        	1.5
+	        	1.5,
+	        	Decimal('1.5')
 	        ),
 	        # Case #16
 	        (
 	        	(-3, Fraction(4, 5)),
 	        	Fraction(-15, 4),
 	        	(-4, 4),
-	        	"-15/4: [-4;4]",
 	        	1,
 	        	MappingProxyType({
 	        		0: Fraction(-4, 1),
 	        		1: Fraction(-15, 4)
 	        	}),
 	        	ContinuedFraction(-14, 5),
-	        	-3.75
+	        	-3.75,
+	        	Decimal('-3.75')
 	        ),
 	        # Case #17
 	        (
 	        	(Decimal('3.245'),),
 	        	Fraction(649, 200),
 	        	(3, 4, 12, 4),
-	        	"649/200: [3;4,12,4]",
 	        	3,
 	        	MappingProxyType({
 	        		0: Fraction(3, 1),
@@ -302,7 +301,8 @@ class TestContinuedFraction:
 	        		3: Fraction(649, 200)
 	        	}),
 	        	ContinuedFraction(650, 201),
-	        	3.245
+	        	3.245,
+	        	Decimal('3.245')
 	        )
 	    ],
 	)
@@ -310,12 +310,12 @@ class TestContinuedFraction:
 		self,
 		valid_inputs,
 		expected_fraction_obj,
-		expected_str,
 		expected_elements,
 		expected_order,
 		expected_convergents,
 		expected_ref_right_order1_mediant,
-		expected_float_value
+		expected_float_value,
+		expected_decimal_value
 	):
 		expected = expected_fraction_obj
 
@@ -326,11 +326,11 @@ class TestContinuedFraction:
 		# objects
 		assert received == expected
 
-		# Compare the `__str__()` values as `ContinuedFraction` objects
-		assert str(received) == expected_str
-
 		# Compare the float values
-		assert received.as_float() == expected.numerator / expected.denominator
+		assert received.as_float() == expected_float_value
+
+		# Compare the decimal values
+		assert received.as_decimal() == expected_decimal_value
 
 		# Compare the element sequences
 		assert received.elements == expected_elements

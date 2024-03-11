@@ -40,9 +40,16 @@ The float value of ``ContinuedFraction(649, 200)`` is available via the ``.as_fl
    >>> cf.as_float()
    3.245
 
-**Note**: the ``.as_float()`` is unique to ``ContinuedFraction`` - it is not defined in the superclass, ``fractions.Fraction``.
+A ``decimal.Decimal`` value of ``ContinuedFraction(649, 200)`` is also available via the ``.as_decimal()`` method.
 
-Every finite continued fraction represents a rational number, and conversely every rational number can be represented as a finite continued fraction. On the other hand, infinite continued fractions can only represent `irrational numbers <https://en.wikipedia.org/wiki/Irrational_number>`_.
+.. code:: python
+
+   >>> cf.as_decimal()
+   Decimal('3.245')
+
+**Note**: the ``.as_float()`` and ``.as_decimal`` methods are unique to ``ContinuedFraction`` - they are not defined in the ``fractions.Fraction`` superclass.
+
+Every finite continued fraction represents a rational number, and conversely every rational number can be represented as a finite continued fraction. On the other hand, infinite continued fractions can only represent `irrational numbers <https://en.wikipedia.org/wiki/Irrational_number>`_ and conversely every infinite continued fraction represents an irrational number.
 
 There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, and, therefore, also, as Python ``fractions.Fraction`` or ``float`` objects. In the current implementation of ``continuedfractions`` the ``fractions.Fraction`` class is the key type involved in creating continued fractions representations. This means that for infinitely many real numbers the package will only produce (finite) approximate representations.
 
@@ -116,7 +123,7 @@ With :math:`a = r = 1` we can represent :math:`\sqrt{2}` as the continued fracti
 
 written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents an infinite sequence :math:`2, 2, 2, \ldots`.
 
-We can start with a more precise representation of :math:`\sqrt{2}` in Python as a `decimal.Decimal` object:
+We can start with a more precise representation of :math:`\sqrt{2}` in Python as a ``decimal.Decimal`` object:
 
 .. code:: python
    
@@ -127,23 +134,25 @@ Then we can iteratively construct more accurate ``ContinuedFraction`` approximat
 
 .. code:: python
 
-   >>> ContinuedFraction.from_elements(1, 2).as_float()
-   >>> 1.5
+   >>> ContinuedFraction.from_elements(1, 2).as_decimal()
+   >>> Decimal('1.5')
 
-   >>> ContinuedFraction.from_elements(1, 2, 2).as_float()
-   >>> 1.4
+   >>> ContinuedFraction.from_elements(1, 2, 2).as_decimal()
+   >>> Decimal('1.4')
 
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2).as_float()
-   >>> 1.4137931034482758
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2).as_decimal()
+   >>> Decimal('1.413793103448275862068965517')
 
    ...
 
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_float()
-   >>> 1.4142136248948696
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_decimal()
+   >>> Decimal('1.414213624894869638351555929')
 
    ...
 
 With the first :math:`10` elements of the complete sequence of elements of the continued fraction representation of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places. We'd ideally like to have as few elements as possible in our ``ContinuedFraction`` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a continued fraction representation are called convergents, and will be discussed in more detail later on.
+
+This example also highlights the fact that "almost all" square roots of positive integers are irrational, even though the set of positive integers which are perfect squares and the set of positive integers which are not perfect squares are both countably infinite - the former is an infinitely sparser subset of the integers.
 
 .. _creating-continued-fractions.validation:
 

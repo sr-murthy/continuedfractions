@@ -62,7 +62,7 @@ build-backend = "pdm.backend"
 
 [project.urls]
 Homepage = "https://github.com/sr-murthy/continuedfractions"
-Documentation = "https://github.com/sr-murthy/continuedfractions"
+Documentation = "https://continuedfractions.readthedocs.io/en/latest"
 Repository = "https://github.com/sr-murthy/continuedfractions"
 
 # For working with PDM, including configuration and usage see:

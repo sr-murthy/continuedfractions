@@ -124,12 +124,6 @@ class ContinuedFraction(Fraction):
         "denominator, respectively, of a rational fraction, are valid."
     )
 
-    def __str__(self) -> str:
-        return (
-            f"{super().__str__()}: [{self.elements[0]}" +
-            (f";{','.join(map(str, self.elements[1:]))}]" if self.order > 0 else ";]")
-        )
-
     @classmethod
     def validate(cls, *args: int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
         """
@@ -478,6 +472,33 @@ class ContinuedFraction(Fraction):
         """
         return self.numerator / self.denominator
 
+    def as_decimal(self) -> Decimal:
+        """
+        Returns the `float` value of the continued fraction, using standard
+        division (`/`) of the numerator by the denominator.
+
+        Returns
+        -------
+        float
+            The `float` representation of the continued fraction.
+
+        Examples
+        --------
+        >>> import math
+        >>> math.pi
+        3.141592653589793
+
+        Now construct a `ContinuedFraction` object from it, and check the 
+        `float` value.
+
+        >>> cf = ContinuedFraction(math.pi)
+        >>> cf
+        ContinuedFraction(884279719003555, 281474976710656)
+        >>> cf.as_float()
+        3.141592653589793
+        """
+        return Decimal(self.numerator) / Decimal(self.denominator)
+
     @property
     def elements(self) -> tuple[int]:
         """
@@ -545,7 +566,7 @@ class ContinuedFraction(Fraction):
 
     def segment(self, k: int, /) -> Fraction:
         """
-        The `k`th segment of the continued fraction, defined as the continued
+        The `k`-th segment of the continued fraction, defined as the continued
         fraction given by its `k`-order convergent, whose elements consist of
         the first `k + 1` two elements of the original continued fraction.
 
@@ -557,7 +578,7 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new `ContinuedFraction` instance representing the `k`th segment
+            A new `ContinuedFraction` instance representing the `k`-th segment
             of the original continued fraction, as described above.
 
         Examples
@@ -572,7 +593,7 @@ class ContinuedFraction(Fraction):
 
     def remainder(self, k: int, /) -> Fraction:
         """
-        The `k`th remainder of the continued fraction, defined as the continued
+        The `k`-th remainder of the continued fraction, defined as the continued
         fraction given by the difference between the original continued
         fraction and its `(k - 1)`-order convergent (equivalently, the
         `(k - 1)`-order segment, as defined above).
@@ -585,7 +606,7 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new `ContinuedFraction` instance representing the `k`th remainder
+            A new `ContinuedFraction` instance representing the `k`-th remainder
             of the original continued fraction, as described above.
 
         Examples

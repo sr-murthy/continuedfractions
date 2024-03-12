@@ -1,10 +1,10 @@
-=================================
-Properties of Continued Fractions
-=================================
+=============================
+Exploring Continued Fractions
+=============================
 
-Python objects of the ``continuedfraction.ContinuedFraction`` class encapsluate a number of basic and interesting properties of continued fractions.
+Python objects of the ``continuedfraction.ContinuedFraction`` class encapsluate a number of basic and interesting properties of continued fractions that can be explored.
 
-.. _properties-of-continued-fractions.elements-and-orders:
+.. _exploring-continued-fractions.elements-and-orders:
 
 Elements and Orders
 ===================
@@ -45,7 +45,7 @@ The elements and orders of ``ContinuedFraction`` objects are well behaved with r
    >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).order
    10
 
-.. _properties-of-continued-fractions.convergents-and-rational-approximations:
+.. _exploring-continued-fractions.convergents-and-rational-approximations:
 
 Convergents and Rational Approximations
 =======================================
@@ -104,7 +104,7 @@ Obviously, we can only handle finite continued fractions in Python, so the conve
 
 **Note**: As the convergents are constructed during ``ContinuedFraction`` object initialisation, the objects that represent them cannot be of type ``ContinuedFraction``, due to recursion errors. Thus, it was decided to keep them as ``fractions.Fraction`` objects.
 
-.. _properties-of-continued-fractions.segments-and-remainders:
+.. _exploring-continued-fractions.segments-and-remainders:
 
 Segments and Remainders
 =======================
@@ -221,7 +221,7 @@ The constant :math:`\gamma`, which has not been proved to be irrational, is defi
 
 where :math:`H_n = \sum_{k=1}^n \frac1{k} = 1 + \frac{1}{2} + \frac{1}{3} + \cdots \frac{1}{n}` is the :math:`n`-th harmonic number.
 
-.. _properties-of-continued-fractions.references:
+.. _exploring-continued-fractions.references:
 
 References
 ==========

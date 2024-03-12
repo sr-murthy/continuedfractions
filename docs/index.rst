@@ -51,7 +51,7 @@ Prelude
 
    sources/getting-started
    sources/creating-continued-fractions
-   sources/properties-of-continued-fractions
+   sources/exploring-continued-fractions
    sources/mediants
    sources/contributing
    sources/api-reference

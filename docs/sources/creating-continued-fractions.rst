@@ -280,8 +280,6 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the continued fraction represen
 
 .. code:: python
 
-   >>> ContinuedFraction('-3.245')
-   ContinuedFraction(-415, 93)
    >>> ContinuedFraction(-415, 93)
    ContinuedFraction(-415, 93)
    >>> -ContinuedFraction(415, 93)

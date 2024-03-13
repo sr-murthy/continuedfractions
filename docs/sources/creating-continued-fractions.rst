@@ -312,7 +312,7 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the continued fraction represen
 .. _creating-continued-fractions.references:
 
 References
-----------
+==========
 
 [1] Baker, Alan. A concise introduction to the theory of numbers. Cambridge: Cambridge Univ. Pr., 2002.
 

@@ -2,7 +2,7 @@
 Exploring Continued Fractions
 =============================
 
-Python objects of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class encapsluate a number of basic and interesting properties of continued fractions that can be easily explored.
+Python objects of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class encapsulate a number of basic and interesting properties of continued fractions that can be easily explored.
 
 .. _exploring-continued-fractions.elements-and-orders:
 

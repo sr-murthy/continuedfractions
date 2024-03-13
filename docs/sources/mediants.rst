@@ -15,13 +15,23 @@ The (simple) **mediant** of two rational numbers :math:`\frac{a}{b}` and :math:`
 
    \frac{a + c}{b + d}
 
-Assuming that :math:`\frac{a}{b} < \frac{c}{d}` and :math:`bd > 0` the mediant above has the property that:
+Assuming that :math:`\frac{a}{b} < \frac{c}{d}` and :math:`bd > 0` (which implies both :math:`\frac{a}{b}` and :math:`\frac{c}{d}` have the same sign) the mediant above has the property that:
 
 .. math::
 
    \frac{a}{b} < \frac{a + c}{b + d} < \frac{c}{d}
 
-Mediants can give good rational approximations to real numbers of interest.
+From the assumptions above this can be proved easily from the following relations:
+
+.. math::
+
+   \begin{align}
+   \frac{a}{b} < \frac{c}{d} &\iff \frac{c}{a} > \frac{d}{b} \iff \frac{a}{c} < \frac{b}{d} \\
+   \frac{a + c}{b + d} &= \frac{a}{b} \cdot \frac{1 + \frac{c}{a}}{1 + \frac{d}{b}} \\
+                       &= \frac{c}{d} \cdot \frac{1 + \frac{a}{c}}{1 + \frac{b}{d}}
+   \end{align}
+
+Mediants can give good rational approximations to real numbers.
 
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method which can be used to calculate mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` objects. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object. A few examples are given below of how to calculate mediants.
 

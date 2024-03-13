@@ -9,7 +9,7 @@ Another feature which the package includes is `mediants <https://en.wikipedia.or
 Mediants and their Properties
 -----------------------------
 
-The (simple) **mediant** of two rational numbers :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, where :math:`b, d \neq 0`, is defined as the rational number:
+The (simple) **mediant** of two rational numbers :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, where :math:`b, d, b + d \neq 0`, is defined as the rational number:
 
 .. math::
 
@@ -23,7 +23,7 @@ Assuming that :math:`\frac{a}{b} < \frac{c}{d}` and :math:`bd > 0` the mediant a
 
 Mediants can give good rational approximations to real numbers of interest.
 
-The ``ContinuedFraction`` class provides a ``.mediant()`` method which can be used to calculate mediants with other ``ContinuedFraction`` or ``fractions.Fraction`` objects. The result is also a ``ContinuedFraction`` object. A few examples are given below of how to calculate mediants.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method which can be used to calculate mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` objects. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object. A few examples are given below of how to calculate mediants.
 
 .. code:: python
 
@@ -78,7 +78,7 @@ while the right-mediants form a strictly increasing sequence upper-bounded by :m
 
    \lim_{k \to \infty} \frac{a + kc}{b + kd} = \lim_{k \to \infty} \frac{\frac{a}{k} + c}{\frac{b}{k} + d} = \frac{c}{d}
 
-We can illustrate this using the ``ContinuedFraction.mediant`` method using the ``dir`` option to set the “direction” of the mediant, starting with the right mediants, which don't need to specified with ``dir='right'`` as that is the default value, and using ``k`` to set the mediant order, which defaults to ``k=1``.
+We can illustrate this using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method using the ``dir`` option to set the “direction” of the mediant, starting with the right mediants, which don't need to specified with ``dir='right'`` as that is the default value, and using ``k`` to set the mediant order, which defaults to ``k=1``.
 
 .. code:: python
 

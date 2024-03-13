@@ -1,15 +1,15 @@
-=================================
-Properties of Continued Fractions
-=================================
+=============================
+Exploring Continued Fractions
+=============================
 
-Python objects of the ``continuedfraction.ContinuedFraction`` class encapsluate a number of basic and interesting properties of continued fractions.
+Python objects of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class encapsluate a number of basic and interesting properties of continued fractions that can be easily explored.
 
-.. _properties-of-continued-fractions.elements-and-orders:
+.. _exploring-continued-fractions.elements-and-orders:
 
 Elements and Orders
 ===================
 
-The **elements** (or coefficients) of a (possibly infinite) continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the leading element :math:`a_0 = \lfloor x \rfloor` (the largest integer :math:`a` such that :math:`|a| \leq |x|`), and the whole numbers :math:`a_1,a_2,\cdots` in the denominators of the fractional terms. For ``ContinuedFraction`` objects the ``.elements`` property can be used to look at their elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
+The **elements** (or coefficients) of a (possibly infinite) continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the head :math:`a_0 = [x]`, which is the integer part of :math:`x`, and the tail elements :math:`a_1,a_2,\cdots` which occur in the denominators of the fractional terms. The :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.elements` property can be used to look at their elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
 
 .. code:: python
 
@@ -24,15 +24,15 @@ The **order** of a continued fraction is defined to be number of its elements **
    >>> cf.order
    3
 
-All ``ContinuedFraction`` objects will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational. The integers represent the special case of zero-order continued fractions.
+All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational. The integers represent the special case of zero-order continued fractions.
 
 .. code:: python
 
    >> ContinuedFraction(3).order
    0
 
-The elements and orders of ``ContinuedFraction`` objects are well behaved with respect to all rational operations supported by
-``fractions.Fraction``:
+The elements and orders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects are well behaved with respect to all rational operations supported by
+:py:class:`fractions.Fraction`:
 
 .. code:: python
 
@@ -45,7 +45,7 @@ The elements and orders of ``ContinuedFraction`` objects are well behaved with r
    >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).order
    10
 
-.. _properties-of-continued-fractions.convergents-and-rational-approximations:
+.. _exploring-continued-fractions.convergents-and-rational-approximations:
 
 Convergents and Rational Approximations
 =======================================
@@ -66,8 +66,8 @@ Each convergent :math:`C_k` represents a **rational approximation** :math:`\frac
 
 This is equivalent to the limit :math:`\lim_{k \to \infty} \epsilon_k = 0`: if :math:`x` is rational the error term will vanish for some :math:`k >= 0` at which point the convergent :math:`C_k = x`. But if :math:`x` is irrational there will be infinitely many convergents, and their sequence may alternate about :math:`x`, but still converge to it.
 
-The ``ContinuedFraction`` class provides a ``.convergents`` property for objects, which returns an immutable map
-(`types.MappingProxyType <https://docs.python.org/3/library/types.html#types.MappingProxyType>`_) of all :math:`k`-order convergents, indexed (keyed) by integers :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
+The  :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property for objects stores the convergents as an immutable map
+(:py:class:`types.MappingProxyType`) of all :math:`k`-order convergents, indexed (keyed) by integers :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
 
 .. code:: python
 
@@ -92,7 +92,7 @@ Using the continued fraction representation :math:`[3; 4, 12, 4]` of :math:`\fra
    & C_3 &&= [3; 4, 12, 4] = 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{649}{200} = 3.245
    \end{alignat*}
 
-Obviously, we can only handle finite continued fractions in Python, so the convergents produced by ``ContinuedFraction`` will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. We can verify the convergents for ``ContinuedFraction(math.pi)`` approach ``math.pi``:
+Obviously, we can only handle finite continued fractions in Python, so the convergents produced by :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. We can verify the convergents for ``ContinuedFraction(math.pi)`` approach ``math.pi``:
 
 .. code:: python
 
@@ -102,23 +102,23 @@ Obviously, we can only handle finite continued fractions in Python, so the conve
    >>> assert pytest.approx(pi_cf.convergents[27], abs=1e-28) == math.pi
    # True
 
-**Note**: As the convergents are constructed during ``ContinuedFraction`` object initialisation, the objects that represent them cannot be of type ``ContinuedFraction``, due to recursion errors. Thus, it was decided to keep them as ``fractions.Fraction`` objects.
+**Note**: As the convergents are constructed during :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object initialisation, the objects that represent them cannot be of type :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, due to recursion errors. Thus, it was decided to keep them as :py:class:`fractions.Fraction` objects. This is also sufficient for the purposes of approximation. To use convergents as :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects use the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.segment` method, which is discussed next.
 
-.. _properties-of-continued-fractions.segments-and-remainders:
+.. _exploring-continued-fractions.segments-and-remainders:
 
 Segments and Remainders
 =======================
 
 Convergents are linked to the concept of **segments**, which are finite subsequences of elements of a given continued fraction. More precisely, we can define the :math:`k`-th segment :math:`S_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the sequence :math:`(a_0,a_1,\ldots,a_k)` of its first :math:`k + 1` elements, which uniquely determines the :math:`k`-order (simple) convergent :math:`C_k` of the continued fraction, as defined above.
 
-The segments of ``ContinuedFraction`` objects can be obtained via the ``.segment()`` method, which takes a non-negative integer not exceeding the order.
+The segments of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.segment` method, which takes a non-negative integer not exceeding the order.
 
 .. code:: python
 
    >>> cf.segment(0), cf.segment(1), cf.segment(2), cf.segment(3)
    (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))3
 
-**Note**: Unlike the :math:`k`-order convergents the segments are ``ContinuedFraction`` objects.
+**Note**: Unlike the :math:`k`-order convergents the segments are :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, and can be used as a proxy for the convergents.
 
 A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained by "removing" the elements of the :math:`(k - 1)`-st segment :math:`S_{k - 1} = (a_0,a_1,\ldots,a_{k - 1})` from :math:`[a_0; a_1,\ldots]`.
 
@@ -126,7 +126,7 @@ A related concept is that of **remainders** of continued fractions, which are (p
 
    R_k = a_k + \cfrac{1}{a_{k + 1} + \cfrac{1}{a_{k + 2} \ddots }}
 
-The remainders of ``ContinuedFraction`` objects can be obtained via the ``.remainder()`` method, which takes a non-negative integer not exceeding the order.
+The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order.
 
 .. code:: python
 
@@ -145,11 +145,11 @@ Using the continued fraction representation of :math:`\frac{649}{200}` we can ve
    & R_3 &&= [4;] = 4 = \frac{4}{1}
    \end{alignat*}
 
-Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_1,R_2,\ldots` satisfy the following relation, for integers :math:`k > 0`:
+Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_1,R_2,\ldots` satisfy the following relation:
 
 .. math::
 
-   R_k = \frac{1}{R_{k - 1} - a_{k - 1}}
+   R_k = \frac{1}{R_{k - 1} - a_{k - 1}}, \hskip{1em} k \geq 1
 
 
 Khinchin Means & Khinchin's Constant
@@ -161,7 +161,7 @@ For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and 
 
    K_n := \sqrt[n]{a_1a_2 \cdots a_n} = \left( a_1a_2 \cdots a_n \right)^{\frac{1}{n}}, \hskip{1em} n \geq 1
 
-So :math:`K_n` is simply the geometric mean of the sequence :math:`(a_1, a_2,\ldots,a_n)` for :math:`n \geq 1`.
+So :math:`K_n` is simply the geometric mean of the integers :math:`a_1, a_2,\ldots,a_n`, for :math:`n \geq 1`.
 
 It has been proved that for irrational numbers, which have infinite continued fraction representations, there are infinitely many for which the quantity :math:`K_n` approaches a constant :math:`K_0 \approx 2.685452\ldots`, called `Khinchin's constant <https://en.wikipedia.org/wiki/Khinchin%27s_constant>`_, independent of the number. So:
 
@@ -169,7 +169,7 @@ It has been proved that for irrational numbers, which have infinite continued fr
 
    \lim_{n \to \infty} K_n = \lim_{n \to \infty} \sqrt[n]{a_1a_2 \cdots a_n} = K_0 \approx 2.685452\ldots
 
-The ``ContinuedFraction`` class provides a way of examining the behaviour of :math:`K_n` via the ``.khinchin_mean`` property, as indicated in the examples below.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a way of examining the behaviour of :math:`K_n` via the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.khinchin_mean` property, as indicated in the examples below.
 
 .. code:: python
 
@@ -221,7 +221,7 @@ The constant :math:`\gamma`, which has not been proved to be irrational, is defi
 
 where :math:`H_n = \sum_{k=1}^n \frac1{k} = 1 + \frac{1}{2} + \frac{1}{3} + \cdots \frac{1}{n}` is the :math:`n`-th harmonic number.
 
-.. _properties-of-continued-fractions.references:
+.. _exploring-continued-fractions.references:
 
 References
 ==========
@@ -247,7 +247,3 @@ https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractionsU
 [9] Wikipedia. "Euler's constant". https://en.wikipedia.org/wiki/Euler%27s_constant. Accessed 11 March 2024.
 
 [10] Wikipedia. "Khinchin's constant". https://en.wikipedia.org/wiki/Khinchin%27s_constant. Accessed 11 March 2024.
-
-[11] Wikipedia. “Mediant (mathematics)”. https://en.wikipedia.org/wiki/Mediant_(mathematics). Accessed 23 February 2024.
-
-[12] Wikipedia. “Stern-Brocot Tree”. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree. Accessed 23 February 2024.

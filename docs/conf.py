@@ -186,7 +186,7 @@ html_baseurl = 'https://github.com/sr-murthy/continuedfractions'
 html_sidebars = {
     "sources/getting-started": [],
     "sources/creating-continued-fractions": [],
-    "sources/properties-of-continued-fractions": [],
+    "sources/exploring-continued-fractions": [],
     "sources/mediants": [],
     "sources/contributing": [],
     "sources/continuedfractions/*": ["sidebar-nav-bs"],

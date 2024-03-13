@@ -7,7 +7,7 @@ Another feature which the package includes is `mediants <https://en.wikipedia.or
 .. _mediants.mediants-and-their-properties:
 
 Mediants and their Properties
------------------------------
+=============================
 
 The (simple) **mediant** of two rational numbers :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, where :math:`b, d, b + d \neq 0`, is defined as the rational number:
 
@@ -44,7 +44,7 @@ This is an ordering property that links mediants to ordered sequences of rationa
 .. _mediants.generalised-mediants:
 
 Generalised Mediants
---------------------
+====================
 
 The concept of the simple mediant of two fractions of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` as given above can be generalised to :math:`k`-th **left-** and **right-mediants**: for a positive integer :math:`k` the :math:`k`-th left mediant of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` can be defined as:
 

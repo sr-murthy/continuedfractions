@@ -188,6 +188,7 @@ Note that the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`
 .. code:: python
 
     # `decimal.Decimal.getcontext().prec` stores the current context precision
+    >>> import decimal
     >>> decimal.getcontext().prec
     28
     # Increase it to 100 digits, and try again
@@ -312,7 +313,7 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the continued fraction represen
 .. _creating-continued-fractions.references:
 
 References
-----------
+==========
 
 [1] Baker, Alan. A concise introduction to the theory of numbers. Cambridge: Cambridge Univ. Pr., 2002.
 

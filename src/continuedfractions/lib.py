@@ -10,7 +10,9 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+from collections import deque
 from decimal import Decimal
+from itertools import accumulate
 from fractions import Fraction
 from typing import Generator
 
@@ -224,10 +226,11 @@ def fraction_from_elements(*elements: int) -> Fraction:
     if any(not isinstance(elem, int) for elem in elements):
         raise ValueError("Continued fraction elements must be integers")
 
-    if len(elements) == 1:
-        return Fraction(elements[0], 1)
-
-    return elements[0] + Fraction(1, fraction_from_elements(*elements[1:]))
+    return Fraction(
+        deque(
+            accumulate(reversed(elements), func=lambda x, y: Fraction(1, x) + y)
+        ).pop()
+    )
 
 
 def convergent(*elements: int, k: int = 1) -> Fraction:

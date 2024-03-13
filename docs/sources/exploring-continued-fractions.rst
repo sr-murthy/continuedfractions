@@ -120,7 +120,7 @@ The segments of :py:class:`~continuedfractions.continuedfraction.ContinuedFracti
 
 **Note**: Unlike the :math:`k`-order convergents the segments are :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, and can be used as a proxy for the convergents.
 
-A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element, usually the leading element :math:`a_0`. More precisely, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained by "removing" the elements of the :math:`(k - 1)`-st segment :math:`S_{k - 1} = (a_0,a_1,\ldots,a_{k - 1})` from :math:`[a_0; a_1,\ldots]`.
+A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element. Generally, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained by "removing" the elements of the :math:`(k - 1)`-st segment :math:`S_{k - 1} = (a_0,a_1,\ldots,a_{k - 1})` from :math:`[a_0; a_1,\ldots]`.
 
 .. math::
 

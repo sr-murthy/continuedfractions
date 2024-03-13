@@ -2,6 +2,8 @@
 Contributing
 ============
 
+The project homepage is on `GitHub <https://github.com/sr-murthy/continuedfractions>`_.
+
 Contributors and contributions are welcome via pull requests from a fork targeting the parent ``main`` `branch <https://github.com/sr-murthy/continuedfractions/tree/main>`_.
 
 A simple Git workflow, using a feature and/or fix branch created off the ``main`` branch of your fork, is recommended.
@@ -90,7 +92,7 @@ The CI/CD pipelines are defined in the `CI YML <.github/workflows/ci.yml>`_, and
 Versioning and Releases
 =======================
 
-The package is currently at version ``0.11.7`` - `semantic versioning <https://semver.org/>`_ is used.
+The package is currently at version ``0.11.8`` - `semantic versioning <https://semver.org/>`_ is used.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 

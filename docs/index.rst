@@ -2,16 +2,15 @@
 continuedfractions
 ==================
 
-A simple extension of the Python `fractions <https://docs.python.org/3/library/fractions.html>`_ standard library for working with `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
+A simple extension of the Python :py:mod:`fractions` standard library for working with `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
 
 The ``continuedfractions`` package is designed to:
 
 -  make it easy to construct continued fractions as Python objects
--  explore their key properties, such as elements/coefficients,
-   convergents, segments, remainders
--  operate on them as rationals and instances of the standard library
-   `fractions.Fraction <https://docs.python.org/3/library/fractions.html#fractions.Fraction>`_
-   class
+-  explore their key continued fractions properties, such as elements/coefficients,
+   convergents, remainders, and other numerical properties etc.
+-  operate on them fully as rational numbers and instances of the standard library
+   :py:class:`fractions.Fraction` class
 
 Prelude
 -------

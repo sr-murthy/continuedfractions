@@ -169,7 +169,7 @@ Then we can iteratively construct more accurate :py:class:`~continuedfractions.c
 
    ...
 
-With the first 10 elements of the complete sequence of elements of the continued fraction representation of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a continued fraction representation are called convergents, and will be discussed in more detail later on.
+With the first 10 elements of the complete sequence of elements of the continued fraction representation of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a continued fraction representation are called convergents, and will be discussed in more detail later on.
 
 If we use the first 101 elements (the leading 1, plus a tail of 100 2s) we get more accurate results:
 
@@ -179,7 +179,7 @@ If we use the first 101 elements (the leading 1, plus a tail of 100 2s) we get m
    >>> sqrt2_100 = ContinuedFraction.from_elements(1, *[2] * 100)
    ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
    >>> sqrt2_100.elements
-   # -> (1, 2, 2, 2, ..., 2)
+   # -> (1, 2, 2, 2, ..., 2) where there are `100` 2s after the `1`
    >>> sqrt2_100.as_decimal()
    Decimal('1.414213562373095048801688724')
 
@@ -262,7 +262,7 @@ A number of examples are given below of validation passes and fails.
 .. _creating-continued-fractions.negative-continued-fractions:
 
 “Negative” Continued Fractions
-------------------------------
+==============================
 
 Continued fractions representations for negative numbers are valid, provided we use `Euclidean integer division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_ to calculate the elements of the representation, by starting with the integer part of the number, and then calculating the remaining elements for the fractional part with the successive quotients and remainders obtained in each division step. For example, :math:`\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}` has the continued fraction representation :math:`[-5; 1, 1, 6, 7]`:
 

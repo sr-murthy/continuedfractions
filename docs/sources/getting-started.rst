@@ -2,7 +2,7 @@
 Getting Started
 ===============
 
-The package uses only Python standard libraries, and is supported on Python versions ``3.10``-``3.12``. It is CI-tested on Ubuntu Linux (22.04.3 LTS), Mac OS (12.7.3) and Windows (Windows Server 2022), but should also install on any other platform supporting these Python versions.
+This is a `PyPI package <https://pypi.org/project/continuedfractions/>`_ which uses only Python standard libraries, and is supported on Python versions ``3.10``-``3.12``. It is CI-tested on Ubuntu Linux (22.04.3 LTS), Mac OS (12.7.3) and Windows (Windows Server 2022), but should also install on any other platform supporting these Python versions.
 
 .. _getting-started.installation:
 
@@ -34,10 +34,10 @@ Package Structure
 
 This is a library of standalone functions, which are summarised below.
 
--  :py:meth:`~continuedfractions.lib.continued_fraction_rational` - generates the (ordered) sequence of elements (coefficients) of a finite, simple continued fraction representation of a given rational number, given as a :py:class:`fractions.Fraction` object. The representation will be unique if the given number is a rational number with an exact binary fractional representation, otherwise it will be approximate.
--  :py:meth:`~continuedfractions.lib.continued_fraction_real` - generates the sequence of elements of a finite, simple, continued fraction representation of a real number, given as a single :py:class:`int`, :py:class:`float`, :py:class:`fractions.Fraction`, :py:class:`decimal.Decimal` object, or a pair of integers and/or :py:class:`fractions.Fraction` objects representing the numerator and non-zero denominator, respectively, of the number. The resulting continued fraction representation will be exact for any rational number and which has an exact representation as a binary fraction, otherwise, it will only be approximate. The latter limitation will be addressed in future versions.
--  :py:meth:`~continuedfractions.lib.convergent` - returns the ``k``-th convergent (for a positive integer :math:`k`) of a (finite) simple continued fraction representation of a number, from a sequence of its elements; the convergent is returned as a :py:class:`fractions.Fraction` object
--  :py:meth:`~continuedfractions.lib.mediant` - returns the ``k``-th left or right mediant of two rational numbers, given as :py:class:`fractions.Fraction` objects
+-  :py:meth:`~continuedfractions.lib.continued_fraction_rational` - generates the (ordered) sequence of elements (coefficients) of a finite, simple continued fraction representation of a given rational number, given as a :py:class:`fractions.Fraction` object.
+-  :py:meth:`~continuedfractions.lib.continued_fraction_real` - generates the sequence of elements of a finite, simple, continued fraction representation of a real number, given as a single :py:class:`int`, :py:class:`float`, :py:class:`fractions.Fraction`, :py:class:`decimal.Decimal` object, or an :py:class:`int` pair and/or :py:class:`fractions.Fraction` pair, representing the numerator and non-zero denominator, respectively, of the number.
+-  :py:meth:`~continuedfractions.lib.convergent` - returns the ``k``-th convergent (for a positive integer :math:`k`) of a (finite) simple continued fraction representation of a number, from a sequence of its elements; the convergent is returned as a :py:class:`fractions.Fraction` object.
+-  :py:meth:`~continuedfractions.lib.mediant` - returns the ``k``-th left or right mediant of two rational numbers, given as :py:class:`fractions.Fraction` objects; the mediant is returned as a :py:class:`fractions.Fraction` object.
 
 .. _getting-started.package-structure.continuedfractions_continuedfraction:
 

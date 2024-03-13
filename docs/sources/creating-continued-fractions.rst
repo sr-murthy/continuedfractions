@@ -188,6 +188,7 @@ Note that the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`
 .. code:: python
 
     # `decimal.Decimal.getcontext().prec` stores the current context precision
+    >>> import decimal
     >>> decimal.getcontext().prec
     28
     # Increase it to 100 digits, and try again

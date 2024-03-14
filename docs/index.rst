@@ -27,13 +27,13 @@ Prelude
    ContinuedFraction(884279719003555, 281474976710656)
    >>> cf.elements
    (3,7,15,1,292,1,1,1,2,1,3,1,14,4,2,3,1,12,5,1,5,20,1,11,1,1,1,2)
-   >>> cf.as_float()
-   3.141592653589793
-   >>> cf.convergents
-   mappingproxy({0: Fraction(3, 1), 1: Fraction(22, 7), 2: Fraction(333, 106), 3: Fraction(355, 113), 4: Fraction(103993, 33102), 5: Fraction(104348, 33215), 6: Fraction(208341, 66317), 7: Fraction(312689, 99532), 8: Fraction(833719, 265381), 9: Fraction(1146408, 364913), 10: Fraction(4272943, 1360120), 11: Fraction(5419351, 1725033), 12: Fraction(80143857, 25510582), 13: Fraction(325994779, 103767361), 14: Fraction(732133415, 233045304), 15: Fraction(2522395024, 802903273), 16: Fraction(3254528439, 1035948577), 17: Fraction(41576736292, 13234286197), 18: Fraction(211138209899, 67207379562), 19: Fraction(252714946191, 80441665759), 20: Fraction(1474712940854, 469415708357), 21: Fraction(29746973763271, 9468755832899), 22: Fraction(31221686704125, 9938171541256), 23: Fraction(373185527508646, 118788642786715), 24: Fraction(404407214212771, 128726814327971), 25: Fraction(777592741721417, 247515457114686), 26: Fraction(1181999955934188, 376242271442657), 27: Fraction(3141592653589793, 1000000000000000)})
+   >>> cf.as_decimal()
+   Decimal('3.141592653589793115997963468544185161590576171875')
+   >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(10), cf.convergent(20), cf.convergent(27)
+   (ContinuedFraction(3, 1), ContinuedFraction(22, 7), ContinuedFraction(333, 106), ContinuedFraction(4272943, 1360120), ContinuedFraction(509453239292, 162164002615), ContinuedFraction(884279719003555, 281474976710656))
    >>> cf.order
    27
-   >>> pi_approx = ContinuedFraction.from_elements(3, 7, 15, 1)
+   >>> pi_approx = ContinuedFraction.from_elements(3, 7, 15, 1, 292)
    >>> pi_approx
    ContinuedFraction(355, 113)
    >>> pi_approx.as_float()

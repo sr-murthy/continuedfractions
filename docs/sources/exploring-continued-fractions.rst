@@ -66,19 +66,12 @@ Each convergent :math:`C_k` represents a **rational approximation** :math:`\frac
 
 This is equivalent to the limit :math:`\lim_{k \to \infty} \epsilon_k = 0`: if :math:`x` is rational the error term will vanish for some :math:`k >= 0` at which point the convergent :math:`C_k = x`. But if :math:`x` is irrational there will be infinitely many convergents, and their sequence may alternate about :math:`x`, but still converge to it.
 
-The  :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property for objects stores the convergents as an immutable map
-(:py:class:`types.MappingProxyType`) of all :math:`k`-order convergents, indexed (keyed) by integers :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
+The  :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergent` method can be used to get the :math:`k`-order convergent for :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
 
 .. code:: python
 
-   >>> cf.convergents
-   mappingproxy({0: Fraction(3, 1), 1: Fraction(13, 4), 2: Fraction(159, 49), 3: Fraction(649, 200)})
-   >>> cf.convergents[2]
-   Fraction(159, 49)
-   >>> import operator
-   >>> # Get the float value of this fraction
-   >>> operator.truediv(*cf.convergents[2].as_integer_ratio())
-   3.2448979591836733
+   >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
+   (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))
 
 Using the continued fraction representation :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` we can verify that these convergents are correct.
 
@@ -97,30 +90,17 @@ Obviously, we can only handle finite continued fractions in Python, so the conve
 .. code:: python
 
    >>> pi_cf = ContinuedFraction(math.pi)
-   >>> pi_cf.convergents
-   mappingproxy({0: Fraction(3, 1), 1: Fraction(22, 7), 2: Fraction(333, 106), 3: Fraction(355, 113), ... , 27: Fraction(3141592653589793, 1000000000000000)})
-   >>> assert pytest.approx(pi_cf.convergents[27], abs=1e-28) == math.pi
+   >>> pi_cf.convergent(0), pi_cf.convergent(1), pi_cf.convergent(2), pi_cf.convergent(26)
+   ContinuedFraction(3, 1), ContinuedFraction(22, 7), ContinuedFraction(333, 106), ContinuedFraction(884279719003555, 281474976710656)
+   >>> assert pytest.approx(pi_cf.convergent(26), abs=1e-28) == math.pi
    # True
 
-**Note**: As the convergents are constructed during :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object initialisation, the objects that represent them cannot be of type :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, due to recursion errors. Thus, it was decided to keep them as :py:class:`fractions.Fraction` objects. This is also sufficient for the purposes of approximation. To use convergents as :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects use the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.segment` method, which is discussed next.
+.. _exploring-continued-fractions.remainders:
 
-.. _exploring-continued-fractions.segments-and-remainders:
+Remainders
+==========
 
-Segments and Remainders
-=======================
-
-Convergents are linked to the concept of **segments**, which are finite subsequences of elements of a given continued fraction. More precisely, we can define the :math:`k`-th segment :math:`S_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the sequence :math:`(a_0,a_1,\ldots,a_k)` of its first :math:`k + 1` elements, which uniquely determines the :math:`k`-order (simple) convergent :math:`C_k` of the continued fraction, as defined above.
-
-The segments of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.segment` method, which takes a non-negative integer not exceeding the order.
-
-.. code:: python
-
-   >>> cf.segment(0), cf.segment(1), cf.segment(2), cf.segment(3)
-   (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))3
-
-**Note**: Unlike the :math:`k`-order convergents the segments are :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, and can be used as a proxy for the convergents.
-
-A related concept is that of **remainders** of continued fractions, which are (possibly infinite) subsequences of elements of a given continued fraction, starting from a given element. Generally, we can define the :math:`k`-th remainder :math:`R_k` of a continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained by "removing" the elements of the :math:`(k - 1)`-st segment :math:`S_{k - 1} = (a_0,a_1,\ldots,a_{k - 1})` from :math:`[a_0; a_1,\ldots]`.
+The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} = (a_0,a_1,\ldots,a_{k - 1})`.
 
 .. math::
 
@@ -149,7 +129,15 @@ Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` th
 
 .. math::
 
-   R_k = \frac{1}{R_{k - 1} - a_{k - 1}}, \hskip{1em} k \geq 1
+   R_{k - 1} = a_{k - 1} + \frac{1}{R_k}, \hskip{1em} k \geq 1
+   
+Remainders are also linked to convergents via the relation:
+
+.. math::
+
+    C_k = a_0 + \frac{1}{R_1}
+
+where :math:`C_k` is the :math:`k`-th convergent :math:`[a_0;a_1,\ldots,a_k]` and :math:`R_1` is the 1st remainder :math:`[a_1;a_2,\ldots]`.
 
 
 Khinchin Means & Khinchin's Constant

@@ -12,9 +12,7 @@ import sys
 
 from decimal import Decimal
 from fractions import Fraction, _RATIONAL_FORMAT
-from functools import partial
 from pathlib import Path
-from types import MappingProxyType
 from typing import Any
 
 # -- 3rd party libraries --
@@ -36,7 +34,7 @@ class ContinuedFraction(Fraction):
     A simple implementation of continued fractions as Python objects and
     instances of the standard library ``fractions.Fraction`` class, with
     various properties for the continued fraction, including its elements
-    (or coefficients), the order, convergents, segments, and remainders.
+    (or coefficients), the order, convergents, and remainders.
 
     Attributes
     ----------
@@ -51,26 +49,21 @@ class ContinuedFraction(Fraction):
         The geometric mean of all elements of the continued fraction, starting
         from ``a_1``, excluding the leading element ``a_0``.
 
-    convergents : types.MappingProxyType[int, Fraction]
-        An immutable map of all the `k`-order convergents of the continued
-        fraction, keyed by `k`.
-
     Methods
     -------
     as_float()
         The `float` value of the fraction, as given by standard division of
         the numerator by the denominator.
 
-    segment(k: int)
-        The `k`th segment of the continued fraction, defined as the continued
-        fraction given by its `k`-order convergent, whose elements consist of
-        the first `k + 1` two elements of the original continued fraction.
+    convergent(k: int)
+        The `k`th (simple) convergent of the continued fraction, defined as the
+        finite simple continued fraction of order ``k`` consisting of the first
+         `k + 1` elements of the original continued fraction.
 
     remainder(k: int)
         The `k`th remainder of the continued fraction, defined as the continued
-        fraction given by the difference between the original continued
-        fraction and its `(k - 1)`-order convergent (equivalently, the
-        `(k - 1)` order segment, as defined above).
+        fraction whose elements start from the ``k``-th element of the sequence
+        of elements of the original continued fraction.
 
     mediant(other: Fraction)
         The continued fraction of the rational number formed by taking the
@@ -89,22 +82,20 @@ class ContinuedFraction(Fraction):
     >>> cf.as_float()
     3.245
 
-    Inspect the elements, order, convergents, segments and remainders
+    Inspect the elements, order, convergents, and remainders
 
     >>> cf.elements
     (3, 4, 12, 4)
     >>> cf.order
     3
-    >>> cf.convergents
-    mappingproxy({0: Fraction(3, 1), 1: Fraction(13, 4), 2: Fraction(159, 49), 3: Fraction(649, 200)})
-    >>> cf.segment(1)
-    ContinuedFraction(13, 4)
-    >>> cf.remainder(1)
-    ContinuedFraction(200, 49)
+    >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
+    (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))
+    >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
+    (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 
-    Check some properties of the segments and remainders
+    Check some properties of the convergents and remainders
 
-    >>> assert cf.remainder(1) == 1 / (cf - cf.convergents[0])
+    >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
 
     Construct continued fractions from element sequences.
 
@@ -325,7 +316,7 @@ class ContinuedFraction(Fraction):
     def __init__(self, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
         """
         Initialises new `ContinuedFraction` instances with attributes and
-        properties for their elements, order, convergents, segments and
+        properties for their elements, order, convergents, and
         remainders.
 
         Parameters
@@ -350,22 +341,20 @@ class ContinuedFraction(Fraction):
         >>> cf
         ContinuedFraction(415, 93)
 
-        Inspect the elements, order, convergents, segments and remainders
+        Inspect the elements, order, convergents, and remainders
 
         >>> cf.elements
         (4, 2, 6, 7)
         >>> cf.order
         3
-        >>> cf.convergents
-        mappingproxy({0: Fraction(4, 1), 1: Fraction(9, 2), 2: Fraction(58, 13), 3: Fraction(415, 93)})
-        >>> cf.segment(0), cf.segment(1), cf.segment(2), cf.segment(3)
+        >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
         (ContinuedFraction(4, 1), ContinuedFraction(9, 2), ContinuedFraction(58, 13), ContinuedFraction(415, 93))
         >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
         (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
 
-        Check some properties of the segments and remainders
+        Check some properties of the convergents and remainders
 
-        >>> assert cf.remainder(1) == 1 / (cf - cf.convergents[0])
+        >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
         """
         super().__init__()
 
@@ -385,14 +374,6 @@ class ContinuedFraction(Fraction):
             self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
         else:      # pragma: no cover
             raise ValueError(self.__class__.__valid_inputs_msg__)
-
-        _convergent = partial(convergent, *self._elements)
-        self._convergents = MappingProxyType(
-            {
-                k: _convergent(k=k)
-                for k in range(len(self._elements))
-            }
-        )
 
     def __add__(self, other: Fraction, /) -> Fraction:
         return self.__class__(super().__add__(other))
@@ -595,66 +576,46 @@ class ContinuedFraction(Fraction):
         except statistics.StatisticsError:
             return
 
-    @property
-    def convergents(self) -> MappingProxyType[int, Fraction]:
+    def convergent(self, k: int, /) -> Fraction:
         """
-        Property: the map of all the (simple) convergents of the continued
-                  fraction, keyed by the orders `0`,`1`,...,`n`, where `n` is
-                  the order of the continued fraction.
-
-        Returns
-        -------
-        types.MappingProxyType[int, fractions.Fraction]
-            The map of all convergents of the continued fraction, keyed
-            by their orders.
-
-        Examples
-        --------
-        >>> cf = ContinuedFraction('.12345')
-        >>> cf
-        ContinuedFraction(2469, 20000)
-        >>> cf.convergents
-        mappingproxy({0: Fraction(0, 1), 1: Fraction(1, 8), 2: Fraction(9, 73), 3: Fraction(10, 81), 4: Fraction(219, 1774), 5: Fraction(229, 1855), 6: Fraction(448, 3629), 7: Fraction(2469, 20000)})
-        """
-        return self._convergents
-
-    def segment(self, k: int, /) -> Fraction:
-        """
-        Returns a ``ContinuedFraction`` object for the `k`-th segment of
-        the continued fraction, which is defined as the sequence of its
-        first ``k + 1`` elements ``a_0, a_1, ... , a_k``. As this sequence
-        uniquely determines the ``k``-th convergent of the continued
-        fraction, the ``k``-th segments may be used as a proxy for the
-        convergents, which in this implementation are represented using
-        ``fractions.Fraction``.
+        Returns a ``ContinuedFraction`` object for the `k`-th (simple)
+        convergent of the continued fraction, which is defined as the finite 
+        simple continued fraction of order ``k`` formed from the first
+        ``k + 1`` elements ``a_0, a_1, ... , a_k``.
 
         Parameters
         ----------
         k : int
-            The index of the segment, as described above.
+            The order of the convergent, as described above.
 
         Returns
         -------
         ContinuedFraction
-            A new `ContinuedFraction` instance representing the `k`-th segment
-            of the original continued fraction, as described above.
+            A new `ContinuedFraction` instance representing the `k`-th (simple)
+            convergent of the original continued fraction, as described above.
 
         Examples
         --------
         >>> cf = ContinuedFraction('.12345')
         >>> cf
         ContinuedFraction(2469, 20000)
-        >>> cf.segment(2)
+        >>> cf.convergent(0)
+        ContinuedFraction(0, 1)
+        >>> cf.convergent(2)
         ContinuedFraction(9, 73)
+        >>> cf.convergent(6)
+        ContinuedFraction(448, 3629)
+        >>> cf.convergent(7)
+        ContinuedFraction(2469, 20000)
         """
-        return self.__class__.from_elements(*self._elements[:k + 1])
+        return self.__class__(convergent(*self._elements[:k + 1], k=k))
 
     def remainder(self, k: int, /) -> Fraction:
         """
         The `k`-th remainder of the continued fraction, defined as the continued
-        fraction given by the difference between the original continued
-        fraction and its `(k - 1)`-order convergent (equivalently, the
-        `(k - 1)`-order segment, as defined above).
+        fraction consisting of the elements starting from the ``k``-th element
+        of the sequence of elements of the original continued fraction: so the
+        ``k``-th remainder has the elements ``a_k, a_{k + 1}, ...``.
 
         Parameters
         ----------
@@ -672,8 +633,14 @@ class ContinuedFraction(Fraction):
         >>> cf = ContinuedFraction('.12345')
         >>> cf
         ContinuedFraction(2469, 20000)
+        >>> cf.remainder(0)
+        ContinuedFraction(2469, 20000)
         >>> cf.remainder(2)
         ContinuedFraction(2469, 248)
+        >>> cf.remainder(6)
+        ContinuedFraction(6, 5)
+        >>> cf.remainder(7)
+        ContinuedFraction(5, 1)
         """
         return self.__class__.from_elements(*self._elements[k:])
 

@@ -13,7 +13,7 @@ Import the core class :py:class:`continuedfractions.continuedfraction.ContinuedF
 From Numeric Types
 ==================
 
-As a starting point, we can take the `rational number <https://en.wikipedia.org/wiki/Rational_number>`_ :math:`\frac{649}{200} = \frac{3 \times 200 + 49}{200} = 3.245` which
+We can start with a simple `rational number <https://en.wikipedia.org/wiki/Rational_number>`_ :math:`\frac{649}{200} = \frac{3 \times 200 + 49}{200} = 3.245` which
 has a continued fraction representation:
 
 .. math::
@@ -22,7 +22,7 @@ has a continued fraction representation:
 
 This representation is called **simple** because all of the numerators in the fractional terms are equal to :math:`1`, which makes the fractions irreducible (cannot be simplified further). Mathematically, the continued fraction is written as :math:`[3; 4, 12, 4]`.
 
-We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail". It is not hard to see that the integers :math:`3, 4, 12, 4` uniquely determine the continued fraction as a simple form.
+We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail". It is not hard to see that the integers :math:`3, 4, 12, 4` uniquely determine the continued fraction in its simple form.
 
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object for :math:`\frac{649}{200}` can be created as follows.
 

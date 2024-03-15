@@ -311,7 +311,13 @@ class ContinuedFraction(Fraction):
         >>> c2
         ContinuedFraction(200, 649)
         """
-        return cls(fraction_from_elements(*elements))
+        # Create a new ``ContinuedFraction`` object from the given elements
+        # and initialise with elements only - no need to initialise via
+        # ``__init__``
+        obj = cls(fraction_from_elements(*elements))
+        obj._elements = elements
+    
+        return obj
 
     def __init__(self, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
         """

@@ -418,15 +418,27 @@ class TestContinuedFraction:
 	
 		assert cf1.mediant(cf2, dir='left', k=k) == expected_left_mediant
 
-	def test_ContinuedFraction__operations(self):
+	def test_ContinuedFraction__rational_operations(self):
 		f1 = ContinuedFraction(649, 200)
 		f2 = ContinuedFraction(-649, 200)
 
 		assert f1 + f2 == ContinuedFraction(0, 1)
 
+		assert f1 + 1 == 1 + f1 == ContinuedFraction('4.245')
+
 		assert f1.__radd__(f2) == f2.__radd__(f1)
 
+		assert f1.__radd__(1) == 1 + f1
+
 		assert f1 - f2 == ContinuedFraction(649, 100)
+
+		assert f1 - 1 == ContinuedFraction('2.245')
+
+		assert 1 - f1 == f1.__rsub__(1) == ContinuedFraction('-2.245')
+
+		assert f1 - 4 == ContinuedFraction('-0.755')
+
+		assert 4 - f1 == ContinuedFraction('0.755')
 
 		assert f1.__rsub__(f2) == f2.__radd__(-f1)
 

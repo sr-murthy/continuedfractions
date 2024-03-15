@@ -19,6 +19,13 @@
 
 A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
 
+The [PyPI package](https://pypi.org/project/continuedfractions/) only uses standard libraries and can be installed on any Python 3.10, 3.11, or 3.12 installation on Linux, Mac OS or Windows.
+```shell
+   pip install continuedfractions
+```
+
+See the [project docs](https://continuedfractions.readthedocs.io/en/latest) for more details.
+
 [Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
 
 The `continuedfractions` package is designed to:
@@ -29,4 +36,4 @@ The `continuedfractions` package is designed to:
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 
-See the [project docs](https://continuedfractions.readthedocs.io/en/latest) for more details.
+

@@ -276,7 +276,68 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the continued fraction represen
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects for negative numbers are constructed in the same way as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is “transferred” to the numerator. A few examples are given below.
+To understand the difference in the sequence of elements more generally, we can start with `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ that for a positive rational number :math:`\frac{a}{b} > 1`, with :math:`a, b` coprime (no common divisors), there are positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`, so that:
+
+.. math::
+
+   \begin{align}
+   \frac{a}{b} &= q + \frac{v}{b} \\
+               &= q + \frac{1}{\frac{b}{v}} \\
+               &= q + \frac{1}{R_1} \\
+               &= [a_0 = q; a_1, \ldots, a_n]
+   \end{align}
+
+where :math:`R_1 = [a_1; a_2, \ldots, a_n] = \frac{b}{v}` is an :math:`(n - 1)`-order continued fraction which is the 1st :ref:`remainder <exploring-continued-fractions.remainders>` of the finite, simple continued fraction representation :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. Note that
+
+.. math::
+
+   -a = -qb - v = -qb - b + b - v = -(q + 1)b + (b - v)
+
+so we can write:
+
+.. math::
+
+   \begin{align}
+   -\frac{a}{b} &= -(q + 1) + \frac{b - v}{b} \\
+                &= -(q + 1) + \frac{1}{\frac{b}{b - v}} \\
+                &= -(q + 1) + \frac{1}{1 + \frac{v}{b - v}} \\
+                &= -(q + 1) + \frac{1}{1 + \frac{1}{\frac{b}{v} - 1}} \\
+                &= -(q + 1) + \frac{1}{1 + \frac{1}{R_1 - 1}} \\
+                &= [a_0 = -(q + 1); 1, a_1 - 1,a_2,a_3,\ldots,a_n]
+   \end{align}
+
+where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots,a_n]` and :math:`\frac{1}{R_1 - 1} = [0; a_1 - 1, a_2, a_3, \ldots,a_n]`. There are two cases: (1) :math:`a_1 = 1` in which case :math:`R_1` (for :math:`-\frac{a}{b}`) is the :math:`(n - 2)`-order continued fraction :math:`[1; a_2,\ldots, a_n] = [a_2 + 1; a_3,\ldots,a_n]`, or case (2) where :math:`R_1` is unchanged.
+
+Thus, we can say that if :math:`[a_0;a_1,\ldots,a_n]` is the :math:`n`-order simple continued fraction representation of a positive rational number :math:`\frac{a}{b} > 1` then :math:`-\frac{a}{b}` has the following :math:`(n - 1)` and :math:`(n + 1)` simple continued representations for the cases :math:`a_1 = 1` and :math:`a_1 > 1`, respectively:
+
+.. math::
+
+   -\frac{a}{b} = 
+      \begin{cases}
+         [-(a_0 + 1); a_2 + 1,a_3,\ldots,a_n], & a_1 = 1 \\
+         [-(a_0 + 1); 1, a_1 - 1,a_2,a_3,\ldots,a_n], & a_1 > 1
+      \end{cases}
+
+As :math:`n \to \infty` then :math:`\lim_{n \to \infty} [a_0;a_1,\ldots,a_n] = [a_0;a_1,\ldots]` represents an irrational number, and the same relations hold.
+
+We can see this in action with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects:
+
+.. code:: python
+
+   >>> ContinuedFraction(382, 225).elements
+   (1, 1, 2, 3, 4, 5)
+   >>> ContinuedFraction(-382, 225).elements
+   (-2, 3, 3, 4, 5)
+   >>> ContinuedFraction.from_elements(-2, 3, 3, 4, 5)
+   ContinuedFraction(-382, 225)
+   >>> ContinuedFraction(225, 157).elements
+   (1, 2, 3, 4, 5)
+   >>> ContinuedFraction(-225, 157).elements
+   (-2, 1, 1, 3, 4, 5)
+   >>> ContinuedFraction.from_elements(-2, 1, 1, 3, 4, 5)
+   ContinuedFraction(-225, 157)
+
+The construction of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects via the ``__new__() -> __init__()`` cycle works the same way for negative numbers as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is “transferred” to the numerator. A few examples are given below.
 
 .. code:: python
 
@@ -288,10 +349,10 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the continued fraction represen
    (-5, 1, 1, 6, 7)
    >>> ContinuedFraction(-415, 93).convergents 
    mappingproxy({0: Fraction(-5, 1), 1: Fraction(-4, 1), 2: Fraction(-9, 2), 3: Fraction(-58, 13), 4: Fraction(-415, 93)})
-   >>> ContinuedFraction(-415, 93).as_float()
-   -4.462365591397849
-   >>> ContinuedFraction(415, 93).as_float()
-   4.462365591397849
+   >>> ContinuedFraction(-415, 93).as_decimal()
+   Decimal('-4.462365591397849462365591397849462365591397849462365591397849462365591397849462365591397849462365591')
+   >>> ContinuedFraction(415, 93).as_decimal()
+   Decimal('4.462365591397849462365591397849462365591397849462365591397849462365591397849462365591397849462365591')
 
 **Note** As negation of numbers is a unary operation, the minus sign in a “negative” :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object must be attached to the fraction, before enclosure in parentheses.
 

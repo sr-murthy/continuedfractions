@@ -32,8 +32,9 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object f
    >>> cf
    ContinuedFraction(649, 200)
 
-**Note**: The same object can also be constructed using ``ContinuedFraction('649/200')``, ``ContinuedFraction('3.245')``, ``ContinuedFraction(Fraction(649, 200))``, ``ContinuedFraction(Fraction(649), 200))``, ``ContinuedFraction(649, Fraction(200)))``, and ``ContinuedFraction(Decimal('3.245'))``. But passing a numeric literal such as ``649/200`` will result in an evaluation of the decimal integer division using `binary floating point division <https://docs.python.org/3/tutorial/floatingpoint.html>`_,
-thus producing a fractional approximation, in this case, ``ContinuedFraction(3653545197704315, 1125899906842624)``.
+.. note::
+
+   The same object can also be constructed using ``ContinuedFraction('649/200')``, ``ContinuedFraction('3.245')``, ``ContinuedFraction(Fraction(649, 200))``, ``ContinuedFraction(Fraction(649), 200))``, ``ContinuedFraction(649, Fraction(200)))``, and ``ContinuedFraction(Decimal('3.245'))``. But passing a numeric literal such as ``649/200`` will result in an evaluation of the decimal integer division using `binary floating point division <https://docs.python.org/3/tutorial/floatingpoint.html>`_, thus producing a fractional approximation, in this case, ``ContinuedFraction(3653545197704315, 1125899906842624)``.
 
 The float value of ``ContinuedFraction(649, 200)`` is available via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.as_float()` method, in this case, a value of :math:`3.245`.
 
@@ -183,7 +184,7 @@ If we use the first 101 elements (the leading 1, plus a tail of 100 2s) we get m
    >>> sqrt2_100.as_decimal()
    Decimal('1.414213562373095048801688724')
 
-Note that the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this construction is now accurate up to 27 digits in the fractional part, but the decimal representation stops there. Why 27? Because the :py:mod:`decimal` library uses a default `contextual precision <https://docs.python.org/3/library/decimal.html#decimal.DefaultContext>`_ of 28 digits. This can be increased, and the accuracy compared in the longer representation, as follows:
+The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this construction is now accurate up to 27 digits in the fractional part, but the decimal representation stops there. Why 27? Because the :py:mod:`decimal` library uses a default `contextual precision <https://docs.python.org/3/library/decimal.html#decimal.DefaultContext>`_ of 28 digits. This can be increased, and the accuracy compared in the longer representation, as follows:
 
 .. code:: python
 
@@ -276,7 +277,7 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the continued fraction represen
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-To understand the difference in the sequence of elements more generally, we can start with `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ that for a positive rational number :math:`\frac{a}{b} > 1`, with :math:`a, b` coprime (no common divisors), there are positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`, so that:
+To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start with `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ that for a positive rational number :math:`\frac{a}{b} > 1`, with :math:`a, b` coprime (no common divisors), and :math:`[a_0;a_1,\ldots,a_n]` as the finite, simple continued fraction representation, there are positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
 
 .. math::
 
@@ -306,9 +307,9 @@ so we can write:
                 &= [a_0 = -(q + 1); 1, a_1 - 1,a_2,a_3,\ldots,a_n]
    \end{align}
 
-where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots,a_n]` and :math:`\frac{1}{R_1 - 1} = [0; a_1 - 1, a_2, a_3, \ldots,a_n]`. There are two cases: (1) :math:`a_1 = 1` in which case :math:`R_1` (for :math:`-\frac{a}{b}`) is the :math:`(n - 2)`-order continued fraction :math:`[1; a_2,\ldots, a_n] = [a_2 + 1; a_3,\ldots,a_n]`, or case (2) where :math:`R_1` is unchanged.
+where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots,a_n]` and :math:`\frac{1}{R_1 - 1} = [0; a_1 - 1, a_2, a_3, \ldots,a_n]`. There are two cases: (1) :math:`a_1 = 1` where :math:`R_1` (for :math:`-\frac{a}{b}`) is the :math:`(n - 2)`-order continued fraction :math:`[1; a_2,\ldots, a_n] = [a_2 + 1; a_3,\ldots,a_n]`, or case (2) :math:`a_1 > 1` where :math:`R_1` is the same as for :math:`\frac{a}{b}`.
 
-Thus, we can say that if :math:`[a_0;a_1,\ldots,a_n]` is the :math:`n`-order simple continued fraction representation of a positive rational number :math:`\frac{a}{b} > 1` then :math:`-\frac{a}{b}` has the following :math:`(n - 1)` and :math:`(n + 1)` simple continued representations for the cases :math:`a_1 = 1` and :math:`a_1 > 1`, respectively:
+Thus, we can say that if :math:`[a_0;a_1,\ldots,a_n]` is the :math:`n`-order simple continued fraction representation of a positive rational number :math:`\frac{a}{b} > 1` then :math:`-\frac{a}{b}` has the following :math:`(n - 1)`- and :math:`(n + 1)`-order simple continued representations for the cases :math:`a_1 = 1` and :math:`a_1 > 1`, respectively:
 
 .. math::
 
@@ -337,7 +338,7 @@ We can see this in action with :py:class:`~continuedfractions.continuedfraction.
    >>> ContinuedFraction.from_elements(-2, 1, 1, 3, 4, 5)
    ContinuedFraction(-225, 157)
 
-The construction of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects via the ``__new__() -> __init__()`` cycle works the same way for negative numbers as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is “transferred” to the numerator. A few examples are given below.
+The construction (creation + initialisation) of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects via the ``__new__() -> __init__()`` step works the same way for negative numbers as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is “transferred” to the numerator. A few examples are given below.
 
 .. code:: python
 
@@ -354,7 +355,9 @@ The construction of :py:class:`~continuedfractions.continuedfraction.ContinuedFr
    >>> ContinuedFraction(415, 93).as_decimal()
    Decimal('4.462365591397849462365591397849462365591397849462365591397849462365591397849462365591397849462365591')
 
-**Note** As negation of numbers is a unary operation, the minus sign in a “negative” :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object must be attached to the fraction, before enclosure in parentheses.
+.. note::
+
+   As negation of numbers is a unary operation, the minus sign in a “negative” :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object must be attached to the fraction, before enclosure in parentheses.
 
 .. code:: python
 

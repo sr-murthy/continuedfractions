@@ -56,7 +56,9 @@ For an integer :math:`k >= 0` the (simple) :math:`k`-th **convergent** :math:`C_
 
    C_k = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 \ddots \cfrac{1}{a_{k-1} + \cfrac{1}{a_k}}}}
 
-We note that if a continued fraction :math:`[a_0; a_1,\ldots]` has a finite order :math:`n` then :math:`C_n` is just the rational number represented by :math:`[a_0; a_1,\ldots,a_n]`.
+.. note::
+
+   If a continued fraction :math:`[a_0; a_1,\ldots]` has a finite order :math:`n` then :math:`C_n` is just the rational number represented by :math:`[a_0; a_1,\ldots,a_n]`.
 
 Each convergent :math:`C_k` represents a **rational approximation** :math:`\frac{p_k}{q_k}` of the given real number :math:`x`, and we can define an error term :math:`\epsilon_k = x - C_k = x - \frac{p_k}{q_k}`. If we assume :math:`x > 0` then the convergents form a sequence of rational numbers converging to :math:`x` as :math:`k \longrightarrow \infty`. So, formally:
 

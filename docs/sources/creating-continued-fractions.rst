@@ -2,27 +2,49 @@
 Creating Continued Fractions
 ============================
 
-Import the core class :py:class:`continuedfractions.continuedfraction.ContinuedFraction`.
+It's useful to start with the basic mathematics of continued fractions, using a simple example.
 
-.. code:: python
+.. _creating-continued-fractions.basic-math:
 
-   >>> from continuedfractions.continuedfraction import ContinuedFraction
+The Basic Math
+==============
 
-.. _creating-continued-fractions.from-numeric-types:
-
-From Numeric Types
-==================
-
-We can start with a simple `rational number <https://en.wikipedia.org/wiki/Rational_number>`_ :math:`\frac{649}{200} = \frac{3 \times 200 + 49}{200} = 3.245` which
-has a continued fraction representation:
+Consider the `rational number <https://en.wikipedia.org/wiki/Rational_number>`_ :math:`\frac{649}{200} = \frac{3 \times 200 + 49}{200} = 3.245` which has a continued fraction representation, or simply, a continued fraction, given by:
 
 .. math::
 
    \frac{649}{200} = 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}}
 
-This representation is called **simple** because all of the numerators in the fractional terms are equal to :math:`1`, which makes the fractions irreducible (cannot be simplified further). Mathematically, the continued fraction is written as :math:`[3; 4, 12, 4]`.
+This is derived by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_, as described below:
 
-We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail". It is not hard to see that the integers :math:`3, 4, 12, 4` uniquely determine the continued fraction in its simple form.
+.. math::
+
+   \begin{align}
+   \frac{649}{200} &= 3 + \cfrac{49}{200} \\
+                   &= 3 + \cfrac{1}{\cfrac{200}{49}} \\
+                   &= 3 + \cfrac{1}{4 + \cfrac{4}{49}} \\
+                   &= 3 + \cfrac{1}{4 + \cfrac{1}{\cfrac{49}{4}}} \\
+                   &= 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}}
+   \end{align}
+
+The numbers :math:`3, 4, 12, 4` are called **elements** (or **coefficients**) of the continued fraction. This representation is called **simple** because all of the numerators in the fractional terms are equal to :math:`1`, which makes the fractions irreducible (cannot be simplified further). Mathematically, the continued fraction is written as :math:`[3; 4, 12, 4]`. The representation is also unique - the only other representation is :math:`[3; 4, 12, 3, 1]`, which can be rewritten as :math:`[3; 4, 12, 4]`.
+
+.. note::
+
+   All references to **simple continued fractions** will be to the unique variants, where the last element :math:`> 1`.
+
+We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail".
+
+.. _creating-continued-fractions.from-numeric-types:
+
+Creating Continued Fractions from Numeric Types
+===============================================
+
+Import the core class :py:class:`continuedfractions.continuedfraction.ContinuedFraction`.
+
+.. code:: python
+
+   >>> from continuedfractions.continuedfraction import ContinuedFraction
 
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object for :math:`\frac{649}{200}` can be created as follows.
 
@@ -52,9 +74,9 @@ A :py:class:`decimal.Decimal` value of ``ContinuedFraction(649, 200)`` is also a
 
 Every finite continued fraction represents a rational number, as a finite continued fraction is a "nested" sum of rational numbers. Conversely, every rational number can be represented as a finite (and simple) continued fraction, by an iterative procedure using `Euclidean division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_. On the other hand, infinite continued fractions represent `irrational numbers <https://en.wikipedia.org/wiki/Irrational_number>`_ and conversely every infinite continued fraction represents an irrational number.
 
-There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, also, cannot be represented exactly as Python :py:class:`float` objects. To deal with this, the package processes rational numbers using the :py:class:`fractions.Fraction` class, which allows for exact continued fraction representations for any rational number, limited only by the available memory and/or capacity of the running environment.
+There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, also, cannot be represented exactly as Python :py:class:`float` objects. To deal with this, the package processes rational numbers using the :py:class:`fractions.Fraction` class, which allows for exact continued fractions for any rational number, limited only by the available memory and/or capacity of the running environment.
 
-Continued fraction representations for irrational numbers given directly as :py:class:`float` objects end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` object to a :py:class:`fractions.Fraction` object. However, as described in the :ref:`next section <creating-continued-fractions.from-elements>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects with arbitrary sequences of elements, which can give much more accurate results.
+Continued fractions for irrational numbers given directly as :py:class:`float` objects end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` object to a :py:class:`fractions.Fraction` object. However, as described in the :ref:`next section <creating-continued-fractions.from-elements>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects with arbitrary sequences of elements, which can give much more accurate results.
 
 An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` object:
 
@@ -79,8 +101,8 @@ However, in the :ref:`next section <creating-continued-fractions.from-elements>`
 
 .. _creating-continued-fractions.from-elements:
 
-From Elements
-=============
+Creating Continued Fractions From Elements/Coefficients
+=======================================================
 
 Continued fractions can also be constructed from sequences of elements, using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method.
 
@@ -129,7 +151,7 @@ Using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_ele
    & \sqrt{n} &&= a + \frac{r}{a + \sqrt{n}}
    \end{alignat*}
 
-Expanding the expression for :math:`\sqrt{n}` recursively we have the following infinite periodic continued fraction representation for :math:`\sqrt{n}`:
+Expanding the expression for :math:`\sqrt{n}` recursively we have the following infinite periodic continued fraction for :math:`\sqrt{n}`:
 
 .. math::
 
@@ -150,7 +172,7 @@ We can start with a more precise representation of :math:`\sqrt{2}` in Python as
    >>> Decimal(math.sqrt(2))
    >>> Decimal('1.4142135623730951454746218587388284504413604736328125')
 
-Then we can iteratively construct more accurate :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximations of :math:`\sqrt{2}` by iteratively taking more complete sequences of the elements of the complete continued fraction representation :math:`[1; \bar{2}]`:
+Then we can iteratively construct more accurate :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximations of :math:`\sqrt{2}` by iteratively taking more complete sequences of the elements from the full simple representation of :math:`[1; \bar{2}]`:
 
 .. code:: python
 
@@ -170,7 +192,7 @@ Then we can iteratively construct more accurate :py:class:`~continuedfractions.c
 
    ...
 
-With the first 10 elements of the complete sequence of elements of the continued fraction representation of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a continued fraction representation are called convergents, and will be discussed in more detail later on.
+With the first 10 elements of the complete sequence of elements of the simple continued fraction of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <exploring-continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
 
 If we use the first 101 elements (the leading 1, plus a tail of 100 2s) we get more accurate results:
 
@@ -265,19 +287,19 @@ A number of examples are given below of validation passes and fails.
 “Negative” Continued Fractions
 ==============================
 
-Continued fractions representations for negative numbers are valid, provided we use `Euclidean integer division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_ to calculate the elements of the representation, by starting with the integer part of the number, and then calculating the remaining elements for the fractional part with the successive quotients and remainders obtained in each division step. For example, :math:`\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}` has the continued fraction representation :math:`[-5; 1, 1, 6, 7]`:
+Continued fractions representations for negative numbers are valid, provided we use `Euclidean integer division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_ to calculate the elements of the representation, by starting with the integer part of the number, and then calculating the remaining elements for the fractional part with the successive quotients and remainders obtained in each division step. For example, :math:`\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}` has the (unique) simple continued fraction :math:`[-5; 1, 1, 6, 7]`:
 
 .. math::
 
    -\frac{415}{93} = -5 + \cfrac{1}{1 + \cfrac{1}{1 + \cfrac{1}{6 + \cfrac{1}{7}}}}
 
-Compare this with :math:`[4; 2, 6, 7]`, which is the continued fraction representation of :math:`\frac{415}{93} = \frac{4 \times 93 + 43}{93}`:
+Compare this with :math:`[4; 2, 6, 7]`, which is the simple continued fraction of :math:`\frac{415}{93} = \frac{4 \times 93 + 43}{93}`:
 
 .. math::
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start with `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ that for a positive rational number :math:`\frac{a}{b} > 1`, with :math:`a, b` coprime (no common divisors), and :math:`[a_0;a_1,\ldots,a_n]` as the finite, simple continued fraction representation, there are positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
+To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`a, b` coprime (no common divisors except :math:`1`), and :math:`[a_0;a_1,\ldots,a_n]` as the simple continued fraction (:math:`a_n > 1`). The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
 
 .. math::
 
@@ -288,13 +310,19 @@ To understand the difference in the sequence of elements between a "positive" an
                &= [a_0 = q; a_1, \ldots, a_n]
    \end{align}
 
-where :math:`R_1 = [a_1; a_2, \ldots, a_n] = \frac{b}{v}` is an :math:`(n - 1)`-order continued fraction which is the 1st :ref:`remainder <exploring-continued-fractions.remainders>` of the finite, simple continued fraction representation :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. Note that
+where :math:`R_1 = [a_1; a_2, \ldots, a_n] = \frac{b}{v}` is an :math:`(n - 1)`-order continued fraction which is the 1st :ref:`remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`.
+
+.. note::
+
+   For integers :math:`0 < a < b`, if :math:`\frac{b}{a} > 1` has a simple continued fraction :math:`[a_0; a_1, \ldots, a_n]`, then :math:`0 < \frac{a}{b} < 1` has an "inverted" simple continued fraction :math:`[0; a_0, a_1, \ldots, a_n]`. Both are unique if :math:`a_n > 1`.
+
+We can write :math:`-a = -(qb + v)` as:
 
 .. math::
 
    -a = -qb - v = -qb - b + b - v = -(q + 1)b + (b - v)
 
-so we can write:
+so that:
 
 .. math::
 
@@ -304,39 +332,62 @@ so we can write:
                 &= -(q + 1) + \frac{1}{1 + \frac{v}{b - v}} \\
                 &= -(q + 1) + \frac{1}{1 + \frac{1}{\frac{b}{v} - 1}} \\
                 &= -(q + 1) + \frac{1}{1 + \frac{1}{R_1 - 1}} \\
-                &= [a_0 = -(q + 1); 1, a_1 - 1,a_2,a_3,\ldots,a_n]
+                &= [-(q + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n]
    \end{align}
 
-where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots,a_n]` and :math:`\frac{1}{R_1 - 1} = [0; a_1 - 1, a_2, a_3, \ldots,a_n]`. There are two cases: (1) :math:`a_1 = 1` where :math:`R_1` (for :math:`-\frac{a}{b}`) is the :math:`(n - 2)`-order continued fraction :math:`[1; a_2,\ldots, a_n] = [a_2 + 1; a_3,\ldots,a_n]`, or case (2) :math:`a_1 > 1` where :math:`R_1` is the same as for :math:`\frac{a}{b}`.
+where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots, a_n]` and :math:`\frac{1}{R_1 - 1} = [0; a_1 - 1, a_2, a_3,\ldots, a_n]`.
 
-Thus, we can say that if :math:`[a_0;a_1,\ldots,a_n]` is the :math:`n`-order simple continued fraction representation of a positive rational number :math:`\frac{a}{b} > 1` then :math:`-\frac{a}{b}` has the following :math:`(n - 1)`- and :math:`(n + 1)`-order simple continued representations for the cases :math:`a_1 = 1` and :math:`a_1 > 1`, respectively:
+.. note::
+
+   If the last element :math:`a_n = 1` then :math:`[a_0; a_1, \ldots, a_n] = [a_0;a_1,\ldots,a_{n - 1} + 1]` is of order :math:`(n - 1)`. So in the representation :math:`[-(q + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n]` above for :math:`-\frac{a}{b}`, if :math:`a_1 = 2` then :math:`a_1 - 1 = 1` and the segment :math:`[-(q + 1); 1, a_1 - 1] = [-(q + 1); 1, 1] = [-(q + 1); 2]` is of order :math:`1`.
+
+If :math:`\bar{R}_1` denotes the :ref:`remainder <exploring-continued-fractions.remainders>` :math:`[1; a_1 - 1, a_2, a_3,\ldots, a_n]` in the representation above for :math:`-\frac{a}{b}` then :math:`\bar{R}_1` is an :math:`(n + 1)`-order, simple continued fraction. A special case is when :math:`a_1 = 1`: in this case :math:`a_0 = -1` and :math:`\bar{R}_1 = [a_2 + 1; a_3, \ldots, a_n]` is an :math:`(n - 1)`-order simple continued fraction. Note that this special case also applies when :math:`0 < a < b`.
+
+Thus, we can say that if :math:`[a_0; a_1,\ldots, a_n]` is the :math:`n`-order simple continued fraction of a positive rational number :math:`\frac{a}{b}` then :math:`-\frac{a}{b}` has :math:`(n - 1)`- and :math:`(n + 1)`-order simple continued fractions given by:
 
 .. math::
 
    -\frac{a}{b} = 
       \begin{cases}
-         [-(a_0 + 1); a_2 + 1,a_3,\ldots,a_n], & a_1 = 1 \\
-         [-(a_0 + 1); 1, a_1 - 1,a_2,a_3,\ldots,a_n], & a_1 > 1
+         [-(a_0 + 1); a_2 + 1, a_3,\ldots, a_n], & a_1 = 1  \\
+         [-(a_0 + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n], & a_1 > 1
       \end{cases}
 
 As :math:`n \to \infty` then :math:`\lim_{n \to \infty} [a_0;a_1,\ldots,a_n] = [a_0;a_1,\ldots]` represents an irrational number, and the same relations hold.
 
-We can see this in action with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects:
+We can see this in action with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, starting with small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
 
 .. code:: python
 
-   >>> ContinuedFraction(382, 225).elements
-   (1, 1, 2, 3, 4, 5)
-   >>> ContinuedFraction(-382, 225).elements
-   (-2, 3, 3, 4, 5)
-   >>> ContinuedFraction.from_elements(-2, 3, 3, 4, 5)
-   ContinuedFraction(-382, 225)
-   >>> ContinuedFraction(225, 157).elements
-   (1, 2, 3, 4, 5)
-   >>> ContinuedFraction(-225, 157).elements
-   (-2, 1, 1, 3, 4, 5)
-   >>> ContinuedFraction.from_elements(-2, 1, 1, 3, 4, 5)
-   ContinuedFraction(-225, 157)
+   >>> ContinuedFraction(2, 3).elements
+   (0, 1, 2)
+   >>> ContinuedFraction(-2, 3).elements
+   (-1, 3)
+   >>> assert ContinuedFraction.from_elements(-1, 3) == ContinuedFraction(-2, 3)
+   # True
+   >>> ContinuedFraction(1, 2).elements
+   (0, 2)
+   >>> ContinuedFraction(-1, 2).elements
+   (-1, 2)
+   >>> assert ContinuedFraction.from_elements(-1, 2) == ContinuedFraction.from_elements(-1, 1, 1) == ContinuedFraction(-1, 2)
+   # True
+
+and now fractions :math:`\frac{a}{b}` where :math:`|a| > |b|`:
+
+.. code:: python
+
+   >>> ContinuedFraction(17, 10).elements
+   (1, 1, 2, 3)
+   >>> ContinuedFraction(-17, 10).elements
+   (-2, 3, 3)
+   >>> assert ContinuedFraction.from_elements(-2, 3, 3) == ContinuedFraction(-17, 10)
+   # True
+   >>> ContinuedFraction(10, 7).elements
+   (1, 2, 3)
+   >>> ContinuedFraction(-10, 7).elements
+   (-2, 1, 1, 3)
+   >>> assert ContinuedFraction.from_elements(-2, 1, 1, 3) == ContinuedFraction(-10, 7)
+   # True
 
 The construction (creation + initialisation) of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects via the ``__new__() -> __init__()`` step works the same way for negative numbers as with positive numbers, subject to the validation rules described above. And to avoid zero division problems if a fraction has a negative denominator the minus sign is “transferred” to the numerator. A few examples are given below.
 

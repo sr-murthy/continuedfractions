@@ -75,7 +75,7 @@ The  :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergen
    >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
    (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))
 
-Using the continued fraction representation :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` we can verify that these convergents are correct.
+Using the simple continued fraction :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` we can verify that these convergents are correct.
 
 .. math::
    :nowrap:
@@ -115,7 +115,7 @@ The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFrac
    >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
    (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 
-Using the continued fraction representation of :math:`\frac{649}{200}` we can verify that these remainders are correct.
+Using the simple continued fraction of :math:`\frac{649}{200}` we can verify that these remainders are correct.
 
 .. math::
    :nowrap:
@@ -153,7 +153,7 @@ For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and 
 
 So :math:`K_n` is simply the geometric mean of the integers :math:`a_1, a_2,\ldots,a_n`, for :math:`n \geq 1`.
 
-It has been proved that for irrational numbers, which have infinite continued fraction representations, there are infinitely many for which the quantity :math:`K_n` approaches a constant :math:`K_0 \approx 2.685452\ldots`, called `Khinchin's constant <https://en.wikipedia.org/wiki/Khinchin%27s_constant>`_, independent of the number. So:
+It has been proved that for irrational numbers, which have infinite continued fractions, there are infinitely many for which the quantity :math:`K_n` approaches a constant :math:`K_0 \approx 2.685452\ldots`, called `Khinchin's constant <https://en.wikipedia.org/wiki/Khinchin%27s_constant>`_, independent of the number. So:
 
 .. math::
 
@@ -177,7 +177,7 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
    Decimal('2.15015313349074244086978069390170276165008544921875')
    >>> ContinuedFraction(5000).khinchin_mean
 
-For rational numbers, which have finite continued fraction representations, the Khinchin means are not defined for all :math:`n`, so this property is not all that useful for rationals. However, for approximations of irrationals the property is useful as given in the examples below using continued fraction approximations for :math:`\pi = [3; 7, 15, 1, 292, \ldots]`.
+For rational numbers, which have finite continued fractions, the Khinchin means are not defined for all :math:`n`, so this property is not all that useful for rationals. However, for approximations of irrationals the property is useful as given in the examples below using continued fraction approximations for :math:`\pi = [3; 7, 15, 1, 292, \ldots]`.
 
 .. code:: python
 

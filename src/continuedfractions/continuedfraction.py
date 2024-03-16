@@ -43,7 +43,7 @@ class ContinuedFraction(Fraction):
 
     order : int
         The order of the continued fraction, defined as the number of
-        elements - 1.
+        elements - ``1``.
 
     khinchin_mean : decimal.Decimal
         The geometric mean of all elements of the continued fraction, starting
@@ -52,23 +52,23 @@ class ContinuedFraction(Fraction):
     Methods
     -------
     as_float()
-        The `float` value of the fraction, as given by standard division of
+        The ``float`` value of the fraction, as given by standard division of
         the numerator by the denominator.
 
     convergent(k: int)
-        The `k`th (simple) convergent of the continued fraction, defined as the
+        The ``k``-th (simple) convergent of the continued fraction, defined as the
         finite simple continued fraction of order ``k`` consisting of the first
-         `k + 1` elements of the original continued fraction.
+        ``k + 1`` elements of the original continued fraction.
 
     remainder(k: int)
-        The `k`th remainder of the continued fraction, defined as the continued
+        The ``k``-th remainder of the continued fraction, defined as the continued
         fraction whose elements start from the ``k``-th element of the sequence
         of elements of the original continued fraction.
 
     mediant(other: Fraction)
         The continued fraction of the rational number formed by taking the
         pairwise sum of the numerators and denominators of the original
-        continued fraction and a second fraction (`other`). The resulting
+        continued fraction and a second fraction (``other``). The resulting
         fraction has the property that its value lies between the two
         constituents.
 
@@ -125,11 +125,11 @@ class ContinuedFraction(Fraction):
         """
         Checks whether the arguments are one of the following types:
 
-        * a single integer or a non-nan float
-        * a single numeric string
-        * a single `fractions.Fraction` or `decimal.Decimal` object
-        * two integers or `fractions.Fraction` objects, or a combination of an
-          integer and a `fractions.Fraction` object, representing the numerator
+        * a single ``int`` or a non-``nan`` ``float``
+        * a single numeric string (``str``)
+        * a single ``fractions.Fraction`` or ``decimal.Decimal`` object
+        * two ``int`` or ``fractions.Fraction`` objects, or a combination of an
+          ``int`` and a ``fractions.Fraction`` object, representing the numerator
           and non-zero denominator of a rational fraction
 
         Parameters
@@ -144,9 +144,9 @@ class ContinuedFraction(Fraction):
 
         Notes
         -----
-        To avoid recursion errors validation excludes `ContinuedFraction`
+        To avoid recursion errors validation excludes ``ContinuedFraction``
         instances, and for the same reason convergents of a
-        `ContinuedFraction` instance are given as `fractions.Fraction`
+        ``ContinuedFraction`` instance are given as ``fractions.Fraction``
         instances.
 
         Examples
@@ -220,11 +220,11 @@ class ContinuedFraction(Fraction):
 
         Arguments must be one of the following types:
 
-        * a single integer or a non-nan float
-        * a single numeric string
-        * a single `fractions.Fraction` or `decimal.Decimal` object
-        * two integers or `fractions.Fraction` objects, or a combination of an
-          integer and a `fractions.Fraction` object, representing the numerator
+        * a single ``int`` or a non-``nan`` ``float``
+        * a single numeric string (``str``)
+        * a single ``fractions.Fraction`` or ``decimal.Decimal`` object
+        * two ``int`` or ``fractions.Fraction`` objects, or a combination of an
+          integer and a ``fractions.Fraction`` object, representing the numerator
           and non-zero denominator of a rational fraction
 
         Parameters
@@ -234,13 +234,13 @@ class ContinuedFraction(Fraction):
 
         **kwargs
             Any valid keyword arguments for the superclass
-            `fractions.Fraction`.
+            ``fractions.Fraction``.
 
         Returns
         -------
         ContinuedFraction
-            A new instance of `ContinuedFraction`, but not yet initialised with
-            the class-specific attributes and properties.
+            A new instance of ``ContinuedFraction``, but not yet initialised
+            with the class-specific attributes and properties.
 
         Examples
         --------
@@ -281,31 +281,32 @@ class ContinuedFraction(Fraction):
     @classmethod
     def from_elements(cls, *elements: int) -> Fraction:
         """
-        Returns a `ContinuedFraction` instance from a sequence of (integer)
+        Returns a ``ContinuedFraction`` instance from a sequence of (integer)
         elements of a continued fraction.
 
         Parameters
         ----------
         *elements: int
-            An ordered sequence of elements of a (finite) continued fraction.
+            An ordered sequence of integer elements of a (finite) continued
+            fraction.
 
         Returns
         -------
         ContinuedFraction
-            A new and fully initialised instance of `ContinuedFraction` with
+            A new and fully initialised instance of ``ContinuedFraction`` with
             the given element sequence.
 
         Examples
         --------
-        Constructing a continued fraction for the rational `649/200` using the
-        element sequence `(3, 4, 12, 4)`.
+        Constructing a continued fraction for the rational ``649/200`` using
+        the element sequence ``(3, 4, 12, 4)``.
 
         >>> c1 = ContinuedFraction.from_elements(3, 4, 12, 4)
         >>> c1
         ContinuedFraction(649, 200)
 
-        Constructing the continued fraction of the inverse rational `200/649`
-        using the element sequence `(0, 3, 4, 12, 4)`.
+        Constructing the continued fraction of the inverse rational ``200/649``
+        using the element sequence ``(0, 3, 4, 12, 4)``.
 
         >>> c2 = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
         >>> c2
@@ -321,9 +322,8 @@ class ContinuedFraction(Fraction):
 
     def __init__(self, *args:  int | float | str | Fraction | Decimal, **kwargs: Any) -> None:
         """
-        Initialises new `ContinuedFraction` instances with attributes and
-        properties for their elements, order, convergents, and
-        remainders.
+        Initialises new ``ContinuedFraction`` instances with attributes and
+        properties for their elements, order, convergents, and remainders.
 
         Parameters
         ----------
@@ -331,7 +331,8 @@ class ContinuedFraction(Fraction):
             Arguments of the type described above.
 
         **kwargs
-            Any valid keyword arguments for the superclass fractions.Fraction
+            Any valid keyword arguments for the superclass
+            ``fractions.Fraction``
 
         Raises
         ------
@@ -341,7 +342,7 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-        Construct the continued fraction for the rational `415/93`.
+        Construct the continued fraction for the rational ``415/93``.
 
         >>> cf = ContinuedFraction(415, 93)
         >>> cf
@@ -439,13 +440,13 @@ class ContinuedFraction(Fraction):
 
     def as_float(self) -> float:
         """
-        Returns the `float` value of the continued fraction, using standard
-        division (`/`) of the numerator by the denominator.
+        Returns the ``float`` value of the continued fraction, using standard
+        division (``/``) of the numerator by the denominator.
 
         Returns
         -------
         float
-            The `float` representation of the continued fraction.
+            The ``float`` representation of the continued fraction.
 
         Examples
         --------
@@ -453,8 +454,8 @@ class ContinuedFraction(Fraction):
         >>> math.pi
         3.141592653589793
 
-        Now construct a `ContinuedFraction` object from it, and check the 
-        `float` value.
+        Now construct a ``ContinuedFraction`` object from it, and check the 
+        ``float`` value.
 
         >>> cf = ContinuedFraction(math.pi)
         >>> cf
@@ -466,8 +467,8 @@ class ContinuedFraction(Fraction):
 
     def as_decimal(self) -> Decimal:
         """
-        Returns the `float` value of the continued fraction, using standard
-        division (`/`) of the numerator by the denominator.
+        Returns the ``float`` value of the continued fraction, using standard
+        division (``/``) of the numerator by the denominator.
 
         Returns
         -------
@@ -480,8 +481,8 @@ class ContinuedFraction(Fraction):
         >>> math.pi
         3.141592653589793
 
-        Now construct a `ContinuedFraction` object from it, and check the 
-        `float` value.
+        Now construct a ``ContinuedFraction` object from it, and check the 
+        ``float`` value.
 
         >>> cf = ContinuedFraction(math.pi)
         >>> cf
@@ -515,13 +516,13 @@ class ContinuedFraction(Fraction):
     def order(self) -> int:
         """
         Property: the order of the continued fraction, which is the number
-                  of its elements + `1`.
+                  of its elements + ``1``.
 
         Returns
         -------
         int
             The order of the continued fraction, which is the number of its
-            elements + `1`.
+            elements + ``1``.
 
         Examples
         --------
@@ -597,8 +598,9 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new `ContinuedFraction` instance representing the `k`-th (simple)
-            convergent of the original continued fraction, as described above.
+            A new ``ContinuedFraction`` instance representing the ``k``-th
+            (simple) convergent of the original continued fraction, as
+            described above.
 
         Examples
         --------
@@ -618,7 +620,7 @@ class ContinuedFraction(Fraction):
 
     def remainder(self, k: int, /) -> Fraction:
         """
-        The `k`-th remainder of the continued fraction, defined as the continued
+        The ``k``-th remainder of the continued fraction, defined as the continued
         fraction consisting of the elements starting from the ``k``-th element
         of the sequence of elements of the original continued fraction: so the
         ``k``-th remainder has the elements ``a_k, a_{k + 1}, ...``.
@@ -631,8 +633,8 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new `ContinuedFraction` instance representing the `k`-th remainder
-            of the original continued fraction, as described above.
+            A new ``ContinuedFraction`` instance representing the ``k``-th
+            remainder of the original continued fraction, as described above.
 
         Examples
         --------
@@ -650,26 +652,28 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__.from_elements(*self._elements[k:])
 
-    def mediant(self, other: Fraction, /, *, dir='right', k: int = 1) -> Fraction:
+    def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> Fraction:
         """
-        Returns the `k`-th left- or right-mediant of this `ContinuedFraction`
-        object with another `fractions.Fraction` object. The "direction" of the
-        mediant is specified with `dir`, and can only be one of `"left"` or 
-        `"right"`.
+        Returns the ``k``-th left- or right-mediant of this
+        ``ContinuedFraction`` object with another ``fractions.Fraction``
+        object.
+        
+        The "direction" of the mediant is specified with ``dir``, and can only
+        be one of ``"left"`` or  ``"right"``.
 
-        For a positive integer `k`, the `k`-th left-mediant of rational numbers
-        `r = a / b` and `s = c / d`, where `b` and `d` are non-zero, can be defined
-        as:
+        For a positive integer ``k``, the ``k``-th left-mediant of rational numbers
+        ``r = a / b`` and ``s = c / d``, where ``b`` and ``d`` are non-zero,
+        can be defined as:
         ::
 
             (ka + c) / (kb + d)
 
-        while the `k`-th right mediant can be defined as:
+        while the ``k``-th right mediant can be defined as:
         ::
 
             (a + kc) / (b + kd)
 
-        If we assume that `r < s` and `bd > 0` then the `k`-th left mediants have
+        If we assume that ``r < s`` and ``bd > 0`` then the ``k``-th left mediants have
         the property that:
         ::
 
@@ -677,17 +681,17 @@ class ContinuedFraction(Fraction):
             a / b < (a + c) / (b + d) < (a + 2c) / (b + 2d) < (a + 3c) / (b + 3d) < ... c / d
 
         That is, the left mediants form a strictly decreasing sequence, actually
-        converging to `a / b`, while the right mediants form a strictly increasing
-        sequence of, actually converging to `c / d`.
+        converging to ``a / b``, while the right mediants form a strictly
+        increasing sequence of, actually converging to ``c / d``.
 
-        For the left mediant use `dir='left'`, while for the right use
-        `dir='right'`. The default is `dir='right'`. For `k = 1` the left and right
-        mediants are the same.
+        For the left mediant use ``dir="left"``, while for the right use
+        `dir='right'`. The default is ``dir="right"``. For ``k = 1`` the left
+        and right mediants are the same.
 
         Parameters
         ----------
         other : fractions.Fraction or ContinuedFraction
-            The second fraction to use to calculate the `k`-th mediant with
+            The second fraction to use to calculate the ``k``-th mediant with
             the first.
         
         k : int, default=1
@@ -696,8 +700,8 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            The `k`-th mediant of the original fraction and the second
-            fraction, as a `ContinuedFraction` instance.
+            The ``k``-th mediant of the original fraction and the second
+            fraction, as a ``ContinuedFraction`` instance.
 
         Examples
         --------

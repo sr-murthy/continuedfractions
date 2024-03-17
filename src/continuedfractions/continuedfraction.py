@@ -9,6 +9,7 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+import functools
 import math
 import statistics
 import sys
@@ -485,7 +486,7 @@ class ContinuedFraction(Fraction):
     def __abs__(self) -> ContinuedFraction:
         return self.__class__(super().__abs__())
 
-
+    @functools.cache
     def as_float(self) -> float:
         """
         Returns the ``float`` value of the continued fraction, using standard
@@ -513,6 +514,7 @@ class ContinuedFraction(Fraction):
         """
         return self.numerator / self.denominator
 
+    @functools.cache
     def as_decimal(self) -> Decimal:
         """
         Returns the ``float`` value of the continued fraction, using standard
@@ -583,6 +585,7 @@ class ContinuedFraction(Fraction):
         return len(self._elements[1:])
 
     @property
+    @functools.lru_cache
     def khinchin_mean(self) -> Decimal | None:
         """
         Property: the Khinchin mean of the continued fraction, which we define
@@ -634,6 +637,7 @@ class ContinuedFraction(Fraction):
         except statistics.StatisticsError:
             return
 
+    @functools.cache
     def convergent(self, k: int, /) -> ContinuedFraction:
         """
         Returns a ``ContinuedFraction`` object for the `k`-th (simple)
@@ -669,6 +673,7 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__(convergent(*self._elements, k=k))
 
+    @functools.cache
     def remainder(self, k: int, /) -> ContinuedFraction:
         """
         The ``k``-th remainder of the continued fraction, defined as the continued
@@ -703,6 +708,7 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__.from_elements(*self._elements[k:])
 
+    @functools.cache
     def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> ContinuedFraction:
         """
         Returns the ``k``-th left- or right-mediant of this

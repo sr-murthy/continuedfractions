@@ -34,21 +34,24 @@ from continuedfractions.lib import (
 
 class ContinuedFraction(Fraction):
     """
-    A simple implementation of continued fractions as Python objects and
+    An implementation of simple continued fractions as Python objects and
     instances of the standard library ``fractions.Fraction`` class, with
     various properties for the continued fraction, including its elements
     (or coefficients), the order, convergents, and remainders.
 
+    The term "simple continued fraction" denotes a specific type of continued
+    fraction where the fractional terms only have numerators of ``1``.
+
     Attributes
     ----------
-    elements : tuple[int]
+    elements : `tuple[int]`
         The ordered sequence of elements of the continued fraction.
 
-    order : int
+    order : `int`
         The order of the continued fraction, defined as the number of
         elements - ``1``.
 
-    khinchin_mean : decimal.Decimal
+    khinchin_mean : `decimal.Decimal`
         The geometric mean of all elements of the continued fraction, starting
         from ``a_1``, excluding the leading element ``a_0``.
 
@@ -139,7 +142,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *args: int or float or str or fractions.Fraction or ContinuedFraction or decimal.Decimal
+        *args: `int`, `float` `str`, `fractions.Fraction`, `ContinuedFraction`, `decimal.Decimal`
             Arguments subject to the validation rules described above.
 
         Raises
@@ -231,7 +234,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *args: int or float or str or fractions.Fraction or ContinuedFraction or decimal.Decimal
+        *args: `int`, `float`, `str`, `fractions.Fraction`, `ContinuedFraction`, `decimal.Decimal`
             Arguments of the type described above.
 
         **kwargs
@@ -294,7 +297,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *elements: int
+        *elements: `int`
             An ordered sequence of integer elements of a (finite) continued
             fraction.
 
@@ -367,7 +370,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *args : int or float or str or fractions.Fraction or decimal.Decimal
+        *args : `int`, `float`, `str`, `fractions.Fraction`, `ContinuedFraction`, `decimal.Decimal`
             Arguments of the type described above.
 
         **kwargs
@@ -637,7 +640,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        k : int
+        k : `int`
             The order of the convergent, as described above.
 
         Returns
@@ -672,7 +675,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        k : int
+        k : `int`
             The index of the remainder, as described above.
 
         Returns
@@ -735,11 +738,11 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        other : fractions.Fraction or ContinuedFraction
+        other : `fractions.Fraction`, `ContinuedFraction`
             The second fraction to use to calculate the ``k``-th mediant with
             the first.
         
-        k : int, default=1
+        k : `int`, default=1
             The order of the mediant, as defined above.        
 
         Returns

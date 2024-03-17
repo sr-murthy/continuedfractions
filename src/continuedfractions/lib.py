@@ -46,7 +46,7 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
 
     Parameters
     ----------
-    r : fractions.Fraction
+    r : `fractions.Fraction`
         The rational number to represented as a continued fraction.
 
     Yields
@@ -122,7 +122,7 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
 
     Parameters
     ----------
-    x : int or float or str
+    x : `int`, `float`, `str`
         The number to represent as a continued fraction. It can be any ``int``
         or ``float``, or an equivalent string representation of an ``int`` or
         ``float``, except for nans (``float("nan")``) and non-numeric strings.
@@ -190,7 +190,7 @@ def fraction_from_elements(*elements: int) -> Fraction:
 
     Parameters
     ----------
-    *elements : int
+    *elements : `int`
         A variable-length sequence of integer elements of a continued fraction.
 
     Returns

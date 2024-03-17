@@ -82,10 +82,11 @@ show_authors = True
 # ones.
 extensions = ['jupyter_sphinx',
               'matplotlib.sphinxext.plot_directive',
+              'myst_parser',
               'nb2plots',
               'numpydoc',
               'sphinx.ext.autodoc',
-              'sphinx.ext.autosectionlabel',
+              #'sphinx.ext.autosectionlabel',
               #'sphinx.ext.autosummary',
               'sphinx.ext.coverage',
               'sphinx.ext.doctest',

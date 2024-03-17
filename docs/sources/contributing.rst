@@ -80,6 +80,12 @@ Documentation
 
 `Project documentation <https://continuedfractions.readthedocs.io/en/latest/>`_ is defined and built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_, and deployed to `Read The Docs <https://readthedocs.org>`_. Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
 
+The Sphinx documentation can be built locally on any branch from the **project root** using:
+
+.. code:: bash
+
+   make -C docs html
+
 .. _contributing.ci-cd:
 
 Continuous Integration and Deployment (CI/CD)

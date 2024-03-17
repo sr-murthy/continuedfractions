@@ -228,7 +228,7 @@ def fraction_from_elements(*elements: int) -> Fraction:
 
     return Fraction(
         deque(
-            accumulate(reversed(elements), func=lambda x, y: Fraction(1, x) + y)
+            accumulate(reversed(elements), func=lambda tail, head: head + Fraction(1, tail))
         ).pop()
     )
 

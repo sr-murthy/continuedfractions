@@ -631,7 +631,7 @@ class ContinuedFraction(Fraction):
         except statistics.StatisticsError:
             return
 
-    def convergent(self, k: int, /) -> Fraction:
+    def convergent(self, k: int, /) -> ContinuedFraction:
         """
         Returns a ``ContinuedFraction`` object for the `k`-th (simple)
         convergent of the continued fraction, which is defined as the finite 
@@ -666,7 +666,7 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__(convergent(*self._elements, k=k))
 
-    def remainder(self, k: int, /) -> Fraction:
+    def remainder(self, k: int, /) -> ContinuedFraction:
         """
         The ``k``-th remainder of the continued fraction, defined as the continued
         fraction consisting of the elements starting from the ``k``-th element
@@ -700,7 +700,7 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__.from_elements(*self._elements[k:])
 
-    def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> Fraction:
+    def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> ContinuedFraction:
         """
         Returns the ``k``-th left- or right-mediant of this
         ``ContinuedFraction`` object with another ``fractions.Fraction``

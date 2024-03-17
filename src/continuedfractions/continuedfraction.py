@@ -9,6 +9,7 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+import functools
 import math
 import statistics
 import sys
@@ -16,7 +17,8 @@ import sys
 from decimal import Decimal
 from fractions import Fraction, _RATIONAL_FORMAT
 from pathlib import Path
-from typing import Any
+from types import MappingProxyType
+from typing import Any, Final
 
 # -- 3rd party libraries --
 
@@ -116,6 +118,9 @@ class ContinuedFraction(Fraction):
     >>> assert cf_negative_inverse == -1/cf
     >>> assert cf * cf_negative_inverse == -1
     """
+
+    # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
+    __slots__ = ['_elements',]
 
     # Class attribute to store an error message for input errors
     __valid_inputs_msg__ = (
@@ -409,21 +414,21 @@ class ContinuedFraction(Fraction):
         super().__init__()
 
         if len(args) == 1 and isinstance(args[0], ContinuedFraction):
-            self._elements = args[0].elements
+            self._elements: Final[tuple[int]] = args[0].elements
         if len(args) == 1 and isinstance(args[0], int):
-            self._elements = tuple(continued_fraction_rational(Fraction(args[0])))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0])))
         elif len(args) == 1 and isinstance(args[0], float):
-            self._elements = tuple(continued_fraction_real(args[0]))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
         elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' in args[0]:
-            self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
         elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' not in args[0]:
-            self._elements = tuple(continued_fraction_real(args[0]))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
         elif len(args) == 1 and (isinstance(args[0], Fraction) or isinstance(args[0], Decimal)):
-            self._elements = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
         elif len(args) == 2 and set(map(type, args)) == set([int]):
-            self._elements = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
         elif len(args) == 2 and set(map(type, args)).issubset([int, Fraction, ContinuedFraction]):
-            self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
         else:      # pragma: no cover
             raise ValueError(self.__class__.__valid_inputs_msg__)
 
@@ -482,11 +487,14 @@ class ContinuedFraction(Fraction):
     def __abs__(self) -> ContinuedFraction:
         return self.__class__(super().__abs__())
 
-
+    @functools.cache
     def as_float(self) -> float:
         """
         Returns the ``float`` value of the continued fraction, using standard
         division (``/``) of the numerator by the denominator.
+
+        The method is cached (with ``functools.cache``), which makes calls
+        after the initial call much faster.
 
         Returns
         -------
@@ -510,10 +518,14 @@ class ContinuedFraction(Fraction):
         """
         return self.numerator / self.denominator
 
+    @functools.cache
     def as_decimal(self) -> Decimal:
         """
         Returns the ``float`` value of the continued fraction, using standard
         division (``/``) of the numerator by the denominator.
+
+        The method is cached (with ``functools.cache``), which makes calls
+        after the initial call much faster.
 
         Returns
         -------
@@ -580,6 +592,7 @@ class ContinuedFraction(Fraction):
         return len(self._elements[1:])
 
     @property
+    @functools.lru_cache
     def khinchin_mean(self) -> Decimal | None:
         """
         Property: the Khinchin mean of the continued fraction, which we define
@@ -598,6 +611,9 @@ class ContinuedFraction(Fraction):
                   In the special case of integers or fractions representing
                   integers, whose continued fraction representations consist of
                   only a single element, a null value is returned.
+
+                  The property is cached (with ``functools.lru_cache``), which
+                  makes calls after the initial call much faster.
 
         Returns
         -------
@@ -631,12 +647,16 @@ class ContinuedFraction(Fraction):
         except statistics.StatisticsError:
             return
 
-    def convergent(self, k: int, /) -> Fraction:
+    @functools.cache
+    def convergent(self, k: int, /) -> ContinuedFraction:
         """
         Returns a ``ContinuedFraction`` object for the `k`-th (simple)
         convergent of the continued fraction, which is defined as the finite 
         simple continued fraction of order ``k`` formed from the first
         ``k + 1`` elements ``a_0, a_1, ... , a_k``.
+
+        The property is cached (with ``functools.cache``), which makes
+        calls after the initial call much faster.
 
         Parameters
         ----------
@@ -664,14 +684,49 @@ class ContinuedFraction(Fraction):
         >>> cf.convergent(7)
         ContinuedFraction(2469, 20000)
         """
-        return self.__class__(convergent(*self._elements[:k + 1], k=k))
+        return self.__class__(convergent(*self._elements, k=k))
 
-    def remainder(self, k: int, /) -> Fraction:
+    @property
+    @functools.lru_cache
+    def convergents(self) -> MappingProxyType[int, ContinuedFraction]:
+        """
+        Property: An immutable dict of all ``k``-order convergents of the
+                  continued fraction, keyed/indexed by ``k``. Each convergent
+                  is also a ``ContinuedFraction`` object.
+
+                  The property is cached (with ``functools.lru_cache``), which
+                  makes calls after the initial call much faster.
+
+        Returns
+        -------
+        ContinuedFraction
+            An immutable dict of all ``k``-order convergents of the continued
+            fraction, keyed/index by ``k``. Each convergent is also a
+            ``ContinuedFraction`` object.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('3.245')
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
+        >>> cf.convergents[0], cf.convergents[2]
+        (ContinuedFraction(3, 1), ContinuedFraction(159, 49))
+        """
+        return MappingProxyType({
+            k: self.convergent(k)
+            for k in range(self.order + 1)
+        })
+
+    @functools.cache
+    def remainder(self, k: int, /) -> ContinuedFraction:
         """
         The ``k``-th remainder of the continued fraction, defined as the continued
         fraction consisting of the elements starting from the ``k``-th element
         of the sequence of elements of the original continued fraction: so the
         ``k``-th remainder has the elements ``a_k, a_{k + 1}, ...``.
+
+        The method is cached (with ``functools.cache``), which makes calls
+        after the initial call much faster.
 
         Parameters
         ----------
@@ -700,7 +755,39 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__.from_elements(*self._elements[k:])
 
-    def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> Fraction:
+    @property
+    @functools.lru_cache
+    def remainders(self) -> MappingProxyType[int, ContinuedFraction]:
+        """
+        Property: An immutable dict of all ``k``-th remainders of the
+                  continued fraction, keyed/indexed by ``k``. Each remainder
+                  is also a ``ContinuedFraction`` object.
+
+                  The property is cached (with ``functools.lru_cache``), which
+                  makes calls after the initial call much faster.
+
+        Returns
+        -------
+        ContinuedFraction
+            An immutable dict of all ``k``-th remainders of the continued
+            fraction, keyed/index by ``k``. Each remainder is also a
+            ``ContinuedFraction`` object.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('3.245')
+        >>> cf.remainders
+        mappingproxy({0: ContinuedFraction(649, 200), 1: ContinuedFraction(200, 49), 2: ContinuedFraction(49, 4), 3: ContinuedFraction(4, 1)})
+        >>> cf.remainders[0], cf.remainders[2]
+        (ContinuedFraction(649, 200), ContinuedFraction(49, 4))
+        """
+        return MappingProxyType({
+            k: self.remainder(k)
+            for k in range(self.order + 1)
+        })
+
+    @functools.cache
+    def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> ContinuedFraction:
         """
         Returns the ``k``-th left- or right-mediant of this
         ``ContinuedFraction`` object with another ``fractions.Fraction``
@@ -735,6 +822,9 @@ class ContinuedFraction(Fraction):
         For the left mediant use ``dir="left"``, while for the right use
         `dir='right'`. The default is ``dir="right"``. For ``k = 1`` the left
         and right mediants are the same.
+
+        The method is cached (with ``functools.cache``), which makes calls
+        after the initial call much faster.
 
         Parameters
         ----------

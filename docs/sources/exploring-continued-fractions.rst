@@ -75,6 +75,25 @@ The  :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergen
    >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
    (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))
 
+It is also possible to get all of the convergents at once using the **cached** :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property:
+
+.. code:: python
+
+   >>> cf.convergents
+   mappingproxy({0: ContinuedFraction(3, 1),
+                 1: ContinuedFraction(13, 4),
+                 2: ContinuedFraction(159, 49),
+                 3: ContinuedFraction(649, 200)})
+
+The result is a :py:class:`types.MappingProxyType` object, and is keyed by convergent order :math:`0, 1,\ldots, n`.
+
+.. code:: python
+
+   >>> cf.convergents[0], cf.convergents[2]
+   (ContinuedFraction(3, 1), ContinuedFraction(159, 49))
+
+Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergent` method the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property is cached, and is thus much faster when needing to make repeated use of the convergents.
+
 Using the simple continued fraction :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` we can verify that these convergents are correct.
 
 .. math::
@@ -114,6 +133,25 @@ The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFrac
 
    >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
    (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
+
+It is also possible to get all of the remainders at once using the **cached** :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property:
+
+.. code:: python
+
+   >>> cf.remainders
+   mappingproxy({0: ContinuedFraction(649, 200),
+                 1: ContinuedFraction(200, 49),
+                 2: ContinuedFraction(49, 4),
+                 3: ContinuedFraction(4, 1)})
+
+The result is a :py:class:`types.MappingProxyType` object, and is keyed by remainder index :math:`0, 1,\ldots, n`.
+
+.. code:: python
+
+   >>> cf.remainders[0], cf.remainders[2]
+   (ContinuedFraction(649, 200), ContinuedFraction(49, 4))
+
+Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property is cached, and is thus much faster when needing to make repeated use of the remainders.
 
 Using the simple continued fraction of :math:`\frac{649}{200}` we can verify that these remainders are correct.
 

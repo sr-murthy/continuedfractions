@@ -58,7 +58,7 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object f
 
 .. note::
 
-   The same object can also be constructed using ``ContinuedFraction('649/200')``, ``ContinuedFraction('3.245')``, ``ContinuedFraction(Fraction(649, 200))``, ``ContinuedFraction(Fraction(649), 200))``, ``ContinuedFraction(649, Fraction(200)))``, and ``ContinuedFraction(Decimal('3.245'))``. But passing a numeric literal such as ``649/200`` will result in an evaluation of the decimal integer division using `binary floating point division <https://docs.python.org/3/tutorial/floatingpoint.html>`_, thus producing a fractional approximation, in this case, ``ContinuedFraction(3653545197704315, 1125899906842624)``.
+   The same object can also be constructed using ``ContinuedFraction('649/200')``, ``ContinuedFraction('3.245')``, ``ContinuedFraction(Fraction(649, 200))``, ``ContinuedFraction(Fraction(649), 200))``, ``ContinuedFraction(649, Fraction(200)))``, and ``ContinuedFraction(Decimal('3.245'))``, and even ``ContinuedFraction(ContinuedFraction(649, 200))`` . But passing a numeric literal such as ``649/200`` will result in an evaluation of the decimal integer division using `binary floating point division <https://docs.python.org/3/tutorial/floatingpoint.html>`_, thus producing a fractional approximation, in this case, ``ContinuedFraction(3653545197704315, 1125899906842624)``.
 
 The float value of ``ContinuedFraction(649, 200)`` is available via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.as_float()` method, in this case, a value of :math:`3.245`.
 
@@ -234,12 +234,13 @@ Input Validation
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class validates all inputs during object creation - in the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.validate` class method, and not instance
 initialisation. Inputs that do not meet the following conditions trigger a :py:class:`ValueError`.
 
--  a single integer or a non-nan float
--  a single numeric string
--  a single :py:class:`fractions.Fraction` or :py:class:`decimal.Decimal` object
--  two integers or :py:class:`fractions.Fraction` objects, or a combination of
-   an integer and a :py:class:`fractions.Fraction` object, representing the
-   numerator and non-zero denominator of a rational number
+   - a single ``int`` or a non-``nan`` ``float``
+   - a single numeric string (``str``)
+   - a single ``fractions.Fraction`` or ``ContinuedFraction`` or
+     ``decimal.Decimal`` object
+   - a pairwise combination of an ``int``, ``fractions.Fraction`` or
+     ``ContinuedFraction`` object, representing the numerator and non-zero
+     denominator of a rational fraction
 
 A number of examples are given below of validation passes and fails.
 
@@ -252,10 +253,11 @@ A number of examples are given below of validation passes and fails.
    Traceback (most recent call last):
    ...
    ValueError: Only single integers, non-nan floats, numeric strings, 
-   `fractions.Fraction`, or `decimal.Decimal` objects; or two 
-   integers or two `fractions.Fraction` objects or a pairwise 
-   combination of these, representing the numerator and non-zero 
-   denominator, respectively, of a rational fraction, are valid.
+   `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
+   objects; or a pairwise combination of an integer, 
+   `fractions.Fraction` or ``ContinuedFraction`` object, representing 
+   the numerator and non-zero denominator, respectively, of a rational 
+   fraction, are valid.
 
    >>> ContinuedFraction.validate(-.123456789)
    >>> ContinuedFraction.validate('-.123456789')
@@ -266,12 +268,16 @@ A number of examples are given below of validation passes and fails.
    Traceback (most recent call last):
    ...
    ValueError: Only single integers, non-nan floats, numeric strings, 
-   `fractions.Fraction`, or `decimal.Decimal` objects; or two 
-   integers or two `fractions.Fraction` objects or a pairwise 
-   combination of these, representing the numerator and non-zero 
-   denominator, respectively, of a rational fraction, are valid.
+   `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
+   objects; or a pairwise combination of an integer, 
+   `fractions.Fraction` or ``ContinuedFraction`` object, representing 
+   the numerator and non-zero denominator, respectively, of a rational 
+   fraction, are valid.
 
    >>> ContinuedFraction.validate(Fraction(-415, 93))
+   >>> ContinuedFraction.validate(ContinuedFraction(649, 200), 2)
+   >>> ContinuedFraction.validate(ContinuedFraction(649, 200), Fraction(1, 2))
+   >>> ContinuedFraction.validate(ContinuedFraction(649, 200), ContinuedFraction(1, 2))
    >>> ContinuedFraction.validate(Decimal('12345.6789'))
    >>> ContinuedFraction.validate(Decimal(12345.6789))
 
@@ -279,10 +285,11 @@ A number of examples are given below of validation passes and fails.
    Traceback (most recent call last):
    ...
    ValueError: Only single integers, non-nan floats, numeric strings, 
-   `fractions.Fraction`, or `decimal.Decimal` objects; or two 
-   integers or two `fractions.Fraction` objects or a pairwise 
-   combination of these, representing the numerator and non-zero 
-   denominator, respectively, of a rational fraction, are valid.
+   `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
+   objects; or a pairwise combination of an integer, 
+   `fractions.Fraction` or ``ContinuedFraction`` object, representing 
+   the numerator and non-zero denominator, respectively, of a rational 
+   fraction, are valid.
 
 .. _creating-continued-fractions.negative-continued-fractions:
 

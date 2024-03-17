@@ -106,6 +106,7 @@ dev = [
     "virtualenv",
 ]
 docs = [
+    "myst-parser",
     "pydata-sphinx-theme",
     "Sphinx",
     "sphinx-autobuild",

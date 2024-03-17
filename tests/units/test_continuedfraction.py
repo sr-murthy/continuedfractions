@@ -234,7 +234,7 @@ class TestContinuedFraction:
 	        	Fraction(1, 10),
 	        	(0, 10),
 	        	1,
-	        	Decimal('10.0000000000000017763568394002504646778106689453125'),
+	        	Decimal('10'),
 	        	(
 	        		ContinuedFraction(0, 1),
 	        		ContinuedFraction(1, 10)
@@ -321,7 +321,78 @@ class TestContinuedFraction:
 	        	ContinuedFraction(650, 201),
 	        	3.245,
 	        	Decimal('3.245')
-	        )
+	        ),
+	        # Case #18
+	        (
+	        	(ContinuedFraction(1, 10),),
+	        	Fraction(1, 10),
+	        	(0, 10),
+	        	1,
+	        	Decimal('10'),
+	        	(
+	        		ContinuedFraction(0, 1),
+	        		ContinuedFraction(1, 10)
+	        	),
+	        	ContinuedFraction(2, 11),
+	        	0.1,
+	        	Decimal('0.1')
+	        ),
+	        # Case #19
+	        (
+	        	(ContinuedFraction(1, 10), 2,),
+	        	Fraction(1, 20),
+	        	(0, 20),
+	        	1,
+	        	Decimal('20'),
+	        	(
+	        		ContinuedFraction(0, 1),
+	        		ContinuedFraction(1, 20)
+	        	),
+	        	ContinuedFraction(2, 21),
+	        	0.05,
+	        	Decimal('0.05')
+	        ),
+	        # Case #20
+	        (
+	        	(ContinuedFraction(1, 10), Fraction(2, 5),),
+	        	Fraction(1, 4),
+	        	(0, 4),
+	        	1,
+	        	Decimal('4'),
+	        	(
+	        		ContinuedFraction(0, 1),
+	        		ContinuedFraction(1, 4)
+	        	),
+	        	ContinuedFraction(2, 5),
+	        	0.25,
+	        	Decimal('0.25')
+	        ),
+	        # Case #20
+	        (
+	        	(ContinuedFraction(649, 200), Fraction(415, 93),),
+	        	Fraction(60357, 83000),
+	        	(0, 1, 2, 1, 1, 1, 102, 1, 2, 1, 1, 1, 6),
+	        	12,
+	        	Decimal('1.9160240282353602214726606689509935677051544189453125'),
+				(
+					ContinuedFraction(0, 1),
+					ContinuedFraction(1, 1),
+					ContinuedFraction(2, 3),
+					ContinuedFraction(3, 4),
+					ContinuedFraction(5, 7),
+					ContinuedFraction(8, 11),
+					ContinuedFraction(821, 1129),
+					ContinuedFraction(829, 1140),
+					ContinuedFraction(2479, 3409),
+					ContinuedFraction(3308, 4549),
+					ContinuedFraction(5787, 7958),
+					ContinuedFraction(9095, 12507),
+					ContinuedFraction(60357, 83000)
+				),
+	        	ContinuedFraction(60358, 83001),
+	        	0.7271927710843373,
+	        	Decimal('0.7271927710843373493975903614')
+	        ),
 	    ],
 	)
 	def test_ContinuedFraction__creation_and_initialisation__valid_inputs__object_correctly_created_and_initialised(
@@ -339,7 +410,11 @@ class TestContinuedFraction:
 		expected = expected_fraction_obj
 
 		# The received ``ContinuedFraction`` object
-		received = ContinuedFraction(*valid_inputs)
+		try:
+			received = ContinuedFraction(*valid_inputs)
+		except Exception:
+			import ipdb; ipdb.set_trace()
+			print()
 
 		# Compare the received and expected objects AS ``fractions.Fraction``
 		# objects
@@ -373,6 +448,30 @@ class TestContinuedFraction:
 		)
 
 		assert received.mediant(1, dir='right', k=1) == expected_ref_right_order1_mediant
+
+	@pytest.mark.parametrize(
+		"invalid_elements",
+		[
+			(0, 0),
+			(1, 0),
+			(1, -1),
+			(3, 0, 12, 4),
+			(-3, -1, 12, 4),
+			(3, 4, 0, 4),
+			(-3, 4, -1, 4),
+			(3, 4, 12, 0),
+			(-3, 4, 12, -1),
+			(3, 0, 0, 4),
+			(-3, 0, 12, 0),
+			(3, 4, 0, 0),
+			(-3, 0, -1, 4),
+			(3, 0, 12, -1),
+			(-3, 4, 0, -1),
+		]
+	)
+	def test_ContinuedFraction__from_elements__invalid_elements__value_error_raised(self, invalid_elements):
+		with pytest.raises(ValueError):
+			ContinuedFraction.from_elements(*invalid_elements)
 
 	@pytest.mark.parametrize(
 	    "cf1, cf2, k, expected_right_mediant",

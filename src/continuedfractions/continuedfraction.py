@@ -664,7 +664,7 @@ class ContinuedFraction(Fraction):
         >>> cf.convergent(7)
         ContinuedFraction(2469, 20000)
         """
-        return self.__class__(convergent(*self._elements[:k + 1], k=k))
+        return self.__class__(convergent(*self._elements, k=k))
 
     def remainder(self, k: int, /) -> Fraction:
         """

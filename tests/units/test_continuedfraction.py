@@ -435,17 +435,27 @@ class TestContinuedFraction:
 		# Compare the Khinchin means
 		assert received.khinchin_mean == expected_khinchin_mean
 
-		# Compare the convergents
+		# Compare the convergents using the ``.convergent`` method
 		assert all(
 			received.convergent(order) == expected_convergents[order]
 			for order in range(len(expected_convergents))
 		)
 
-		# Compare the remainders
-		assert all(
-			received.remainder(k) == ContinuedFraction.from_elements(*expected_elements[k:])
+		# Compare the convergents using the ``.convergents`` property
+		assert tuple(received.convergents.values()) == expected_convergents
+
+		expected_remainders = tuple(
+			ContinuedFraction.from_elements(*expected_elements[k:])
 			for k in range(received.order + 1)
 		)
+		# Compare the remainders using the ``.remainder`` method
+		assert all(
+			received.remainder(k) == expected_remainders[k]
+			for k in range(received.order + 1)
+		)
+
+		# Compare the remainders using the ``.remainders`` property
+		assert tuple(received.remainders.values()) == expected_remainders
 
 		assert received.mediant(1, dir='right', k=1) == expected_ref_right_order1_mediant
 

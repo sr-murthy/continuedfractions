@@ -323,6 +323,7 @@ def mediant(r: Fraction, s: Fraction, /, *, dir='right', k: int = 1) -> Fraction
     If we assume that ``r < s`` and ``bd > 0`` then the ``k``-th left mediants
     have the property that:
     ::
+
         a / b < ... < (3a + c) / (3b + d) < (2a + c) / (2b + d) < (a + c) / (b + d) < c / d
         a / b < (a + c) / (b + d) < (a + 2c) / (b + 2d) < (a + 3c) / (b + 3d) < ... c / d
 

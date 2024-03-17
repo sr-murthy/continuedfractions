@@ -284,6 +284,10 @@ class ContinuedFraction(Fraction):
         Returns a ``ContinuedFraction`` instance from a sequence of (integer)
         elements of a continued fraction.
 
+        There is a validation check: all elements must be integers, and all
+        elements after the 1st should be positive; otherwise a ``ValueError``
+        is raised.
+
         Parameters
         ----------
         *elements: int
@@ -295,6 +299,12 @@ class ContinuedFraction(Fraction):
         ContinuedFraction
             A new and fully initialised instance of ``ContinuedFraction`` with
             the given element sequence.
+
+        Raises
+        ------
+        ValueError
+            If any elements are not integers, or any elements after the 1st
+            are not positive.
 
         Examples
         --------
@@ -311,10 +321,36 @@ class ContinuedFraction(Fraction):
         >>> c2 = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
         >>> c2
         ContinuedFraction(200, 649)
+
+        Validation for elements containing non-integers or negative integers.
+
+        >>> ContinuedFraction.from_elements('0', 1)
+        Traceback (most recent call last):
+        ...
+        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+        >>> ContinuedFraction.from_elements(0, 1, 2.5)
+        Traceback (most recent call last):
+        ...
+        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+        >>> ContinuedFraction.from_elements(1, 0)
+        Traceback (most recent call last):
+        ...
+        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+        >>> ContinuedFraction.from_elements(1, -1)
+        Traceback (most recent call last):
+        ...
+        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+
         """
         # Create a new ``ContinuedFraction`` object from the given elements
         # and initialise with elements only - no need to initialise via
         # ``__init__``
+        if any(not isinstance(elem, int) or (elem <= 0 and i > 0) for i, elem in enumerate(elements)):
+            raise ValueError(
+                "Continued fraction elements must be integers, and all "
+                "elements after the 1st must be positive"
+            )
+
         obj = cls(fraction_from_elements(*elements))
         obj._elements = elements
     

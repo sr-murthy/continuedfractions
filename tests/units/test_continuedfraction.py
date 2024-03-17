@@ -375,6 +375,30 @@ class TestContinuedFraction:
 		assert received.mediant(1, dir='right', k=1) == expected_ref_right_order1_mediant
 
 	@pytest.mark.parametrize(
+		"invalid_elements",
+		[
+			(0, 0),
+			(1, 0),
+			(1, -1),
+			(3, 0, 12, 4),
+			(-3, -1, 12, 4),
+			(3, 4, 0, 4),
+			(-3, 4, -1, 4),
+			(3, 4, 12, 0),
+			(-3, 4, 12, -1),
+			(3, 0, 0, 4),
+			(-3, 0, 12, 0),
+			(3, 4, 0, 0),
+			(-3, 0, -1, 4),
+			(3, 0, 12, -1),
+			(-3, 4, 0, -1),
+		]
+	)
+	def test_ContinuedFraction__from_elements__invalid_elements__value_error_raised(self, invalid_elements):
+		with pytest.raises(ValueError):
+			ContinuedFraction.from_elements(*invalid_elements)
+
+	@pytest.mark.parametrize(
 	    "cf1, cf2, k, expected_right_mediant",
 	    [
 	        (ContinuedFraction(1, 2), Fraction(3, 5), 1, ContinuedFraction(4, 7)),

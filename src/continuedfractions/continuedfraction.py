@@ -16,7 +16,7 @@ import sys
 from decimal import Decimal
 from fractions import Fraction, _RATIONAL_FORMAT
 from pathlib import Path
-from typing import Any
+from typing import Any, Final
 
 # -- 3rd party libraries --
 
@@ -116,6 +116,9 @@ class ContinuedFraction(Fraction):
     >>> assert cf_negative_inverse == -1/cf
     >>> assert cf * cf_negative_inverse == -1
     """
+
+    # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
+    __slots__ = ['_elements',]
 
     # Class attribute to store an error message for input errors
     __valid_inputs_msg__ = (
@@ -409,21 +412,21 @@ class ContinuedFraction(Fraction):
         super().__init__()
 
         if len(args) == 1 and isinstance(args[0], ContinuedFraction):
-            self._elements = args[0].elements
+            self._elements: Final[tuple[int]] = args[0].elements
         if len(args) == 1 and isinstance(args[0], int):
-            self._elements = tuple(continued_fraction_rational(Fraction(args[0])))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0])))
         elif len(args) == 1 and isinstance(args[0], float):
-            self._elements = tuple(continued_fraction_real(args[0]))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
         elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' in args[0]:
-            self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
         elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' not in args[0]:
-            self._elements = tuple(continued_fraction_real(args[0]))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
         elif len(args) == 1 and (isinstance(args[0], Fraction) or isinstance(args[0], Decimal)):
-            self._elements = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
         elif len(args) == 2 and set(map(type, args)) == set([int]):
-            self._elements = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
         elif len(args) == 2 and set(map(type, args)).issubset([int, Fraction, ContinuedFraction]):
-            self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
+            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
         else:      # pragma: no cover
             raise ValueError(self.__class__.__valid_inputs_msg__)
 

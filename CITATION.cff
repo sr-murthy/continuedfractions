@@ -1,0 +1,26 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: continuedfractions
+message: Object-oriented continued fractions with Python
+type: software
+authors:
+  - name-particle: S. R.
+    family-names: Murthy
+    email: s.murthy@tutanota.com
+repository-code: 'https://github.com/sr-murthy/continuedfractions'
+url: 'https://continuedfractions.readthedocs.io/en/latest/'
+abstract: Object-oriented continued fractions with Python.
+keywords:
+  - continued fractions
+  - computational number theory
+  - rational numbers
+  - irrational numbers
+  - real numbers
+  - rational approximation
+  - mediants
+license: MPL-2.0
+commit: 3d4fc41
+version: 0.11.21
+date-released: '2024-03-18'

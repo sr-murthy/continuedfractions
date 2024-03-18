@@ -837,9 +837,7 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> ContinuedFraction:
-        """
-        Returns the ``k``-th left- or right-mediant of the rational number
-        represented by the continued fraction, and another rational number.
+        """Returns the ``k``-th left- or right-mediant of the continued fraction with another rational number.
         
         The "direction" of the mediant is specified with ``dir``, and can only
         be one of ``"left"`` or  ``"right"``.

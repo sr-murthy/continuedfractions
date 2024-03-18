@@ -256,10 +256,10 @@ def convergent(*elements: int, k: int = 1) -> Fraction:
 
     Parameters
     ----------
-    *elements : int
+    *elements : `int`
         A variable-length sequence of integer elements of a continued fraction.
 
-    k : int, default=1
+    k : `int`, default=1
         The order of the convergent.
 
     Returns
@@ -342,17 +342,17 @@ def mediant(r: Fraction, s: Fraction, /, *, dir='right', k: int = 1) -> Fraction
 
     Parameters
     ----------
-    r : fractions.Fraction
+    r : `fractions.Fraction`
         The first rational number.
 
-    s : fractions.Fraction
+    s : `fractions.Fraction`
         The second rational number.
 
-    dir : str, default='right'
+    dir : `str`, default='right'
         The "direction" of the mediant - `'left'` or `'right'`, as defined
         above.
 
-    k : int, default=1
+    k : `int`, default=1
         The order of the mediant, as defined above.
 
     Returns

@@ -72,6 +72,7 @@ The  :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergen
 
 .. code:: python
 
+   >>> cf = ContinuedFraction(649 200)
    >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
    (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))
 
@@ -79,7 +80,7 @@ It is also possible to get all of the convergents at once using the **cached** :
 
 .. code:: python
 
-   >>> cf.convergents
+   >>> ContinuedFraction(649 200).convergents
    mappingproxy({0: ContinuedFraction(3, 1),
                  1: ContinuedFraction(13, 4),
                  2: ContinuedFraction(159, 49),
@@ -89,10 +90,22 @@ The result is a :py:class:`types.MappingProxyType` object, and is keyed by conve
 
 .. code:: python
 
+   >>> cf = ContinuedFraction(649 200)
    >>> cf.convergents[0], cf.convergents[2]
    (ContinuedFraction(3, 1), ContinuedFraction(159, 49))
 
 Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergent` method the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property is cached, and is thus much faster when needing to make repeated use of the convergents.
+
+There are also (cached) properties for even-order convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_order_convergents`) and odd-order convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_order_convergents`), as illustrated below.
+
+.. code:: python
+
+   >>> ContinuedFraction(649 200).even_order_convergents
+   mappingproxy({0: ContinuedFraction(3, 1), 2: ContinuedFraction(159, 49)})
+   >>> ContinuedFraction(649 200).odd_order_convergents
+   mappingproxy({1: ContinuedFraction(13, 4), 3: ContinuedFraction(649, 200)})
+
+As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are :py:class:`types.MappingProxyType` objects, and are keyed by convergent order.
 
 Using the simple continued fraction :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` we can verify that these convergents are correct.
 

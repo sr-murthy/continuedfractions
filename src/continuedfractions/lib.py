@@ -22,7 +22,8 @@ from typing import Generator
 
 
 def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
-    """
+    """Generates elements/coefficients of the finite, simple continued fraction for the given rational number.
+
     Generates the (integer) elements (also called coefficient or terms) of a
     unique, finite, "simple" continued fraction representation of the
     rational fraction ``x/y`` with numerator ``x`` and non-zero denominator
@@ -103,7 +104,8 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
 
 
 def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, None]:
-    """
+    """Generates elements/coefficients of the finite, simple continued fraction of the given "real" number.
+
     Generates the (integer) elements of a "simple" continued fraction
     representation of ``x``, which can be either an integer, float or an
     equivalent string representation, except for nans and non-numeric strings.
@@ -179,10 +181,11 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
 
 
 def fraction_from_elements(*elements: int) -> Fraction:
-    """
-    Returns a ``fractions.Fraction`` object representing the rational fraction
-    constructed from an ordered sequence of the (integer) elements of a
-    continued fraction.
+    """Returns a rational number from a sequence of elements of simple continued fraction.
+
+    Returns a ``fractions.Fraction`` object representing the rational number
+    represented by the simple continued fraction as given by the sequence
+    of elements.
 
     The element sequence must be given as positional arguments, which means
     that if they are contained in an iterable then they must be unpacked
@@ -234,7 +237,8 @@ def fraction_from_elements(*elements: int) -> Fraction:
 
 
 def convergent(*elements: int, k: int = 1) -> Fraction:
-    """
+    """Returns the ``k``-th convergent of a simple continued fraction as represented by a sequence of its elements.
+
     Returns a ``fractions.Fraction`` object representing the ``k``-th
     convergent of a (finite) continued fraction given by an ordered sequence of
     its (integer) elements.
@@ -244,8 +248,8 @@ def convergent(*elements: int, k: int = 1) -> Fraction:
     ``1``, ... ``n``.
 
     Each convergent has its own continued fraction representation, which occurs
-    as a partial sum in the continued fraction representation of the number
-    represented by the continued fraction given by the element sequence.
+    as a partial sum in the original continued fraction given by the element
+    sequence.
 
     It is assumed that ``k`` < the number of elements, otherwise a
     ``ValueError`` is raised.
@@ -268,7 +272,7 @@ def convergent(*elements: int, k: int = 1) -> Fraction:
     Raises
     ------
     ValueError
-        If `k` < the number of elements.
+        If `k` is not an integer or is less than the the number of elements.
 
     Examples
     --------
@@ -304,7 +308,8 @@ def convergent(*elements: int, k: int = 1) -> Fraction:
 
 
 def mediant(r: Fraction, s: Fraction, /, *, dir='right', k: int = 1) -> Fraction:
-    """
+    """Returns the ``k``-th left- or right-mediant of two rational numbers.
+
     Returns the ``k``-th left- or right-mediant of two rational numbers, given
     as ``fractions.Fraction`` objects.
 

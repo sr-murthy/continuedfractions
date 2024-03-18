@@ -9,7 +9,7 @@
 #     https://packaging.python.org/en/latest/tutorials/packaging-projects/
 #
 name = "continuedfractions"
-description = "Continued fractions with Python"
+description = "Object-oriented continued fractions with Python."
 
 authors = [
     {name = "S. R. Murthy", email = "s.murthy@tutanota.com"},
@@ -29,11 +29,14 @@ dependencies = [
 ]
 readme = "README.md"
 keywords = [
+    "computational number theory",
     "continued fractions",
+    "irrational numbers",
+    "mediants",
+    "number theory",
+    "rational approximation",
     "rational numbers",
     "real numbers",
-    "irrational numbers",
-    "approximation"
 ]
 classifiers = [
         "Development Status :: 4 - Beta",
@@ -137,7 +140,7 @@ deploy = [
 
 [tool.pdm.scripts]
 
-lint = {shell = "make lint", help = "Linting code with Ruff"}
+lint = {shell = "make lint", help = "Lint source with Ruff"}
 doctests = {shell = "make doctests", help = "Run doctests"}
 unittests = {shell = "make unittests", help = "Run unit tests & measure coverage"}
 

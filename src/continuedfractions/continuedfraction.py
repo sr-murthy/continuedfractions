@@ -35,7 +35,8 @@ from continuedfractions.lib import (
 
 
 class ContinuedFraction(Fraction):
-    """
+    """An object-oriented representation of a (finite) simple continued fraction.
+
     An implementation of simple continued fractions as Python objects and
     instances of the standard library ``fractions.Fraction`` class, with
     various properties for the continued fraction, including its elements
@@ -52,6 +53,15 @@ class ContinuedFraction(Fraction):
     order : `int`
         The order of the continued fraction, defined as the number of
         elements - ``1``.
+
+    convergents : `MappingProxyType[int, ContinuedFraction]`
+        The convergents of the continued fraction
+
+    even_order_convergents: `MappingProxyType[int, ContinuedFraction]`
+        The even-order convergents of the continued fraction
+
+    odd_order_convergents : `MappingProxyType[int, ContinuedFraction]`
+        The odd-order convergents of the continued fraction
 
     khinchin_mean : `decimal.Decimal`
         The geometric mean of all elements of the continued fraction, starting
@@ -134,7 +144,8 @@ class ContinuedFraction(Fraction):
 
     @classmethod
     def validate(cls, *args_: int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> None:
-        """
+        """Validates inputs for object creation.
+
         Checks whether the arguments are one of the following types:
 
         * a single ``int`` or a non-``nan`` ``float``
@@ -223,7 +234,8 @@ class ContinuedFraction(Fraction):
             raise ValueError(cls.__valid_inputs_msg__)
 
     def __new__(cls, *args:  int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> ContinuedFraction:
-        """
+        """Creates objects of this class.
+
         Creates instances of this class, which represent finite, simple
         continued fractions.
 
@@ -292,9 +304,7 @@ class ContinuedFraction(Fraction):
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """
-        Returns a ``ContinuedFraction`` instance from a sequence of (integer)
-        elements of a continued fraction.
+        """Returns a ``ContinuedFraction`` object from a sequence of (integer) elements of a continued fraction.
 
         There is a validation check: all elements must be integers, and all
         elements after the 1st should be positive; otherwise a ``ValueError``
@@ -369,9 +379,7 @@ class ContinuedFraction(Fraction):
         return obj
 
     def __init__(self, *args:  int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> None:
-        """
-        Initialises new ``ContinuedFraction`` instances with attributes and
-        properties for their elements, order, convergents, and remainders.
+        """Initialises new ``ContinuedFraction`` instances with attributes and properties for their elements, order, convergents, and remainders.
 
         Parameters
         ----------
@@ -489,9 +497,7 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def as_float(self) -> float:
-        """
-        Returns the ``float`` value of the continued fraction, using standard
-        division (``/``) of the numerator by the denominator.
+        """Returns the ``float`` value of the continued fraction, using standard division (``/``) of the numerator by the denominator.
 
         The method is cached (with ``functools.cache``), which makes calls
         after the initial call much faster.
@@ -520,9 +526,7 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def as_decimal(self) -> Decimal:
-        """
-        Returns the ``float`` value of the continued fraction, using standard
-        division (``/``) of the numerator by the denominator.
+        """Returns the ``float`` value of the continued fraction, using standard division (``/``) of the numerator by the denominator.
 
         The method is cached (with ``functools.cache``), which makes calls
         after the initial call much faster.
@@ -551,8 +555,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def elements(self) -> tuple[int]:
-        """
-        Property: the element sequence of the continued fraction.
+        """Property: the element sequence of the continued fraction.
 
         Returns
         -------
@@ -571,9 +574,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def order(self) -> int:
-        """
-        Property: the order of the continued fraction, which is the number
-                  of its elements + ``1``.
+        """Property: the order of the continued fraction, which is the number of its elements + ``1``.
 
         Returns
         -------
@@ -594,26 +595,22 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def khinchin_mean(self) -> Decimal | None:
-        """
-        Property: the Khinchin mean of the continued fraction, which we define
-                  as the geometric mean of all its elements starting from
-                  ``a_1``, so that is,:
-                  ::
+        """Property: the Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements.
 
-                    a_1, a_2, ...
+           The Khinchin mean is the geometric mean of all elements starting
+           from the first, excluding the leading element ``a_0``, so the mean
+           of ``a_1, a_2, ... , a_n``.
+        
+           As in practice all ``ContinuedFraction`` objects will have a finite
+           sequence of elements the Khinchin mean as defined above will always
+           have a computable value.
 
-                  The leading element ``a_0`` is excluded.
+           In the special case of integers or fractions representing integers,
+           whose continued fraction representations consist of only a single
+           element, a null value is returned.
 
-                  As in practice all ``ContinuedFraction`` objects will have a
-                  finite sequence of elements the Khinchin mean as defined
-                  above will always have a computable value.
-
-                  In the special case of integers or fractions representing
-                  integers, whose continued fraction representations consist of
-                  only a single element, a null value is returned.
-
-                  The property is cached (with ``functools.lru_cache``), which
-                  makes calls after the initial call much faster.
+           The property is cached (with ``functools.lru_cache``), which makes
+           calls after the initial call much faster.
 
         Returns
         -------
@@ -649,11 +646,11 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def convergent(self, k: int, /) -> ContinuedFraction:
-        """
-        Returns a ``ContinuedFraction`` object for the `k`-th (simple)
-        convergent of the continued fraction, which is defined as the finite 
-        simple continued fraction of order ``k`` formed from the first
-        ``k + 1`` elements ``a_0, a_1, ... , a_k``.
+        """Returns the ``k``-th (simple) convergent of the continued fraction.
+
+        The ``k``-th convergent is a (finite) simple continued fraction of
+        order ``k`` formed from the first ``k + 1`` elements
+        ``a_0, a_1, ... , a_k`` of the original.
 
         The property is cached (with ``functools.cache``), which makes
         calls after the initial call much faster.
@@ -689,19 +686,16 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """
-        Property: An immutable dict of all ``k``-order convergents of the
-                  continued fraction, keyed/indexed by ``k``. Each convergent
-                  is also a ``ContinuedFraction`` object.
+        """Property: An immutable dict of all ``k``-order convergents of the continued fraction, keyed/indexed by ``k``. Each convergent is also a ``ContinuedFraction`` object.
 
-                  The property is cached (with ``functools.lru_cache``), which
-                  makes calls after the initial call much faster.
+        The property is cached (with ``functools.lru_cache``), which makes
+        calls after the initial call much faster.
 
         Returns
         -------
         ContinuedFraction
             An immutable dict of all ``k``-order convergents of the continued
-            fraction, keyed/index by ``k``. Each convergent is also a
+            fraction, keyed/indexed by ``k``. Each convergent is also a
             ``ContinuedFraction`` object.
 
         Examples
@@ -717,13 +711,71 @@ class ContinuedFraction(Fraction):
             for k in range(self.order + 1)
         })
 
+    @property
+    @functools.lru_cache
+    def even_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
+        """Property: An immutable dict of all even-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+
+        The property is cached (with ``functools.lru_cache``), which makes
+        calls after the initial call much faster.
+
+        Returns
+        -------
+        ContinuedFraction
+            An immutable dict of all even-order convergents of the continued
+            fraction, keyed/indexed by order. Each convergent is also a
+            ``ContinuedFraction`` object.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('3.245')
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
+        >>> cf.even_order_convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 2: ContinuedFraction(159, 49)})
+        """
+        return MappingProxyType({
+            k: self.convergents[k]
+            for k in range(0, self.order + 1, 2)
+        })
+
+    @property
+    @functools.lru_cache
+    def odd_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
+        """Property: An immutable dict of all odd-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+
+        The property is cached (with ``functools.lru_cache``), which makes
+        calls after the initial call much faster.
+
+        Returns
+        -------
+        ContinuedFraction
+            An immutable dict of all odd-order convergents of the continued
+            fraction, keyed/indexed by order. Each convergent is also a
+            ``ContinuedFraction`` object.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction('3.245')
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
+        >>> cf.odd_order_convergents
+        mappingproxy({1: ContinuedFraction(13, 4), 3: ContinuedFraction(649, 200)})
+        """
+        return MappingProxyType({
+            k: self.convergents[k]
+            for k in range(1, self.order + 1, 2)
+        })
+
     @functools.cache
     def remainder(self, k: int, /) -> ContinuedFraction:
-        """
-        The ``k``-th remainder of the continued fraction, defined as the continued
-        fraction consisting of the elements starting from the ``k``-th element
-        of the sequence of elements of the original continued fraction: so the
-        ``k``-th remainder has the elements ``a_k, a_{k + 1}, ...``.
+        """Returns the ``k``-th remainder of the continued fraction.
+
+        The ``k``-th remainder of the continued fraction, defined as the
+        continued fraction consisting of the elements starting from the
+        ``k``-th element of the sequence of elements of the original continued
+        fraction: so the ``k``-th remainder has the elements
+        ``a_k, a_{k + 1}, ...``.
 
         The method is cached (with ``functools.cache``), which makes calls
         after the initial call much faster.
@@ -758,13 +810,10 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def remainders(self) -> MappingProxyType[int, ContinuedFraction]:
-        """
-        Property: An immutable dict of all ``k``-th remainders of the
-                  continued fraction, keyed/indexed by ``k``. Each remainder
-                  is also a ``ContinuedFraction`` object.
+        """Property: An immutable dict of all ``k``-th remainders of the continued fraction, keyed/indexed by ``k``. Each remainder is also a ``ContinuedFraction`` object.
 
-                  The property is cached (with ``functools.lru_cache``), which
-                  makes calls after the initial call much faster.
+           The property is cached (with ``functools.lru_cache``), which makes
+           calls after the initial call much faster.
 
         Returns
         -------
@@ -789,9 +838,8 @@ class ContinuedFraction(Fraction):
     @functools.cache
     def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> ContinuedFraction:
         """
-        Returns the ``k``-th left- or right-mediant of this
-        ``ContinuedFraction`` object with another ``fractions.Fraction``
-        object.
+        Returns the ``k``-th left- or right-mediant of the rational number
+        represented by the continued fraction, and another rational number.
         
         The "direction" of the mediant is specified with ``dir``, and can only
         be one of ``"left"`` or  ``"right"``.

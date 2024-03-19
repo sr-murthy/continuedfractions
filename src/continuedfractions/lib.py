@@ -1,8 +1,8 @@
 __all__ = [
     'continued_fraction_real',
     'continued_fraction_rational',
-    'fraction_from_elements',
     'convergent',
+    'fraction_from_elements',
     'mediant',
 ]
 
@@ -104,7 +104,7 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
 
 
 def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, None]:
-    """Generates elements/coefficients of the finite, simple continued fraction of the given "real" number.
+    """Generates elements/coefficients of the (finite) simple continued fraction of the given "real" number.
 
     Generates the (integer) elements of a "simple" continued fraction
     representation of ``x``, which can be either an integer, float or an
@@ -181,7 +181,7 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
 
 
 def fraction_from_elements(*elements: int) -> Fraction:
-    """Returns a rational number from a sequence of elements of simple continued fraction.
+    """Returns the rational number represented by a simple continued fraction from a sequence of its elements.
 
     Returns a ``fractions.Fraction`` object representing the rational number
     represented by the simple continued fraction as given by the sequence
@@ -237,7 +237,7 @@ def fraction_from_elements(*elements: int) -> Fraction:
 
 
 def convergent(*elements: int, k: int = 1) -> Fraction:
-    """Returns the ``k``-th convergent of a simple continued fraction as represented by a sequence of its elements.
+    """Returns the ``k``-th convergent of a simple continued fraction given a sequence of its elements.
 
     Returns a ``fractions.Fraction`` object representing the ``k``-th
     convergent of a (finite) continued fraction given by an ordered sequence of

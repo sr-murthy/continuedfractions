@@ -132,6 +132,9 @@ class ContinuedFraction(Fraction):
     # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
     __slots__ = ['_elements',]
 
+    # To support pattern matching of instances in ``match`` statements
+    __match_args__ = ('numerator', 'denominator')
+
     # Class attribute to store an error message for input errors
     __valid_inputs_msg__ = (
         "Only single integers, non-nan floats, numeric strings, \n"
@@ -421,24 +424,34 @@ class ContinuedFraction(Fraction):
         """
         super().__init__()
 
-        if len(args) == 1 and isinstance(args[0], ContinuedFraction):
-            self._elements: Final[tuple[int]] = args[0].elements
-        if len(args) == 1 and isinstance(args[0], int):
-            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0])))
-        elif len(args) == 1 and isinstance(args[0], float):
-            self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
-        elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' in args[0]:
-            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
-        elif len(args) == 1 and isinstance(args[0], str) and _RATIONAL_FORMAT.match(args[0]) and '/' not in args[0]:
-            self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
-        elif len(args) == 1 and (isinstance(args[0], Fraction) or isinstance(args[0], Decimal)):
-            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
-        elif len(args) == 2 and set(map(type, args)) == set([int]):
-            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
-        elif len(args) == 2 and set(map(type, args)).issubset([int, Fraction, ContinuedFraction]):
-            self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
-        else:      # pragma: no cover
-            raise ValueError(self.__class__.__valid_inputs_msg__)
+        match args:
+            # -- case of a single ``ContinuedFraction`` --
+            case (ContinuedFraction(),):
+                self._elements: Final[tuple[int]] = args[0].elements
+            # -- case of a single ``int`` --
+            case (int(),):
+                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0])))
+            # -- case of a single ``float`` --
+            case (float(),):
+                self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
+            # -- case of a single (signed or unsigned) numeric string matching --
+            # -- ``fractions._RATIONAL_FORMAT`` --
+            case (str(),):
+                self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))            
+            # -- case of a single ``fractions.Fraction`` or ``decimal.Decimal``
+            case (Fraction(),) | (Decimal(),):
+                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
+            # -- case of a pair of ``int``s
+            case (int(), int()):
+                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
+            # -- case of a pairwise combination of ``int``,                --
+            # -- ``fractions.Fraction`` or ``ContinuedFraction`` instances --
+            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction()):
+                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
+            # -- any other case - these cases would have been excluded by --
+            # ``validate`` but just to be sure                            --
+            case _:     # pragma: no cover
+                raise ValueError(self.__class__.__valid_inputs_msg__)
 
     def __add__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
         return self.__class__(super().__add__(other))

@@ -119,7 +119,6 @@ autosummary_generate = False
 # Intersphinx mappings to reference external documentation domains
 intersphinx_mapping = {
     'coverage': ('https://coverage.readthedocs.io/en/7.3.1/', None),
-    #'hubspot': ('https://developers.hubspot.com/docs/api/overview', None),
     'matplotlib': ('https://matplotlib.org/stable/', None),
     'networkx': ('https://networkx.org/documentation/stable/', None),
     'numpy':  ('https://numpy.org/doc/stable/', None),
@@ -149,6 +148,11 @@ exclude_patterns = ['_build',
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
+
+# A list of prefixes that are ignored when creating the module index. (new in Sphinx 0.6)
+modindex_common_prefix = ["continuedfractions."]
+
+doctest_global_setup = "import continuedfractions"
 
 # If this is True, the ``todo`` and ``todolist`` extension directives
 # produce output, else they produce nothing. The default is ``False``.
@@ -182,7 +186,7 @@ html_context = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 # General (non-theme) HTML output options
-html_baseurl = 'https://github.com/sr-murthy/continuedfractions'
+html_baseurl = 'https://continuedfractions.readthedocs.io/en/stable/'
 
 html_sidebars = {
     "sources/getting-started": [],
@@ -206,15 +210,17 @@ html_theme_options = {
             'icon': 'fa-brands fa-github',
         },
     ],
+    'navbar_persistent': ['search-button'],
     'navbar_align': 'content',
     'navbar_center': ['navbar-nav'],
     'navbar_end': ['theme-switcher', 'navbar-icon-links'],
     'navbar_start': ['navbar-logo'],
-    'navigation_depth': 10,
+    'navigation_depth': 4,
+    "primary_sidebar_end": ["indices", "sidebar-ethical-ads"],
     'secondary_sidebar_items': ['page-toc', 'edit-this-page', 'sourcelink'],
-    'show_nav_level': 20,
+    'show_nav_level': 2,
     'show_toc_level': 1,
-    'use_edit_page_button': True,
+    'use_edit_page_button': False,
 }
 
 html_logo = '_static/logo.png'

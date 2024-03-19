@@ -12,9 +12,7 @@ __all__ = [
 # -- Standard libraries --
 import re
 
-from collections import deque
 from decimal import Decimal
-from itertools import accumulate
 from fractions import Fraction, _RATIONAL_FORMAT
 from typing import Generator
 
@@ -201,6 +199,100 @@ def continued_fraction_real(x: int | float | str, /) -> Generator[int, None, Non
         yield elem
 
 
+def convergent(k: int, *elements: int) -> Fraction:
+    """Returns the ``k``-th convergent of a simple continued fraction given a sequence of its elements.
+
+    Returns a ``fractions.Fraction`` object representing the ``k``-th
+    convergent of a (finite) continued fraction given by an ordered sequence of
+    its (integer) elements.
+    
+    The integer ``k`` is called the order of the convergent, and a continued
+    fraction of order ``n`` has exactly ``n + 1`` convergents of orders ``0``,
+    ``1``, ... ``n``.
+
+    Each convergent has its own continued fraction representation, which occurs
+    as a partial sum in the original continued fraction given by the element
+    sequence.
+
+    It is assumed that ``k`` < the number of elements, otherwise a
+    ``ValueError`` is raised.
+
+    Parameters
+    ----------
+    k : `int`
+        The order of the convergent. Must be a non-negative integer less than
+        the number of elements.
+
+    *elements : `int`
+        A variable-length sequence of integer elements of a continued fraction.
+
+    Returns
+    -------
+    fractions.Fraction
+        A rational fraction constructed from the given sequence of elements of
+        a continued fraction, representing the ``k``-order convergent of a
+        (finite) continued fraction represented by the given element sequence.
+
+    Raises
+    ------
+    ValueError
+        If `k` is not an integer or is less than the the number of elements.
+
+    Examples
+    --------
+    >>> convergent(0, 3, 4, 12, 4)
+    Fraction(3, 1)
+
+    >>> convergent(1, 3, 4, 12, 4)
+    Fraction(13, 4)
+
+    >>> convergent(2, 3, 4, 12, 4)
+    Fraction(159, 49)
+
+    >>> convergent(3, 3, 4, 12, 4)
+    Fraction(649, 200)
+
+    >>> convergent(-1, 3, 4, 12, 4)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer less than the number of
+    elements of the continued fraction, and all elements must
+    be integers.
+
+    >>> convergent(4, 3, 4, 12, 4)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer less than the number of
+    elements of the continued fraction, and all elements must
+    be integers.
+    """
+    if not isinstance(k, int) or k < 0 or k >= len(elements) or any(not isinstance(e, int) for e in elements):
+        raise ValueError(
+            "`k` must be a non-negative integer less than the number of\n"
+            "elements of the continued fraction, and all elements must\n"
+            "be integers."
+        )
+
+    a, b = elements[0], 1
+    
+    if k == 0:
+        return Fraction(a, b)
+
+    c, d = elements[1] * elements[0] + 1, elements[1]
+
+    if k == 1:
+        return Fraction(c, d)
+
+    p, q = 1, 1
+
+    for e in elements[2:k + 1]:
+        p, q = e * c + a, e * d + b
+        a, b = c, d
+        c, d = p, q
+
+    return Fraction(p, q)
+
+
 def fraction_from_elements(*elements: int) -> Fraction:
     """Returns the rational number represented by a simple continued fraction from a sequence of its elements.
 
@@ -250,82 +342,7 @@ def fraction_from_elements(*elements: int) -> Fraction:
     if any(not isinstance(elem, int) for elem in elements):
         raise ValueError("Continued fraction elements must be integers")
 
-    return Fraction(
-        deque(
-            accumulate(reversed(elements), func=lambda tail, head: head + Fraction(1, tail))
-        ).pop()
-    )
-
-
-def convergent(*elements: int, k: int = 1) -> Fraction:
-    """Returns the ``k``-th convergent of a simple continued fraction given a sequence of its elements.
-
-    Returns a ``fractions.Fraction`` object representing the ``k``-th
-    convergent of a (finite) continued fraction given by an ordered sequence of
-    its (integer) elements.
-    
-    The integer ``k`` is called the order of the convergent, and a continued
-    fraction of order ``n`` has exactly ``n + 1`` convergents of orders ``0``,
-    ``1``, ... ``n``.
-
-    Each convergent has its own continued fraction representation, which occurs
-    as a partial sum in the original continued fraction given by the element
-    sequence.
-
-    It is assumed that ``k`` < the number of elements, otherwise a
-    ``ValueError`` is raised.
-
-    Parameters
-    ----------
-    *elements : `int`
-        A variable-length sequence of integer elements of a continued fraction.
-
-    k : `int`, default=1
-        The order of the convergent.
-
-    Returns
-    -------
-    fractions.Fraction
-        A rational fraction constructed from the given sequence of elements of
-        a continued fraction, representing the ``k``-order convergent of a
-        (finite) continued fraction represented by the given element sequence.
-
-    Raises
-    ------
-    ValueError
-        If `k` is not an integer or is less than the the number of elements.
-
-    Examples
-    --------
-    >>> convergent(3, 4, 12, 4, k=0)
-    Fraction(3, 1)
-
-    >>> convergent(3, 4, 12, 4, k=1)
-    Fraction(13, 4)
-
-    >>> convergent(3, 4, 12, 4, k=2)
-    Fraction(159, 49)
-
-    >>> convergent(3, 4, 12, 4, k=3)
-    Fraction(649, 200)
-
-    >>> convergent(3, 4, 12, 4, k=-1)
-    Traceback (most recent call last):
-    ...
-    ValueError: `k` must be a non-negative integer less than the number of elements of the continued fraction
-
-    >>> convergent(3, 4, 12, 4, k=4)
-    Traceback (most recent call last):
-    ...
-    ValueError: `k` must be a non-negative integer less than the number of elements of the continued fraction
-    """
-    if not isinstance(k, int) or k < 0 or k >= len(elements):
-        raise ValueError(
-            "`k` must be a non-negative integer less than the number of "
-            "elements of the continued fraction"
-        )
-
-    return fraction_from_elements(*elements[:k + 1])
+    return convergent(len(elements) - 1, *elements)
 
 
 def mediant(r: Fraction, s: Fraction, /, *, dir='right', k: int = 1) -> Fraction:

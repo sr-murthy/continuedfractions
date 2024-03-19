@@ -1,6 +1,7 @@
 # -- IMPORTS --
 
 # -- Standard libraries --
+from decimal import Decimal
 from fractions import Fraction
 
 # -- 3rd party libraries --
@@ -121,38 +122,38 @@ class TestFractionFromElements:
 class TestConvergent:
 
 	@pytest.mark.parametrize(
-	    "elements, k",
+	    "k, elements",
 	    [
-	        ([1., 2.], 1),
-	        ([1, 2.], 1),
-	        ([1., 2.], 1),
-	        ([1, 2], -1),
-	        ([1, 2], 2),
+	        (1, [1., 2.]),
+	        (1, [1, 2.]),
+	        (1, [1., 2.]),
+	        (-1, [1, 2]),
+	        (2, [1, Decimal('2')]),
 	    ],
 	)
-	def test_convergent__invalid_elements__value_error_raised(self, elements, k):
+	def test_convergent__invalid_elements__value_error_raised(self, k, elements):
 		with pytest.raises(ValueError):
-			convergent(*elements, k=k)
+			convergent(k, *elements)
 
 	@pytest.mark.parametrize(
-	    "elements, k, expected_convergent",
+	    "k, elements, expected_convergent",
 	    [
-	        ([1, 2], 1, Fraction(3, 2)),
-	        ([-5000], 0, Fraction(-5000, 1)),
-	        ([3, 4, 12, 4], 2, Fraction(159, 49)),
-	        ([-4, 1, 3, 12, 4], 3, Fraction(-159, 49)),
-	        ([-1, 1, 2], 2, Fraction(-1, 3)),
-	        ([0, 3], 1, Fraction(1, 3)),
-	        ([4, 2, 6, 7], 2, Fraction(58, 13)),
-	        ([-5, 1, 1, 6, 7], 3, Fraction(-58, 13)),
-	        ([0, 10], 0, Fraction(0, 1)),
-	        ([-2, 1, 5, 3, 4], 4, Fraction(-95, 82)),
-	        ([3, 2, 5, 4, 2], 3, Fraction(159, 46)),
+	        (1, [1, 2], Fraction(3, 2)),
+	        (0, [-5000], Fraction(-5000, 1)),
+	        (2, [3, 4, 12, 4], Fraction(159, 49)),
+	        (3, [-4, 1, 3, 12, 4], Fraction(-159, 49)),
+	        (2, [-1, 1, 2], Fraction(-1, 3)),
+	        (1, [0, 3], Fraction(1, 3)),
+	        (2, [4, 2, 6, 7], Fraction(58, 13)),
+	        (3, [-5, 1, 1, 6, 7], Fraction(-58, 13)),
+	        (0, [0, 10], Fraction(0, 1)),
+	        (4, [-2, 1, 5, 3, 4], Fraction(-95, 82)),
+	        (3, [3, 2, 5, 4, 2], Fraction(159, 46)),
 	    ],
 	)
-	def test_convergent__valid_elements__correct_convergent_returned(self, elements, k, expected_convergent):
+	def test_convergent__valid_elements__correct_convergent_returned(self, k, elements, expected_convergent):
 	
-		assert convergent(*elements, k=k) == expected_convergent
+		assert convergent(k, *elements) == expected_convergent
 
 class TestMediant:
 

@@ -631,7 +631,7 @@ class ContinuedFraction(Fraction):
         >>> cf.convergent(7)
         ContinuedFraction(2469, 20000)
         """
-        return self.__class__(convergent(*self._elements, k=k))
+        return self.__class__(convergent(k, *self._elements))
 
     @property
     @functools.lru_cache

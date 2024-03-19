@@ -45,33 +45,31 @@ class ContinuedFraction(Fraction):
     The term "simple continued fraction" denotes a specific type of continued
     fraction where the fractional terms only have numerators of ``1``.
 
+    Parameters
+    ----------
+    *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
+        Arguments of the type described above.
+
+    **kwargs
+        Any valid keyword arguments for the superclass ``fractions.Fraction``
+
     Attributes
     ----------
-    elements : `tuple[int]`
-        The ordered sequence of elements of the continued fraction.
-
-    order : `int`
-        The order of the continued fraction, defined as the number of
-        elements - ``1``.
-
-    convergents : `MappingProxyType[int, ContinuedFraction]`
-        The convergents of the continued fraction
-
-    even_order_convergents: `MappingProxyType[int, ContinuedFraction]`
-        The even-order convergents of the continued fraction
-
-    odd_order_convergents : `MappingProxyType[int, ContinuedFraction]`
-        The odd-order convergents of the continued fraction
-
-    khinchin_mean : `decimal.Decimal`
-        The geometric mean of all elements of the continued fraction, starting
-        from ``a_1``, excluding the leading element ``a_0``.
+    elements
+    order
+    convergents
+    even_order_convergents
+    odd_order_convergents
+    remainders
+    khinchin_mean
 
     Methods
     -------
+    as_decimal()
+        The ``decimal.Decimal`` value of the continued fraction.
+
     as_float()
-        The ``float`` value of the fraction, as given by standard division of
-        the numerator by the denominator.
+        The ``float`` value of the continued fraction.
 
     convergent(k: int)
         The ``k``-th (simple) convergent of the continued fraction, defined as the
@@ -161,7 +159,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *args: `int`, `float` `str`, `fractions.Fraction`, `ContinuedFraction`, `decimal.Decimal`
+        *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
             Arguments subject to the validation rules described above.
 
         Raises
@@ -254,7 +252,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *args: `int`, `float`, `str`, `fractions.Fraction`, `ContinuedFraction`, `decimal.Decimal`
+        *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
             Arguments of the type described above.
 
         **kwargs
@@ -315,7 +313,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *elements: `int`
+        *elements : int
             An ordered sequence of integer elements of a (finite) continued
             fraction.
 
@@ -386,7 +384,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        *args : `int`, `float`, `str`, `fractions.Fraction`, `ContinuedFraction`, `decimal.Decimal`
+        *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
             Arguments of the type described above.
 
         **kwargs
@@ -510,7 +508,7 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def as_float(self) -> float:
-        """Returns the ``float`` value of the continued fraction, using standard division (``/``) of the numerator by the denominator.
+        """Returns the ``float`` value of the continued fraction.
 
         The method is cached (with ``functools.cache``), which makes calls
         after the initial call much faster.
@@ -518,7 +516,7 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         float
-            The ``float`` representation of the continued fraction.
+            The ``float`` value of the continued fraction.
 
         Examples
         --------
@@ -539,15 +537,15 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def as_decimal(self) -> Decimal:
-        """Returns the ``float`` value of the continued fraction, using standard division (``/``) of the numerator by the denominator.
+        """Returns the ``decimal.Decimal`` value of the continued fraction.
 
         The method is cached (with ``functools.cache``), which makes calls
         after the initial call much faster.
 
         Returns
         -------
-        float
-            The `float` representation of the continued fraction.
+        decimal.Decimal
+            The ``decimal.Decimal`` representation of the continued fraction.
 
         Examples
         --------
@@ -670,7 +668,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        k : `int`
+        k : int
             The order of the convergent, as described above.
 
         Returns
@@ -706,7 +704,7 @@ class ContinuedFraction(Fraction):
 
         Returns
         -------
-        ContinuedFraction
+        MappingProxyType[int, ContinuedFraction]
             An immutable dict of all ``k``-order convergents of the continued
             fraction, keyed/indexed by ``k``. Each convergent is also a
             ``ContinuedFraction`` object.
@@ -734,7 +732,7 @@ class ContinuedFraction(Fraction):
 
         Returns
         -------
-        ContinuedFraction
+        MappingProxyType[int, ContinuedFraction]
             An immutable dict of all even-order convergents of the continued
             fraction, keyed/indexed by order. Each convergent is also a
             ``ContinuedFraction`` object.
@@ -762,7 +760,7 @@ class ContinuedFraction(Fraction):
 
         Returns
         -------
-        ContinuedFraction
+        MappingProxyType[int, ContinuedFraction]
             An immutable dict of all odd-order convergents of the continued
             fraction, keyed/indexed by order. Each convergent is also a
             ``ContinuedFraction`` object.
@@ -795,7 +793,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        k : `int`
+        k : int
             The index of the remainder, as described above.
 
         Returns
@@ -830,7 +828,7 @@ class ContinuedFraction(Fraction):
 
         Returns
         -------
-        ContinuedFraction
+        MappingProxyType[int, ContinuedFraction]
             An immutable dict of all ``k``-th remainders of the continued
             fraction, keyed/index by ``k``. Each remainder is also a
             ``ContinuedFraction`` object.
@@ -887,11 +885,11 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        other : `fractions.Fraction`, `ContinuedFraction`
+        other : fractions.Fraction, ContinuedFraction
             The second fraction to use to calculate the ``k``-th mediant with
             the first.
         
-        k : `int`, default=1
+        k : int, default=1
             The order of the mediant, as defined above.        
 
         Returns

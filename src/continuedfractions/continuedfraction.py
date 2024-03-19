@@ -45,49 +45,6 @@ class ContinuedFraction(Fraction):
     The term "simple continued fraction" denotes a specific type of continued
     fraction where the fractional terms only have numerators of ``1``.
 
-    Parameters
-    ----------
-    *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
-        Arguments of the type described above.
-
-    **kwargs
-        Any valid keyword arguments for the superclass ``fractions.Fraction``
-
-    Attributes
-    ----------
-    elements
-    order
-    convergents
-    even_order_convergents
-    odd_order_convergents
-    remainders
-    khinchin_mean
-
-    Methods
-    -------
-    as_decimal()
-        The ``decimal.Decimal`` value of the continued fraction.
-
-    as_float()
-        The ``float`` value of the continued fraction.
-
-    convergent(k: int)
-        The ``k``-th (simple) convergent of the continued fraction, defined as the
-        finite simple continued fraction of order ``k`` consisting of the first
-        ``k + 1`` elements of the original continued fraction.
-
-    remainder(k: int)
-        The ``k``-th remainder of the continued fraction, defined as the continued
-        fraction whose elements start from the ``k``-th element of the sequence
-        of elements of the original continued fraction.
-
-    mediant(other: Fraction)
-        The continued fraction of the rational number formed by taking the
-        pairwise sum of the numerators and denominators of the original
-        continued fraction and a second fraction (``other``). The resulting
-        fraction has the property that its value lies between the two
-        constituents.
-
     Examples
     --------
     Construct the continued fraction for the rational `649/200`.
@@ -566,12 +523,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def elements(self) -> tuple[int]:
-        """Property: the element sequence of the continued fraction.
-
-        Returns
-        -------
-        tuple[int]
-            The element sequence of the continued fraction.
+        """tuple[int]: The sequence of elements of the continued fraction.
 
         Examples
         --------
@@ -585,13 +537,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def order(self) -> int:
-        """Property: the order of the continued fraction, which is the number of its elements + ``1``.
-
-        Returns
-        -------
-        int
-            The order of the continued fraction, which is the number of its
-            elements + ``1``.
+        """int: The order of the continued fraction, which is the number of its elements - ``1``.
 
         Examples
         --------
@@ -606,29 +552,22 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def khinchin_mean(self) -> Decimal | None:
-        """Property: the Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements.
+        """decimal.Decimal: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements.
 
-           The Khinchin mean is the geometric mean of all elements starting
-           from the first, excluding the leading element ``a_0``, so the mean
-           of ``a_1, a_2, ... , a_n``.
-        
-           As in practice all ``ContinuedFraction`` objects will have a finite
-           sequence of elements the Khinchin mean as defined above will always
-           have a computable value.
+        The Khinchin mean is the geometric mean of all elements starting
+        from the first, excluding the leading element ``a_0``, so the mean
+        of ``a_1, a_2, ... , a_n``.
 
-           In the special case of integers or fractions representing integers,
-           whose continued fraction representations consist of only a single
-           element, a null value is returned.
+        As in practice all ``ContinuedFraction`` objects will have a finite
+        sequence of elements the Khinchin mean as defined above will always
+        have a computable value.
 
-           The property is cached (with ``functools.lru_cache``), which makes
-           calls after the initial call much faster.
+        In the special case of integers or fractions representing integers,
+        whose continued fraction representations consist of only a single
+        element, a null value is returned.
 
-        Returns
-        -------
-        decimal.Decimal
-            The geometric mean of all elements of the continued fraction,
-            excluding the leading term ``a_0``, so the geometric mean of
-            the sequence ``a_1, a2, ...``.
+        The property is cached (with ``functools.lru_cache``), which makes
+        calls after the initial call much faster.
 
         Examples
         --------
@@ -697,17 +636,13 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """Property: An immutable dict of all ``k``-order convergents of the continued fraction, keyed/indexed by ``k``. Each convergent is also a ``ContinuedFraction`` object.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all ``k``-order convergents of the continued fraction, keyed/indexed by ``k``.
+
+        Each convergent is indexed by its order and is also a
+        ``ContinuedFraction`` object.
 
         The property is cached (with ``functools.lru_cache``), which makes
         calls after the initial call much faster.
-
-        Returns
-        -------
-        MappingProxyType[int, ContinuedFraction]
-            An immutable dict of all ``k``-order convergents of the continued
-            fraction, keyed/indexed by ``k``. Each convergent is also a
-            ``ContinuedFraction`` object.
 
         Examples
         --------
@@ -725,24 +660,17 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def even_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """Property: An immutable dict of all even-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all even-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+
+        Each convergent is indexed by its order and is also a
+        ``ContinuedFraction`` object.
 
         The property is cached (with ``functools.lru_cache``), which makes
         calls after the initial call much faster.
 
-        Returns
-        -------
-        MappingProxyType[int, ContinuedFraction]
-            An immutable dict of all even-order convergents of the continued
-            fraction, keyed/indexed by order. Each convergent is also a
-            ``ContinuedFraction`` object.
-
         Examples
         --------
-        >>> cf = ContinuedFraction('3.245')
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
-        >>> cf.even_order_convergents
+        >>> ContinuedFraction('3.245').even_order_convergents
         mappingproxy({0: ContinuedFraction(3, 1), 2: ContinuedFraction(159, 49)})
         """
         return MappingProxyType({
@@ -753,24 +681,17 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def odd_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """Property: An immutable dict of all odd-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all odd-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+
+        Each convergent is indexed by its order and is also a
+        ``ContinuedFraction`` object.
 
         The property is cached (with ``functools.lru_cache``), which makes
         calls after the initial call much faster.
 
-        Returns
-        -------
-        MappingProxyType[int, ContinuedFraction]
-            An immutable dict of all odd-order convergents of the continued
-            fraction, keyed/indexed by order. Each convergent is also a
-            ``ContinuedFraction`` object.
-
         Examples
         --------
-        >>> cf = ContinuedFraction('3.245')
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
-        >>> cf.odd_order_convergents
+        >>> ContinuedFraction('3.245').odd_order_convergents
         mappingproxy({1: ContinuedFraction(13, 4), 3: ContinuedFraction(649, 200)})
         """
         return MappingProxyType({
@@ -821,17 +742,13 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def remainders(self) -> MappingProxyType[int, ContinuedFraction]:
-        """Property: An immutable dict of all ``k``-th remainders of the continued fraction, keyed/indexed by ``k``. Each remainder is also a ``ContinuedFraction`` object.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all ``k``-th remainders of the continued fraction, keyed/indexed by ``k``. Each remainder is also a ``ContinuedFraction`` object.
 
-           The property is cached (with ``functools.lru_cache``), which makes
-           calls after the initial call much faster.
+        Each remainder is indexed by its order and is also a
+        ``ContinuedFraction`` object.
 
-        Returns
-        -------
-        MappingProxyType[int, ContinuedFraction]
-            An immutable dict of all ``k``-th remainders of the continued
-            fraction, keyed/index by ``k``. Each remainder is also a
-            ``ContinuedFraction`` object.
+        The property is cached (with ``functools.lru_cache``), which makes
+        calls after the initial call much faster.
 
         Examples
         --------

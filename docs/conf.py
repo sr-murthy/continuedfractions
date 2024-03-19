@@ -107,14 +107,21 @@ extensions = ['jupyter_sphinx',
 #     For more on all available autodoc defaults see
 #         https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#confval-autodoc_default_options
 autodoc_default_options = {
-    'exclude-members': '__weakref__',
+    'exclude-members': '__weakref__,__slots__,__match_args__',
     'member-order': 'bysource',
     'private-members': False,
     'special-members': '__call__, __eq__, __init__, __new__'
 }
 
-# Autosummary settings
+# Sphinx autodoc autosummary settings
 autosummary_generate = False
+
+# Numpydoc settings
+numpydoc_show_class_members = True
+numpydoc_show_inherited_class_members = False
+numpydoc_class_members_toctree = False
+numpydoc_attributes_as_param_list = False
+numpydoc_xref_param_type = False
 
 # Intersphinx mappings to reference external documentation domains
 intersphinx_mapping = {
@@ -157,10 +164,6 @@ doctest_global_setup = "import continuedfractions"
 # If this is True, the ``todo`` and ``todolist`` extension directives
 # produce output, else they produce nothing. The default is ``False``.
 todo_include_todos = True
-
-
-def linkcode_resolve(domain, info):
-    ...
 
 # -- Project file data variables ---------------------------------------------
 

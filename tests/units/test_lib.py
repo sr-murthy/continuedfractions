@@ -45,6 +45,18 @@ class TestContinuedFractionRational:
 class TestContinuedFractionReal:
 
 	@pytest.mark.parametrize(
+		"x",
+		[
+			(1/1j,),
+			("not a numeric string"),
+			("1a23"),
+		]
+	)
+	def test_continued_fraction_real__invalid_inputs__value_error_raised(self, x):
+		with pytest.raises(ValueError):
+			list(continued_fraction_real(x))
+
+	@pytest.mark.parametrize(
 	    "x, elements",
 	    [
 	        (3/2, tuple([1, 2])),

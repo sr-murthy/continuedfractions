@@ -21,6 +21,5 @@ keywords:
   - rational approximation
   - mediants
 license: MPL-2.0
-commit: 3d4fc41
-version: 0.11.21
-date-released: '2024-03-18'
+version: 0.11.22
+date-released: '2024-03-19'

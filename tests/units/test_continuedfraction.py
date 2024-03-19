@@ -410,11 +410,7 @@ class TestContinuedFraction:
 		expected = expected_fraction_obj
 
 		# The received ``ContinuedFraction`` object
-		try:
-			received = ContinuedFraction(*valid_inputs)
-		except Exception:
-			import ipdb; ipdb.set_trace()
-			print()
+		received = ContinuedFraction(*valid_inputs)
 
 		# Compare the received and expected objects AS ``fractions.Fraction``
 		# objects

@@ -55,7 +55,7 @@ There are no root-level ``requirements*.txt`` files - but only a single (default
 
 .. note::
 
-   It is important to note that the :command:`pdm install` uses either the default :file:`pdm.lock` lockfile, or one specified with :command:`-L <lockfile>`. Multiple lockfiles can be generated and maintained. Refer to the `PDM documentation <https://pdm-project.org/latest/reference/cli/#install>`_ for more information.
+   It is important to note that the :command:`pdm install` uses either the default :file:`pdm.lock` lockfile, or one specified with :command:`-L <lockfile>`. Multiple lockfiles can be generated and maintained. Refer to the `PDM install documentation <https://pdm-project.org/latest/reference/cli/#install>`_ for more information.
 
 If you don't wish to install any editable dependencies, including the project itself, you can use:
 
@@ -101,7 +101,7 @@ Linting warnings should be addressed first. The doctests serve as acceptance tes
 Documentation
 =============
 
-`Project documentation <https://continuedfractions.readthedocs.io/en/latest/>`_ is defined and built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_, and deployed to `Read The Docs <https://readthedocs.org>`_. Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
+`Project documentation <https://continuedfractions.readthedocs.io/en/stable/>`_ is defined and built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_, and deployed to `Read The Docs <https://readthedocs.org>`_. Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
 
 The Sphinx documentation can be built locally on any branch from the **project root** using:
 
@@ -115,7 +115,7 @@ First, ensure that you have installed the docs Python requirements, which includ
 
    pip install -r docs/requirements.txt
 
-or via `PDM <https://github.com/sr-murthy/continuedfractions/blob/main/docs/requirements.txt>`_:
+or via `PDM <https://pdm.fming.dev/latest/>`_:
 
 .. code:: bash
 
@@ -133,7 +133,7 @@ The CI/CD pipelines are defined in the `CI YML <.github/workflows/ci.yml>`_, and
 Versioning and Releases
 =======================
 
-The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.11.23`` - `semantic versioning <https://semver.org/>`_ is used.
+The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.11.24`` - `semantic versioning <https://semver.org/>`_ is used.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 

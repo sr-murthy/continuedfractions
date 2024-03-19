@@ -337,7 +337,7 @@ class ContinuedFraction(Fraction):
         return obj
 
     def __init__(self, *args:  int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> None:
-        """Initialises new ``ContinuedFraction`` instances with attributes and properties for their elements, order, convergents, and remainders.
+        """Initialises new ``ContinuedFraction`` instances.
 
         Parameters
         ----------
@@ -397,11 +397,11 @@ class ContinuedFraction(Fraction):
             case (Fraction(),) | (Decimal(),):
                 self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
             # -- case of a pair of ``int``s
-            case (int(), int()):
+            case (int(), int(),):
                 self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
             # -- case of a pairwise combination of ``int``,                --
             # -- ``fractions.Fraction`` or ``ContinuedFraction`` instances --
-            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction()):
+            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction(),):
                 self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
             # -- any other case - these cases would have been excluded by --
             # ``validate`` but just to be sure                            --

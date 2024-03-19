@@ -2,14 +2,18 @@
 Exploring Continued Fractions
 =============================
 
-Python objects of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class encapsulate a number of basic and interesting properties of continued fractions that can be easily explored.
+Python objects of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class encapsulate a number of basic and interesting properties of simple continued fractions that can be easily explored.
+
+.. note::
+
+   All references to continued fractions are to the simple, unique variants. Support for non-simple (irregular/generalised) continued fractions is planned to be included in a future release.
 
 .. _exploring-continued-fractions.elements-and-orders:
 
 Elements and Orders
 ===================
 
-The **elements** (or coefficients) of a (possibly infinite) continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the head :math:`a_0 = [x]`, which is the integer part of :math:`x`, and the tail elements :math:`a_1,a_2,\cdots` which occur in the denominators of the fractional terms. The :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.elements` property can be used to look at their elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
+The **elements** (or coefficients) of a (possibly infinite), simple continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the head :math:`a_0 = [x]`, which is the integer part of :math:`x`, and the tail elements :math:`a_1,a_2,\cdots` which occur in the denominators of the fractional terms. The :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.elements` property can be used to look at their elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
 
 .. code:: python
 

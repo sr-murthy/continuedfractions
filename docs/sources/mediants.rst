@@ -88,7 +88,7 @@ while the right-mediants form a strictly increasing sequence upper-bounded by :m
 
    \lim_{k \to \infty} \frac{a + kc}{b + kd} = \lim_{k \to \infty} \frac{\frac{a}{k} + c}{\frac{b}{k} + d} = \frac{c}{d}
 
-We can illustrate this using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method using the ``dir`` option to set the “direction” of the mediant, starting with the right mediants, which don't need to specified with ``dir='right'`` as that is the default value, and using ``k`` to set the mediant order, which defaults to ``k=1``.
+We can illustrate this using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method using the ``dir`` option to set the “direction” of the mediant, starting with the right mediants, which don't need to be specified with ``dir='right'`` as that is the default value, and using ``k`` to set the mediant order, which defaults to ``k=1``.
 
 .. code:: python
 

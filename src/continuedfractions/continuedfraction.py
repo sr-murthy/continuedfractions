@@ -128,7 +128,6 @@ class ContinuedFraction(Fraction):
         --------
         >>> ContinuedFraction.validate(100)
         >>> ContinuedFraction.validate(3, -2)
-
         >>> ContinuedFraction.validate(1, -2.0)
         Traceback (most recent call last):
         ...
@@ -138,12 +137,10 @@ class ContinuedFraction(Fraction):
         `fractions.Fraction` or ``ContinuedFraction`` object, representing 
         the numerator and non-zero denominator, respectively, of a rational 
         fraction, are valid.
-
         >>> ContinuedFraction.validate(-.123456789)
         >>> ContinuedFraction.validate('-.123456789')
         >>> ContinuedFraction.validate('-649/200')
         >>> ContinuedFraction.validate(-3/2)
-
         >>> ContinuedFraction.validate(-3, 0)
         Traceback (most recent call last):
         ...
@@ -153,11 +150,9 @@ class ContinuedFraction(Fraction):
         `fractions.Fraction` or ``ContinuedFraction`` object, representing 
         the numerator and non-zero denominator, respectively, of a rational 
         fraction, are valid.
-
         >>> ContinuedFraction.validate(Fraction(-415, 93))
         >>> ContinuedFraction.validate(Decimal('12345.6789'))
         >>> ContinuedFraction.validate(Decimal(12345.6789))
-
         >>> ContinuedFraction.validate(Fraction(3, 2), 2.5)
         Traceback (most recent call last):
         ...
@@ -473,6 +468,9 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
+        Note that the default :py:mod:`decimal` context precision of :math:`28`
+        is used in these examples.
+
         >>> import math
         >>> math.pi
         3.141592653589793
@@ -502,6 +500,9 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
+        Note that the default :py:mod:`decimal` context precision of :math:`28`
+        is used in these examples.
+
         >>> import math
         >>> math.pi
         3.141592653589793
@@ -512,8 +513,8 @@ class ContinuedFraction(Fraction):
         >>> cf = ContinuedFraction(math.pi)
         >>> cf
         ContinuedFraction(884279719003555, 281474976710656)
-        >>> cf.as_float()
-        3.141592653589793
+        >>> cf.as_decimal()
+        Decimal('3.141592653589793115997963469')
         """
         return Decimal(self.numerator) / Decimal(self.denominator)
 
@@ -569,6 +570,9 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
+        Note that the default :py:mod:`decimal` context precision of :math:`28`
+        is used in these examples.
+
         >>> ContinuedFraction(649, 200).elements
         (3, 4, 12, 4)
         >>> ContinuedFraction(649, 200).khinchin_mean
@@ -582,7 +586,7 @@ class ContinuedFraction(Fraction):
         >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).khinchin_mean
         Decimal('2.15015313349074244086978069390170276165008544921875')
         >>> ContinuedFraction(5000).khinchin_mean
-        
+
         """
         if self.order == 1:
             return Decimal(self.elements[-1])

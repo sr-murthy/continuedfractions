@@ -459,7 +459,8 @@ class TestContinuedFraction:
 		# Compare the remainders using the ``.remainders`` property
 		assert tuple(received.remainders.values()) == expected_remainders
 
-		assert received.mediant(1, dir='right', k=1) == expected_ref_right_order1_mediant
+		assert received.right_mediant(1, k=1) == expected_ref_right_order1_mediant
+		assert received.left_mediant(1, k=1) == expected_ref_right_order1_mediant
 
 	@pytest.mark.parametrize(
 		"invalid_elements",
@@ -486,25 +487,6 @@ class TestContinuedFraction:
 			ContinuedFraction.from_elements(*invalid_elements)
 
 	@pytest.mark.parametrize(
-	    "cf1, cf2, k, expected_right_mediant",
-	    [
-	        (ContinuedFraction(1, 2), Fraction(3, 5), 1, ContinuedFraction(4, 7)),
-	        (ContinuedFraction(1, 2), ContinuedFraction(3, 5), 2, ContinuedFraction(7, 12)),
-	        (ContinuedFraction(1, 2), Fraction(3, 5), 3, ContinuedFraction(10, 17)),
-	        (ContinuedFraction(1, 2), ContinuedFraction(0), 1, ContinuedFraction(1, 3)),
-	        (ContinuedFraction(1, 2), Fraction(1, 2), 1, ContinuedFraction(1, 2)),
-	        (ContinuedFraction(1, -2), ContinuedFraction(1, 2), 1, ContinuedFraction(0, 1)),
-	        (ContinuedFraction(-1, 2), Fraction(1), 1, ContinuedFraction(0, 1)),
-	        (ContinuedFraction(-1, 2), ContinuedFraction(-1), 1, ContinuedFraction(-2, 3)),
-	        (ContinuedFraction(-1, 2), Fraction(1, -2), 1, ContinuedFraction(-1, 2)),
-	        (ContinuedFraction(1, 2), Fraction(3, 5), 10 ** 6, ContinuedFraction(3000001, 5000002)),
-	    ],
-	)
-	def test_ContinuedFraction__right_mediant__two_fractions__correct_mediant_returned(self, cf1, cf2, k, expected_right_mediant):
-	
-		assert cf1.mediant(cf2, dir='right', k=k) == expected_right_mediant
-
-	@pytest.mark.parametrize(
 	    "cf1, cf2, k, expected_left_mediant",
 	    [
 	        (ContinuedFraction(1, 2), Fraction(3, 5), 1, ContinuedFraction(4, 7)),
@@ -527,7 +509,26 @@ class TestContinuedFraction:
 	)
 	def test_ContinuedFraction__left_mediant__two_fractions__correct_mediant_returned(self, cf1, cf2, k, expected_left_mediant):
 	
-		assert cf1.mediant(cf2, dir='left', k=k) == expected_left_mediant
+		assert cf1.left_mediant(cf2, k=k) == expected_left_mediant
+
+	@pytest.mark.parametrize(
+	    "cf1, cf2, k, expected_right_mediant",
+	    [
+	        (ContinuedFraction(1, 2), Fraction(3, 5), 1, ContinuedFraction(4, 7)),
+	        (ContinuedFraction(1, 2), ContinuedFraction(3, 5), 2, ContinuedFraction(7, 12)),
+	        (ContinuedFraction(1, 2), Fraction(3, 5), 3, ContinuedFraction(10, 17)),
+	        (ContinuedFraction(1, 2), ContinuedFraction(0), 1, ContinuedFraction(1, 3)),
+	        (ContinuedFraction(1, 2), Fraction(1, 2), 1, ContinuedFraction(1, 2)),
+	        (ContinuedFraction(1, -2), ContinuedFraction(1, 2), 1, ContinuedFraction(0, 1)),
+	        (ContinuedFraction(-1, 2), Fraction(1), 1, ContinuedFraction(0, 1)),
+	        (ContinuedFraction(-1, 2), ContinuedFraction(-1), 1, ContinuedFraction(-2, 3)),
+	        (ContinuedFraction(-1, 2), Fraction(1, -2), 1, ContinuedFraction(-1, 2)),
+	        (ContinuedFraction(1, 2), Fraction(3, 5), 10 ** 6, ContinuedFraction(3000001, 5000002)),
+	    ],
+	)
+	def test_ContinuedFraction__right_mediant__two_fractions__correct_mediant_returned(self, cf1, cf2, k, expected_right_mediant):
+	
+		assert cf1.right_mediant(cf2, k=k) == expected_right_mediant
 
 	def test_ContinuedFraction__rational_operations(self):
 		f1 = ContinuedFraction(649, 200)

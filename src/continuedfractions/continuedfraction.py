@@ -38,12 +38,12 @@ class ContinuedFraction(Fraction):
     """An object-oriented representation of a (finite) simple continued fraction.
 
     An implementation of simple continued fractions as Python objects and
-    instances of the standard library ``fractions.Fraction`` class, with
+    instances of the standard library :py:class:`fractions.Fraction` class, with
     various properties for the continued fraction, including its elements
     (or coefficients), the order, convergents, and remainders.
 
     The term "simple continued fraction" denotes a specific type of continued
-    fraction where the fractional terms only have numerators of ``1``.
+    fraction where the fractional terms only have numerators of :math:`1`.
 
     Examples
     --------
@@ -87,7 +87,7 @@ class ContinuedFraction(Fraction):
     # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
     __slots__ = ['_elements',]
 
-    # To support pattern matching of instances in ``match`` statements
+    # To support pattern matching of instances in :py:func:`match` statements
     __match_args__ = ('numerator', 'denominator')
 
     # Class attribute to store an error message for input errors
@@ -106,13 +106,13 @@ class ContinuedFraction(Fraction):
 
         Checks whether the arguments are one of the following types:
 
-        * a single ``int`` or a non-``nan`` ``float``
-        * a single numeric string (``str``)
-        * a single ``fractions.Fraction`` or ``ContinuedFraction`` or
-          ``decimal.Decimal`` object
-        * a pairwise combination of an ``int``, ``fractions.Fraction`` or
-          ``ContinuedFraction`` object, representing the numerator
-          and non-zero denominator of a rational fraction
+        * a single :py:class:`int`, or a :py:class:`float` different from :py:data:`math.nan` 
+        * a single numeric string (:py:class:`str`)
+        * a single :py:class:`fractions.Fraction` or :py:class:`ContinuedFraction` or
+          :py:class:`decimal.Decimal` object
+        * a pairwise combination of an :py:class:`int`, :py:class:`fractions.Fraction` or
+          :py:class:`ContinuedFraction` object, representing the numerator
+          and non-zero denominator of a rational number
 
         Parameters
         ----------
@@ -199,13 +199,13 @@ class ContinuedFraction(Fraction):
 
         Arguments must be one of the following types:
 
-        * a single ``int`` or a non-``nan`` ``float``
-        * a single numeric string (``str``)
-        * a single ``fractions.Fraction`` or ``ContinuedFraction`` or
-          ``decimal.Decimal`` object
-        * a pairwise combination of an ``int``, ``fractions.Fraction`` or
-          ``ContinuedFraction`` object, representing the numerator
-          and non-zero denominator of a rational fraction
+        * a single :py:class:`int`, or a :py:class:`float` different from :py:data:`math.nan` 
+        * a single numeric string (:py:class:`str`)
+        * a single :py:class:`fractions.Fraction` or :py:class:`ContinuedFraction` or
+          :py:class:`decimal.Decimal` object
+        * a pairwise combination of an :py:class:`int`, :py:class:`fractions.Fraction` or
+          :py:class:`ContinuedFraction` object, representing the numerator
+          and non-zero denominator of a rational number
 
         Parameters
         ----------
@@ -214,19 +214,18 @@ class ContinuedFraction(Fraction):
 
         **kwargs
             Any valid keyword arguments for the superclass
-            ``fractions.Fraction``.
+            :py:class:`fractions.Fraction`.
 
         Returns
         -------
         ContinuedFraction
-            A new instance of ``ContinuedFraction``, but not yet initialised
+            A new instance of :py:class:`ContinuedFraction`, but not yet initialised
             with the class-specific attributes and properties.
 
         Examples
         --------
         >>> ContinuedFraction(100, 2)
         ContinuedFraction(50, 1)
-
         >>> ContinuedFraction(1, -2.0)
         Traceback (most recent call last):
         ...
@@ -236,10 +235,8 @@ class ContinuedFraction(Fraction):
         `fractions.Fraction` or ``ContinuedFraction`` object, representing 
         the numerator and non-zero denominator, respectively, of a rational 
         fraction, are valid.
-
         >>> ContinuedFraction('-.123456789')
         ContinuedFraction(-123456789, 1000000000)
-
         >>> ContinuedFraction(.3, -2)
         Traceback (most recent call last):
         ...
@@ -249,7 +246,6 @@ class ContinuedFraction(Fraction):
         `fractions.Fraction` or ``ContinuedFraction`` object, representing 
         the numerator and non-zero denominator, respectively, of a rational 
         fraction, are valid.
-
         >>> ContinuedFraction(Fraction(-415, 93))
         ContinuedFraction(-415, 93)
         """
@@ -262,10 +258,10 @@ class ContinuedFraction(Fraction):
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """Returns a ``ContinuedFraction`` object from a sequence of (integer) elements of a continued fraction.
+        """Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a continued fraction.
 
         There is a validation check: all elements must be integers, and all
-        elements after the 1st should be positive; otherwise a ``ValueError``
+        elements after the 1st should be positive; otherwise a :py:class:`ValueError`
         is raised.
 
         Parameters
@@ -277,7 +273,7 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new and fully initialised instance of ``ContinuedFraction`` with
+            A new and fully initialised instance of :py:class:`ContinuedFraction` with
             the given element sequence.
 
         Raises
@@ -288,15 +284,15 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-        Constructing a continued fraction for the rational ``649/200`` using
-        the element sequence ``(3, 4, 12, 4)``.
+        Constructing a continued fraction for the rational :math:`\\frac{649}{200}` using
+        the element sequence :math:`3, 4, 12, 4`.
 
         >>> c1 = ContinuedFraction.from_elements(3, 4, 12, 4)
         >>> c1
         ContinuedFraction(649, 200)
 
-        Constructing the continued fraction of the inverse rational ``200/649``
-        using the element sequence ``(0, 3, 4, 12, 4)``.
+        Constructing the continued fraction of the (multiplicative) inverse :math:`\\frac{200}{649}`
+        using the element sequence :math:`0, 3, 4, 12, 4`.
 
         >>> c2 = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
         >>> c2
@@ -337,7 +333,7 @@ class ContinuedFraction(Fraction):
         return obj
 
     def __init__(self, *args:  int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> None:
-        """Initialises new ``ContinuedFraction`` instances with attributes and properties for their elements, order, convergents, and remainders.
+        """Initialises new :py:class:`ContinuedFraction` instances.
 
         Parameters
         ----------
@@ -356,7 +352,7 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-        Construct the continued fraction for the rational ``415/93``.
+        Construct the continued fraction for the rational :math:`\\frac{415}{93}`.
 
         >>> cf = ContinuedFraction(415, 93)
         >>> cf
@@ -397,11 +393,11 @@ class ContinuedFraction(Fraction):
             case (Fraction(),) | (Decimal(),):
                 self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
             # -- case of a pair of ``int``s
-            case (int(), int()):
+            case (int(), int(),):
                 self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
             # -- case of a pairwise combination of ``int``,                --
             # -- ``fractions.Fraction`` or ``ContinuedFraction`` instances --
-            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction()):
+            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction(),):
                 self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
             # -- any other case - these cases would have been excluded by --
             # ``validate`` but just to be sure                            --
@@ -465,15 +461,15 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def as_float(self) -> float:
-        """Returns the ``float`` value of the continued fraction.
+        """Returns the :py:class:`float` value of the continued fraction.
 
-        The method is cached (with ``functools.cache``), which makes calls
+        The method is cached (with :py:func:`functools.cache`), which makes calls
         after the initial call much faster.
 
         Returns
         -------
         float
-            The ``float`` value of the continued fraction.
+            The :py:class:`float` value of the continued fraction.
 
         Examples
         --------
@@ -481,8 +477,8 @@ class ContinuedFraction(Fraction):
         >>> math.pi
         3.141592653589793
 
-        Now construct a ``ContinuedFraction`` object from it, and check the 
-        ``float`` value.
+        Now construct a :py:class:`ContinuedFraction` object from it, and check the 
+        :py:class:`float` value.
 
         >>> cf = ContinuedFraction(math.pi)
         >>> cf
@@ -494,15 +490,15 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def as_decimal(self) -> Decimal:
-        """Returns the ``decimal.Decimal`` value of the continued fraction.
+        """Returns the :py:class:`decimal.Decimal` value of the continued fraction.
 
-        The method is cached (with ``functools.cache``), which makes calls
+        The method is cached (with :py:func:`functools.cache`), which makes calls
         after the initial call much faster.
 
         Returns
         -------
         decimal.Decimal
-            The ``decimal.Decimal`` representation of the continued fraction.
+            The :py:class:`decimal.Decimal` representation of the continued fraction.
 
         Examples
         --------
@@ -510,8 +506,8 @@ class ContinuedFraction(Fraction):
         >>> math.pi
         3.141592653589793
 
-        Now construct a ``ContinuedFraction` object from it, and check the 
-        ``float`` value.
+        Now construct a :py:class:`ContinuedFraction` object from it, and check the 
+        :py:class:`float` value.
 
         >>> cf = ContinuedFraction(math.pi)
         >>> cf
@@ -537,13 +533,15 @@ class ContinuedFraction(Fraction):
 
     @property
     def order(self) -> int:
-        """int: The order of the continued fraction, which is the number of its elements - ``1``.
+        """int: The order of the continued fraction, which is the number of its elements minus :math:`1`.
 
         Examples
         --------
         >>> cf = ContinuedFraction('.12345')
         >>> cf
         ContinuedFraction(2469, 20000)
+        >>> len(cf.elements)
+        8
         >>> cf.order
         7
         """
@@ -552,13 +550,13 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def khinchin_mean(self) -> Decimal | None:
-        """decimal.Decimal: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements.
+        """decimal.Decimal: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
 
-        The Khinchin mean is the geometric mean of all elements starting
-        from the first, excluding the leading element ``a_0``, so the mean
-        of ``a_1, a_2, ... , a_n``.
+        The Khinchin mean is the geometric mean :math:`\\sqrt[n]{a_1a_2 \\cdots a_n}`
+        of all elements of the (finite, simple) continued fraction :math:`[a_0;a_1,\\ldots,a_n]`
+        starting from the 1st.
 
-        As in practice all ``ContinuedFraction`` objects will have a finite
+        As in practice all :py:class:`ContinuedFraction` objects will have a finite
         sequence of elements the Khinchin mean as defined above will always
         have a computable value.
 
@@ -566,7 +564,7 @@ class ContinuedFraction(Fraction):
         whose continued fraction representations consist of only a single
         element, a null value is returned.
 
-        The property is cached (with ``functools.lru_cache``), which makes
+        The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
 
         Examples
@@ -596,13 +594,34 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def convergent(self, k: int, /) -> ContinuedFraction:
-        """Returns the ``k``-th (simple) convergent of the continued fraction.
+        """Returns the :math:`k`-th (simple) convergent of the continued fraction.
 
-        The ``k``-th convergent is a (finite) simple continued fraction of
-        order ``k`` formed from the first ``k + 1`` elements
-        ``a_0, a_1, ... , a_k`` of the original.
+        Given a simple continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
+        :math:`k`-th convergent is defined as:
 
-        The property is cached (with ``functools.cache``), which makes
+        .. math::
+
+           C_k = a_0 + \\cfrac{1}{a_1 + \\cfrac{1}{a_2 \\ddots \\cfrac{1}{a_{k-1} + \\cfrac{1}{a_k}}}}
+
+        The result is a :py:class:`fractions.Fraction` object.
+        
+        The integer :math:`k` is called the order of the convergent, and if 
+        :math:`[a_0;a_1,a_2,\\ldots]` is finite of order :math:`n` then it has
+        exactly :math:`n + 1` convergents :math:`C_0,C_1,C_2,\\ldots,C_n` where
+        the :math:`k`-th convergent :math:`C_k = \\frac{p_k}{q_k}` is given by
+        the recurrence relation:
+
+        .. math::
+           
+           \\begin{align}
+           p_k &= a_kp_{k - 1} + p_{k - 2} \\\\
+           q_k &= a_kq_{k - 1} + q_{k - 2},        \\hskip{3em}    k \\geq 3
+           \\end{align}
+
+        where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`,
+        and :math:`q_1 = p_1`.
+
+        The property is cached (with :py:func:`functools.cache`), which makes
         calls after the initial call much faster.
 
         Parameters
@@ -613,7 +632,7 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new ``ContinuedFraction`` instance representing the ``k``-th
+            A new :py:class:`ContinuedFraction` instance representing the :math:`k`-th
             (simple) convergent of the original continued fraction, as
             described above.
 
@@ -631,17 +650,17 @@ class ContinuedFraction(Fraction):
         >>> cf.convergent(7)
         ContinuedFraction(2469, 20000)
         """
-        return self.__class__(convergent(*self._elements, k=k))
+        return self.__class__(convergent(k, *self._elements))
 
     @property
     @functools.lru_cache
     def convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all ``k``-order convergents of the continued fraction, keyed/indexed by ``k``.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all :math:`k`-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
-        ``ContinuedFraction`` object.
+        :py:class:`ContinuedFraction` object.
 
-        The property is cached (with ``functools.lru_cache``), which makes
+        The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
 
         Examples
@@ -660,12 +679,12 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def even_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all even-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all even-order convergents of the continued fraction, keyed/indexed by  order.
 
         Each convergent is indexed by its order and is also a
-        ``ContinuedFraction`` object.
+        :py:class:`ContinuedFraction` object.
 
-        The property is cached (with ``functools.lru_cache``), which makes
+        The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
 
         Examples
@@ -681,12 +700,12 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def odd_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all odd-order convergents of the continued fraction, keyed/indexed by their order. Each convergent is also a ``ContinuedFraction`` object.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all odd-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
-        ``ContinuedFraction`` object.
+        :py:class:`ContinuedFraction` object.
 
-        The property is cached (with ``functools.lru_cache``), which makes
+        The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
 
         Examples
@@ -701,15 +720,18 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def remainder(self, k: int, /) -> ContinuedFraction:
-        """Returns the ``k``-th remainder of the continued fraction.
+        """Returns the :math:`k`-th remainder of the continued fraction.
 
-        The ``k``-th remainder of the continued fraction, defined as the
-        continued fraction consisting of the elements starting from the
-        ``k``-th element of the sequence of elements of the original continued
-        fraction: so the ``k``-th remainder has the elements
-        ``a_k, a_{k + 1}, ...``.
+        The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction
+        :math:`[a_0; a_1,\\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\\ldots]`,
+        obtained from the original by "removing" the elements of the :math:`(k - 1)`-st
+        convergent :math:`C_{k - 1} = (a_0,a_1,\\ldots,a_{k - 1})`.
 
-        The method is cached (with ``functools.cache``), which makes calls
+        .. math::
+
+            R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
+
+        The method is cached (with :py:func:`functools.cache`), which makes calls
         after the initial call much faster.
 
         Parameters
@@ -720,7 +742,7 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new ``ContinuedFraction`` instance representing the ``k``-th
+            A new :py:class:`ContinuedFraction` instance representing the :math:`k`-th
             remainder of the original continued fraction, as described above.
 
         Examples
@@ -742,12 +764,12 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def remainders(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all ``k``-th remainders of the continued fraction, keyed/indexed by ``k``. Each remainder is also a ``ContinuedFraction`` object.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all :math:`k`-th remainders of the continued fraction, keyed by order.
 
         Each remainder is indexed by its order and is also a
-        ``ContinuedFraction`` object.
+        :py:class:`ContinuedFraction` object.
 
-        The property is cached (with ``functools.lru_cache``), which makes
+        The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
 
         Examples
@@ -764,46 +786,50 @@ class ContinuedFraction(Fraction):
         })
 
     @functools.cache
-    def mediant(self, other: Fraction, /, *, dir="right", k: int = 1) -> ContinuedFraction:
-        """Returns the ``k``-th left- or right-mediant of the continued fraction with another rational number.
+    def left_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
+        """Returns the :math:`k`-th left-mediant of the continued fraction with another rational number.
         
-        The "direction" of the mediant is specified with ``dir``, and can only
-        be one of ``"left"`` or  ``"right"``.
+        For a positive integer :math:`k`, the :math:`k`-th left-mediant of two
+        rational numbers :math:`r = \\frac{a}{b}` and :math:`s = \\frac{c}{d}`,
+        where :math:`b, d, b + d \\neq 0`, is defined as:
+        
+        .. math::
 
-        For a positive integer ``k``, the ``k``-th left-mediant of rational numbers
-        ``r = a / b`` and ``s = c / d``, where ``b`` and ``d`` are non-zero,
-        can be defined as:
-        ::
+           \\frac{ka + c}{kb + d}, \\hskip{3em}    k \\geq 1
 
-            (ka + c) / (kb + d)
+        while the :math:`k`-th right mediant is defined as:
+        
+        .. math::
 
-        while the ``k``-th right mediant can be defined as:
-        ::
+           \\frac{a + kc}{b + kd}, \\hskip{3em}    k \\geq 1
 
-            (a + kc) / (b + kd)
+        If we assume that :math:`r < s` and :math:`bd > 0` then these mediants
+        have the property that:
+       
+        .. math::
 
-        If we assume that ``r < s`` and ``bd > 0`` then the ``k``-th left mediants have
-        the property that:
-        ::
+           \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \\hskip{3em} k \\geq 1
 
-            a / b < ... < (3a + c) / (3b + d) < (2a + c) / (2b + d) < (a + c) / (b + d) < c / d
-            a / b < (a + c) / (b + d) < (a + 2c) / (b + 2d) < (a + 3c) / (b + 3d) < ... c / d
+        where equality holds for :math:`k = 1`. If we let :math:`k \\to \\infty`
+        then the mediants converge to opposite limits:
 
-        That is, the left mediants form a strictly decreasing sequence, actually
-        converging to ``a / b``, while the right mediants form a strictly
-        increasing sequence of, actually converging to ``c / d``.
+        .. math::
 
-        For the left mediant use ``dir="left"``, while for the right use
-        `dir='right'`. The default is ``dir="right"``. For ``k = 1`` the left
-        and right mediants are the same.
+          \\begin{align}
+          \\lim_{k \\to \\infty} \\frac{ka + c}{kb + d} &= \\frac{a}{b} \\\\
+          \\lim_{k \\to \\infty} \\frac{a + kc}{b + kd} &= \\frac{c}{d}
+          \\end{align}
 
-        The method is cached (with ``functools.cache``), which makes calls
+        For more information consult the
+        `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
+
+        The method is cached (with :py:func:`functools.cache`), which makes calls
         after the initial call much faster.
 
         Parameters
         ----------
         other : fractions.Fraction, ContinuedFraction
-            The second fraction to use to calculate the ``k``-th mediant with
+            The second fraction to use to calculate the :math:`k`-th mediant with
             the first.
         
         k : int, default=1
@@ -812,23 +838,104 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            The ``k``-th mediant of the original fraction and the second
-            fraction, as a ``ContinuedFraction`` instance.
+            The :math:`k`-th left-mediant of the original fraction and the second
+            fraction, as a :py:class:`ContinuedFraction` object.
 
         Examples
         --------
-        >>> c1 = ContinuedFraction('.5')
+        >>> c1 = ContinuedFraction('1/2')
         >>> c2 = ContinuedFraction(3, 5)
         >>> c1, c2
         (ContinuedFraction(1, 2), ContinuedFraction(3, 5))
-        >>> c1.mediant(c2)
+        >>> c1.left_mediant(c2)
         ContinuedFraction(4, 7)
-        >>> c1.mediant(c2, k=2)
-        ContinuedFraction(7, 12)
-        >>> c1.mediant(c2, k=3)
-        ContinuedFraction(10, 17)
+        >>> c1.left_mediant(c2, k=2)
+        ContinuedFraction(5, 9)
+        >>> c1.left_mediant(c2, k=3)
+        ContinuedFraction(6, 11)
+        >>> c1.left_mediant(c2, k=100)
+        ContinuedFraction(103, 205)
+        >>> assert c1.left_mediant(c2, k=2) < c1.right_mediant(c2, k=2)
+        >>> assert c1.left_mediant(c2, k=3) < c1.right_mediant(c2, k=3)
+        >>> assert c1.left_mediant(c2, k=100) < c1.right_mediant(c2, k=100)
         """
-        return self.__class__(mediant(self, other, dir=dir, k=k))
+        return self.__class__(mediant(self, other, dir="left", k=k))
+
+    @functools.cache
+    def right_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
+        """Returns the :math:`k`-th right-mediant of the continued fraction with another rational number.
+        
+        For a positive integer :math:`k`, the :math:`k`-th right-mediant of two
+        rational numbers :math:`r = \\frac{a}{b}` and :math:`s = \\frac{c}{d}`,
+        where :math:`b, d, b + d \\neq 0`, is defined as:
+        
+        .. math::
+
+           \\frac{a + kc}{b + kd}, \\hskip{3em}    k \\geq 1
+
+        while the :math:`k`-th left-mediant is defined as:
+        
+        .. math::
+
+           \\frac{ka + c}{kb + d}, \\hskip{3em}    k \\geq 1
+
+        If we assume that :math:`r < s` and :math:`bd > 0` then these mediants
+        have the property that:
+       
+        .. math::
+
+           \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \\hskip{3em} k \\geq 1
+
+        where equality holds for :math:`k = 1`. If we let :math:`k \\to \\infty`
+        then the mediants converge to opposite limits:
+
+        .. math::
+
+          \\begin{align}
+          \\lim_{k \\to \\infty} \\frac{ka + c}{kb + d} &= \\frac{a}{b} \\\\
+          \\lim_{k \\to \\infty} \\frac{a + kc}{b + kd} &= \\frac{c}{d}
+          \\end{align}
+
+        For more information consult the
+        `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
+
+        The method is cached (with :py:func:`functools.cache`), which makes calls
+        after the initial call much faster.
+
+        Parameters
+        ----------
+        other : fractions.Fraction, ContinuedFraction
+            The second fraction to use to calculate the :math:`k`-th mediant with
+            the first.
+        
+        k : int, default=1
+            The order of the mediant, as defined above.        
+
+        Returns
+        -------
+        ContinuedFraction
+            The :math:`k`-th right-mediant of the original fraction and the second
+            fraction, as a :py:class:`ContinuedFraction` object.
+
+        Examples
+        --------
+        >>> c1 = ContinuedFraction('1/2')
+        >>> c2 = ContinuedFraction(3, 5)
+        >>> c1, c2
+        (ContinuedFraction(1, 2), ContinuedFraction(3, 5))
+        >>> c1.right_mediant(c2)
+        ContinuedFraction(4, 7)
+        >>> c1.right_mediant(c2, k=2)
+        ContinuedFraction(7, 12)
+        >>> c1.right_mediant(c2, k=3)
+        ContinuedFraction(10, 17)
+        >>> c1.right_mediant(c2, k=100)
+        ContinuedFraction(301, 502)
+        >>> assert c1.left_mediant(c2, k=2) < c1.right_mediant(c2, k=2)
+        >>> assert c1.left_mediant(c2, k=3) < c1.right_mediant(c2, k=3)
+        >>> assert c1.left_mediant(c2, k=100) < c1.right_mediant(c2, k=100)
+        """
+        return self.__class__(mediant(self, other, dir="right", k=k))
 
 
 if __name__ == "__main__":      # pragma: no cover

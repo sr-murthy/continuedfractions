@@ -15,7 +15,7 @@ Consider the `rational number <https://en.wikipedia.org/wiki/Rational_number>`_ 
 
    \frac{649}{200} = 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}}
 
-This is derived by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_, as described below:
+This is derived by repeatedly applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_, as described below:
 
 .. math::
 
@@ -29,11 +29,13 @@ This is derived by applying `Euclid's division lemma <https://en.wikipedia.org/w
 
 The numbers :math:`3, 4, 12, 4` are called **elements** (or **coefficients**) of the continued fraction :math:`[3; 4, 12, 4]`, and the number of elements after the first - in this case :math:`3` - is defined to be its **order**.
 
-The representation :math:`[3; 4, 12, 4]` is called **simple** because all of the numerators in the fractional terms are equal to :math:`1`, which makes the fractions irreducible (cannot be simplified further). Mathematically, the continued fraction is written as :math:`[3; 4, 12, 4]`. The representation is also unique - the only other representation is :math:`[3; 4, 12, 3, 1]`, which can be rewritten as :math:`[3; 4, 12, 4]`.
+The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) because all of the numerators in the fractional terms are equal to :math:`1`, which makes the fractions irreducible (cannot be simplified further). Mathematically, the continued fraction is written as :math:`[3; 4, 12, 4]`. The representation is also unique - the only other representation is :math:`[3; 4, 12, 3, 1]`, which can be rewritten as :math:`[3; 4, 12, 4]`.
 
 .. note::
 
-   All references to **simple continued fractions** will be to the unique variants, where the last element :math:`> 1`.
+   All references to continued fractions are to the simple, unique variants, where the last element :math:`> 1`.
+
+   Support for non-simple (irregular/generalised) continued fractions is planned to be included in a future release.
 
 We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail".
 
@@ -75,6 +77,38 @@ A :py:class:`decimal.Decimal` value of ``ContinuedFraction(649, 200)`` is also a
 
    >>> cf.as_decimal()
    Decimal('3.245')
+
+.. _creating-continued-fractions.decimal-precision:
+
+Decimal Precision
+-----------------
+
+The Python :py:mod:`decimal` library can, in principle, support arbitrary precision arithmetic, subject to the limitations of the running environment, system, hardware etc. It does this via `context objects <https://docs.python.org/3.12/library/decimal.html#context-objects>`_ for :py:class:`~decimal.Decimal` objects, in which you can set the precision of the :py:class:`~decimal.Decimal` values in your current environment to whatever is appropriate to your computation or experiment, subject to the limitations of your environment and/or system.
+
+An example is given below:
+
+.. code:: python
+
+   # Inspect the current context
+   >>> decimal.getcontext()
+   Context(prec=28, rounding=ROUND_HALF_EVEN, Emin=-999999, Emax=999999, capitals=1, clamp=0, flags=[Inexact, Rounded], traps=[InvalidOperation, DivisionByZero, Overflow])
+   >>> Decimal('1') / 3
+   Decimal('0.3333333333333333333333333333')
+   # Increase the precision to 100 digits, including the integer part of the number
+   >>> decimal.getcontext().prec = 100
+   >>> Decimal('1') / 3
+   Decimal('0.3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333')
+
+.. note::
+
+   This doesn't necessarily work for all :py:class:`float` values, e.g. ``math.pi``, or ``math.sqrt(2)``, so be careful.
+
+You can also set indicators that :py:class:`~decimal.Decimal` computations should be exact, and trigger signals if results are not exact and that some kind of rounding was applied - see the `Decimal FAQ <https://docs.python.org/3.12/library/decimal.html#decimal-faq>`_ for more information and examples.
+
+.. _creating-continued-fractions.irrational-numbers:
+
+Irrational Numbers
+------------------
 
 Every finite continued fraction represents a rational number, as a finite continued fraction is a "nested" sum of rational numbers. Conversely, every rational number can be represented as a finite (and simple) continued fraction, by an iterative procedure using `Euclidean division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_. On the other hand, infinite continued fractions represent `irrational numbers <https://en.wikipedia.org/wiki/Irrational_number>`_ and conversely every infinite continued fraction represents an irrational number.
 
@@ -138,95 +172,7 @@ We can verify that the :py:class:`~continuedfractions.continuedfraction.Continue
    >>> assert cf + (-cf) == cf_inverse + cf_negative_inverse == 0
    # True
 
-For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify the exact sequence of elements beforehand.
-
-.. _creating-continued-fractions.irrationals-from-elements:
-
-Approximating Irrationals
--------------------------
-
-Using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` can be very useful when trying to approximate irrational numbers with (finite) continued fractions. We know, for example, that the square root :math:`\sqrt{n}` of any non-square (positive) integer :math:`n` is irrational. This can be seen by writing :math:`n = a^2 + r`, for integers :math:`a, r > 0`, from which we have:
-
-.. math::
-   :nowrap:
-
-   \begin{alignat*}{1}
-   & r &&= n - a^2 = \left(\sqrt{n} + a\right)\left(\sqrt{n} - a\right) \\
-   & \sqrt{n} &&= a + \frac{r}{a + \sqrt{n}}
-   \end{alignat*}
-
-Expanding the expression for :math:`\sqrt{n}` recursively we have the following infinite periodic continued fraction for :math:`\sqrt{n}`:
-
-.. math::
-
-   \sqrt{n} = a + \cfrac{r}{2a + \cfrac{r}{2a + \cfrac{r}{2a + \ddots}}}
-
-With :math:`a = r = 1` we can represent :math:`\sqrt{2}` as the continued fraction:
-
-.. math::
-
-   \sqrt{2} = 1 + \cfrac{1}{2 + \cfrac{1}{2 + \cfrac{1}{2 + \ddots}}}
-
-written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents an infinite sequence :math:`2, 2, 2, \ldots`.
-
-We can start with a more precise representation of :math:`\sqrt{2}` in Python as a :py:class:`decimal.Decimal` object:
-
-.. code:: python
-   
-   >>> Decimal(math.sqrt(2))
-   >>> Decimal('1.4142135623730951454746218587388284504413604736328125')
-
-Then we can iteratively construct more accurate :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximations of :math:`\sqrt{2}` by iteratively taking more complete sequences of the elements from the full simple representation of :math:`[1; \bar{2}]`:
-
-.. code:: python
-
-   >>> ContinuedFraction.from_elements(1, 2).as_decimal()
-   >>> Decimal('1.5')
-
-   >>> ContinuedFraction.from_elements(1, 2, 2).as_decimal()
-   >>> Decimal('1.4')
-
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2).as_decimal()
-   >>> Decimal('1.413793103448275862068965517')
-
-   ...
-
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_decimal()
-   >>> Decimal('1.414213624894869638351555929')
-
-   ...
-
-With the first 10 elements of the complete sequence of elements of the simple continued fraction of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <exploring-continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
-
-If we use the first 101 elements (the leading 1, plus a tail of 100 2s) we get more accurate results:
-
-.. code:: python
-
-   # Create a `ContinuedFraction` from the sequence 1, 2, 2, 2, ..., 2, with 100 2s in the tail
-   >>> sqrt2_100 = ContinuedFraction.from_elements(1, *[2] * 100)
-   ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
-   >>> sqrt2_100.elements
-   # -> (1, 2, 2, 2, ..., 2) where there are `100` 2s after the `1`
-   >>> sqrt2_100.as_decimal()
-   Decimal('1.414213562373095048801688724')
-
-The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this construction is now accurate up to 27 digits in the fractional part, but the decimal representation stops there. Why 27? Because the :py:mod:`decimal` library uses a default `contextual precision <https://docs.python.org/3/library/decimal.html#decimal.DefaultContext>`_ of 28 digits. This can be increased, and the accuracy compared in the longer representation, as follows:
-
-.. code:: python
-
-    # `decimal.Decimal.getcontext().prec` stores the current context precision
-    >>> import decimal
-    >>> decimal.getcontext().prec
-    28
-    # Increase it to 100 digits, and try again
-    >>> decimal.getcontext().prec = 100
-    >>> sqrt2_100 = ContinuedFraction.from_elements(1, *[2] * 100)
-    >>> sqrt2_100.as_decimal()
-    Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
-
-Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is accurate up to 75 digits in the fractional part, but deviates from the `true value <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_ from the 76th digit onwards.
-
-This example also highlights the fact that "almost all" square roots of positive integers are irrational, even though the set of positive integers which are perfect squares and the set of positive integers which are not perfect squares are both countably infinite - the former is an infinitely sparser subset of the integers.
+For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>`.
 
 .. _creating-continued-fractions.validation:
 

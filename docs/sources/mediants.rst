@@ -33,19 +33,20 @@ From the assumptions above this can be proved easily from the following relation
 
 Mediants can give good rational approximations to real numbers.
 
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method which can be used to calculate mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` objects. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object. A few examples are given below of how to calculate mediants.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` method which can be used to calculate (simple) mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` objects. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object. A few examples are given below of how to calculate mediants.
 
 .. code:: python
 
-   >>> ContinuedFraction('0.5').mediant(Fraction(2, 3))
+   >>> ContinuedFraction('0.5').right_mediant(Fraction(2, 3))
    ContinuedFraction(3, 5)
    >>> ContinuedFraction('0.6').elements
    (0, 1, 1, 2)
-   >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
+   >>> ContinuedFraction(1, 2).right_mediant(ContinuedFraction('2/3'))
    ContinuedFraction(3, 5)
-   >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
+   >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).right_mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
    # True
 
+There is also a corresponding :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant` method, which gives you the same value for :math:`k = 1`. The definitions of "right-mediant" and "left-mediant" are given in the :ref:`next section <mediants.generalised-mediants>`, but the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` is sufficient for computing simple mediants.
 
 In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`.
 
@@ -60,73 +61,121 @@ The concept of the simple mediant of two fractions of :math:`\frac{a}{b}` and :m
 
 .. math::
 
-   \frac{ka + c}{kb + d}
+   \frac{ka + c}{kb + d}, \hskip{3em} k \geq 1
 
 while the :math:`k`-th right mediant can be defined as:
 
 .. math::
 
-   \frac{a + kc}{b + kd}
+   \frac{a + kc}{b + kd}, \hskip{3em} k \geq 1
 
-For :math:`k = 1` the left- and right-mediants are identical, but as :math:`k \longrightarrow \infty` they separate into two different, strictly monotonic, sequences converging to opposite limits: the left-mediants form a strictly decreasing sequence lower-bounded by :math:`\frac{a}{b}`, thus converging to :math:`\frac{a}{b}`:
+For :math:`k = 1` the left- and right-mediants are identical to the simple mediant :math:`\frac{a + c}{b + d}`, but for :math:`k > 1` the :math:`k`-th left-mediant is less than the :math:`k`-th right mediant. Using the assumptions :math:`\frac{a}{b} < \frac{c}{d}` and :math:`bd > 0`, the proof is given by:
+
+.. math::
+
+   \begin{align}
+   \frac{a + kc}{b + kd} - \left(\frac{ka + c}{kb + d}\right) &= \frac{(a + kc)(kb + d) - (b + kd)(ka + c)}{(b + kd)(kb + d)} \\
+                                                 &= \frac{k^2(bc - ad) - (bc - ad)}{(b + kd)((kb + d))} \\
+                                                 &= \frac{(bc - ad)(k^2 - 1)}{(b + kd)(kb + d)} \\
+                                                 &\geq 0
+   \end{align}
+
+where equality holds if and only if :math:`k = 1`.
+
+Left- and right-mediants can be constructed easily using the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class, which provides the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant` and :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` methods.
+
+Here are some examples of constructing left-mediants:
+
+.. code:: python
+
+   >>> cf1 = ContinuedFraction('1/2')
+   >>> cf2 = ContinuedFraction(3, 5)
+   # The default `k = 1` gives you the common, simple mediant of the two rationals
+   >>> cf1.left_mediant(c2)
+   ContinuedFraction(4, 7)
+   >>> cf1.left_mediant(cf2, k=2)
+   ContinuedFraction(5, 9)
+   >>> cf1.left_mediant(cf2, k=100)
+   ContinuedFraction(103, 205)
+   >>> cf1.left_mediant(cf2, k=100).as_decimal()
+   Decimal('0.5024390243902439024390243902439024390243902439024390243902439024390243902439024390243902439024390244')
+
+and right-mediants:
+
+.. code:: python
+
+   >>> cf1 = ContinuedFraction('1/2')
+   >>> cf2 = ContinuedFraction(3, 5)
+   # The default `k = 1` gives you the common, simple mediant of the two rationals
+   >>> cf1.right_mediant(c2)
+   ContinuedFraction(4, 7)
+   >>> cf1.right_mediant(cf2, k=2)
+   ContinuedFraction(7, 12)
+   >>> cf1.right_mediant(cf2, k=100)
+   ContinuedFraction(301, 502)
+   >>> cf1.right_mediant(cf2, k=100).as_decimal()
+   Decimal('0.5996015936254980079681274900')
+
+As :math:`k \longrightarrow \infty` the left- and right-mediants form different, strictly monotonic, sequences 
+converging to opposite limits: the left-mediants form a strictly decreasing sequence lower-bounded by :math:`\frac{a}{b}`:
 
 .. math::
 
    \frac{a}{b} < \cdots < \frac{3a + c}{3b + d} < \frac{2a + c}{2b + d} < \frac{a + c}{b + d} < \frac{c}{d}
 
+thus converging to :math:`\frac{a}{b}`:
+
 .. math::
 
    \lim_{k \to \infty} \frac{ka + c}{kb + d} = \lim_{k \to \infty} \frac{a + \frac{c}{k}}{b + \frac{d}{k}} = \frac{a}{b}
 
-while the right-mediants form a strictly increasing sequence upper-bounded by :math:`\frac{c}{d}`, thus converging to :math:`\frac{c}{d}`:
+while the right-mediants form a strictly increasing sequence upper-bounded by :math:`\frac{c}{d}`:
 
 .. math::
 
    \frac{a}{b} < \frac{a + c}{b + d} < \frac{a + 2c}{b + 2d} < \frac{a + 3c}{b + 3d} < \cdots < \frac{c}{d}
 
+thus converging to :math:`\frac{c}{d}`:
+
 .. math::
 
    \lim_{k \to \infty} \frac{a + kc}{b + kd} = \lim_{k \to \infty} \frac{\frac{a}{k} + c}{\frac{b}{k} + d} = \frac{c}{d}
 
-We can illustrate this using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method using the ``dir`` option to set the “direction” of the mediant, starting with the right mediants, which don't need to specified with ``dir='right'`` as that is the default value, and using ``k`` to set the mediant order, which defaults to ``k=1``.
+We can see with the ``ContinuedFraction(1, 2)`` and ``ContinuedFraction(3, 5)`` objects used in the examples above, starting with the left-mediants:
 
 .. code:: python
 
-   # Right mediants
-   >>> c1 = ContinuedFraction(1, 2)
-   >>> c2 = ContinuedFraction(3, 5)
-   >>> c1.mediant(c2)
+   >>> cf1 = ContinuedFraction(1, 2)
+   >>> cf2 = ContinuedFraction(3, 5)
+   >>> cf1.left_mediant(cf2)
    ContinuedFraction(4, 7)
-   >>> c1.mediant(c2).as_decimal()
+   >>> cf1.left_mediant(cf2).as_decimal()
    Decimal('0.5714285714285714285714285714')
-   >>> c1.mediant(c2, k=10)
-   ContinuedFraction(31, 52)
-   >>> c1.mediant(c2, k=100).as_decimal()
-   Decimal('0.5996015936254980079681274900')
-   >>> c1.mediant(c2, k=10 ** 6)
-   ContinuedFraction(3000001, 5000002)
-   >>> c1.mediant(c2, k=10 ** 6).as_decimal()
-   Decimal('0.5999999600000159999936000026')
+   >>> cf1.left_mediant(cf2, k=10).as_decimal()
+   Decimal('0.52')
+   >>> cf1.left_mediant(cf2, k=100).as_decimal()
+   Decimal('0.5024390243902439024390243902439024390243902439024390243902439024390243902439024390243902439024390244')
+   >>> cf1.left_mediant(cf2, k=10 ** 6)
+   ContinuedFraction(1000003, 2000005)
+   >>> cf1.left_mediant(cf2, k=10 ** 6).as_decimal()
+   Decimal('0.5000002499993750015624960938')
 
-And then the left mediants, specified with ``dir='left'``.
+And then the right-mediants:
 
 .. code:: python
 
-   # Left mediants
-   >>> c1.mediant(c2, dir='left')
-   ContinuedFraction(4, 7)
-   >>> c1.mediant(c2, dir='left', k=10)
-   ContinuedFraction(13, 25)
-   >>> c1.mediant(c2, dir='left', k=10).as_decimal()
-   Decimal('0.52')
-   >>> c1.mediant(c2, dir='left', k=100)
-   ContinuedFraction(103, 205)
-   >>> c1.mediant(c2, dir='left', k=100).as_decimal()
-   Decimal('0.5024390243902439024390243902'
-   >>> c1.mediant(c2, dir='left', k=10 ** 6)
-   ContinuedFraction(1000003, 2000005)
-   >>> c1.mediant(c2, dir='left', k=10 ** 6).as_decimal()
-   Decimal('0.5000002499993750015624960938')
+   >>> cf1 = ContinuedFraction(1, 2)
+   >>> cf2 = ContinuedFraction(3, 5)
+   >>> cf1.right_mediant(cf2).as_decimal()
+   Decimal('0.5714285714285714285714285714')
+   >>> cf1.right_mediant(cf2, k=10).as_decimal()
+   Decimal('0.5961538461538461538461538462')
+   >>> cf1.right_mediant(cf2, k=100).as_decimal()
+   Decimal('0.5996015936254980079681274900')
+   >>> cf1.right_mediant(cf2, k=10 ** 6)
+   ContinuedFraction(3000001, 5000002)
+   >>> cf1.right_mediant(cf2, k=10 ** 6).as_decimal()
+   Decimal('0.5999999600000159999936000026')
 
 .. _mediants.references:
 

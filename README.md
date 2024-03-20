@@ -24,7 +24,7 @@ The [PyPI package](https://pypi.org/project/continuedfractions/) only uses stand
 pip install continuedfractions
 ```
 
-See the [project docs](https://continuedfractions.readthedocs.io/en/latest) for more details.
+See the [project docs](https://continuedfractions.readthedocs.io/en/stable/) for more details.
 
 [Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
 

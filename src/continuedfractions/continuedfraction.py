@@ -55,7 +55,7 @@ class ContinuedFraction(Fraction):
     >>> cf.as_float()
     3.245
 
-    Inspect the elements, order, convergents, and remainders
+    Inspect the elements, order, convergents, and remainders.
 
     >>> cf.elements
     (3, 4, 12, 4)
@@ -66,7 +66,7 @@ class ContinuedFraction(Fraction):
     >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
     (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 
-    Check some properties of the convergents and remainders
+    Check some properties of the convergents and remainders.
 
     >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
 
@@ -353,7 +353,7 @@ class ContinuedFraction(Fraction):
         >>> cf
         ContinuedFraction(415, 93)
 
-        Inspect the elements, order, convergents, and remainders
+        Inspect the elements, order, convergents, and remainders.
 
         >>> cf.elements
         (4, 2, 6, 7)
@@ -364,7 +364,7 @@ class ContinuedFraction(Fraction):
         >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
         (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
 
-        Check some properties of the convergents and remainders
+        Check some properties of the convergents and remainders.
 
         >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
         """
@@ -671,7 +671,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def even_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all even-order convergents of the continued fraction, keyed/indexed by  order.
+        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all even-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.

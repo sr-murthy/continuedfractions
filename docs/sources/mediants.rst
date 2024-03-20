@@ -75,7 +75,7 @@ For :math:`k = 1` the left- and right-mediants are identical to the simple media
 
    \begin{align}
    \frac{a + kc}{b + kd} - \left(\frac{ka + c}{kb + d}\right) &= \frac{(a + kc)(kb + d) - (b + kd)(ka + c)}{(b + kd)(kb + d)} \\
-                                                 &= \frac{k^2(bc - ad) - (bc - ad)}{(b + kd)((kb + d))} \\
+                                                 &= \frac{k^2(bc - ad) - (bc - ad)}{(b + kd)(kb + d)} \\
                                                  &= \frac{(bc - ad)(k^2 - 1)}{(b + kd)(kb + d)} \\
                                                  &\geq 0
    \end{align}

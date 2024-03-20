@@ -54,15 +54,11 @@ The elements and orders of :py:class:`~continuedfractions.continuedfraction.Cont
 Convergents and Rational Approximations
 =======================================
 
-For an integer :math:`k >= 0` the (simple) :math:`k`-th **convergent** :math:`C_k` of a continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is defined to be the rational number and finite, simple continued fraction represented by :math:`[a_0; a_1,\ldots,a_k]`, formed from the first :math:`k + 1` elements of the original.
+For an integer :math:`k >= 0` the (simple) :math:`k`-th **convergent** :math:`C_k` of a simple continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the rational number :math:`\frac{p_k}{q_k}` with the simple continued fraction :math:`[a_0; a_1,\ldots,a_k]` formed from the first :math:`k + 1` elements of the original.
 
 .. math::
 
    C_k = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 \ddots \cfrac{1}{a_{k-1} + \cfrac{1}{a_k}}}}
-
-.. note::
-
-   If a continued fraction :math:`[a_0; a_1,\ldots]` has a finite order :math:`n` then :math:`C_n` is just the rational number represented by :math:`[a_0; a_1,\ldots,a_n]`.
 
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergent` method to compute the :math:`k`-order convergent for :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
 
@@ -183,7 +179,7 @@ The different behaviour of even- and odd-order convergents can be illustrated by
 Rational Approximation
 ----------------------
 
-Each convergent :math:`C_k` is said to represent a **rational approximation** :math:`\frac{p_k}{q_k}` of a real number, say, :math:`x`, to which they converge. This is expressed formally by:
+Each convergent :math:`C_k` is said to represent a **rational approximation** :math:`\frac{p_k}{q_k}` of a real number, say, :math:`x`, to which the sequence :math:`(C_k)` converges. This is expressed formally by:
 
 .. math::
 
@@ -215,7 +211,7 @@ With :math:`a = r = 1` we can represent :math:`\sqrt{2}` as the continued fracti
 
 written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents an infinite sequence :math:`2, 2, 2, \ldots`.
 
-We can illustrate rational approximation with the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method by continuing the :ref:`earlier example <creating-continued-fractions.irrational-numbers>` for :math:`sqrt{2}`, but instead using by iteratively constructing more accurate continued fraction representations with higher-order convergents:
+We can illustrate rational approximation with the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method by continuing the :ref:`earlier example <creating-continued-fractions.irrational-numbers>` for :math:`\sqrt{2}` but instead using by iteratively constructing more accurate continued fraction representations with higher-order convergents:
 
 .. code:: python
 
@@ -235,7 +231,7 @@ We can illustrate rational approximation with the :py:meth:`~continuedfractions.
 
 With the 10th convergent of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <exploring-continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
 
-If we use the 100th convergent (with a :math:`101` elements consisting of the leading 1, plus a tail of 100 2s), we get more accurate results:
+If we use the 100th convergent (with :math:`101` elements consisting of the integer part  :math:`1`, plus a tail of 100 twos), we get more accurate results:
 
 .. code:: python
 
@@ -263,7 +259,7 @@ The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this 
     >>> sqrt2_100.as_decimal()
     Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
 
-Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is accurate up to 75 digits in the fractional part, but deviates from the `true value <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_ from the 76th digit onwards, because ``sqrt2_100`` is only an approximation to :math:`\sqrt{2}`.
+Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is accurate up to 75 digits in the fractional part, but deviates from the `true value <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_ after 76th digit onwards.
 
 This example also highlights the fact that "almost all" square roots of positive integers are irrational, even though the set of positive integers which are perfect squares and the set of positive integers which are not perfect squares are both countably infinite - the former is an infinitely sparser subset of the integers.
 
@@ -272,13 +268,13 @@ This example also highlights the fact that "almost all" square roots of positive
 Remainders
 ==========
 
-The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`[a_0;a_1,\ldots,a_{k - 1}]`.
+The :math:`k`-th remainder :math:`R_k` of a simple continued fraction :math:`[a_0; a_1,\ldots]` is the simple continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`.
 
 .. math::
 
    R_k = a_k + \cfrac{1}{a_{k + 1} + \cfrac{1}{a_{k + 2} \ddots }}
 
-The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order.
+If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a rational number. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order.
 
 .. code:: python
 
@@ -304,7 +300,7 @@ The result is a :py:class:`types.MappingProxyType` object, and is keyed by remai
 
 Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property is cached, and is thus much faster when needing to make repeated use of the remainders.
 
-Using the simple continued fraction of :math:`\frac{649}{200}` we can verify that these remainders are correct.
+Using the simple continued fraction of :math:`\frac{649}{200}` we can verify that these remainders are mathematically correct.
 
 .. math::
    :nowrap:
@@ -321,15 +317,8 @@ Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` th
 .. math::
 
    R_{k - 1} = a_{k - 1} + \frac{1}{R_k}, \hskip{3em} k \geq 1
-   
-Remainders are also linked to convergents via the relation:
 
-.. math::
-
-    C_k = a_0 + \frac{1}{R_1}
-
-where :math:`C_k` is the :math:`k`-th convergent :math:`[a_0;a_1,\ldots,a_k]` and :math:`R_1` is the 1st remainder :math:`[a_1;a_2,\ldots]`.
-
+where :math:`\frac{1}{R_k}` is a symbolic expression for the number represented by the inverted simple continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`.
 
 Khinchin Means & Khinchin's Constant
 ====================================

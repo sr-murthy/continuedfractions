@@ -6,7 +6,7 @@ Python objects of the :py:class:`~continuedfractions.continuedfraction.Continued
 
 .. note::
 
-   All references to continued fractions are to the simple, unique variants. Support for non-simple (irregular/generalised) continued fractions is planned to be included in a future release.
+   All references to continued fractions are to the simple forms. Support for non-simple, generalised continued fractions is planned to be included in a future release.
 
 .. _exploring-continued-fractions.elements-and-orders:
 

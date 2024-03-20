@@ -454,12 +454,8 @@ class ContinuedFraction(Fraction):
     def __abs__(self) -> ContinuedFraction:
         return self.__class__(super().__abs__())
 
-    @functools.cache
     def as_float(self) -> float:
         """Returns the :py:class:`float` value of the continued fraction.
-
-        The method is cached (with :py:func:`functools.cache`), which makes calls
-        after the initial call much faster.
 
         Returns
         -------
@@ -486,12 +482,8 @@ class ContinuedFraction(Fraction):
         """
         return self.numerator / self.denominator
 
-    @functools.cache
     def as_decimal(self) -> Decimal:
         """Returns the :py:class:`decimal.Decimal` value of the continued fraction.
-
-        The method is cached (with :py:func:`functools.cache`), which makes calls
-        after the initial call much faster.
 
         Returns
         -------
@@ -549,7 +541,6 @@ class ContinuedFraction(Fraction):
         return len(self._elements[1:])
 
     @property
-    @functools.lru_cache
     def khinchin_mean(self) -> Decimal | None:
         """decimal.Decimal: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
 
@@ -564,9 +555,6 @@ class ContinuedFraction(Fraction):
         In the special case of integers or fractions representing integers,
         whose continued fraction representations consist of only a single
         element, a null value is returned.
-
-        The property is cached (with :py:func:`functools.lru_cache`), which makes
-        calls after the initial call much faster.
 
         Examples
         --------

@@ -150,7 +150,7 @@ The different behaviour of even- and odd-order convergents can be illustrated by
    >>> cf
    >>> ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
    >>> cf.as_decimal()
-   >>> Decimal('1.414213562373095048801688724')
+   Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
    #
    # Look at the differences between consecutive even-order convergents
    >>> cf.even_order_convergents[2] - cf.even_order_convergents[0]

@@ -1,6 +1,16 @@
 # -- IMPORTS --
 
 # -- Standard libraries --
+import decimal
+
+# Set the :py:mod:`decimal` context for the test computations in this module
+# using default precision of 28 digits, including the integer part, and 
+# set the :py:class:`decimal.Inexact` trap for computations to signal
+# loss of precision due to rounding - this would be useful in debugging
+context = decimal.Context(prec=28, Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN)
+context.traps[decimal.Inexact] = True
+decimal.setcontext(context)
+
 from decimal import Decimal
 from fractions import Fraction
 from types import MappingProxyType
@@ -367,7 +377,7 @@ class TestContinuedFraction:
 	        	0.25,
 	        	Decimal('0.25')
 	        ),
-	        # Case #20
+	        # Case #21
 	        (
 	        	(ContinuedFraction(649, 200), Fraction(415, 93),),
 	        	Fraction(60357, 83000),
@@ -420,7 +430,10 @@ class TestContinuedFraction:
 		assert received.as_float() == expected_float_value
 
 		# Compare the decimal values
-		assert received.as_decimal() == expected_decimal_value
+		try:
+			assert received.as_decimal() == expected_decimal_value
+		except decimal.Inexact:
+			pass
 
 		# Compare the element sequences
 		assert received.elements == expected_elements

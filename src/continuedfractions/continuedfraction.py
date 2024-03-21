@@ -449,7 +449,47 @@ class ContinuedFraction(Fraction):
         return self.__class__(super().__pos__())
 
     def __neg__(self) -> ContinuedFraction:
-        return self.__class__(super().__neg__())
+        """
+        An override of ``Fraction.__neg__`` to implement a division-free
+        negation algorithm for finite simple continued fractions, as
+        described here:
+
+            https://continuedfractions.readthedocs.io/en/latest/sources/creating-continued-fractions.html#negative-continued-fractions
+
+        The basic algorithm can be described as follows: if
+        :math:`[a_0;a_1,\\ldots,a_n]` is a simple continued fraction of a
+        **positive** rational number :math:`\\frac{a}{b}` of finite order
+        :math:`n` then  :math:`-\\frac{a}{b}` has the simple continued
+        fraction:
+
+        .. math::
+
+           \\begin{cases}
+           [-a_0;], \\hskip{3em} & n = 0 \\\\
+           [-(a_0 + 1); a_2 + 1, a_3,\\ldots, a_n] \\hskip{3em} & n > 1 \\text{ and } a_1 = 1 \\\\
+           [-(a_0 + 1); 2], \\hskip{3em} & n = 2 \\text{ and } a_1 = 2 \\\\
+           [-(a_0 + 1); 1, a_1 - 1, a_3, \\ldots,a_n], \\hskip{3em} & n > 2 \\text{ and } a_1 > 1
+           \\end{cases}
+
+        Note that any simple continued fraction of type
+        :math:`[a_0;a_1,\\ldots,a_{n} = 1]` can be reduced to the simple
+        continued fraction :math:`[a_0;a_1,\\ldots,a_{n - 1} + 1]`.
+        """
+        obj = self.__class__.__new__(self.__class__, -self.numerator, self.denominator)
+        elems = self._elements
+
+        if len(elems) == 1:
+            obj._elements = (-elems[0],)
+            return obj
+        elif len(elems) > 1 and elems[1] == 1:
+            obj._elements = (-(elems[0] + 1), elems[2] + 1, *elems[3:])
+            return obj
+        elif len(elems) == 2 and elems[1] == 2:
+            obj._elements = (-(elems[0] + 1), 2)
+            return obj
+        else:
+            obj._elements = (-(elems[0] + 1), 1, elems[1] - 1, *elems[2:])
+            return obj
 
     def __abs__(self) -> ContinuedFraction:
         return self.__class__(super().__abs__())

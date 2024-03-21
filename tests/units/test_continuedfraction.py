@@ -544,8 +544,21 @@ class TestContinuedFraction:
 		assert cf1.right_mediant(cf2, k=k) == expected_right_mediant
 
 	def test_ContinuedFraction__rational_operations(self):
+		f0 = ContinuedFraction(2, 1)
 		f1 = ContinuedFraction(649, 200)
 		f2 = ContinuedFraction(-649, 200)
+		f3 = ContinuedFraction(3, 2)
+		f4 = ContinuedFraction(5, 3)
+
+		assert -f0 == -(f0) == f0.__neg__()
+
+		assert -f1 == f2 == f1.__neg__()
+
+		assert -f2 == f1 == f2.__neg__()
+
+		assert -f3 == -(f3) == f3.__neg__()
+
+		assert -f4 == -(f4) == f4.__neg__()
 
 		assert f1 + f2 == ContinuedFraction(0, 1)
 

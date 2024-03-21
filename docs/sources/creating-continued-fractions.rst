@@ -302,17 +302,16 @@ where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots, a_n]` and :math:`\frac{1}{R_1 - 1} =
 
 If :math:`\bar{R}_1` denotes the :ref:`1st remainder <exploring-continued-fractions.remainders>` :math:`[1; a_1 - 1, a_2, a_3,\ldots, a_n]` in the representation above for :math:`-\frac{a}{b}` then :math:`\bar{R}_1` is an :math:`n`-order, simple continued fraction. A special case is when :math:`a_1 = 1`: in this case :math:`a_0 = -1` and :math:`\bar{R}_1 = [a_2 + 1; a_3, \ldots, a_n]` is an :math:`(n - 2)`-order simple continued fraction. Note that this special case also applies when :math:`0 < a < b`.
 
-Thus, we can say that if :math:`[a_0; a_1,\ldots, a_n]` is the :math:`n`-order simple continued fraction of a positive rational number :math:`\frac{a}{b}` then :math:`-\frac{a}{b}` has :math:`(n - 1)`- and :math:`(n + 1)`-order simple continued fractions given by:
+Thus, we can say that if :math:`[a_0; a_1,\ldots, a_n]` is the :math:`n`-order simple continued fraction of a positive rational number :math:`\frac{a}{b}` then the simple continued fraction of :math:`-\frac{a}{b}` is given by:
 
 .. math::
 
-   -\frac{a}{b} = 
-      \begin{cases}
-         [-(a_0 + 1); a_2 + 1, a_3,\ldots, a_n], & a_1 = 1  \\
-         [-(a_0 + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n], & a_1 > 1
-      \end{cases}
-
-As :math:`n \to \infty` then :math:`\lim_{n \to \infty} [a_0;a_1,\ldots,a_n] = [a_0;a_1,\ldots]` represents an irrational number, and the same relations hold.
+   \begin{cases}
+   [-a_0;] & \text{if } n = 0 \\
+   [-(a_0 + 1); a_2 + 1, a_3,\ldots, a_n] \hskip{3em} & \text{if } n > 1 \text{ and } a_1 = 1 \\
+   [-(a_0 + 1); 2] \hskip{3em} & \text{if } n = 2 \text{ and } a_1 = 2 \\
+   [-(a_0 + 1); 1, a_1 - 1, a_3, \ldots,a_n], \hskip{3em} & \text{if } n > 2 \text{ and } a_1 > 1
+   \end{cases}
 
 We can see this in action with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, starting with small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
 

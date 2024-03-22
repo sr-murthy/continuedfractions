@@ -250,7 +250,7 @@ class ContinuedFraction(Fraction):
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """ Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a continued fraction.
+        """ Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a (finite) simple continued fraction.
 
         There is a validation check: all elements must be integers, and all
         elements after the 1st should be positive; otherwise a :py:class:`ValueError`
@@ -259,8 +259,8 @@ class ContinuedFraction(Fraction):
         Parameters
         ----------
         *elements : int
-            An ordered sequence of integer elements of a (finite) continued
-            fraction.
+            An ordered sequence of integer elements of a (finite) simple
+            continued fraction.
 
         Returns
         -------

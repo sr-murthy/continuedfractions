@@ -619,3 +619,30 @@ class TestContinuedFraction:
 		assert -f1 == ContinuedFraction(-f1.numerator, f1.denominator) == ContinuedFraction(Fraction(-f1))
 
 		assert abs(f2) == f1
+
+	@pytest.mark.parametrize(
+		"operand, expected, expected_elements",
+		[
+			(ContinuedFraction(-2, 1), ContinuedFraction(2, 1), (2,)),
+			(ContinuedFraction(-1, 1), ContinuedFraction(1, 1), (1,)),
+			(ContinuedFraction(-0, 1), ContinuedFraction(0, 1), (0,)),
+			(ContinuedFraction(1, 1), ContinuedFraction(-1, 1), (-1,)),
+			(ContinuedFraction(2, 1), ContinuedFraction(-2, 1), (-2,)),
+			(ContinuedFraction(-649, 200), ContinuedFraction(649, 200), (3, 4, 12, 4,)),
+			(ContinuedFraction(-3, 2), ContinuedFraction(3, 2), (1, 2,)),
+			(ContinuedFraction(-4, 3), ContinuedFraction(4, 3), (1, 3,)),
+			(ContinuedFraction(-1, 2), ContinuedFraction(1, 2), (0, 2,)),
+			(ContinuedFraction(-1, 3), ContinuedFraction(1, 3), (0, 3,)),
+			(ContinuedFraction(-0, 1), ContinuedFraction(0, 1), (0,)),
+			(ContinuedFraction(1, 3), ContinuedFraction(-1, 3), (-1, 1, 2)),
+			(ContinuedFraction(1, 2), ContinuedFraction(-1, 2), (-1, 2,)),
+			(ContinuedFraction(4, 3), ContinuedFraction(-4, 3), (-2, 1, 2,)),
+			(ContinuedFraction(3, 2), ContinuedFraction(-3, 2), (-2, 2,)),
+			(ContinuedFraction(649, 200), ContinuedFraction(-649, 200), (-4, 1, 3, 12, 4,)),
+		]
+	)
+	def test___neg__(self, operand, expected, expected_elements):
+		received = -operand
+
+		assert expected == received
+		assert received.elements == expected_elements

@@ -450,14 +450,11 @@ class ContinuedFraction(Fraction):
 
     def __neg__(self) -> ContinuedFraction:
         """
-        An override of ``Fraction.__neg__`` to implement a division-free
-        negation algorithm for finite simple continued fractions, as
-        described here:
-
-            https://continuedfractions.readthedocs.io/en/latest/sources/creating-continued-fractions.html#negative-continued-fractions
+        Division-free negation for a finite simple continued fraction, as
+        described `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/creating-continued-fractions.html#negative-continued-fractions>`_.
 
         The basic algorithm can be described as follows: if
-        :math:`[a_0;a_1,\\ldots,a_n]` is a simple continued fraction of a
+        :math:`[a_0; a_1,\\ldots, a_n]` is the simple continued fraction of a
         **positive** rational number :math:`\\frac{a}{b}` of finite order
         :math:`n` then  :math:`-\\frac{a}{b}` has the simple continued
         fraction:
@@ -466,30 +463,36 @@ class ContinuedFraction(Fraction):
 
            \\begin{cases}
            [-a_0;], \\hskip{3em} & n = 0 \\\\
+           [-(a_0 + 1); 2], \\hskip{3em} & n = 1 \\text{ and } a_1 = 2 \\\\
            [-(a_0 + 1); a_2 + 1, a_3,\\ldots, a_n] \\hskip{3em} & n > 1 \\text{ and } a_1 = 1 \\\\
-           [-(a_0 + 1); 2], \\hskip{3em} & n = 2 \\text{ and } a_1 = 2 \\\\
-           [-(a_0 + 1); 1, a_1 - 1, a_3, \\ldots,a_n], \\hskip{3em} & n > 2 \\text{ and } a_1 > 1
+           [-(a_0 + 1); 1, a_1 - 1, a_2, \\ldots,a_n], \\hskip{3em} & n > 1 \\text{ and } a_1 > 1
            \\end{cases}
 
-        Note that any simple continued fraction of type
-        :math:`[a_0;a_1,\\ldots,a_{n} = 1]` can be reduced to the simple
-        continued fraction :math:`[a_0;a_1,\\ldots,a_{n - 1} + 1]`.
+        In applying this algorithm there is an assumption that the last element
+        :math:`a_n > 1`, as any simple continued fraction of type
+        :math:`[a_0; a_1,\\ldots, a_{n} = 1]` can be reduced to the simple
+        continued fraction :math:`[a_0; a_1,\\ldots, a_{n - 1} + 1]`.
         """
-        obj = self.__class__.__new__(self.__class__, -self.numerator, self.denominator)
-        elems = self._elements
+        cls_ = self.__class__
+        elms = self._elements
 
-        if len(elems) == 1:
-            obj._elements = (-elems[0],)
-            return obj
-        elif len(elems) > 1 and elems[1] == 1:
-            obj._elements = (-(elems[0] + 1), elems[2] + 1, *elems[3:])
-            return obj
-        elif len(elems) == 2 and elems[1] == 2:
-            obj._elements = (-(elems[0] + 1), 2)
-            return obj
+        if len(elms) == 1:
+            # Case (1) of the algorithm
+            neg_elms = (-elms[0],)
+        elif len(elms) == 2 and elms[1] == 2:
+            # Case (2) of the algorithm
+            neg_elms = (-(elms[0] + 1), 2)
+        elif len(elms) > 1 and elms[1] == 1:
+            # Case (3) of the algorithm
+            neg_elms = (-(elms[0] + 1), elms[2] + 1, *elms[3:])
         else:
-            obj._elements = (-(elems[0] + 1), 1, elems[1] - 1, *elems[2:])
-            return obj
+            # Case (4) of the algorithm
+            neg_elms = (-(elms[0] + 1), 1, elms[1] - 1, *elms[2:])
+
+        obj = cls_.__new__(cls_, *convergent(len(neg_elms) - 1, *neg_elms).as_integer_ratio())
+        obj._elements = neg_elms
+
+        return obj
 
     def __abs__(self) -> ContinuedFraction:
         return self.__class__(super().__abs__())

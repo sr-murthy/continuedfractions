@@ -322,6 +322,9 @@ class ContinuedFraction(Fraction):
                 "elements after the 1st must be positive"
             )
 
+        if len(elements) > 1 and elements[-1] == 1:
+            elements = elements[:-2] + (elements[-2] + 1,)
+
         obj = cls(fraction_from_elements(*elements))
         obj._elements = elements
     

@@ -500,6 +500,28 @@ class TestContinuedFraction:
 			ContinuedFraction.from_elements(*invalid_elements)
 
 	@pytest.mark.parametrize(
+		"elements, expected",
+		[
+			((-2,), ContinuedFraction(-2, 1)),
+			((-2, 2,), ContinuedFraction(-3, 2)),
+			((-2, 1, 1,), ContinuedFraction(-3, 2)),
+			((-1,), ContinuedFraction(-1, 1)),
+			((-1, 2,), ContinuedFraction(-1, 2)),
+			((-1, 1, 1,), ContinuedFraction(-1, 2)),
+			((-0,), ContinuedFraction(0, 1)),
+			((0, 2,), ContinuedFraction(1, 2)),
+			((0, 1, 1,), ContinuedFraction(1, 2)),
+			((1, 2,), ContinuedFraction(3, 2)),
+			((1, 1, 1,), ContinuedFraction(3, 2))
+		]
+	)
+	def test_ContinuedFraction__from_elements__valid_elements__correct_fraction_returned(self, elements, expected):
+			received = ContinuedFraction.from_elements(*elements)
+
+			assert received == expected
+			assert received.elements == expected.elements
+
+	@pytest.mark.parametrize(
 	    "cf1, cf2, k, expected_left_mediant",
 	    [
 	        (ContinuedFraction(1, 2), Fraction(3, 5), 1, ContinuedFraction(4, 7)),

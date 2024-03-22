@@ -462,10 +462,10 @@ class ContinuedFraction(Fraction):
         .. math::
 
            \\begin{cases}
-           [-a_0;], \\hskip{3em} & n = 0 \\\\
-           [-(a_0 + 1); 2], \\hskip{3em} & n = 1 \\text{ and } a_1 = 2 \\\\
-           [-(a_0 + 1); a_2 + 1, a_3,\\ldots, a_n] \\hskip{3em} & n > 1 \\text{ and } a_1 = 1 \\\\
-           [-(a_0 + 1); 1, a_1 - 1, a_2, \\ldots,a_n], \\hskip{3em} & n > 1 \\text{ and } a_1 > 1
+           [-a_0;]                                      \\hskip{3em} & n = 0 \\\\
+           [-(a_0 + 1); 2]                              \\hskip{3em} & n = 1 \\text{ and } a_1 = 2 \\\\
+           [-(a_0 + 1); a_2 + 1, a_3,\\ldots, a_n]      \\hskip{3em} & n \\geq 2 \\text{ and } a_1 = 1 \\\\
+           [-(a_0 + 1); 1, a_1 - 1, a_2, \\ldots,a_n]   \\hskip{3em} & n \\geq 2 \\text{ and } a_1 \\geq 2
            \\end{cases}
 
         In applying this algorithm there is an assumption that the last element

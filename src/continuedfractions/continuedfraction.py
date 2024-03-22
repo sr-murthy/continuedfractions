@@ -250,7 +250,7 @@ class ContinuedFraction(Fraction):
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a continued fraction.
+        """ Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a continued fraction.
 
         There is a validation check: all elements must be integers, and all
         elements after the 1st should be positive; otherwise a :py:class:`ValueError`
@@ -555,7 +555,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def elements(self) -> tuple[int]:
-        """tuple[int]: The sequence of elements of the continued fraction.
+        """:py:class:`tuple`: The sequence of elements of the continued fraction.
 
         Examples
         --------
@@ -569,7 +569,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def order(self) -> int:
-        """int: The order of the continued fraction, which is the number of its elements minus :math:`1`.
+        """:py:class:`int`: The order of the continued fraction, which is the number of its elements minus :math:`1`.
 
         Examples
         --------
@@ -585,15 +585,18 @@ class ContinuedFraction(Fraction):
 
     @property
     def khinchin_mean(self) -> Decimal | None:
-        """decimal.Decimal: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
+        """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
 
-        The Khinchin mean is the geometric mean :math:`\\sqrt[n]{a_1a_2 \\cdots a_n}`
-        of all elements of the (finite, simple) continued fraction :math:`[a_0;a_1,\\ldots,a_n]`
-        starting from the 1st.
+        We define the Khinchin mean :math:`K_n` of a simple continued fraction
+        :math:`[a_0; a_1, a_2, \\ldots, a_n]` as:
 
-        As in practice all :py:class:`ContinuedFraction` objects will have a finite
-        sequence of elements the Khinchin mean as defined above will always
-        have a computable value.
+        .. math::
+
+           K_n := \\sqrt[n]{a_1a_2 \\cdots a_n} = \\left( a_1a_2 \\cdots a_n \\right)^{\\frac{1}{n}}, \\hskip{3em} n \\geq 1
+
+        This property is intended to make it easier to study the limit of
+        :math:`K_n` as :math:`n \\to \\infty`.  See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#khinchin-means-khinchin-s-constant>`_
+        for more details.
 
         In the special case of integers or fractions representing integers,
         whose continued fraction representations consist of only a single
@@ -690,7 +693,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all :math:`k`-order convergents of the continued fraction, keyed by order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.
@@ -714,7 +717,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def even_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all even-order convergents of the continued fraction, keyed by order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all even-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.
@@ -735,7 +738,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def odd_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all odd-order convergents of the continued fraction, keyed by order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all odd-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.
@@ -799,7 +802,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def remainders(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all :math:`k`-th remainders of the continued fraction, keyed by order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-th remainders of the continued fraction, keyed by order.
 
         Each remainder is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.

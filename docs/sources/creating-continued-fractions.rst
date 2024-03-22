@@ -33,9 +33,9 @@ The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) b
 
 .. note::
 
-   All references to continued fractions are to the simple, unique variants, where the last element :math:`> 1`.
+   All references to continued fractions are to the simple forms where the last element :math:`> 1`.
 
-   Support for non-simple (irregular/generalised) continued fractions is planned to be included in a future release.
+   Support for non-simple, generalised continued fractions is planned to be included in a future release.
 
 We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail".
 
@@ -302,19 +302,18 @@ where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots, a_n]` and :math:`\frac{1}{R_1 - 1} =
 
 If :math:`\bar{R}_1` denotes the :ref:`1st remainder <exploring-continued-fractions.remainders>` :math:`[1; a_1 - 1, a_2, a_3,\ldots, a_n]` in the representation above for :math:`-\frac{a}{b}` then :math:`\bar{R}_1` is an :math:`n`-order, simple continued fraction. A special case is when :math:`a_1 = 1`: in this case :math:`a_0 = -1` and :math:`\bar{R}_1 = [a_2 + 1; a_3, \ldots, a_n]` is an :math:`(n - 2)`-order simple continued fraction. Note that this special case also applies when :math:`0 < a < b`.
 
-Thus, we can say that if :math:`[a_0; a_1,\ldots, a_n]` is the :math:`n`-order simple continued fraction of a positive rational number :math:`\frac{a}{b}` then :math:`-\frac{a}{b}` has :math:`(n - 1)`- and :math:`(n + 1)`-order simple continued fractions given by:
+Thus, we can say that if :math:`[a_0; a_1,\ldots, a_n]` is the :math:`n`-order simple continued fraction of a positive rational number :math:`\frac{a}{b}` then the simple continued fraction of :math:`-\frac{a}{b}` is given by:
 
 .. math::
 
-   -\frac{a}{b} = 
-      \begin{cases}
-         [-(a_0 + 1); a_2 + 1, a_3,\ldots, a_n], & a_1 = 1  \\
-         [-(a_0 + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n], & a_1 > 1
-      \end{cases}
+   \begin{cases}
+   [-a_0;]                                     \hskip{3em} & n = 0 \\
+   [-(a_0 + 1); 2]                             \hskip{3em} & n = 1 \text{ and } a_1 = 2 \\
+   [-(a_0 + 1); a_2 + 1, a_3,\ldots, a_n]      \hskip{3em} & n \geq 2 \text{ and } a_1 = 1 \\
+   [-(a_0 + 1); 1, a_1 - 1, a_2, \ldots,a_n]   \hskip{3em} & n \geq 2 \text{ and } a_1 \geq 2
+   \end{cases}
 
-As :math:`n \to \infty` then :math:`\lim_{n \to \infty} [a_0;a_1,\ldots,a_n] = [a_0;a_1,\ldots]` represents an irrational number, and the same relations hold.
-
-We can see this in action with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, starting with small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
+We can see this in action with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, starting with non-trivial cases with small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
 
 .. code:: python
 

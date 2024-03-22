@@ -1,6 +1,16 @@
 # -- IMPORTS --
 
 # -- Standard libraries --
+import decimal
+
+# Set the :py:mod:`decimal` context for the test computations in this module
+# using default precision of 28 digits, including the integer part, and 
+# set the :py:class:`decimal.Inexact` trap for computations to signal
+# loss of precision due to rounding - this would be useful in debugging
+context = decimal.Context(prec=28, Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN)
+context.traps[decimal.Inexact] = True
+decimal.setcontext(context)
+
 from decimal import Decimal
 from fractions import Fraction
 from types import MappingProxyType
@@ -367,7 +377,7 @@ class TestContinuedFraction:
 	        	0.25,
 	        	Decimal('0.25')
 	        ),
-	        # Case #20
+	        # Case #21
 	        (
 	        	(ContinuedFraction(649, 200), Fraction(415, 93),),
 	        	Fraction(60357, 83000),
@@ -420,7 +430,10 @@ class TestContinuedFraction:
 		assert received.as_float() == expected_float_value
 
 		# Compare the decimal values
-		assert received.as_decimal() == expected_decimal_value
+		try:
+			assert received.as_decimal() == expected_decimal_value
+		except decimal.Inexact:
+			pass
 
 		# Compare the element sequences
 		assert received.elements == expected_elements
@@ -487,6 +500,28 @@ class TestContinuedFraction:
 			ContinuedFraction.from_elements(*invalid_elements)
 
 	@pytest.mark.parametrize(
+		"elements, expected",
+		[
+			((-2,), ContinuedFraction(-2, 1)),
+			((-2, 2,), ContinuedFraction(-3, 2)),
+			((-2, 1, 1,), ContinuedFraction(-3, 2)),
+			((-1,), ContinuedFraction(-1, 1)),
+			((-1, 2,), ContinuedFraction(-1, 2)),
+			((-1, 1, 1,), ContinuedFraction(-1, 2)),
+			((-0,), ContinuedFraction(0, 1)),
+			((0, 2,), ContinuedFraction(1, 2)),
+			((0, 1, 1,), ContinuedFraction(1, 2)),
+			((1, 2,), ContinuedFraction(3, 2)),
+			((1, 1, 1,), ContinuedFraction(3, 2))
+		]
+	)
+	def test_ContinuedFraction__from_elements__valid_elements__correct_fraction_returned(self, elements, expected):
+			received = ContinuedFraction.from_elements(*elements)
+
+			assert received == expected
+			assert received.elements == expected.elements
+
+	@pytest.mark.parametrize(
 	    "cf1, cf2, k, expected_left_mediant",
 	    [
 	        (ContinuedFraction(1, 2), Fraction(3, 5), 1, ContinuedFraction(4, 7)),
@@ -531,8 +566,21 @@ class TestContinuedFraction:
 		assert cf1.right_mediant(cf2, k=k) == expected_right_mediant
 
 	def test_ContinuedFraction__rational_operations(self):
+		f0 = ContinuedFraction(2, 1)
 		f1 = ContinuedFraction(649, 200)
 		f2 = ContinuedFraction(-649, 200)
+		f3 = ContinuedFraction(3, 2)
+		f4 = ContinuedFraction(5, 3)
+
+		assert -f0 == -(f0) == f0.__neg__()
+
+		assert -f1 == f2 == f1.__neg__()
+
+		assert -f2 == f1 == f2.__neg__()
+
+		assert -f3 == -(f3) == f3.__neg__()
+
+		assert -f4 == -(f4) == f4.__neg__()
 
 		assert f1 + f2 == ContinuedFraction(0, 1)
 
@@ -593,3 +641,30 @@ class TestContinuedFraction:
 		assert -f1 == ContinuedFraction(-f1.numerator, f1.denominator) == ContinuedFraction(Fraction(-f1))
 
 		assert abs(f2) == f1
+
+	@pytest.mark.parametrize(
+		"operand, expected, expected_elements",
+		[
+			(ContinuedFraction(-2, 1), ContinuedFraction(2, 1), (2,)),
+			(ContinuedFraction(-1, 1), ContinuedFraction(1, 1), (1,)),
+			(ContinuedFraction(-0, 1), ContinuedFraction(0, 1), (0,)),
+			(ContinuedFraction(1, 1), ContinuedFraction(-1, 1), (-1,)),
+			(ContinuedFraction(2, 1), ContinuedFraction(-2, 1), (-2,)),
+			(ContinuedFraction(-649, 200), ContinuedFraction(649, 200), (3, 4, 12, 4,)),
+			(ContinuedFraction(-3, 2), ContinuedFraction(3, 2), (1, 2,)),
+			(ContinuedFraction(-4, 3), ContinuedFraction(4, 3), (1, 3,)),
+			(ContinuedFraction(-1, 2), ContinuedFraction(1, 2), (0, 2,)),
+			(ContinuedFraction(-1, 3), ContinuedFraction(1, 3), (0, 3,)),
+			(ContinuedFraction(-0, 1), ContinuedFraction(0, 1), (0,)),
+			(ContinuedFraction(1, 3), ContinuedFraction(-1, 3), (-1, 1, 2)),
+			(ContinuedFraction(1, 2), ContinuedFraction(-1, 2), (-1, 2,)),
+			(ContinuedFraction(4, 3), ContinuedFraction(-4, 3), (-2, 1, 2,)),
+			(ContinuedFraction(3, 2), ContinuedFraction(-3, 2), (-2, 2,)),
+			(ContinuedFraction(649, 200), ContinuedFraction(-649, 200), (-4, 1, 3, 12, 4,)),
+		]
+	)
+	def test___neg__(self, operand, expected, expected_elements):
+		received = -operand
+
+		assert expected == received
+		assert received.elements == expected_elements

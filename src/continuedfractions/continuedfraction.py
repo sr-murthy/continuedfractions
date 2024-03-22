@@ -55,7 +55,7 @@ class ContinuedFraction(Fraction):
     >>> cf.as_float()
     3.245
 
-    Inspect the elements, order, convergents, and remainders
+    Inspect the elements, order, convergents, and remainders.
 
     >>> cf.elements
     (3, 4, 12, 4)
@@ -66,7 +66,7 @@ class ContinuedFraction(Fraction):
     >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
     (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 
-    Check some properties of the convergents and remainders
+    Check some properties of the convergents and remainders.
 
     >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
 
@@ -86,9 +86,6 @@ class ContinuedFraction(Fraction):
 
     # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
     __slots__ = ['_elements',]
-
-    # To support pattern matching of instances in :py:func:`match` statements
-    __match_args__ = ('numerator', 'denominator')
 
     # Class attribute to store an error message for input errors
     __valid_inputs_msg__ = (
@@ -253,7 +250,7 @@ class ContinuedFraction(Fraction):
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a continued fraction.
+        """ Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a (finite) simple continued fraction.
 
         There is a validation check: all elements must be integers, and all
         elements after the 1st should be positive; otherwise a :py:class:`ValueError`
@@ -262,8 +259,8 @@ class ContinuedFraction(Fraction):
         Parameters
         ----------
         *elements : int
-            An ordered sequence of integer elements of a (finite) continued
-            fraction.
+            An ordered sequence of integer elements of a (finite) simple
+            continued fraction.
 
         Returns
         -------
@@ -322,6 +319,9 @@ class ContinuedFraction(Fraction):
                 "elements after the 1st must be positive"
             )
 
+        if len(elements) > 1 and elements[-1] == 1:
+            elements = elements[:-2] + (elements[-2] + 1,)
+
         obj = cls(fraction_from_elements(*elements))
         obj._elements = elements
     
@@ -353,7 +353,7 @@ class ContinuedFraction(Fraction):
         >>> cf
         ContinuedFraction(415, 93)
 
-        Inspect the elements, order, convergents, and remainders
+        Inspect the elements, order, convergents, and remainders.
 
         >>> cf.elements
         (4, 2, 6, 7)
@@ -364,7 +364,7 @@ class ContinuedFraction(Fraction):
         >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
         (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
 
-        Check some properties of the convergents and remainders
+        Check some properties of the convergents and remainders.
 
         >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
         """
@@ -449,7 +449,50 @@ class ContinuedFraction(Fraction):
         return self.__class__(super().__pos__())
 
     def __neg__(self) -> ContinuedFraction:
-        return self.__class__(super().__neg__())
+        """
+        Division-free negation for a finite simple continued fraction, as
+        described `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/creating-continued-fractions.html#negative-continued-fractions>`_.
+
+        The basic algorithm can be described as follows: if
+        :math:`[a_0; a_1,\\ldots, a_n]` is the simple continued fraction of a
+        **positive** rational number :math:`\\frac{a}{b}` of finite order
+        :math:`n` then  :math:`-\\frac{a}{b}` has the simple continued
+        fraction:
+
+        .. math::
+
+           \\begin{cases}
+           [-a_0;]                                      \\hskip{3em} & n = 0 \\\\
+           [-(a_0 + 1); 2]                              \\hskip{3em} & n = 1 \\text{ and } a_1 = 2 \\\\
+           [-(a_0 + 1); a_2 + 1, a_3,\\ldots, a_n]      \\hskip{3em} & n \\geq 2 \\text{ and } a_1 = 1 \\\\
+           [-(a_0 + 1); 1, a_1 - 1, a_2, \\ldots,a_n]   \\hskip{3em} & n \\geq 2 \\text{ and } a_1 \\geq 2
+           \\end{cases}
+
+        In applying this algorithm there is an assumption that the last element
+        :math:`a_n > 1`, as any simple continued fraction of type
+        :math:`[a_0; a_1,\\ldots, a_{n} = 1]` can be reduced to the simple
+        continued fraction :math:`[a_0; a_1,\\ldots, a_{n - 1} + 1]`.
+        """
+        cls_ = self.__class__
+        elms = self._elements
+
+        if len(elms) == 1:
+            # Case (1) of the algorithm
+            neg_elms = (-elms[0],)
+        elif len(elms) == 2 and elms[1] == 2:
+            # Case (2) of the algorithm
+            neg_elms = (-(elms[0] + 1), 2)
+        elif len(elms) > 1 and elms[1] == 1:
+            # Case (3) of the algorithm
+            neg_elms = (-(elms[0] + 1), elms[2] + 1, *elms[3:])
+        else:
+            # Case (4) of the algorithm
+            neg_elms = (-(elms[0] + 1), 1, elms[1] - 1, *elms[2:])
+
+        obj = cls_.__new__(cls_, *convergent(len(neg_elms) - 1, *neg_elms).as_integer_ratio())
+        obj._elements = neg_elms
+
+        return obj
 
     def __abs__(self) -> ContinuedFraction:
         return self.__class__(super().__abs__())
@@ -512,7 +555,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def elements(self) -> tuple[int]:
-        """tuple[int]: The sequence of elements of the continued fraction.
+        """:py:class:`tuple`: The sequence of elements of the continued fraction.
 
         Examples
         --------
@@ -526,7 +569,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def order(self) -> int:
-        """int: The order of the continued fraction, which is the number of its elements minus :math:`1`.
+        """:py:class:`int`: The order of the continued fraction, which is the number of its elements minus :math:`1`.
 
         Examples
         --------
@@ -542,15 +585,18 @@ class ContinuedFraction(Fraction):
 
     @property
     def khinchin_mean(self) -> Decimal | None:
-        """decimal.Decimal: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
+        """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
 
-        The Khinchin mean is the geometric mean :math:`\\sqrt[n]{a_1a_2 \\cdots a_n}`
-        of all elements of the (finite, simple) continued fraction :math:`[a_0;a_1,\\ldots,a_n]`
-        starting from the 1st.
+        We define the Khinchin mean :math:`K_n` of a simple continued fraction
+        :math:`[a_0; a_1, a_2, \\ldots, a_n]` as:
 
-        As in practice all :py:class:`ContinuedFraction` objects will have a finite
-        sequence of elements the Khinchin mean as defined above will always
-        have a computable value.
+        .. math::
+
+           K_n := \\sqrt[n]{a_1a_2 \\cdots a_n} = \\left( a_1a_2 \\cdots a_n \\right)^{\\frac{1}{n}}, \\hskip{3em} n \\geq 1
+
+        This property is intended to make it easier to study the limit of
+        :math:`K_n` as :math:`n \\to \\infty`.  See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#khinchin-means-khinchin-s-constant>`_
+        for more details.
 
         In the special case of integers or fractions representing integers,
         whose continued fraction representations consist of only a single
@@ -647,7 +693,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all :math:`k`-order convergents of the continued fraction, keyed by order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.
@@ -671,7 +717,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def even_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all even-order convergents of the continued fraction, keyed/indexed by  order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all even-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.
@@ -692,7 +738,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def odd_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all odd-order convergents of the continued fraction, keyed by order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all odd-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.
@@ -756,7 +802,7 @@ class ContinuedFraction(Fraction):
     @property
     @functools.lru_cache
     def remainders(self) -> MappingProxyType[int, ContinuedFraction]:
-        """types.MappingProxyType[int, ContinuedFraction]: An immutable dict of all :math:`k`-th remainders of the continued fraction, keyed by order.
+        """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-th remainders of the continued fraction, keyed by order.
 
         Each remainder is indexed by its order and is also a
         :py:class:`ContinuedFraction` object.

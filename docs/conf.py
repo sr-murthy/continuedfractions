@@ -222,7 +222,7 @@ html_theme_options = {
     "primary_sidebar_end": ["indices", "sidebar-ethical-ads"],
     'secondary_sidebar_items': ['page-toc', 'edit-this-page', 'sourcelink'],
     'show_nav_level': 2,
-    'show_toc_level': 1,
+    'show_toc_level': 2,
     'use_edit_page_button': False,
 }
 

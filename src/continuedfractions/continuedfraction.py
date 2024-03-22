@@ -87,9 +87,6 @@ class ContinuedFraction(Fraction):
     # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
     __slots__ = ['_elements',]
 
-    # To support pattern matching of instances in :py:func:`match` statements
-    __match_args__ = ('numerator', 'denominator')
-
     # Class attribute to store an error message for input errors
     __valid_inputs_msg__ = (
         "Only single integers, non-nan floats, numeric strings, \n"

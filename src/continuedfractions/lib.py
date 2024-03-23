@@ -13,12 +13,30 @@ __all__ = [
 import re
 
 from decimal import Decimal
-from fractions import Fraction, _RATIONAL_FORMAT
+from fractions import Fraction
 from typing import Generator
 
 # -- 3rd party libraries --
 
 # -- Internal libraries --
+
+
+# A copy of ``fractions._RATIONAL_FORMAT`` to get around mypy type checking
+# error caused by this name not being defined in the ``typeshed`` stub
+# for ``fractions``
+_RATIONAL_FORMAT = re.compile(r"""
+    \A\s*                                  # optional whitespace at the start,
+    (?P<sign>[-+]?)                        # an optional sign, then
+    (?=\d|\.\d)                            # lookahead for digit or .digit
+    (?P<num>\d*|\d+(_\d+)*)                # numerator (possibly empty)
+    (?:                                    # followed by
+       (?:\s*/\s*(?P<denom>\d+(_\d+)*))?   # an optional denominator
+    |                                      # or
+       (?:\.(?P<decimal>\d*|\d+(_\d+)*))?  # an optional fractional part
+       (?:E(?P<exp>[-+]?\d+(_\d+)*))?      # and optional exponent
+    )
+    \s*\Z                                  # and optional whitespace to finish
+""", re.VERBOSE | re.IGNORECASE)
 
 
 def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
@@ -360,7 +378,7 @@ def fraction_from_elements(*elements: int) -> Fraction:
     return convergent(len(elements) - 1, *elements)
 
 
-def mediant(r: Fraction, s: Fraction, /, *, dir='right', k: int = 1) -> Fraction:
+def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> Fraction:
     """Returns the :math:`k`-th left- or right-mediant of two rational numbers.
 
     For a positive integer :math:`k`, the :math:`k`-th left-mediant of two

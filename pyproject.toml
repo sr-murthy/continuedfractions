@@ -152,6 +152,7 @@ path = "src/continuedfractions/version.py"
 #     https://docs.pytest.org/en/7.3.x/reference/customize.html#configuration
 #     https://docs.pytest.org/en/7.3.x/reference/customize.html#pyproject-toml
 #
+
 [tool.pytest.ini_options]
 pythonpath = "src"
 addopts = """\

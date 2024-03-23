@@ -4,4 +4,4 @@
 
 .. automodule:: continuedfractions.continuedfraction
     :members:
-    :special-members: __neg__
+    :special-members: __new__, __neg__

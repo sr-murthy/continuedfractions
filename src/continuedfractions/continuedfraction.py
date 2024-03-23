@@ -15,10 +15,10 @@ import statistics
 import sys
 
 from decimal import Decimal
-from fractions import Fraction, _RATIONAL_FORMAT
+from fractions import Fraction
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any, Final
+from typing import Any
 
 # -- 3rd party libraries --
 
@@ -28,9 +28,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from continuedfractions.lib import (
     continued_fraction_rational,
     continued_fraction_real,
-    fraction_from_elements,
     convergent,
+    fraction_from_elements,
     mediant,
+    _RATIONAL_FORMAT,
 )
 
 
@@ -97,8 +98,16 @@ class ContinuedFraction(Fraction):
         "fraction, are valid."
     )
 
+    # Declare all instances to have an ``_elements`` attribute, which must be
+    # a ``tuple`` of ``int``s.
+    _elements: tuple[int]
+
     @classmethod
-    def validate(cls, *args_: int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> None:
+    def validate(
+        cls,
+        *args_: int | float | str | Decimal | Fraction | ContinuedFraction | tuple[int | Fraction | ContinuedFraction, int | Fraction | ContinuedFraction],
+        **kwargs: Any
+    ) -> None:
         """Validates inputs for object creation.
 
         Checks whether the arguments are one of the following types:
@@ -183,11 +192,12 @@ class ContinuedFraction(Fraction):
         if len(args_) == 2 and args_[1] == 0:
             raise ValueError(cls.__valid_inputs_msg__)
 
-    def __new__(cls, *args:  int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> ContinuedFraction:
-        """Creates objects of this class.
-
-        Creates instances of this class, which represent finite, simple
-        continued fractions.
+    def __new__(
+        cls,
+        *args: int | float | str | Decimal | Fraction | ContinuedFraction | tuple[int | Fraction | ContinuedFraction, int | Fraction | ContinuedFraction],
+        **kwargs: Any
+    ) -> ContinuedFraction:
+        """Creates, initialises and returns objects of this class.
 
         Arguments must be one of the following types:
 
@@ -211,46 +221,72 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A new instance of :py:class:`ContinuedFraction`, but not yet initialised
-            with the class-specific attributes and properties.
+            A full instance of :py:class:`ContinuedFraction`.
 
         Examples
         --------
-        >>> ContinuedFraction(100, 2)
-        ContinuedFraction(50, 1)
-        >>> ContinuedFraction(1, -2.0)
-        Traceback (most recent call last):
-        ...
-        ValueError: Only single integers, non-nan floats, numeric strings, 
-        `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-        objects; or a pairwise combination of an integer, 
-        `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-        the numerator and non-zero denominator, respectively, of a rational 
-        fraction, are valid.
-        >>> ContinuedFraction('-.123456789')
-        ContinuedFraction(-123456789, 1000000000)
-        >>> ContinuedFraction(.3, -2)
-        Traceback (most recent call last):
-        ...
-        ValueError: Only single integers, non-nan floats, numeric strings, 
-        `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-        objects; or a pairwise combination of an integer, 
-        `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-        the numerator and non-zero denominator, respectively, of a rational 
-        fraction, are valid.
-        >>> ContinuedFraction(Fraction(-415, 93))
-        ContinuedFraction(-415, 93)
+        Construct the continued fraction for the rational :math:`\\frac{415}{93}`.
+
+        >>> cf = ContinuedFraction(415, 93)
+        >>> cf
+        ContinuedFraction(415, 93)
+
+        Inspect the elements, order, convergents, and remainders.
+
+        >>> cf.elements
+        (4, 2, 6, 7)
+        >>> cf.order
+        3
+        >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
+        (ContinuedFraction(4, 1), ContinuedFraction(9, 2), ContinuedFraction(58, 13), ContinuedFraction(415, 93))
+        >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
+        (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
+
+        Check some properties of the convergents and remainders.
+
+        >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
         """
         try:
             cls.validate(*args, **kwargs)
         except ValueError:
             raise
 
-        return super().__new__(cls, *args, **kwargs)
+        self = super().__new__(cls, *args, **kwargs)
+
+        match args:
+            # -- case of a single ``ContinuedFraction`` --
+            case (ContinuedFraction(),):
+                self._elements = args[0].elements
+            # -- case of a single ``int`` --
+            case (int(),):
+                self._elements = tuple(continued_fraction_rational(Fraction(args[0])))
+            # -- case of a single ``float`` --
+            case (float(),):
+                self._elements = tuple(continued_fraction_real(args[0]))
+            # -- case of a single (signed or unsigned) numeric string matching --
+            # -- ``fractions._RATIONAL_FORMAT`` --
+            case (str(),):
+                self._elements = tuple(continued_fraction_real(args[0]))            
+            # -- case of a single ``fractions.Fraction`` or ``decimal.Decimal``
+            case (Fraction(),) | (Decimal(),):
+                self._elements = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
+            # -- case of a pair of ``int``s
+            case (int(), int(),):
+                self._elements = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
+            # -- case of a pairwise combination of ``int``,                --
+            # -- ``fractions.Fraction`` or ``ContinuedFraction`` instances --
+            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction(),):
+                self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
+            # -- any other case - these cases would have been excluded by --
+            # ``validate`` but just to be sure                            --
+            case _:     # pragma: no cover
+                raise ValueError(self.__class__.__valid_inputs_msg__)
+
+        return self
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """ Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a (finite) simple continued fraction.
+        """Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a (finite) simple continued fraction.
 
         There is a validation check: all elements must be integers, and all
         elements after the 1st should be positive; otherwise a :py:class:`ValueError`
@@ -322,82 +358,10 @@ class ContinuedFraction(Fraction):
         if len(elements) > 1 and elements[-1] == 1:
             elements = elements[:-2] + (elements[-2] + 1,)
 
-        obj = cls(fraction_from_elements(*elements))
-        obj._elements = elements
+        self = cls(fraction_from_elements(*elements))
+        self._elements = elements
     
-        return obj
-
-    def __init__(self, *args:  int | float | str | Fraction | ContinuedFraction | Decimal, **kwargs: Any) -> None:
-        """Initialises new :py:class:`ContinuedFraction` instances.
-
-        Parameters
-        ----------
-        *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
-            Arguments of the type described above.
-
-        **kwargs
-            Any valid keyword arguments for the superclass
-            ``fractions.Fraction``
-
-        Raises
-        ------
-        ValueError
-            If there are arguments that have somehow passed the validation
-            check, but do not fall into one of the types described above.
-
-        Examples
-        --------
-        Construct the continued fraction for the rational :math:`\\frac{415}{93}`.
-
-        >>> cf = ContinuedFraction(415, 93)
-        >>> cf
-        ContinuedFraction(415, 93)
-
-        Inspect the elements, order, convergents, and remainders.
-
-        >>> cf.elements
-        (4, 2, 6, 7)
-        >>> cf.order
-        3
-        >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
-        (ContinuedFraction(4, 1), ContinuedFraction(9, 2), ContinuedFraction(58, 13), ContinuedFraction(415, 93))
-        >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
-        (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
-
-        Check some properties of the convergents and remainders.
-
-        >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
-        """
-        super().__init__()
-
-        match args:
-            # -- case of a single ``ContinuedFraction`` --
-            case (ContinuedFraction(),):
-                self._elements: Final[tuple[int]] = args[0].elements
-            # -- case of a single ``int`` --
-            case (int(),):
-                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0])))
-            # -- case of a single ``float`` --
-            case (float(),):
-                self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))
-            # -- case of a single (signed or unsigned) numeric string matching --
-            # -- ``fractions._RATIONAL_FORMAT`` --
-            case (str(),):
-                self._elements: Final[tuple[int]] = tuple(continued_fraction_real(args[0]))            
-            # -- case of a single ``fractions.Fraction`` or ``decimal.Decimal``
-            case (Fraction(),) | (Decimal(),):
-                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
-            # -- case of a pair of ``int``s
-            case (int(), int(),):
-                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
-            # -- case of a pairwise combination of ``int``,                --
-            # -- ``fractions.Fraction`` or ``ContinuedFraction`` instances --
-            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction(),):
-                self._elements: Final[tuple[int]] = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
-            # -- any other case - these cases would have been excluded by --
-            # ``validate`` but just to be sure                            --
-            case _:     # pragma: no cover
-                raise ValueError(self.__class__.__valid_inputs_msg__)
+        return self
 
     def __add__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
         return self.__class__(super().__add__(other))
@@ -622,13 +586,13 @@ class ContinuedFraction(Fraction):
         >>> ContinuedFraction(5000).khinchin_mean
 
         """
-        if self.order == 1:
-            return Decimal(self.elements[-1])
-
-        try:
-            return Decimal(statistics.geometric_mean(self.elements[1:]))
-        except statistics.StatisticsError:
-            return
+        match self.order:
+            case 0:
+                return
+            case 1:
+                return Decimal(self.elements[-1])
+            case _:
+                return Decimal(statistics.geometric_mean(self.elements[1:]))
 
     @functools.cache
     def convergent(self, k: int, /) -> ContinuedFraction:

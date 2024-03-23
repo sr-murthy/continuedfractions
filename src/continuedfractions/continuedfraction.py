@@ -225,35 +225,14 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-        >>> ContinuedFraction(100, 2)
-        ContinuedFraction(50, 1)
-        >>> ContinuedFraction(1, -2.0)
-        Traceback (most recent call last):
-        ...
-        ValueError: Only single integers, non-nan floats, numeric strings, 
-        `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-        objects; or a pairwise combination of an integer, 
-        `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-        the numerator and non-zero denominator, respectively, of a rational 
-        fraction, are valid.
-        >>> ContinuedFraction('-.123456789')
-        ContinuedFraction(-123456789, 1000000000)
-        >>> ContinuedFraction(.3, -2)
-        Traceback (most recent call last):
-        ...
-        ValueError: Only single integers, non-nan floats, numeric strings, 
-        `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-        objects; or a pairwise combination of an integer, 
-        `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-        the numerator and non-zero denominator, respectively, of a rational 
-        fraction, are valid.
-
         Construct the continued fraction for the rational :math:`\\frac{415}{93}`.
+
         >>> cf = ContinuedFraction(415, 93)
         >>> cf
         ContinuedFraction(415, 93)
 
         Inspect the elements, order, convergents, and remainders.
+
         >>> cf.elements
         (4, 2, 6, 7)
         >>> cf.order
@@ -264,6 +243,7 @@ class ContinuedFraction(Fraction):
         (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
 
         Check some properties of the convergents and remainders.
+
         >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
         """
         try:

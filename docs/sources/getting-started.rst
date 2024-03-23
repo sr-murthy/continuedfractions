@@ -17,15 +17,17 @@ The simplest way of installing it is a standard ``pip``/``pip3`` install:
 
 For contributors there are development requirements which are specified in the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_ - contribution guidelines will be described in more detail later.
 
+.. _getting-started.package-structure:
+
+Package Structure
+=================
+
 The ``continuedfractions`` package consists of two core libraries.
 
 -  :py:mod:`continuedfractions.lib`
 -  :py:mod:`continuedfractions.continuedfraction`
 
-.. _getting-started.package-structure:
-
-Package Structure
-=================
+Each is summarised below. Or you can go straight to the :doc:`API reference <api-reference>`.
 
 .. _getting-started.package-structure.continuedfractions_lib:
 

@@ -99,8 +99,7 @@ class ContinuedFraction(Fraction):
     )
 
     # Declare all instances to have an ``_elements`` attribute, which must be
-    # a ``tuple`` of ``int``s, and initialise to ``0``. For any instance the
-    # initial value will get overwritten after logic in ``__new__``
+    # a ``tuple`` of ``int``s.
     _elements: tuple[int]
 
     @classmethod

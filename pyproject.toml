@@ -123,9 +123,6 @@ docs = [
 lint = [
     "ruff",
 ]
-typing = [
-    "mypy[toml]",
-]
 test = [
     "coverage[toml]",
     "pytest",
@@ -155,19 +152,6 @@ path = "src/continuedfractions/version.py"
 #     https://docs.pytest.org/en/7.3.x/reference/customize.html#configuration
 #     https://docs.pytest.org/en/7.3.x/reference/customize.html#pyproject-toml
 #
-
-[tool.mypy]
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
-disallow_untyped_decorators = true
-exclude = "version.py"
-explicit_package_bases = true
-follow_imports = "normal"
-ignore_missing_imports = true
-implicit_reexport = true
-mypy_path = "src"
-namespace_packages = true
-python_version = 3.11
 
 [tool.pytest.ini_options]
 pythonpath = "src"

@@ -157,15 +157,17 @@ path = "src/continuedfractions/version.py"
 #
 
 [tool.mypy]
-follow_imports = "silent"
-ignore_missing_imports = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
 disallow_untyped_decorators = true
 exclude = "version.py"
-namespace_packages = true
-mypy_path = "src"
 explicit_package_bases = true
+follow_imports = "normal"
+ignore_missing_imports = true
+implicit_reexport = true
+mypy_path = "src"
+namespace_packages = true
+python_version = 3.11
 
 [tool.pytest.ini_options]
 pythonpath = "src"

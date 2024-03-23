@@ -15,7 +15,7 @@ import statistics
 import sys
 
 from decimal import Decimal
-from fractions import Fraction, _RATIONAL_FORMAT
+from fractions import Fraction
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Final
@@ -28,9 +28,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from continuedfractions.lib import (
     continued_fraction_rational,
     continued_fraction_real,
-    fraction_from_elements,
     convergent,
+    fraction_from_elements,
     mediant,
+    _RATIONAL_FORMAT,
 )
 
 

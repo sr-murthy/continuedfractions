@@ -152,9 +152,45 @@ Continued fractions can also be constructed from sequences of elements, using th
    >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
    >>> cf_inverse
    ContinuedFraction(200, 649)
+   >>> cf_negative_inverse = ContinuedFraction.from_elements(-1, 1, 2, 4, 12, 4)
+   >>> cf_negative_inverse
+   ContinuedFraction(-200, 649)
+   >>> cf_negative_inverse.elements
+   (-1, 1, 2, 4, 12, 4)
 
-We can verify that the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects constructed for :math:`\frac{649}{200}` and its (multiplicative) inverse :math:`\frac{200}{649}`, are as expected.
+The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{twos}}` where the tail contains 1000 twos.
 
+.. code:: python
+
+   >>> decimal.getcontext().prec = 1000
+   >>> ContinuedFraction.from_elements(1, *[2] * 1000).as_decimal()
+   >>> Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462107038850387534327641572735013846230912297024924836055850737212644121497099935831413222665927505592755799950501152782060571470109559971605970274534596862014728517418640889198609552329230484308714321450839762603627995251407989687253396546331808829640620615258352395054745750287759961729835575220337531857011354374603408498847160386899970699004815030544027790316454247823068492936918621580578463111596668713013015618568987237235288509264861249497715421833420428568606014682472077143585487415565706967765372022648544701585880162075847492265722600208558446652145839889394437092659180031138824646815708263010059485870400318648034219489727829064104507263688131373985525611732204024509122770022693976417470272013752399982976782217338826145327739130951193355408762382855063050397471264684204993755563270525522588635793369056816493299408349652485293806821732869748392205646382061385126800425762739265218823406558704964782626829881122')
+
+The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` is described in the :ref:`documentation <exploring-continued-fractions.fast-algorithms>`.
+
+For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>`.
+
+.. _creating-continued-fractions.rational-operations:
+
+Rational Operations
+===================
+
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class is a subclass of :py:class:`fractions.Fraction` and supports all of the rational operations implemented in the superclass. This means that :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are fully operable as rational numbers, as well as encapsulating the properties of (finite) simple continued fractions.
+
+.. note::
+
+   Implementations of rational operations in the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class will always return a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance **unless** the operation is binary and the other operand is either not a :py:class:`fractions.Fraction` instance, or in some operations, such as :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__pow__`, :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__rpow__` etc., not an :py:class:`int`.
+
+A few examples are given below of some key rational operations for the rational :math:`\frac{649}{200}` with ``ContinuedFraction(649, 200)``.
+
+.. code:: python
+
+   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> cf.elements
+   (3, 4, 12, 4)
+   >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
    >>> cf_inverse.elements
    (0, 3, 4, 12, 4)
    >>> assert cf_inverse == 1/cf
@@ -171,73 +207,40 @@ We can verify that the :py:class:`~continuedfractions.continuedfraction.Continue
    >>> assert cf * cf_negative_inverse == -1
    >>> assert cf + (-cf) == cf_inverse + cf_negative_inverse == 0
    # True
+   >>> cf ** 2
+   ContinuedFraction(9, 4)
+   >>> (cf ** 2).elements
+   (10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2)
+   >>> assert ContinuedFraction.from_elements(10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2) == cf ** 2
+   # True
 
-For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>`.
+As these examples illustrate, the continued fraction properties of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are fully respected by the rational operations.
 
-.. _creating-continued-fractions.validation:
-
-Input Validation
-================
-
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class validates all inputs during object creation - in the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.validate` class method, and not instance
-initialisation. Inputs that do not meet the following conditions trigger a :py:class:`ValueError`.
-
-   - a single ``int`` or a non-``nan`` ``float``
-   - a single numeric string (``str``)
-   - a single ``fractions.Fraction`` or ``ContinuedFraction`` or
-     ``decimal.Decimal`` object
-   - a pairwise combination of an ``int``, ``fractions.Fraction`` or
-     ``ContinuedFraction`` object, representing the numerator and non-zero
-     denominator of a rational fraction
-
-A number of examples are given below of validation passes and fails.
+Rational operations for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can involve any instance of :py:class:`numbers.Rational`, including :py:class:`int` and :py:class:`fractions.Fraction`, and the result is always a new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance:
 
 .. code:: python
 
-   >>> ContinuedFraction.validate(100)
-   >>> ContinuedFraction.validate(3, -2)
+   >>> cf = ContinuedFraction('0.5')
+   >>> cf
+   ContinuedFraction(1, 2)
+   >>> id(cf), id(-cf)
+   (4603182592, 4599771072)
 
-   >>> ContinuedFraction.validate(1, -2.0)
-   Traceback (most recent call last):
-   ...
-   ValueError: Only single integers, non-nan floats, numeric strings, 
-   `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-   objects; or a pairwise combination of an integer, 
-   `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-   the numerator and non-zero denominator, respectively, of a rational 
-   fraction, are valid.
+There is no support for operations involving :py:class:`decimal.Decimal`:
 
-   >>> ContinuedFraction.validate(-.123456789)
-   >>> ContinuedFraction.validate('-.123456789')
-   >>> ContinuedFraction.validate('-649/200')
-   >>> ContinuedFraction.validate(-3/2)
+.. code:: python
 
-   >>> ContinuedFraction.validate(-3, 0)
-   Traceback (most recent call last):
-   ...
-   ValueError: Only single integers, non-nan floats, numeric strings, 
-   `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-   objects; or a pairwise combination of an integer, 
-   `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-   the numerator and non-zero denominator, respectively, of a rational 
-   fraction, are valid.
+   >>> ContinuedFraction('1.5') + Decimal('0.5')
+   TypeError: unsupported operand type(s) for +: 'decimal.Decimal' and 'Fraction'
 
-   >>> ContinuedFraction.validate(Fraction(-415, 93))
-   >>> ContinuedFraction.validate(ContinuedFraction(649, 200), 2)
-   >>> ContinuedFraction.validate(ContinuedFraction(649, 200), Fraction(1, 2))
-   >>> ContinuedFraction.validate(ContinuedFraction(649, 200), ContinuedFraction(1, 2))
-   >>> ContinuedFraction.validate(Decimal('12345.6789'))
-   >>> ContinuedFraction.validate(Decimal(12345.6789))
+For any other numeric type, such as :py:class:`complex`, if the operation is defined the result is not a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance:
+   
+.. code:: python
 
-   >>> ContinuedFraction.validate(Fraction(3, 2), 2.5)
-   Traceback (most recent call last):
-   ...
-   ValueError: Only single integers, non-nan floats, numeric strings, 
-   `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-   objects; or a pairwise combination of an integer, 
-   `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-   the numerator and non-zero denominator, respectively, of a rational 
-   fraction, are valid.
+   >>> complex(1, 2) + ContinuedFraction(3, 2)
+   (2.5+2j)
+
+The full set of rational operations can be viewed directly in the `class source <https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/continuedfraction.py>`_ - the class source also can be viewed from links in the :doc:`class API reference <continuedfractions/continuedfraction>`.
 
 .. _creating-continued-fractions.negative-continued-fractions:
 
@@ -267,7 +270,7 @@ To understand the difference in the sequence of elements between a "positive" an
                &= [a_0 = q; a_1, \ldots, a_n]
    \end{align}
 
-where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`.
+where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. And :math:`\frac{1}{R_1}` is a symbolic expression for the rational number which is the (multiplicative) inverse of the rational number represented by :math:`R_1`.
 
 .. note::
 

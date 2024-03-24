@@ -10,7 +10,6 @@ __all__ = [
 
 # -- Standard libraries --
 import functools
-import math
 import statistics
 import sys
 
@@ -18,7 +17,6 @@ from decimal import Decimal
 from fractions import Fraction
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any
 
 # -- 3rd party libraries --
 
@@ -27,11 +25,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from continuedfractions.lib import (
     continued_fraction_rational,
-    continued_fraction_real,
     convergent,
     fraction_from_elements,
     mediant,
-    _RATIONAL_FORMAT,
 )
 
 
@@ -88,135 +84,49 @@ class ContinuedFraction(Fraction):
     # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
     __slots__ = ['_elements',]
 
-    # Class attribute to store an error message for input errors
-    __valid_inputs_msg__ = (
-        "Only single integers, non-nan floats, numeric strings, \n"
-        "`fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` \n"
-        "objects; or a pairwise combination of an integer, \n"
-        "`fractions.Fraction` or ``ContinuedFraction`` object, representing \n"
-        "the numerator and non-zero denominator, respectively, of a rational \n"
-        "fraction, are valid."
-    )
-
     # Declare all instances to have an ``_elements`` attribute, which must be
     # a ``tuple`` of ``int``s.
     _elements: tuple[int]
 
-    @classmethod
-    def validate(
-        cls,
-        *args_: int | float | str | Decimal | Fraction | ContinuedFraction | tuple[int | Fraction | ContinuedFraction, int | Fraction | ContinuedFraction],
-        **kwargs: Any
-    ) -> None:
-        """Validates inputs for object creation.
-
-        Checks whether the arguments are one of the following types:
-
-        * a single :py:class:`int`, or a :py:class:`float` different from :py:data:`math.nan` 
-        * a single numeric string (:py:class:`str`)
-        * a single :py:class:`fractions.Fraction` or :py:class:`ContinuedFraction` or
-          :py:class:`decimal.Decimal` object
-        * a pairwise combination of an :py:class:`int`, :py:class:`fractions.Fraction` or
-          :py:class:`ContinuedFraction` object, representing the numerator
-          and non-zero denominator of a rational number
-
-        Parameters
-        ----------
-        *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
-            Arguments subject to the validation rules described above.
-
-        Raises
-        ------
-        ValueError
-            If validation fails.
-
-        Examples
-        --------
-        >>> ContinuedFraction.validate(100)
-        >>> ContinuedFraction.validate(3, -2)
-        >>> ContinuedFraction.validate(1, -2.0)
-        Traceback (most recent call last):
-        ...
-        ValueError: Only single integers, non-nan floats, numeric strings, 
-        `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-        objects; or a pairwise combination of an integer, 
-        `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-        the numerator and non-zero denominator, respectively, of a rational 
-        fraction, are valid.
-        >>> ContinuedFraction.validate(-.123456789)
-        >>> ContinuedFraction.validate('-.123456789')
-        >>> ContinuedFraction.validate('-649/200')
-        >>> ContinuedFraction.validate(-3/2)
-        >>> ContinuedFraction.validate(-3, 0)
-        Traceback (most recent call last):
-        ...
-        ValueError: Only single integers, non-nan floats, numeric strings, 
-        `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-        objects; or a pairwise combination of an integer, 
-        `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-        the numerator and non-zero denominator, respectively, of a rational 
-        fraction, are valid.
-        >>> ContinuedFraction.validate(Fraction(-415, 93))
-        >>> ContinuedFraction.validate(Decimal('12345.6789'))
-        >>> ContinuedFraction.validate(Decimal(12345.6789))
-        >>> ContinuedFraction.validate(Fraction(3, 2), 2.5)
-        Traceback (most recent call last):
-        ...
-        ValueError: Only single integers, non-nan floats, numeric strings, 
-        `fractions.Fraction`, or `ContinuedFraction`, or  `decimal.Decimal` 
-        objects; or a pairwise combination of an integer, 
-        `fractions.Fraction` or ``ContinuedFraction`` object, representing 
-        the numerator and non-zero denominator, respectively, of a rational 
-        fraction, are valid.
-        """
-        if len(args_) not in [1, 2]:
-            raise ValueError(cls.__valid_inputs_msg__)
-
-        if (
-            len(args_) == 1 and
-            not set(map(type, args_)).issubset(
-                [int, float, str, Fraction, ContinuedFraction, Decimal]
-            )
-        ):
-            raise ValueError(cls.__valid_inputs_msg__)
-
-        if any(isinstance(arg, float) and math.isnan(arg) for arg in args_):
-            raise ValueError(cls.__valid_inputs_msg__)
-
-        if len(args_) == 1 and isinstance(args_[0], str) and not _RATIONAL_FORMAT.match(args_[0]):
-            raise ValueError(cls.__valid_inputs_msg__)
-
-        if len(args_) == 2 and not set(map(type, args_)).issubset([int, Fraction, ContinuedFraction]):
-            raise ValueError(cls.__valid_inputs_msg__)
-
-        if len(args_) == 2 and args_[1] == 0:
-            raise ValueError(cls.__valid_inputs_msg__)
-
-    def __new__(
-        cls,
-        *args: int | float | str | Decimal | Fraction | ContinuedFraction | tuple[int | Fraction | ContinuedFraction, int | Fraction | ContinuedFraction],
-        **kwargs: Any
-    ) -> ContinuedFraction:
+    def __new__(cls, numerator=0, denominator=None, *, _normalize=True) -> ContinuedFraction:
         """Creates, initialises and returns objects of this class.
 
-        Arguments must be one of the following types:
+        Arguments can be any which are valid for creating objects of the
+        :py:class:`fractions.Fraction` superclass, which incidentally does
+        **not** specify typing for arguments of
+        :py:meth:`~fractions.Fraction.__new__`.
 
-        * a single :py:class:`int`, or a :py:class:`float` different from :py:data:`math.nan` 
-        * a single numeric string (:py:class:`str`)
-        * a single :py:class:`fractions.Fraction` or :py:class:`ContinuedFraction` or
-          :py:class:`decimal.Decimal` object
-        * a pairwise combination of an :py:class:`int`, :py:class:`fractions.Fraction` or
-          :py:class:`ContinuedFraction` object, representing the numerator
-          and non-zero denominator of a rational number
+        For clarification, valid arguments can be one of the following:
+
+        * a single instance of :py:class:`numbers.Rational`, including
+          :py:class:`int`, :py:class:`fractions.Fraction` or
+          :py:class:`ContinuedFraction`, named or unnamed
+        * a pair of  :py:class:`numbers.Rational` instances, including
+          :py:class:`int`, :py:class:`fractions.Fraction` and
+          :py:class:`ContinuedFraction`, named or unnamed
+        * a single :py:class:`float` or :py:class:`decimal.Decimal` value
+          that is not a special value such as :py:data:`math.nan`,
+          ``float('inf')``, or ``Decimal('infinity')``
+        * a single numeric string (:py:class:`str`) that matches
+          :py:data:`~fractions._RATIONAL_FORMAT`
 
         Parameters
         ----------
-        *args : int, float, str, fractions.Fraction, ContinuedFraction, decimal.Decimal
-            Arguments of the type described above.
+        numerator : int, default=0
+            The numerator. Can be any :py:class:`numbers.Rational` instance,
+            including an :py:class:`int`, :py:class:`fractions.Fraction`, or
+            :py:class:`ContinuedFraction`.
 
-        **kwargs
-            Any valid keyword arguments for the superclass
-            :py:class:`fractions.Fraction`.
+        denominator : int or None, default=None
+            The denominator. Can be any :py:class:`numbers.Rational` instance,
+            including an :py:class:`int`, :py:class:`fractions.Fraction`, or
+            :py:class:`ContinuedFraction`, or :py:data:`None`.
+
+        _normalize : bool, default=True
+            If ``True`` the fraction is reduced by the
+            `greatest common divisor <https://en.wikipedia.org/wiki/Greatest_common_divisor>`_.
+            This requires the ``denominator`` to be a (non-zero)
+            :py:class:`int`.
 
         Returns
         -------
@@ -225,62 +135,48 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-        Construct the continued fraction for the rational :math:`\\frac{415}{93}`.
+        Several example are given below of constructing the simple continued
+        fraction for the number :math:`\\frac{-649}{200}` in different ways.
 
-        >>> cf = ContinuedFraction(415, 93)
-        >>> cf
-        ContinuedFraction(415, 93)
+        >>> ContinuedFraction(-649, 200)
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction('-3.245')
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction(Decimal('-3.245'))
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction('-649/200')
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction(Fraction(-649, 200))
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction(ContinuedFraction(649, -200))
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction(Fraction(-649), 200)
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction(649, Fraction(-200))
+        ContinuedFraction(-649, 200)
+        >>> ContinuedFraction(Fraction(-649), ContinuedFraction(200))
+        ContinuedFraction(-649, 200)
 
-        Inspect the elements, order, convergents, and remainders.
+        In each of the examples above, the minus sign can be removed from
+        the arguments to the :py:class:`numbers.Rational` instance and
+        instead attached to the outer class, e.g.:
 
-        >>> cf.elements
-        (4, 2, 6, 7)
-        >>> cf.order
-        3
-        >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
-        (ContinuedFraction(4, 1), ContinuedFraction(9, 2), ContinuedFraction(58, 13), ContinuedFraction(415, 93))
-        >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
-        (ContinuedFraction(415, 93), ContinuedFraction(93, 43), ContinuedFraction(43, 7), ContinuedFraction(7, 1))
+        >>> -ContinuedFraction(649, 200)
+        ContinuedFraction(-649, 200)
+        >>> -ContinuedFraction('3.245')
+        ContinuedFraction(-649, 200)
+        >>> -ContinuedFraction('649/200')
+        ContinuedFraction(-649, 200)
 
-        Check some properties of the convergents and remainders.
-
-        >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
+        Invalid arguments will raise errors in the
+        :py:class:`fractions.Fraction` superclass.
         """
-        try:
-            cls.validate(*args, **kwargs)
-        except ValueError:
-            raise
+        # Get the ``fractions.Fraction`` object from the superclass constructor
+        self = super().__new__(cls, numerator=numerator, denominator=denominator, _normalize=_normalize)    # type: ignore[call-overload]
 
-        self = super().__new__(cls, *args, **kwargs)
-
-        match args:
-            # -- case of a single ``ContinuedFraction`` --
-            case (ContinuedFraction(),):
-                self._elements = args[0].elements
-            # -- case of a single ``int`` --
-            case (int(),):
-                self._elements = tuple(continued_fraction_rational(Fraction(args[0])))
-            # -- case of a single ``float`` --
-            case (float(),):
-                self._elements = tuple(continued_fraction_real(args[0]))
-            # -- case of a single (signed or unsigned) numeric string matching --
-            # -- ``fractions._RATIONAL_FORMAT`` --
-            case (str(),):
-                self._elements = tuple(continued_fraction_real(args[0]))            
-            # -- case of a single ``fractions.Fraction`` or ``decimal.Decimal``
-            case (Fraction(),) | (Decimal(),):
-                self._elements = tuple(continued_fraction_rational(Fraction(*args[0].as_integer_ratio())))
-            # -- case of a pair of ``int``s
-            case (int(), int(),):
-                self._elements = tuple(continued_fraction_rational(Fraction(args[0], args[1])))
-            # -- case of a pairwise combination of ``int``,                --
-            # -- ``fractions.Fraction`` or ``ContinuedFraction`` instances --
-            case (int() | Fraction() | ContinuedFraction(), int() | Fraction() | ContinuedFraction(),):
-                self._elements = tuple(continued_fraction_rational(Fraction(*self.as_integer_ratio())))
-            # -- any other case - these cases would have been excluded by --
-            # ``validate`` but just to be sure                            --
-            case _:     # pragma: no cover
-                raise ValueError(self.__class__.__valid_inputs_msg__)
+        # Call ``lib.continued_fraction_rational`` with the fraction to get
+        # get the elements, and assign back to the instance
+        self._elements = tuple(continued_fraction_rational(self))
 
         return self
 
@@ -288,9 +184,7 @@ class ContinuedFraction(Fraction):
     def from_elements(cls, *elements: int) -> ContinuedFraction:
         """Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a (finite) simple continued fraction.
 
-        There is a validation check: all elements must be integers, and all
-        elements after the 1st should be positive; otherwise a :py:class:`ValueError`
-        is raised.
+        Invalid elements will trigger a :py:class:`ValueError`.
 
         Parameters
         ----------
@@ -358,56 +252,64 @@ class ContinuedFraction(Fraction):
         if len(elements) > 1 and elements[-1] == 1:
             elements = elements[:-2] + (elements[-2] + 1,)
 
-        self = cls(fraction_from_elements(*elements))
-        self._elements = elements
+        # Call the superclass constructor with the ``fractions.Fraction``
+        # object returned by ``lib.fraction_from_elements`` - this will
+        # be the highest-order convergent of the simple continued
+        # fraction represented by the given sequence of elements
+        self = super().__new__(cls, fraction_from_elements(*elements))
+
+        # Assign the given elements back to the instance - note that we
+        # have avoided going through the division algorithm in
+        # ``lib.continued_fraction_rational``
+        self._elements = elements   # type: ignore[assignment]
     
         return self
 
-    def __add__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __add__(self, other, /):
         return self.__class__(super().__add__(other))
 
-    def __radd__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __radd__(self, other, /):
         return self.__class__(super().__radd__(other))
 
-    def __sub__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __sub__(self, other, /):
         return self.__class__(super().__sub__(other))
 
-    def __rsub__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __rsub__(self, other, /):
         return self.__class__(super().__rsub__(other))
 
-    def __mul__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __mul__(self, other, /):
         return self.__class__(super().__mul__(other))
 
-    def __rmul__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __rmul__(self, other, /):
         return self.__class__(super().__rmul__(other))
 
-    def __truediv__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __truediv__(self, other, /):
         return self.__class__(super().__truediv__(other))
 
-    def __rtruediv__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __rtruediv__(self, other, /):
         return self.__class__(super().__rtruediv__(other))
 
-    def __floordiv__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __floordiv__(self, other, /):
         return self.__class__(super().__floordiv__(other))
 
-    def __rfloordiv__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __rfloordiv__(self, other, /):
         return self.__class__(super().__rfloordiv__(other))
 
-    def __divmod__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __divmod__(self, other, /):
         quo, rem = super().__divmod__(other)
 
         return self.__class__(quo), self.__class__(rem)
 
-    def __rdivmod__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __rdivmod__(self, other, /):
         quo, rem = super().__rdivmod__(other)
         
         return self.__class__(quo), self.__class__(rem)
 
-    def __pow__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
+    def __pow__(self, other, /) -> ContinuedFraction:
         return self.__class__(super().__pow__(other))
 
-    def __rpow__(self, other: int | float | Fraction | ContinuedFraction, /) -> ContinuedFraction:
-        return self.__class__(Fraction(other).__pow__(self))
+    def __rpow__(self, other, /):
+        return self.__class__(Fraction(other).__rpow__(self))
 
     def __pos__(self) -> ContinuedFraction:
         return self.__class__(super().__pos__())
@@ -453,10 +355,10 @@ class ContinuedFraction(Fraction):
             # Case (4) of the algorithm
             neg_elms = (-(elms[0] + 1), 1, elms[1] - 1, *elms[2:])
 
-        obj = cls_.__new__(cls_, *convergent(len(neg_elms) - 1, *neg_elms).as_integer_ratio())
-        obj._elements = neg_elms
+        neg_self = cls_.__new__(cls_, *convergent(len(neg_elms) - 1, *neg_elms).as_integer_ratio())
+        neg_self._elements = neg_elms
 
-        return obj
+        return neg_self
 
     def __abs__(self) -> ContinuedFraction:
         return self.__class__(super().__abs__())
@@ -588,7 +490,7 @@ class ContinuedFraction(Fraction):
         """
         match self.order:
             case 0:
-                return
+                return None
             case 1:
                 return Decimal(self.elements[-1])
             case _:

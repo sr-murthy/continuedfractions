@@ -27,31 +27,6 @@ from continuedfractions.continuedfraction import (
 class TestContinuedFraction:
 
 	@pytest.mark.parametrize(
-	    "invalid_inputs",
-	    [
-	    	('not a number',),
-	    	('-1 2',),
-	    	(1, float("nan")),
-	    	('-1 + 2',),
-	    	(1, 0),
-	    	(-1, Fraction(0, 1)),
-	    	(None,),
-	    	([-1, '2'],),
-	    	(1, 2, 3,),
-	    	(b'bytes of number',),
-	    	([],),
-	    	((1, 2, 3,)),
-	    	(dict(a=1, b=2,)),
-	    	(-2, .3),
-	    	(Fraction(1, -2), Decimal(3)),
-	    	(Decimal('-1'), 2),
-	    ],
-	)
-	def test_ContinuedFraction__creation_and_initialisation__invalid_inputs__value_error_raised(self, invalid_inputs):
-		with pytest.raises(ValueError):
-			ContinuedFraction(*invalid_inputs)
-
-	@pytest.mark.parametrize(
 	    """valid_inputs,
 	       expected_fraction_obj,
 	       expected_elements,

@@ -158,7 +158,7 @@ Continued fractions can also be constructed from sequences of elements, using th
    >>> cf_negative_inverse.elements
    (-1, 1, 2, 4, 12, 4)
 
-The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{twos}}` where the tail contains 1000 twos.
+The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
 
 .. code:: python
 
@@ -168,7 +168,7 @@ The given sequence of elements can be arbitrarily long, subject to the limitatio
 
 The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` is described in the :ref:`documentation <exploring-continued-fractions.fast-algorithms>`.
 
-For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>`.
+For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>` or experimental computations.
 
 .. _creating-continued-fractions.rational-operations:
 
@@ -216,7 +216,7 @@ A few examples are given below of some key rational operations for the rational 
 
 As these examples illustrate, the continued fraction properties of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are fully respected by the rational operations.
 
-Rational operations for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can involve any instance of :py:class:`numbers.Rational`, including :py:class:`int` and :py:class:`fractions.Fraction`, and the result is always a new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance:
+Rational operations for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can involve any instance of :py:class:`numbers.Rational`, including :py:class:`int` and :py:class:`fractions.Fraction`, but results are only guaranteed for the latter two types, and in these cases the result is always a new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
 
 .. code:: python
 
@@ -226,7 +226,7 @@ Rational operations for :py:class:`~continuedfractions.continuedfraction.Continu
    >>> id(cf), id(-cf)
    (4603182592, 4599771072)
 
-There is no support for operations involving :py:class:`decimal.Decimal`:
+There is no support for binary operations involving :py:class:`decimal.Decimal`:
 
 .. code:: python
 

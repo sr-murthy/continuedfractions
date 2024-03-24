@@ -88,7 +88,7 @@ class ContinuedFraction(Fraction):
     # a ``tuple`` of ``int``s.
     _elements: tuple[int]
 
-    def __new__(cls, numerator=0, denominator=None, *, _normalize=True) -> ContinuedFraction:
+    def __new__(cls, *args: Any, **kwargs: Any) -> ContinuedFraction:
         """Creates, initialises and returns objects of this class.
 
         Arguments can be any which are valid for creating objects of the
@@ -109,24 +109,6 @@ class ContinuedFraction(Fraction):
           ``float('inf')``, or ``Decimal('infinity')``
         * a single numeric string (:py:class:`str`) that matches
           :py:data:`~fractions._RATIONAL_FORMAT`
-
-        Parameters
-        ----------
-        numerator : int, default=0
-            The numerator. Can be any :py:class:`numbers.Rational` instance,
-            including an :py:class:`int`, :py:class:`fractions.Fraction`, or
-            :py:class:`ContinuedFraction`.
-
-        denominator : int or None, default=None
-            The denominator. Can be any :py:class:`numbers.Rational` instance,
-            including an :py:class:`int`, :py:class:`fractions.Fraction`, or
-            :py:class:`ContinuedFraction`, or :py:data:`None`.
-
-        _normalize : bool, default=True
-            If ``True`` the fraction is reduced by the
-            `greatest common divisor <https://en.wikipedia.org/wiki/Greatest_common_divisor>`_.
-            This requires the ``denominator`` to be a (non-zero)
-            :py:class:`int`.
 
         Returns
         -------
@@ -172,7 +154,7 @@ class ContinuedFraction(Fraction):
         :py:class:`fractions.Fraction` superclass.
         """
         # Get the ``fractions.Fraction`` object from the superclass constructor
-        self = super().__new__(cls, numerator=numerator, denominator=denominator, _normalize=_normalize)    # type: ignore[call-overload]
+        self = super().__new__(cls, *args, **kwargs)
 
         # Call ``lib.continued_fraction_rational`` with the fraction to get
         # get the elements, and assign back to the instance

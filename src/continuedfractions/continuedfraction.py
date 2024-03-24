@@ -90,7 +90,7 @@ class ContinuedFraction(Fraction):
     _elements: tuple[int]
 
     def __new__(cls, *args: Any, **kwargs: Any) -> ContinuedFraction:
-        """Creates, initialises and returns objects of this class.
+        """Creates, initialises and returns instances of this class.
 
         Arguments can be any which are valid for creating objects of the
         :py:class:`fractions.Fraction` superclass.

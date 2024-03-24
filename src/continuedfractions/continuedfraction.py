@@ -93,9 +93,7 @@ class ContinuedFraction(Fraction):
         """Creates, initialises and returns objects of this class.
 
         Arguments can be any which are valid for creating objects of the
-        :py:class:`fractions.Fraction` superclass, which incidentally does
-        **not** specify typing for arguments of
-        :py:meth:`~fractions.Fraction.__new__`.
+        :py:class:`fractions.Fraction` superclass.
 
         For clarification, valid arguments can be one of the following:
 
@@ -109,7 +107,7 @@ class ContinuedFraction(Fraction):
           that is not a special value such as :py:data:`math.nan`,
           ``float('inf')``, or ``Decimal('infinity')``
         * a single numeric string (:py:class:`str`) that matches
-          :py:data:`~fractions._RATIONAL_FORMAT`
+          :py:data:`fractions._RATIONAL_FORMAT`
 
         Returns
         -------
@@ -513,7 +511,7 @@ class ContinuedFraction(Fraction):
         where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`,
         and :math:`q_1 = p_1`.
 
-        The property is cached (with :py:func:`functools.cache`), which makes
+        The method is cached (with :py:func:`functools.cache`), which makes
         calls after the initial call much faster.
 
         Parameters

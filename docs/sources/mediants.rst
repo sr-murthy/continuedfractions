@@ -33,7 +33,7 @@ From the assumptions above this can be proved easily from the following relation
 
 Mediants can give good rational approximations to real numbers.
 
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` method which can be used to calculate (simple) mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` objects. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object. A few examples are given below of how to calculate mediants.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` method which can be used to calculate (simple) mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` instances. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object. A few examples are given below of how to calculate mediants.
 
 .. code:: python
 
@@ -141,7 +141,7 @@ thus converging to :math:`\frac{c}{d}`:
 
    \lim_{k \to \infty} \frac{a + kc}{b + kd} = \lim_{k \to \infty} \frac{\frac{a}{k} + c}{\frac{b}{k} + d} = \frac{c}{d}
 
-We can see with the ``ContinuedFraction(1, 2)`` and ``ContinuedFraction(3, 5)`` objects used in the examples above, starting with the left-mediants:
+We can see with the ``ContinuedFraction(1, 2)`` and ``ContinuedFraction(3, 5)`` instances used in the examples above, starting with the left-mediants:
 
 .. code:: python
 

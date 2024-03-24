@@ -28,14 +28,14 @@ The **order** of a continued fraction is defined to be number of its elements **
    >>> cf.order
    3
 
-All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational. The integers represent the special case of zero-order continued fractions.
+All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational. The integers represent the special case of zero-order continued fractions.
 
 .. code:: python
 
    >> ContinuedFraction(3).order
    0
 
-The elements and orders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects are well behaved with respect to all rational operations supported by
+The elements and orders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are well behaved with respect to all rational operations supported by
 :py:class:`fractions.Fraction`:
 
 .. code:: python
@@ -274,7 +274,7 @@ The :math:`k`-th remainder :math:`R_k` of a simple continued fraction :math:`[a_
 
    R_k = a_k + \cfrac{1}{a_{k + 1} + \cfrac{1}{a_{k + 2} \ddots }}
 
-If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a rational number. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order.
+If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a rational number. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order.
 
 .. code:: python
 

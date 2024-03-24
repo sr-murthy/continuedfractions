@@ -337,9 +337,9 @@ def fraction_from_elements(*elements: int) -> Fraction:
     number represented by the simple continued fraction as given by the sequence
     of elements.
 
-    The element sequence must be given as positional arguments, which means
-    that if they are contained in an iterable then they must be unpacked
-    using the unpacking operator ``*``, as described in the examples below.
+    The elements must be given as positional arguments, which means that if
+    they are contained in an iterable then they must be unpacked using the
+    unpacking operator ``*``, as described in the examples below.
 
     Parameters
     ----------

@@ -158,11 +158,7 @@ Continued fractions can also be constructed from sequences of elements, using th
    >>> cf_negative_inverse.elements
    (-1, 1, 2, 4, 12, 4)
 
-<<<<<<< Updated upstream
 The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
-=======
-The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains 1000 twos.
->>>>>>> Stashed changes
 
 .. code:: python
 

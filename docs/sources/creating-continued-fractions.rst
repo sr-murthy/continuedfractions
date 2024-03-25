@@ -276,7 +276,7 @@ where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-o
 
 .. note::
 
-   For integers :math:`0 < b < a`, if :math:`\frac{a}{b}` (:math:`> 1`) has a simple continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n`, then :math:`0 < \frac{b}{a} < 1` has an "inverted" simple continued fraction :math:`[0; a_0, a_1, \ldots, a_n]` of order :math:`n + 1`. Both are unique if :math:`a_n > 1`.
+   For integers :math:`0 < b < a`, if :math:`\frac{a}{b}` (:math:`> 1`) has the simple continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n`, then :math:`0 < \frac{b}{a} < 1` has the "inverted" simple continued fraction :math:`[0; a_0, a_1, \ldots, a_n]` of order :math:`n + 1`. Both are unique if :math:`a_n > 1`.
 
    Also, if :math:`m` is any integer then :math:`m + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + m` is a symbolic expression for  :math:`[m;] + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + [m;] = [a_0 + m;a_1,\ldots, a_n]`, where :math:`[m;]` is the continued fraction of :math:`m`.
 

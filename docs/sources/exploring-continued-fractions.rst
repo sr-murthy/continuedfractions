@@ -6,7 +6,7 @@ Python objects of the :py:class:`~continuedfractions.continuedfraction.Continued
 
 .. note::
 
-   All references to continued fractions are to the simple forms. Support for non-simple, generalised continued fractions is planned to be included in a future release.
+   All references to continued fractions are to the simple forms. Support for non-simple, generalised continued fractions is planned to be included in future releases.
 
 .. _exploring-continued-fractions.elements-and-orders:
 
@@ -121,7 +121,7 @@ Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.con
 Even- and Odd-order Convergents
 -------------------------------
 
-It is known that even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase but at a decreasing rate, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease but at an increasing rate. This is captured by the formula:
+It is known that even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula:
 
 .. math::
 
@@ -185,7 +185,7 @@ Each convergent :math:`C_k` is said to represent a **rational approximation** :m
 
    \lim_{k \to \infty} C_k = \lim_{k \to \infty} \frac{p_k}{q_k} = x, \hskip{3em} k \geq 1
 
-Obviously, we can only handle finite continued fractions in Python, so the convergents produced by :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational.
+The current implementation of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can only represent finite (simple) continued fractions, which means that the convergents in its instances will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. Support for infinite, generalised continued fractions will be added in future releases.
 
 We know, for example, that the square root :math:`\sqrt{n}` of any non-square (positive) integer :math:`n` is irrational. This can be seen by writing :math:`n = a^2 + r`, for integers :math:`a, r > 0`, from which we have:
 
@@ -274,7 +274,7 @@ The :math:`k`-th remainder :math:`R_k` of a simple continued fraction :math:`[a_
 
    R_k = a_k + \cfrac{1}{a_{k + 1} + \cfrac{1}{a_{k + 2} \ddots }}
 
-If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a rational number. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order.
+If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a rational number. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order of the original.
 
 .. code:: python
 

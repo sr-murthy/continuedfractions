@@ -92,10 +92,8 @@ class ContinuedFraction(Fraction):
     def __new__(cls, *args: Any, **kwargs: Any) -> ContinuedFraction:
         """Creates, initialises and returns instances of this class.
 
-        Arguments can be any which are valid for creating instances of the
-        :py:class:`fractions.Fraction` superclass, which incidentally does
-        **not** specify typing for arguments of
-        :py:meth:`~fractions.Fraction.__new__`.
+        Arguments can be any which are valid for creating objects of the
+        :py:class:`fractions.Fraction` superclass.
 
         For clarification, valid arguments can be one of the following:
 
@@ -109,7 +107,7 @@ class ContinuedFraction(Fraction):
           that is not a special value such as :py:data:`math.nan`,
           ``float('inf')``, or ``Decimal('infinity')``
         * a single numeric string (:py:class:`str`) that matches
-          :py:data:`~fractions._RATIONAL_FORMAT`
+          :py:data:`fractions._RATIONAL_FORMAT`
 
         Returns
         -------
@@ -232,6 +230,11 @@ class ContinuedFraction(Fraction):
                 "elements after the 1st must be positive"
             )
 
+        # A step to ensure uniqueness of the simple form of the continued
+        # fraction - if the last element is ``1`` it can be "removed" by
+        # adding it to the second last element, thereby shortening the
+        # sequence by one element. The resulting simple continued
+        # fraction becomes unique for the number that is represented.
         if len(elements) > 1 and elements[-1] == 1:
             elements = elements[:-2] + (elements[-2] + 1,)
 
@@ -508,7 +511,7 @@ class ContinuedFraction(Fraction):
         where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`,
         and :math:`q_1 = p_1`.
 
-        The property is cached (with :py:func:`functools.cache`), which makes
+        The method is cached (with :py:func:`functools.cache`), which makes
         calls after the initial call much faster.
 
         Parameters

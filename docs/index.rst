@@ -11,6 +11,7 @@ The package is designed to:
    convergents, remainders, and other numerical properties etc.
 -  operate on them fully as rational numbers and instances of the standard library
    :py:class:`fractions.Fraction` class
+-  support approximations and experimental computations for irrational numbers
 
 You can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`.
 

@@ -35,7 +35,7 @@ The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) b
 
    All references to continued fractions are to the simple forms where the last element :math:`> 1`.
 
-   Support for non-simple, generalised continued fractions is planned to be included in a future release.
+   Support for non-simple, generalised continued fractions is planned to be included in future releases.
 
 We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail".
 
@@ -158,7 +158,7 @@ Continued fractions can also be constructed from sequences of elements, using th
    >>> cf_negative_inverse.elements
    (-1, 1, 2, 4, 12, 4)
 
-The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{twos}}` where the tail contains 1000 twos.
+The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
 
 .. code:: python
 
@@ -166,9 +166,9 @@ The given sequence of elements can be arbitrarily long, subject to the limitatio
    >>> ContinuedFraction.from_elements(1, *[2] * 1000).as_decimal()
    >>> Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462107038850387534327641572735013846230912297024924836055850737212644121497099935831413222665927505592755799950501152782060571470109559971605970274534596862014728517418640889198609552329230484308714321450839762603627995251407989687253396546331808829640620615258352395054745750287759961729835575220337531857011354374603408498847160386899970699004815030544027790316454247823068492936918621580578463111596668713013015618568987237235288509264861249497715421833420428568606014682472077143585487415565706967765372022648544701585880162075847492265722600208558446652145839889394437092659180031138824646815708263010059485870400318648034219489727829064104507263688131373985525611732204024509122770022693976417470272013752399982976782217338826145327739130951193355408762382855063050397471264684204993755563270525522588635793369056816493299408349652485293806821732869748392205646382061385126800425762739265218823406558704964782626829881122')
 
-The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` is described in the :ref:`documentation <exploring-continued-fractions.fast-algorithms>`.
+The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` is division-free and uses a well known recurrence relation for convergents of simple continued fractions, which is described :ref:`here <exploring-continued-fractions.fast-algorithms>`.
 
-For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>`.
+For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>` or experimental computations.
 
 .. _creating-continued-fractions.rational-operations:
 
@@ -216,7 +216,7 @@ A few examples are given below of some key rational operations for the rational 
 
 As these examples illustrate, the continued fraction properties of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are fully respected by the rational operations.
 
-Rational operations for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can involve any instance of :py:class:`numbers.Rational`, including :py:class:`int` and :py:class:`fractions.Fraction`, and the result is always a new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance:
+Rational operations for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can involve any instance of :py:class:`numbers.Rational`, including :py:class:`int` and :py:class:`fractions.Fraction`, but results are only guaranteed for the latter two types, and in these cases the result is always a new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
 
 .. code:: python
 
@@ -226,7 +226,7 @@ Rational operations for :py:class:`~continuedfractions.continuedfraction.Continu
    >>> id(cf), id(-cf)
    (4603182592, 4599771072)
 
-There is no support for operations involving :py:class:`decimal.Decimal`:
+There is no support for binary operations involving :py:class:`decimal.Decimal`:
 
 .. code:: python
 
@@ -259,7 +259,7 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the simple continued fraction o
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`a, b` coprime (no common divisors except :math:`1`), and :math:`[a_0;a_1,\ldots,a_n]` as the simple continued fraction of order :math:`n \geq 1` (and :math:`a_n > 1`). The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
+To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`b < a` and :math:`a, b` coprime (no common divisors except :math:`1`). Let :math:`[a_0;a_1,\ldots,a_n]` be the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}` (where :math:`a_n > 1`). The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
 
 .. math::
 
@@ -272,9 +272,11 @@ To understand the difference in the sequence of elements between a "positive" an
 
 where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. And :math:`\frac{1}{R_1}` is a symbolic expression for the rational number which is the (multiplicative) inverse of the rational number represented by :math:`R_1`.
 
+.. _creating-continued-fractions.basic-rules:
+
 .. note::
 
-   For integers :math:`0 < a < b`, if :math:`\frac{b}{a} > 1` has a simple continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n`, then :math:`0 < \frac{a}{b} < 1` has an "inverted" simple continued fraction :math:`[0; a_0, a_1, \ldots, a_n]` of order :math:`n + 1`. Both are unique if :math:`a_n > 1`.
+   For integers :math:`0 < b < a`, if :math:`\frac{a}{b}` (:math:`> 1`) has the simple continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n`, then :math:`0 < \frac{b}{a} < 1` has the "inverted" simple continued fraction :math:`[0; a_0, a_1, \ldots, a_n]` of order :math:`n + 1`. Both are unique if :math:`a_n > 1`.
 
    Also, if :math:`m` is any integer then :math:`m + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + m` is a symbolic expression for  :math:`[m;] + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + [m;] = [a_0 + m;a_1,\ldots, a_n]`, where :math:`[m;]` is the continued fraction of :math:`m`.
 
@@ -318,7 +320,11 @@ Thus, we can say that if :math:`[a_0; a_1,\ldots, a_n]` is the :math:`n`-order s
 
 This represents a **division-free** algorithm for computing the simple continued fraction of the negative of a positive rational number, and is faithfully implemented in the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__neg__` method.
 
-We can verify this with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, starting with non-trivial cases with small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
+.. note::
+
+   This algorithm can be combined with the :ref:`basic rule <creating-continued-fractions.basic-rules>` for the simple continued fraction of the multiplicative inverse of a given positive rational number to yield division-free algorithms for computing simple continued fractions for multiplying and dividing pairs of rational numbers, and also for taking exponents of rational numbers with integers. These will be implemented in :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` in future releases.
+
+We can illustrate the negation relations above with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances for small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
 
 .. code:: python
 
@@ -335,7 +341,7 @@ We can verify this with :py:class:`~continuedfractions.continuedfraction.Continu
    >>> assert ContinuedFraction.from_elements(-1, 2) == ContinuedFraction.from_elements(-1, 1, 1) == ContinuedFraction(-1, 2)
    # True
 
-and now fractions :math:`\frac{a}{b}` where :math:`|a| > |b|`:
+and also fractions :math:`\frac{a}{b}` where :math:`|a| > |b|`:
 
 .. code:: python
 

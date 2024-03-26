@@ -25,20 +25,22 @@ If you wish to contribute please first ensure you have `SSH access to GitHub <ht
 
 If not please follow the SSH instructions linked above.
 
-Once you’ve forked the repository, it is recommended to clone your fork over SSH:
+Once you’ve forked the repository, you can clone your fork, e.g. over SSH:
 
 .. code:: python
 
    git clone git+ssh://git@github.com/<fork user>/continuedfractions
+
+You can create additional remotes for the parent project to enable easier syncing, or you can simply create PRs directly against the parent project.
 
 .. _contributing.dependencies-and-pdm:
 
 Dependencies & PDM
 ==================
 
-As mentioned earlier, the package has no (production) dependencies, but groups of development requirements are specified in the
-``[tool.pdm.dev-dependencies]`` section of the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_. Of these only the ``'test'`` dependencies,
-including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_, are important.
+The package has no external (production) dependencies - some development dependencies are specified in the
+``[tool.pdm.dev-dependencies]`` section of the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_, but they are not mandatory. Of these, the most important are probably the ``'test'`` dependencies,
+including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_:
 
 .. code:: toml
 
@@ -141,4 +143,4 @@ The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently 
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 
-Pipelines for releases (and also documentation) will be added as part of a future release.
+Pipelines for releases will be added as part of a future release.

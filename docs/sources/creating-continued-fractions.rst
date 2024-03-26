@@ -50,7 +50,7 @@ Import the core class :py:class:`continuedfractions.continuedfraction.ContinuedF
 
    >>> from continuedfractions.continuedfraction import ContinuedFraction
 
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object for :math:`\frac{649}{200}` can be created as follows.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance for :math:`\frac{649}{200}` can be created as follows.
 
 .. code:: python
 
@@ -60,7 +60,7 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object f
 
 .. note::
 
-   The same object can also be constructed using ``ContinuedFraction('649/200')``, ``ContinuedFraction('3.245')``, ``ContinuedFraction(Fraction(649, 200))``, ``ContinuedFraction(Fraction(649), 200))``, ``ContinuedFraction(649, Fraction(200)))``, and ``ContinuedFraction(Decimal('3.245'))``, and even ``ContinuedFraction(ContinuedFraction(649, 200))`` .
+   The same instance can also be constructed using ``ContinuedFraction('649/200')``, ``ContinuedFraction('3.245')``, ``ContinuedFraction(Fraction(649, 200))``, ``ContinuedFraction(Fraction(649), 200))``, ``ContinuedFraction(649, Fraction(200)))``, and ``ContinuedFraction(Decimal('3.245'))``, and even ``ContinuedFraction(ContinuedFraction(649, 200))`` .
 
    But passing a numeric literal such as ``649/200`` will result in an evaluation of the decimal integer division using `binary floating point division <https://docs.python.org/3/tutorial/floatingpoint.html>`_, thus producing a fractional approximation, in this case, ``ContinuedFraction(3653545197704315, 1125899906842624)``.
 
@@ -114,9 +114,9 @@ Every finite continued fraction represents a rational number, as a finite contin
 
 There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, also, cannot be represented exactly as Python :py:class:`float` instances. To deal with this, the package processes rational numbers using the :py:class:`fractions.Fraction` class, which allows for exact continued fractions for any rational number, limited only by the available memory and/or capacity of the running environment.
 
-Continued fractions for irrational numbers given directly as :py:class:`float` instances end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` object to a :py:class:`fractions.Fraction` object. However, as described in the :ref:`next section <creating-continued-fractions.from-elements>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances with arbitrary sequences of elements, which can give much more accurate results.
+Continued fractions for irrational numbers given directly as :py:class:`float` instances end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` value to a :py:class:`fractions.Fraction` instance. However, as described in the :ref:`next section <creating-continued-fractions.from-elements>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances with arbitrary sequences of elements, which can give much more accurate results.
 
-An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` object:
+An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` value:
 
 .. code:: python
 
@@ -379,7 +379,7 @@ A few examples are given below.
 
 .. note::
 
-   As negation of numbers is a unary operation, the minus sign in a “negative” :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object must be attached to the fraction, before enclosure in parentheses.
+   As negation of numbers is a unary operation, the minus sign in a “negative” :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance must be attached to the fraction, before enclosure in parentheses.
 
 .. code:: python
 

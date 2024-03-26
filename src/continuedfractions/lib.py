@@ -166,9 +166,9 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int,
     A few examples are given below of how this function can be used.
 
     >>> list(continued_fraction_real(5000))
-    >>> [5000]
+    [5000]
     >>> list(continued_fraction_real(-5000.0))
-    >>> [-5000]
+    [-5000]
     >>> list(continued_fraction_real(2/5))
     [0, 2, 2, 1801439850948198]
     >>> list(continued_fraction_real('2/5'))

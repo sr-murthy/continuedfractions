@@ -259,7 +259,7 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the simple continued fraction o
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`b < a` and :math:`a, b` coprime (no common divisors except :math:`1`). Let :math:`[a_0;a_1,\ldots,a_n]` be the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}` (where :math:`a_n > 1`). The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
+To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`b < a` and :math:`a, b` coprime (no common divisors except :math:`1`). Let :math:`[a_0;a_1,\ldots,a_n]` be the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}`, where we can assume:math:`a_n > 1`. The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
 
 .. math::
 
@@ -270,7 +270,7 @@ To understand the difference in the sequence of elements between a "positive" an
                &= [a_0 = q; a_1, \ldots, a_n]
    \end{align}
 
-where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. And :math:`\frac{1}{R_1}` is a symbolic expression for the rational number which is the (multiplicative) inverse of the rational number represented by :math:`R_1`.
+where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. If :math:`v = 1` then :math:`R_1 = [b;]` and :math:`[q; b]` is the simple continued fraction of :math:`\frac{a}{b}`. However, if :math:`v > 1` then :math:`R_1` is defined and :math:`\frac{1}{R_1}` is a symbolic expression for the rational number which is the (multiplicative) inverse of the rational number represented by :math:`R_1`.
 
 .. _creating-continued-fractions.basic-rules:
 

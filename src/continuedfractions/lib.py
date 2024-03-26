@@ -147,19 +147,18 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int,
     environment.
 
     Invalid values will generate an error in either the
-    :py:class:`fractions.Fraction` or :py:class:`decimal.Decimal` classes,
-    and are not raised directly in the function itself.
+    :py:class:`fractions.Fraction` or :py:class:`decimal.Decimal` classes -
+    no errors are raised directly in the function itself.
 
     Parameters
     ----------
     x : int, float, str, decimal.Decimal
-        The real number to represent as a continued fraction.
+        The real number to represent as a simple continued fraction.
 
     Yields
     ------
     int
-        Elements of a unique "simple" continued fraction representation of
-        the given value.
+        Elements of a simple continued fraction of the given real number.
 
     Examples
     --------
@@ -307,10 +306,6 @@ def convergent(k: int, *elements: int) -> Fraction:
 def fraction_from_elements(*elements: int) -> Fraction:
     """Returns the rational number represented by a simple (finite) continued fraction from a sequence of its elements.
 
-    Returns a :py:class:`fractions.Fraction` instance representing the rational
-    number represented by the simple continued fraction as given by the sequence
-    of elements.
-
     The elements must be given as positional arguments, which means that if
     they are contained in an iterable then they must be unpacked using the
     unpacking operator ``*``, as described in the examples below.
@@ -318,13 +313,14 @@ def fraction_from_elements(*elements: int) -> Fraction:
     Parameters
     ----------
     *elements : `int`
-        A variable-length sequence of integer elements of a continued fraction.
+        A variable-length sequence of integer elements of a simple continued
+        fraction.
 
     Returns
     -------
     fractions.Fraction
-        A rational fraction constructed from the given sequence of elements of
-        a continued fraction.
+        A rational number constructed from a sequence of elements of a simple
+        continued fraction which represents the number.
 
     Raises
     ------

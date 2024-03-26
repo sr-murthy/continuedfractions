@@ -22,9 +22,7 @@ from typing import Generator
 # -- Internal libraries --
 
 
-# A copy of ``fractions._RATIONAL_FORMAT`` to get around mypy type checking
-# error caused by this name not being defined in the ``typeshed`` stub
-# for ``fractions``
+# A private copy of ``fractions._RATIONAL_FORMAT`` to support debugging
 _RATIONAL_FORMAT = re.compile(r"""
     \A\s*                                  # optional whitespace at the start,
     (?P<sign>[-+]?)                        # an optional sign, then

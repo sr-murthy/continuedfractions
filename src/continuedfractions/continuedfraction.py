@@ -9,6 +9,7 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+import decimal
 import functools
 import statistics
 import sys

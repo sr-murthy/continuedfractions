@@ -9,6 +9,7 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+import decimal
 import functools
 import statistics
 import sys
@@ -152,7 +153,7 @@ class ContinuedFraction(Fraction):
         Invalid arguments will raise errors in the
         :py:class:`fractions.Fraction` superclass.
         """
-        # Get the ``fractions.Fraction`` object from the superclass constructor
+        # Get the ``fractions.Fraction`` instance from the superclass constructor
         self = super().__new__(cls, *args, **kwargs)
 
         # Call ``lib.continued_fraction_rational`` with the fraction to get
@@ -163,7 +164,7 @@ class ContinuedFraction(Fraction):
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """Returns a :py:class:`ContinuedFraction` object from a sequence of (integer) elements of a (finite) simple continued fraction.
+        """Returns a :py:class:`ContinuedFraction` instance from a sequence of (integer) elements of a (finite) simple continued fraction.
 
         Invalid elements will trigger a :py:class:`ValueError`.
 
@@ -221,7 +222,7 @@ class ContinuedFraction(Fraction):
         ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
 
         """
-        # Create a new ``ContinuedFraction`` object from the given elements
+        # Create a new ``ContinuedFraction`` instance from the given elements
         # and initialise with elements only - no need to initialise via
         # ``__init__``
         if any(not isinstance(elem, int) or (elem <= 0 and i > 0) for i, elem in enumerate(elements)):
@@ -239,7 +240,7 @@ class ContinuedFraction(Fraction):
             elements = elements[:-2] + (elements[-2] + 1,)
 
         # Call the superclass constructor with the ``fractions.Fraction``
-        # object returned by ``lib.fraction_from_elements`` - this will
+        # instance returned by ``lib.fraction_from_elements`` - this will
         # be the highest-order convergent of the simple continued
         # fraction represented by the given sequence of elements
         self = super().__new__(cls, fraction_from_elements(*elements))
@@ -366,7 +367,7 @@ class ContinuedFraction(Fraction):
         >>> math.pi
         3.141592653589793
 
-        Now construct a :py:class:`ContinuedFraction` object from it, and check the 
+        Now construct a :py:class:`ContinuedFraction` instance from it, and check the 
         :py:class:`float` value.
 
         >>> cf = ContinuedFraction(math.pi)
@@ -394,7 +395,7 @@ class ContinuedFraction(Fraction):
         >>> math.pi
         3.141592653589793
 
-        Now construct a :py:class:`ContinuedFraction` object from it, and check the 
+        Now construct a :py:class:`ContinuedFraction` instance from it, and check the 
         :py:class:`float` value.
 
         >>> cf = ContinuedFraction(math.pi)
@@ -493,7 +494,7 @@ class ContinuedFraction(Fraction):
 
            C_k = a_0 + \\cfrac{1}{a_1 + \\cfrac{1}{a_2 \\ddots \\cfrac{1}{a_{k-1} + \\cfrac{1}{a_k}}}}
 
-        The result is a :py:class:`fractions.Fraction` object.
+        The result is a :py:class:`fractions.Fraction` instance.
         
         The integer :math:`k` is called the order of the convergent, and if 
         :math:`[a_0;a_1,a_2,\\ldots]` is finite of order :math:`n` then it has
@@ -548,7 +549,7 @@ class ContinuedFraction(Fraction):
         """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
-        :py:class:`ContinuedFraction` object.
+        :py:class:`ContinuedFraction` instance.
 
         The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
@@ -572,7 +573,7 @@ class ContinuedFraction(Fraction):
         """:py:class:`types.MappingProxyType`: An immutable dict of all even-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
-        :py:class:`ContinuedFraction` object.
+        :py:class:`ContinuedFraction` instance.
 
         The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
@@ -593,7 +594,7 @@ class ContinuedFraction(Fraction):
         """:py:class:`types.MappingProxyType`: An immutable dict of all odd-order convergents of the continued fraction, keyed by order.
 
         Each convergent is indexed by its order and is also a
-        :py:class:`ContinuedFraction` object.
+        :py:class:`ContinuedFraction` instance.
 
         The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
@@ -657,7 +658,7 @@ class ContinuedFraction(Fraction):
         """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-th remainders of the continued fraction, keyed by order.
 
         Each remainder is indexed by its order and is also a
-        :py:class:`ContinuedFraction` object.
+        :py:class:`ContinuedFraction` instance.
 
         The property is cached (with :py:func:`functools.lru_cache`), which makes
         calls after the initial call much faster.
@@ -729,7 +730,7 @@ class ContinuedFraction(Fraction):
         -------
         ContinuedFraction
             The :math:`k`-th left-mediant of the original fraction and the second
-            fraction, as a :py:class:`ContinuedFraction` object.
+            fraction, as a :py:class:`ContinuedFraction` instance.
 
         Examples
         --------
@@ -805,7 +806,7 @@ class ContinuedFraction(Fraction):
         -------
         ContinuedFraction
             The :math:`k`-th right-mediant of the original fraction and the second
-            fraction, as a :py:class:`ContinuedFraction` object.
+            fraction, as a :py:class:`ContinuedFraction` instance.
 
         Examples
         --------
@@ -833,5 +834,8 @@ if __name__ == "__main__":      # pragma: no cover
     #
     #     python -m doctest -v src/continuedfractions/continuedfraction.py
     #
+    # NOTE: the doctest examples using where `float` or ``decimal.Decimal``
+            # values assume a context precision of 28 digits
+    decimal.getcontext().prec = 28
     import doctest
     doctest.testmod()

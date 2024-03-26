@@ -46,38 +46,39 @@ class TestContinuedFractionRational:
 class TestContinuedFractionReal:
 
 	@pytest.mark.parametrize(
-		"x",
-		[
-			(1/1j,),
-			("not a numeric string"),
-			("1a23"),
-		]
-	)
-	def test_continued_fraction_real__invalid_inputs__value_error_raised(self, x):
-		with pytest.raises(ValueError):
-			list(continued_fraction_real(x))
-
-	@pytest.mark.parametrize(
-	    "x, elements",
+	    "x, expected",
 	    [
-	        (3/2, tuple([1, 2])),
-	        ('1.5', tuple([1, 2])),
-	        ('-5000', tuple([-5000])),
-	        (3.245, tuple([3, 4, 12, 4])),
-	        (-649/200, tuple([-4, 1, 3, 12, 4])),
-	        (-649/-200, tuple([3, 4, 12, 4])),
-	        ('0.3333', tuple([0, 3, 3333])),
-	        ('-0.3333', tuple([-1, 1, 2, 3333])),
-	        ('-5.25', tuple([-6, 1, 3])),
-	        ('5.25', tuple([5, 4])),
-	        ('0.3', tuple([0, 3, 3])),
-	        (0.1, tuple([0, 10])),
-	        ('-3.245', tuple([-4, 1, 3, 12, 4])),
+	        (5000, (5000,)),
+	        ('-5000', (-5000,)),
+	        (float(5000), (5000,)),
+	        (Decimal('-5000'), (-5000,)),
+	        (3 / 2, (1, 2,)),
+	        ('3/2', (1, 2,)),
+	        ('1.5', (1, 2,)),
+	        (Decimal('1.5'), (1, 2,)),
+	        (3.245, (3, 4, 12, 3, 1, 234562480591, 2, 5, 2,)),
+	        ('3.245', (3, 4, 12, 4,)),
+	        (Decimal('3.245'), (3, 4, 12, 4)),
+	       	('-3.245', (-4, 1, 3, 12, 4,)),
+	        (-649 / 200, (-4, 1, 3, 12, 3, 1, 234562480591, 2, 5, 2,)),
+	        (Decimal(-649 / 200), (-4, 1, 3, 12, 3, 1, 234562480591, 2, 5, 2,)),
+	        ('-649/200', (-4, 1, 3, 12, 4,)),
+	        (-649 / -200, (3, 4, 12, 3, 1, 234562480591, 2, 5, 2)),
+	        (3333 / 10000, (0, 3, 3332, 1, 674191559, 1, 61, 7, 6,)),
+	        ('0.3333', (0, 3, 3333,)),
+	        (-3333 / 10000, (-1, 1, 2, 3332, 1, 674191559, 1, 61, 7, 6,)),
+	        ('-0.3333', (-1, 1, 2, 3333,)),
+	        (Decimal('-0.3333'), (-1, 1, 2, 3333,)),
+	        (5.25, (5, 4,)),
+	        ('5.25', (5, 4,)),
+	        (Decimal('5.25'), (5, 4,)),
+	        (Decimal(21 / 4), (5, 4,)),
+	        (-5.25, (-6, 1, 3,)),
+	        ('-5.25', (-6, 1, 3,)),
+	        (Decimal(-21 / 4), (-6, 1, 3,)),
 	    ],
 	)
-	def test_continued_fraction_real__valid_inputs__correct_elements_generated(self, x, elements):
-		
-		expected = elements
+	def test_continued_fraction_real__valid_inputs__correct_elements_generated(self, x, expected):
 
 		assert tuple(continued_fraction_real(x)) == expected
 

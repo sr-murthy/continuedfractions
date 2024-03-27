@@ -236,8 +236,9 @@ def convergent(k: int, *elements: int) -> Fraction:
 
     This function is a faithful implementation of this algorithm.
 
-    A ``ValueError`` is raised if ``k`` is not a non-negative integer less
-    than the number of elements, or if any of the elements are not integers.
+    A :py:class:`ValueError` is raised if :math:`k` is not an integer or is an
+    integer greater than the number of elements, or if any of the elements are
+    not integers.
 
     Parameters
     ----------
@@ -258,8 +259,8 @@ def convergent(k: int, *elements: int) -> Fraction:
     Raises
     ------
     ValueError
-        If ``k`` is not a non-negative integer less than the number of elements,
-        or if any of the elements are not integers.
+        If :math:`k` is not a non-negative integer less than the number of
+        elements, or if any of the elements are not integers.
 
     Examples
     --------

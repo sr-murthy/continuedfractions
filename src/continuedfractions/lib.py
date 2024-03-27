@@ -3,7 +3,9 @@ __all__ = [
     'continued_fraction_rational',
     'convergent',
     'fraction_from_elements',
+    'left_mediant',
     'mediant',
+    'right_mediant',
 ]
 
 
@@ -11,6 +13,7 @@ __all__ = [
 
 # -- Standard libraries --
 import decimal
+import functools
 import re
 
 from decimal import Decimal
@@ -290,13 +293,13 @@ def convergent(k: int, *elements: int) -> Fraction:
     if k == 0:
         return Fraction(a, b)
 
-    c, d = elements[1] * elements[0] + 1, elements[1]
+    c, d = (elements[1] * a) + b, elements[1]
 
     if k == 1:
         return Fraction(c, d)
 
     for e in elements[2:k + 1]:
-        p, q = e * c + a, e * d + b
+        p, q = (e * c) + a, (e * d) + b
         a, b = c, d
         c, d = p, q
 
@@ -437,6 +440,14 @@ def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> F
         return Fraction(k * a + c, k * b + d)
 
     return Fraction(a + k * c, b + k * d)
+
+
+#: A :py:func:`functools.partial` binding of :py:func:`mediant` for left-mediants.
+left_mediant = functools.partial(mediant, dir="left")
+
+
+#: A :py:func:`functools.partial` binding of :py:func:`mediant` for right-mediants.
+right_mediant = functools.partial(mediant, dir="right")
 
 
 if __name__ == "__main__":      # pragma: no cover

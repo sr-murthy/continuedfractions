@@ -108,8 +108,9 @@ class ContinuedFraction(Fraction):
         * a single :py:class:`float` or :py:class:`decimal.Decimal` value
           that is not a special value such as :py:data:`math.nan`,
           ``float('inf')``, or ``Decimal('infinity')``
-        * a single numeric string (:py:class:`str`) that matches
-          :py:data:`fractions._RATIONAL_FORMAT`
+        * a single numeric valid string (:py:class:`str`) - validity is
+          determined in the superclass by the
+          :py:data:`fractions._RATIONAL_FORMAT` test
 
         Returns
         -------

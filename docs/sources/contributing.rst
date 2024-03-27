@@ -94,7 +94,7 @@ The `Makefile <Makefile>`_ defines three main targets: ``lint`` for Ruff linting
    make doctests
    make unittests
 
-Linting warnings should be addressed first. The doctests serve as acceptance tests, and should be run first, before the unit tests.
+Linting warnings should be addressed first. The doctests serve as acceptance tests, and are best run after the unit tests.
 
 .. _contributing.documentation:
 

@@ -34,13 +34,17 @@ Each is summarised below. Or you can go straight to the :doc:`API reference <api
 ``continuedfractions.lib``
 ++++++++++++++++++++++++++
 
-This is a library of standalone functions, which are summarised below.
+This is a library of standalone functions, the most important of which are summarised below.
 
 -  :py:meth:`~continuedfractions.lib.continued_fraction_rational` - generates the (ordered) sequence of elements (coefficients) of the unique simple continued fraction of a given rational number, given as a :py:class:`fractions.Fraction` instance
 -  :py:meth:`~continuedfractions.lib.continued_fraction_real` - generates the sequence of elements of a simple continued fraction of a real number, given as a single :py:class:`int`, :py:class:`float`, :py:class:`str`, or :py:class:`decimal.Decimal` value; the results for :py:class:`float` inputs may be approximate and not necessarily unique
 - :py:meth:`~continuedfractions.lib.fraction_from_elements` - returns a :py:class:`fractions.Fraction` instance of the rational number represented by a simple continued fraction with the given sequence of elements
 -  :py:meth:`~continuedfractions.lib.convergent` - returns the :math:`k`-th convergent (for a positive integer :math:`k`) from a sequence of elements of a (finite) simple continued fraction; the convergent is returned as a :py:class:`fractions.Fraction` instance
 -  :py:meth:`~continuedfractions.lib.mediant` - returns the :math:`k`-th left or right mediant of two rational numbers, given as :py:class:`fractions.Fraction` values; the mediant is returned as a :py:class:`fractions.Fraction` instance
+
+.. note::
+
+   There are also two "wrapper" functions for computing left- and right-mediants - :py:func:`~continuedfractions.lib.left_mediant` and :py:func:`~continuedfractions.lib.right_mediant` - but these just call :py:func:`~continuedfractions.lib.mediant`.
 
 .. _getting-started.package-structure.continuedfractions_continuedfraction:
 

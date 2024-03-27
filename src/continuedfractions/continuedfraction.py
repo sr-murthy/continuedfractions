@@ -29,7 +29,8 @@ from continuedfractions.lib import (
     continued_fraction_rational,
     convergent,
     fraction_from_elements,
-    mediant,
+    left_mediant,
+    right_mediant,
 )
 
 
@@ -750,7 +751,7 @@ class ContinuedFraction(Fraction):
         >>> assert c1.left_mediant(c2, k=3) < c1.right_mediant(c2, k=3)
         >>> assert c1.left_mediant(c2, k=100) < c1.right_mediant(c2, k=100)
         """
-        return self.__class__(mediant(self, other, dir="left", k=k))
+        return self.__class__(left_mediant(self, other, dir="left", k=k))
 
     @functools.cache
     def right_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
@@ -826,7 +827,7 @@ class ContinuedFraction(Fraction):
         >>> assert c1.left_mediant(c2, k=3) < c1.right_mediant(c2, k=3)
         >>> assert c1.left_mediant(c2, k=100) < c1.right_mediant(c2, k=100)
         """
-        return self.__class__(mediant(self, other, dir="right", k=k))
+        return self.__class__(right_mediant(self, other, dir="right", k=k))
 
 
 if __name__ == "__main__":      # pragma: no cover

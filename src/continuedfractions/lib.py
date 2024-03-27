@@ -374,7 +374,7 @@ def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> F
    
     .. math::
 
-       \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \hskip{3em} k \\geq 1
+       \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \\hskip{3em} k \\geq 1
 
     where equality holds for :math:`k = 1`. If we let :math:`k \\to \\infty`
     then the mediants converge to opposite limits:

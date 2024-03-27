@@ -236,8 +236,9 @@ def convergent(k: int, *elements: int) -> Fraction:
 
     This function is a faithful implementation of this algorithm.
 
-    A ``ValueError`` is raised if ``k`` is not a non-negative integer less
-    than the number of elements, or if any of the elements are not integers.
+    A :py:class:`ValueError` is raised if :math:`k` is not an integer or is an
+    integer greater than the number of elements, or if any of the elements are
+    not integers.
 
     Parameters
     ----------
@@ -258,8 +259,8 @@ def convergent(k: int, *elements: int) -> Fraction:
     Raises
     ------
     ValueError
-        If ``k`` is not a non-negative integer less than the number of elements,
-        or if any of the elements are not integers.
+        If :math:`k` is not a non-negative integer less than the number of
+        elements, or if any of the elements are not integers.
 
     Examples
     --------
@@ -373,7 +374,7 @@ def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> F
    
     .. math::
 
-       \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \hskip{3em} k \\geq 1
+       \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \\hskip{3em} k \\geq 1
 
     where equality holds for :math:`k = 1`. If we let :math:`k \\to \\infty`
     then the mediants converge to opposite limits:

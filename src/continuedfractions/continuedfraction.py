@@ -108,8 +108,9 @@ class ContinuedFraction(Fraction):
         * a single :py:class:`float` or :py:class:`decimal.Decimal` value
           that is not a special value such as :py:data:`math.nan`,
           ``float('inf')``, or ``Decimal('infinity')``
-        * a single numeric string (:py:class:`str`) that matches
-          :py:data:`fractions._RATIONAL_FORMAT`
+        * a single numeric valid string (:py:class:`str`) - validity is
+          determined in the superclass by the
+          :py:data:`fractions._RATIONAL_FORMAT` test
 
         Returns
         -------
@@ -751,7 +752,7 @@ class ContinuedFraction(Fraction):
         >>> assert c1.left_mediant(c2, k=3) < c1.right_mediant(c2, k=3)
         >>> assert c1.left_mediant(c2, k=100) < c1.right_mediant(c2, k=100)
         """
-        return self.__class__(left_mediant(self, other, dir="left", k=k))
+        return self.__class__(left_mediant(self, other, k=k))
 
     @functools.cache
     def right_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
@@ -827,7 +828,7 @@ class ContinuedFraction(Fraction):
         >>> assert c1.left_mediant(c2, k=3) < c1.right_mediant(c2, k=3)
         >>> assert c1.left_mediant(c2, k=100) < c1.right_mediant(c2, k=100)
         """
-        return self.__class__(right_mediant(self, other, dir="right", k=k))
+        return self.__class__(right_mediant(self, other, k=k))
 
 
 if __name__ == "__main__":      # pragma: no cover

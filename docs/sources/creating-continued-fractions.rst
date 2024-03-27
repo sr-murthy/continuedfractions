@@ -191,6 +191,8 @@ A few examples are given below of some key rational operations for the rational 
    >>> cf.elements
    (3, 4, 12, 4)
    >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
+   >>> cf_inverse
+   ContinuedFraction(200, 649)
    >>> cf_inverse.elements
    (0, 3, 4, 12, 4)
    >>> assert cf_inverse == 1/cf
@@ -208,7 +210,7 @@ A few examples are given below of some key rational operations for the rational 
    >>> assert cf + (-cf) == cf_inverse + cf_negative_inverse == 0
    # True
    >>> cf ** 2
-   ContinuedFraction(9, 4)
+   ContinuedFraction(421201, 40000)
    >>> (cf ** 2).elements
    (10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2)
    >>> assert ContinuedFraction.from_elements(10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2) == cf ** 2
@@ -259,7 +261,7 @@ Compare this with :math:`[4; 2, 6, 7]`, which is the simple continued fraction o
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`b < a` and :math:`a, b` coprime (no common divisors except :math:`1`). Let :math:`[a_0;a_1,\ldots,a_n]` be the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}`, where we can assume:math:`a_n > 1`. The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
+To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`b < a` and :math:`a, b` coprime (no common divisors except :math:`1`). Let :math:`[a_0;a_1,\ldots,a_n]` be the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}`, where we can assume :math:`a_n > 1`. The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
 
 .. math::
 

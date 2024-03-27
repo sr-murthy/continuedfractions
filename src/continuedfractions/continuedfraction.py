@@ -248,7 +248,7 @@ class ContinuedFraction(Fraction):
         # Assign the given elements back to the instance - note that we
         # have avoided going through the division algorithm in
         # ``lib.continued_fraction_rational``
-        self._elements = elements   # type: ignore[assignment]
+        self._elements = elements
     
         return self
 

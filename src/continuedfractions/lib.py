@@ -290,13 +290,13 @@ def convergent(k: int, *elements: int) -> Fraction:
     if k == 0:
         return Fraction(a, b)
 
-    c, d = elements[1] * elements[0] + 1, elements[1]
+    c, d = (elements[1] * a) + b, elements[1]
 
     if k == 1:
         return Fraction(c, d)
 
     for e in elements[2:k + 1]:
-        p, q = e * c + a, e * d + b
+        p, q = (e * c) + a, (e * d) + b
         a, b = c, d
         c, d = p, q
 

@@ -9,8 +9,6 @@ __all__ = [
 import functools
 import sys
 
-from fractions import Fraction
-
 from pathlib import Path
 from typing import Generator
 

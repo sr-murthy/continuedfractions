@@ -17,3 +17,4 @@ API Reference
 
    continuedfractions/lib
    continuedfractions/continuedfraction
+   continuedfractions/rational-orderings

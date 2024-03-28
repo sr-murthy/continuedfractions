@@ -23,8 +23,29 @@ from continuedfractions.continuedfraction import ContinuedFraction
 def _farey_sequence(n: int) -> Generator[ContinuedFraction, None, None]:
 	"""Generates the sequence of rational numbers forming the Farey sequence of order :math:`n`.
 
-	The Farey sequence :math:`F_n` of order :math:`n` is an (ordered) sequence
-	of rational numbers which is defined recursively as follows:
+	Parameters
+	----------
+	n : int:
+		The order of the Farey sequence.
+
+	Yields
+	-------
+	ContinuedFraction
+		A sequence of ``ContinuedFraction`` instances representing the elements
+		of the Farey sequence of order :math:`n`.
+	"""
+
+
+@functools.cache
+def farey_sequence(n: int) -> tuple[ContinuedFraction]:
+	"""Returns a tuple of rational numbers forming the Farey sequence of order :math:`n`.
+
+	This is a cached wrapper for :py:func:`~continuedfractions.rational_orderings._farey_sequence`
+	to provide a return value for any given value of :math:`n`.
+
+	The `Farey sequence <https://en.wikipedia.org/wiki/Farey_sequence>`_
+	:math:`F_n` of order :math:`n` is an (ordered) sequence of rational numbers
+	which is defined recursively as follows:
 
 	.. math::
 
@@ -68,19 +89,10 @@ def _farey_sequence(n: int) -> Generator[ContinuedFraction, None, None]:
 	n : int:
 		The order of the Farey sequence.
 
-	Yields
+	Returns
 	-------
-	ContinuedFraction
-		A sequence of ``ContinuedFraction`` instances representing the elements
-		of the Farey sequence of order :math:`n`.
+	tuple[ContinuedFraction]
+		A :py:class:`tuple` of ``ContinuedFraction`` instances representing the
+		elements of the Farey sequence of order :math:`n`.
 	"""
-
-
-@functools.cache
-def farey_sequence(n: int) -> tuple[ContinuedFraction]:
-	"""
-	A cached wrapper for :py:func:`~continuedfractions.rational_orderings._farey_sequence`
-	to provide a return value for any given value of :math:`n`.
-	"""
-	#return tuple(_farey_sequence(n))
 	raise NotImplementedError

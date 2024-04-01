@@ -101,7 +101,7 @@ jobs:
       if: matrix.install-via == 'script'
       run: |
         curl -sSLO https://pdm-project.org/install-pdm.py
-        curl -sSL https://pdm-project.org/install-pdm.py.sha256 | shasum -a 256 -c -
+        curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py.sha256 | shasum -a 256 -c -
         python3 install-pdm.py
         pdm info -v
         pdm venv list -v

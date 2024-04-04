@@ -107,10 +107,10 @@ extensions = ['jupyter_sphinx',
 #     For more on all available autodoc defaults see
 #         https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#confval-autodoc_default_options
 autodoc_default_options = {
-    'exclude-members': '__weakref__,__slots__,__match_args__',
+    'exclude-members': '__call__,__weakref__,__slots__,__match_args__',
     'member-order': 'bysource',
     'private-members': False,
-    'special-members': '__call__, __eq__, __init__, __new__'
+    'special-members': '__eq__, __init__, __new__'
 }
 
 # Sphinx autodoc autosummary settings

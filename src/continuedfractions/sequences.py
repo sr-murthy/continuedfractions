@@ -11,12 +11,12 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
-import functools
+
 import sys
 
 from itertools import starmap
 from pathlib import Path
-from typing import Callable, Generator, Literal, TypeAlias
+from typing import Generator, Literal, TypeAlias
 
 # -- 3rd party libraries --
 
@@ -112,7 +112,7 @@ class KSRMTree:
 
     _roots: tuple[KSRMNode, KSRMNode]
 
-    _branches: tuple[KSRMBranch]
+    _branches: tuple[KSRMBranch]    # noqa: F821
 
     def __new__(cls) -> KSRMTree:
         """Class constructor.
@@ -149,7 +149,7 @@ class KSRMTree:
         return self._roots
 
     @property
-    def branches(self) -> tuple[KSRMBranch]:
+    def branches(self) -> tuple[KSRMBranch]:    # noqa: F821
         """:py:class:`tuple`: The tuple of three branch generating functions of the KSRM tree.
 
         There are three branch generating functions, given by the mappings:
@@ -206,11 +206,11 @@ class KSRMTree:
     def _backtrack(
         self,
         n: int,
-        visited: list[tuple[KSRMNode, KSRMBranch]],
+        visited: list[tuple[KSRMNode, KSRMBranch]],     # noqa: F821
         /,
         *,
         node_bound: int = None
-    ) -> tuple[KSRMNode, KSRMBranch, int, KSRMBranch]:
+    ) -> tuple[KSRMNode, KSRMBranch, int, KSRMBranch]:  # noqa: F821
         """Backtracks on the KSRM coprime pairs tree.
 
         A private function that backtracks on the KSRM coprime pairs tree: the

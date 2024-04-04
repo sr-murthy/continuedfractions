@@ -329,13 +329,10 @@ class KSRMTree:
         # last branch, return the current node, generating branch, index
         # and the generating branch of the last visited node before the current
         # node.
-        while cur_index > 0:
+        while cur_index > 0 and (cur_node[0] >= node_bound or last_branch == self.branches[-1]):
             cur_index -= 1
             cur_node, cur_branch = visited[cur_index]
             last_branch = visited[cur_index + 1][1]
-
-            if cur_node[0] < node_bound and last_branch != self.branches[-1]:
-                return cur_node, cur_branch, cur_index, last_branch        
 
         # Return the current node, generating branch, index and the generating
         # branch of the last visited node before the current node.
@@ -622,13 +619,20 @@ def farey_sequence(n: int, /) -> Generator[ContinuedFraction, None, None]:
     :math:`b \\leq n` it contains exactly :math:`\\phi(b)`` fractions of the
     form :math:`\\frac{a}{b}` where :math:`(a, b) = 1`.
 
-    This means that the length :math:`LF(n)` of :math:`F_n` is given by:
+    This means that the length :math:`|F_n|` of :math:`F_n` is given by:
 
     .. math::
 
-       LF(n) = 1 + \\phi(1) + \\phi(2) + \\cdots + \\phi(n) = 1 + \\sum_{k = 1}^n \\phi(k)
+       |F_n| = 1 + \\phi(1) + \\phi(2) + \\cdots + \\phi(n) = 1 + \\sum_{k = 1}^n \\phi(k)
 
     where :math:`\\phi(k)` is `Euler's totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_.
+
+    As :math:`F_n` includes all elements of :math:`F_k` for :math:`k < n` the
+    length :math:`|F_n|` can also be written as:
+
+    .. math::
+
+       |F_n| = |F_{n - 1}| + \\phi(n)
 
     The first five Farey sequences are:
 

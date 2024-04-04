@@ -65,6 +65,9 @@ class NamedCallableProxy:
 
         return str(self._callable)
 
+    def __eq__(self, other: NamedCallableProxy) -> bool:
+        return self._callable.__code__.co_code == other._callable.__code__.co_code
+
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self._callable(*args, **kwargs)
 

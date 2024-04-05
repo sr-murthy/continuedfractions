@@ -11,7 +11,7 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
-
+import math
 import sys
 
 from itertools import starmap
@@ -420,10 +420,15 @@ class KSRMTree:
         >>> list(tree.search_root(10, (3, 2)))
         [(3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2)]
         """
-        #import ipdb; ipdb.set_trace()
         # Input validation.
-        if not isinstance(n, int) or n <= 1:
-            raise ValueError("`n` must be a positive integer >= 2")
+        if not isinstance(n, int) or n <= 1 or not math.gcd(*root) == 1:
+            raise ValueError(
+                "`n` must be a positive integer >= 2, and `root` must be a "
+                "coprime pair (r, s) for integers r > s >= 1"
+            )
+
+        if n < root[0]:
+            return
 
         # A stack to store visited nodes and their generating branches
         visited = []
@@ -535,7 +540,6 @@ class KSRMTree:
         >>> list(tree.search(10))
         [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (10, 7), (9, 4), (6, 1), (8, 1), (10, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1)]
         """
-        #import ipdb; ipdb.set_trace()
         if not isinstance(n, int) or n < 1:
             raise ValueError("`n` must be a positive integer >= 1")
 
@@ -595,7 +599,7 @@ def coprime_pairs(n: int, /) -> Generator[tuple[int], None, None]:
 
 
 def farey_sequence(n: int, /) -> Generator[ContinuedFraction, None, None]:
-    """Generates the sequence of rational numbers forming the Farey sequence of order :math:`n`.
+    """Generates the (ordered) sequence of rational numbers forming the Farey sequence of order :math:`n`.
 
     The elements of the sequence are generated as
     :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
@@ -674,6 +678,9 @@ def farey_sequence(n: int, /) -> Generator[ContinuedFraction, None, None]:
     >>> list(farey_sequence(5))
     [ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1)]
     """
+    if not isinstance(n, int) or n < 1:
+        raise ValueError("`n` must be a positive integer >= 1")
+
     yield ContinuedFraction(0, 1)
 
     yield from sorted(

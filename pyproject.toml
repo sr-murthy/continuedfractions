@@ -128,6 +128,7 @@ test = [
     "pytest",
     "pytest-cov",
     "pytest-xdist",
+    "sympy",
 ]
 tox = [
 #    "tox",

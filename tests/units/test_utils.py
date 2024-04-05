@@ -49,6 +49,11 @@ class TestNamedCallableProxy:
 		# Compare the names
 		assert received._name == expected._name
 
+		# Assert the ``__repr__`` value - comparison with ``expected`` will
+		# not work as it is a different object in memory compared to
+		# ``received``
+		assert received.__repr__()
+
 		# Compare the outputs for ``__call__``
 		assert received(1) == expected(1) == 1
 		assert received(2) == expected(2) == 4

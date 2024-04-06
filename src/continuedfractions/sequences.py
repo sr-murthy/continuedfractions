@@ -27,9 +27,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.continuedfraction import ContinuedFraction
 
-#: Custom types for annotation in this library
-KSRMNode: TypeAlias = tuple[int, int]
-KSRMBranch: NamedCallableProxy
+KSRMNode: TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM coprime pairs tree
+KSRMBranch: NamedCallableProxy          #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
 class KSRMTree:
@@ -138,7 +137,7 @@ class KSRMTree:
         return self
 
     @property
-    def roots(self) -> Literal[(2, 1), (3, 1)]:
+    def roots(self) -> Literal[((2, 1), (3, 1))]:
         """:py:class:`tuple`: The tuple of roots of the KSRM tree, which are :math:`(2, 1)` and :math:`(3, 1)`.
 
         For more details see the following papers:
@@ -754,7 +753,7 @@ def farey_sequence(n: int, /) -> tuple[ContinuedFraction]:
         The order of the Farey sequence.
 
     Returns
-    ------
+    -------
     tuple
         A :py:class:`tuple` of ``ContinuedFraction`` instances representing the
         elements of the Farey sequence of order :math:`n`, generated in

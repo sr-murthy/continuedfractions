@@ -611,13 +611,17 @@ class KSRMTree:
         if n == 1 or not strict:
             yield 1, 1
 
-        if n > 1:
-            yield from self.search_root(n, self.roots[0], strict=strict)
+        if n > 1 and strict:
+            yield from self.search_root(n, self.roots[0], strict=True)
+        elif n == 2 and not strict:
+            yield from ((2, 1),)
+        elif n > 1 and not strict:
+            yield from self.search_root(n, self.roots[0])
 
-        if n > 2 and strict:
+        if n > 2 and n % 2 == 1 and strict:
             yield from self.search_root(n, self.roots[1], strict=True)
         elif n > 2 and n % 2 == 0 and not strict:
-            yield from self.search_root(n, self.roots[1])
+            yield from self.search_root(n - 1, self.roots[1])
         elif n > 2 and n % 2 == 1 and not strict:
             yield from self.search_root(n - 1, self.roots[1])
             yield from self.search_root(n, self.roots[1], strict=True)

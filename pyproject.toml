@@ -27,17 +27,25 @@ license = {file = "LICENSE"}
 
 dependencies = [
 ]
+
 readme = "README.md"
+
 keywords = [
+    "backtracking search",
     "computational number theory",
+    "coprime integers",
     "continued fractions",
+    "depth first search",
+    "farey sequence",
     "irrational numbers",
     "mediants",
     "number theory",
     "rational approximation",
     "rational numbers",
     "real numbers",
+    "tree search",
 ]
+
 classifiers = [
         "Environment :: Console",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",

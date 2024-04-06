@@ -11,6 +11,7 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+import functools
 import math
 import sys
 
@@ -63,10 +64,10 @@ class KSRMTree:
     the tree is the parent of all nodes that branch from it, but the nodes
     :math:`(2, 1)` and :math:`(3, 1)` are canonical.
 
-    This can be understood more concretely as a generative procedure for
-    pairs of (positive) coprime integers, namely: start separately from
-    the parents :math:`(2, 1)` and :math:`(3, 1)`, and apply the functions
-    given by the mappings below to each parent:
+    This can be understood more concretely as a generative procedure
+    (or algorithm) for pairs of (positive) coprime integers, namely: start
+    separately from the parents :math:`(2, 1)` and :math:`(3, 1)`, and apply
+    the functions given by the mappings below to each parent:
 
     .. math::
 
@@ -79,9 +80,14 @@ class KSRMTree:
     producing the "1st generation" of :math:`3 + 3 = 6` triplets. Repeat the
     same procedure ad infinitum for each generation.
 
+    .. note::
+
+       The tree starting at the root :math:`(3, 1)` can only produce odd pairs
+       of coprimes, under the maps described above.
+
     For each integer :math:`k \\geq 1` the :math:`k`-th generation (for both
     trees) will have a total of :math:`2 \\cdot 3^k` children, and the total
-    number of all members up to the :math:`k`-generation will be
+    number of all family members up to the :math:`k`-generation will be
     :math:`2(1 + 3 + 3^2 + \\ldots 3^k) = 3(3^k - 1)`.
 
     Given a positive integer :math:`n` we may ask how many coprime pairs
@@ -338,7 +344,7 @@ class KSRMTree:
         # branch of the last visited node before the current node.
         return cur_node, cur_branch, cur_index, last_branch
 
-    def search_root(self, n: int, root: KSRMNode, /) -> Generator[KSRMNode, None, None]:
+    def search_root(self, n: int, root: KSRMNode, /, *, strict: bool = False) -> Generator[KSRMNode, None, None]:
         """Backtracking depth-first branch-and-bound search (in pre-order, NLMR) of the KSRM coprime pairs tree from the given root node to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
 
         The given root node need not be the canonical roots, :math:`(2, 1)`,
@@ -346,6 +352,18 @@ class KSRMTree:
 
         It is required that :math:`n \\geq 2`, otherwise a
         :py:class:`ValueError` is raised.
+
+        There are two mutually exclusive modes:
+
+        #. **non-strict** (``strict=False``, the default): where any coprime pairs
+           :math:`(r, s)` satisfying :math:`1 \\leq s < r \\leq n` are
+           generated;
+        #. **strict** (``strict=True``): where only coprime pairs :math:`(r, s)`
+           satisfying the stricter inequality :math:`1 \\leq s < r = n` are
+           generated.
+
+        The strict mode is equivalent to generating all (positive) integers
+        coprime to :math:`n \\geq 1` for a given :math:`n`.
 
         The search implementation is an iterative version of a backtracking
         depth-first branch-and-bound search (DFS), in which nodes are traversed
@@ -385,6 +403,12 @@ class KSRMTree:
             canonical roots, :math:`(2, 1)`, :math:`(3, 1)`, but also any of
             their successor nodes.
 
+        strict : bool, default=False
+            The mode of generation of coprime pairs :math:`(r, s)`, with
+            :math:`1 \\leq s < r`: non-strict (the default), where
+            :math:`r \\leq n`, or strict, where the stricter condition
+            :math:`r = n` is applied.
+
         Raises
         ------
         ValueError
@@ -398,7 +422,8 @@ class KSRMTree:
 
         Examples
         --------
-        Searching from the root :math:`(2, 1)`:
+        Searching from the root :math:`(2, 1)` in (the default) non-strict
+        mode for :math:`n = 5`:
 
         >>> tree = KSRMTree()
         >>> list(tree.search_root(5, (2, 1)))
@@ -407,7 +432,7 @@ class KSRMTree:
         >>> list(tree.search_root(5, tree.roots[0]))
         [(2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1)]
 
-        Searching from the root :math:`(3, 1)`.
+        The same type of search from the root :math:`(3, 1)`:
 
         >>> list(tree.search_root(5, (3, 1)))
         [(3, 1), (5, 3), (5, 1)]
@@ -415,10 +440,15 @@ class KSRMTree:
         >>> list(tree.search_root(5, tree.roots[1]))
         [(3, 1), (5, 3), (5, 1)]
 
-        Searching from the node :math:`(3, 2)`:
+        Strict mode searching from the root :math:`(2, 1)` for :math:`n = 7`:
 
-        >>> list(tree.search_root(10, (3, 2)))
-        [(3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2)]
+        >>> list(tree.search_root(7, (2, 1), strict=True))
+        [(7, 6), (7, 2), (7, 4)]
+
+        The same type of search now from the root :math:`(3, 1)`:
+
+        >>> list(tree.search_root(7, (3, 1), strict=True))
+        [(7, 5), (7, 3), (7, 1)]
         """
         # Input validation.
         if not isinstance(n, int) or n <= 1 or not math.gcd(*root) == 1:
@@ -430,8 +460,13 @@ class KSRMTree:
         if n < root[0]:
             return
 
-        # A stack to store visited nodes and their generating branches
+        # A stack to store visited nodes and their generating branches.
         visited = []
+
+        # A counter to store the number of nodes searched (or visited) -
+        # useful for debugging and also for optimising the search
+        # implementation.
+        num_nodes_searched = 0
 
         # Start at the root, initialising variables for the current node
         # and generating branch to that of the root node, and also 
@@ -440,9 +475,12 @@ class KSRMTree:
         cur_node = root
         cur_branch = last_branch = None
         visited.append((cur_node, cur_branch))
+        num_nodes_searched += 1
 
-        # Generate the root.
-        yield cur_node
+        # Generate the root if either in non-strict mode, or in strict mode and
+        # the current node ``(r, s)`` satisfies ``r == n``.
+        if not strict or cur_node[0] == n:
+            yield cur_node
                     
         # The iterative backtracking depth-first branch-and-bound search
         # (pre-order, LNMR), with pruning of intermediate and failed nodes.
@@ -457,13 +495,18 @@ class KSRMTree:
             # generating branches.
             cur_node = cur_branch(*cur_node)
             visited.append((cur_node, cur_branch))
+            num_nodes_searched += 1
 
-            # If the node satisfies ``r <= n`` generate it, update the variable
+            # If the node satisfies ``r <= n`` and generate it if either in
+            # non-strict mode, or in strict mode and the current node
+            # ``(r, s)`` satisfies ``r == n``; then, update the variable
             # storing the generating branch of the successor node of the
             # current node, and set the current (next generating) branch to
             # branch #1, and continue the DFS.
             if cur_node[0] <= n:
-                yield cur_node
+                if not strict or (strict and cur_node[0] == n):
+                    yield cur_node
+
                 last_branch = cur_branch
                 cur_branch = self.branches[0]
                 continue
@@ -473,7 +516,7 @@ class KSRMTree:
                 # node index are also updated, as is the variable storing the
                 # generating branch of the successor node of the target/current
                 # node.
-                cur_node, cur_branch, cur_index, last_branch = self._backtrack(n, visited, node_bound=n)           
+                cur_node, cur_branch, cur_index, last_branch = self._backtrack(n, visited, node_bound=n)
 
                 # Prune all visited intermediate nodes after the backtracked
                 # target node leading up to the failed node, including the
@@ -496,13 +539,13 @@ class KSRMTree:
         # debugging easier.
         return
 
-    def search(self, n: int, /) -> Generator[KSRMNode, None, None]:
+    def search(self, n: int, /, *, strict: bool = False) -> Generator[KSRMNode, None, None]:
         """Backtracking depth-first branch-and-bound search (in pre-order, NLMR) of the KSRM coprime pairs tree to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
     
         See the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`
         method for details of the implementation for the root-based search.
 
-        This method simply calls the root-based search method for the two
+        This method mainly calls the root-based search method for the two
         canonical roots :math:`(2, 1)` and :math:`(3, 1)`.
 
         Parameters
@@ -510,6 +553,12 @@ class KSRMTree:
         n : int
             The positive integer for which coprime pairs :math:`(r, s)`, with
             :math:`1 \\leq s < r \\leq n`, are sought.
+
+        strict : bool, default=False
+            The mode of generation of coprime pairs :math:`(r, s)`, with
+            :math:`1 \\leq s < r`: non-strict (the default), where
+            :math:`r \\leq n`, or strict, where the stricter condition
+            :math:`r = n` is applied.
 
         Raises
         ------
@@ -524,6 +573,8 @@ class KSRMTree:
 
         Examples
         --------
+        A few examples of non-strict mode searches:
+
         >>> tree = KSRMTree()
         >>> list(tree.search("not an integer"))
         Traceback (most recent call last):
@@ -539,21 +590,43 @@ class KSRMTree:
         [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1), (3, 1), (5, 3), (5, 1)]
         >>> list(tree.search(10))
         [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (10, 7), (9, 4), (6, 1), (8, 1), (10, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1)]
+
+        A few examples of strict mode searches:
+
+        >>> list(KSRMTree().search(1, strict=True))
+        [(1, 1)]
+        >>> list(KSRMTree().search(2, strict=True))
+        [(2, 1)]
+        >>> list(KSRMTree().search(3, strict=True))
+        [(3, 2), (3, 1)]
+        >>> list(KSRMTree().search(5, strict=True))
+        [(5, 4), (5, 2), (5, 3), (5, 1)]
+        >>> list(KSRMTree().search(7, strict=True))
+        [(7, 6), (7, 2), (7, 4), (7, 5), (7, 3), (7, 1)]
+        >>> list(KSRMTree().search(10, strict=True))
+        [(10, 9), (10, 3), (10, 7), (10, 1)]
         """
         if not isinstance(n, int) or n < 1:
             raise ValueError("`n` must be a positive integer >= 1")
 
-        yield 1, 1
+        if n == 1 or not strict:
+            yield 1, 1
 
         if n > 1:
-            yield from self.search_root(n, self.roots[0])
+            yield from self.search_root(n, self.roots[0], strict=strict)
 
-        if n > 2:
+        if n > 2 and strict:
+            yield from self.search_root(n, self.roots[1], strict=True)
+        elif n > 2 and n % 2 == 0 and not strict:
             yield from self.search_root(n, self.roots[1])
+        elif n > 2 and n % 2 == 1 and not strict:
+            yield from self.search_root(n - 1, self.roots[1])
+            yield from self.search_root(n, self.roots[1], strict=True)
 
 
-def coprime_pairs(n: int, /) -> Generator[tuple[int], None, None]:
-    """A function wrapper to generates a sequence of all pairs of (positive) coprime integers :math:`<= n`.
+@functools.cache
+def coprime_pairs(n: int, /, *, strict: bool = False) -> tuple[KSRMNode]:
+    """A function wrapper to return a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
 
     Calls the :py:meth:`continuedfractions.sequences.KSRMTree.search` to
     perform the search.
@@ -567,41 +640,63 @@ def coprime_pairs(n: int, /) -> Generator[tuple[int], None, None]:
         The positive integer for which coprime pairs :math:`(r, s)`, with
         :math:`1 \\leq s < r \\leq n`, are sought.
 
+    strict : bool, default=False
+        The mode of generation of coprime pairs :math:`(r, s)`, with
+        :math:`1 \\leq s < r`: non-strict (the default), where
+        :math:`r \\leq n`, or strict, where the stricter condition
+        :math:`r = n` is applied.
+
     Raises
     ------
     ValueError
         If ``n`` is not an :py:class:`int` or is an :py:class:`int` less than
         :math:`1`.
 
-    Yields
-    ------
+    Returns
+    -------
     tuple
-        Pairs of coprime integers :math:`(r, s)`, with
+        A :py:class:`tuple` of pairs of coprime integers :math:`(r, s)`, with
         :math:`1 \\leq s < r \\leq n`.
 
     Examples
     --------
-    >>> list(coprime_pairs(1))
-    [(1, 1)]
-    >>> list(coprime_pairs(2))
-    [(1, 1), (2, 1)]
-    >>> list(coprime_pairs(3))
-    [(1, 1), (2, 1), (3, 2), (3, 1)]
-    >>> list(coprime_pairs(5))
-    [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1), (3, 1), (5, 3), (5, 1)]
-    >>> list(coprime_pairs(10))
-    [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (10, 7), (9, 4), (6, 1), (8, 1), (10, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1)]
+    A few examples of non-strict mode generation:
+
+    >>> coprime_pairs(1)
+    ((1, 1),)
+    >>> coprime_pairs(2)
+    ((1, 1), (2, 1))
+    >>> coprime_pairs(3)
+    ((1, 1), (2, 1), (3, 2), (3, 1))
+    >>> coprime_pairs(5)
+    ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1), (3, 1), (5, 3), (5, 1))
+    >>> coprime_pairs(10)
+    ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (10, 7), (9, 4), (6, 1), (8, 1), (10, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1))
+
+    A few examples of strict mode generation:
+
+    >>> coprime_pairs(1, strict=True)
+    ((1, 1),)
+    >>> coprime_pairs(2, strict=True)
+    ((2, 1),)
+    >>> coprime_pairs(3, strict=True)
+    ((3, 2), (3, 1))
+    >>> coprime_pairs(5, strict=True)
+    ((5, 4), (5, 2), (5, 3), (5, 1))
+    >>> coprime_pairs(10, strict=True)
+    ((10, 9), (10, 3), (10, 7), (10, 1))
     """
     if not isinstance(n, int) or n < 1:
         raise ValueError("`n` must be a positive integer >= 1")
 
-    yield from KSRMTree().search(n)
+    return tuple(KSRMTree().search(n, strict=strict))
 
 
-def farey_sequence(n: int, /) -> Generator[ContinuedFraction, None, None]:
-    """Generates the (ordered) sequence of rational numbers forming the Farey sequence of order :math:`n`.
+@functools.cache
+def farey_sequence(n: int, /) -> tuple[ContinuedFraction]:
+    """Returns an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
 
-    The elements of the sequence are generated as
+    The elements of the sequence are returned as
     :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
     instances, in ascending order of magnitude.
 
@@ -658,37 +753,38 @@ def farey_sequence(n: int, /) -> Generator[ContinuedFraction, None, None]:
     n : int:
         The order of the Farey sequence.
 
-    Yields
+    Returns
     ------
-    ContinuedFraction
-        ``ContinuedFraction`` instances representing the elements of the Farey
-        sequence of order :math:`n`, generated in ascending order of magnitude.
+    tuple
+        A :py:class:`tuple` of ``ContinuedFraction`` instances representing the
+        elements of the Farey sequence of order :math:`n`, generated in
+        ascending order of magnitude.
 
     Examples
     --------
-    >>> list(farey_sequence(1))
-    [ContinuedFraction(0, 1), ContinuedFraction(1, 1)]
-
-    >>> list(farey_sequence(2))
-    [ContinuedFraction(0, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 1)]
-
-    >>> list(farey_sequence(3))
-    [ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1)]
-
-    >>> list(farey_sequence(5))
-    [ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1)]
+    >>> farey_sequence(1)
+    (ContinuedFraction(0, 1), ContinuedFraction(1, 1))
+    >>> farey_sequence(2)
+    (ContinuedFraction(0, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 1))
+    >>> farey_sequence(3)
+    (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
+    >>> farey_sequence(4)
+    (ContinuedFraction(0, 1), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(1, 1))
+    >>> farey_sequence(5)
+    (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
     """
     if not isinstance(n, int) or n < 1:
         raise ValueError("`n` must be a positive integer >= 1")
 
-    yield ContinuedFraction(0, 1)
+    if n == 1:
+        return tuple([ContinuedFraction(0, 1), ContinuedFraction(1, 1)])
 
-    yield from sorted(
+    return (ContinuedFraction(0, 1),) + tuple(sorted(
         starmap(
             ContinuedFraction,
-            starmap(lambda *x: tuple(reversed(x)), coprime_pairs(n))
+            starmap(lambda *x: tuple(reversed(x)), coprime_pairs(n, strict=False))
         )
-    )
+    ))
 
 
 if __name__ == "__main__":      # pragma: no cover

@@ -782,18 +782,21 @@ def farey_sequence(n: int, /) -> tuple[ContinuedFraction]:
     if n == 1:
         return tuple([ContinuedFraction(0, 1), ContinuedFraction(1, 1)])
 
-    return (ContinuedFraction(0, 1),) + tuple(sorted(
-        starmap(
-            ContinuedFraction,
-            starmap(lambda *x: tuple(reversed(x)), coprime_pairs(n, strict=False))
-        )
-    ))
+    return (
+        (ContinuedFraction(0, 1),) + 
+        tuple(sorted(
+            starmap(
+                ContinuedFraction,
+                starmap(lambda *x: tuple(reversed(x)), coprime_pairs(n, strict=False))
+            )
+        ))
+    )
 
 
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/utils.py
+    #     python -m doctest -v src/continuedfractions/sequences.py
     #
     import doctest
     doctest.testmod()

@@ -10,10 +10,76 @@ import sympy
 from continuedfractions.continuedfraction import ContinuedFraction
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.sequences import (
+    coprime_integers,
     coprime_pairs,
     farey_sequence,
     KSRMTree,
 )
+
+
+class TestCoprimeIntegers:
+
+    @pytest.mark.parametrize(
+        "n",
+        [
+            ("not an integer",),
+            (0,),
+            (-1, ),
+            (0.1,)
+        ]
+    )
+    def test_coprime_integers__invalid_args__raises_value_error(self, n):
+        with pytest.raises(ValueError):
+            coprime_integers(n)
+
+    @pytest.mark.parametrize(
+        "n, expected_coprime_integers",
+        [
+            (1, (1,)),
+            (2, (1,)),
+            (3, (2, 1)),
+            (4, (3, 1)),
+            (5, (4, 3, 2, 1)),
+            (6, (5, 1)),
+            (7, (6, 5, 4, 3, 2, 1)),
+            (8, (7, 5, 3, 1)),
+            (9, (8, 7, 5, 4, 2, 1)),
+            (10, (9, 7, 3, 1))
+        ]
+    )
+    def test_coprime_integers(self, n, expected_coprime_integers):
+        expected = expected_coprime_integers
+
+        received = coprime_integers(n)
+
+        assert received == expected
+
+    @pytest.mark.parametrize(
+        "n, expected_totient_value",
+        [
+            (1, sympy.totient(1)),
+            (2, sympy.totient(2)),
+            (3, sympy.totient(3)),
+            (4, sympy.totient(4)),
+            (5, sympy.totient(5)),
+            (6, sympy.totient(6)),
+            (7, sympy.totient(7)),
+            (8, sympy.totient(8)),
+            (9, sympy.totient(9)),
+            (10, sympy.totient(10)),
+            (100, sympy.totient(100)),
+            (1000, sympy.totient(1000)),
+            (10000, sympy.totient(10000)),
+            (100000, sympy.totient(100000)),
+            (1000000, sympy.totient(1000000)),
+        ]
+    )
+    def test_coprime_integers__verify_against_totient_value(self, n, expected_totient_value):
+        expected = expected_totient_value
+
+        received = coprime_integers(n)
+
+        assert len(received) == expected
 
 
 class TestKSRMTree:
@@ -194,99 +260,10 @@ class TestKSRMTree:
 
         ],
     )
-    def test_KSRMTree__search_root__non_strict_mode(self, n, root, expected_pairs):
+    def test_KSRMTree__search_root(self, n, root, expected_pairs):
         expected = expected_pairs
 
         received = list(KSRMTree().search_root(n, root))
-
-        assert received == expected
-
-    @pytest.mark.parametrize(
-        """n,
-           root,
-           expected_pairs""",
-        [
-            # Case #1
-            (
-                2,
-                (2, 1),
-                [
-                    (2, 1),
-                ],
-            ),
-            # Case #2
-            (
-                3,
-                (2, 1),
-                [
-                    (3, 2),
-                ],
-            ),
-            # Case #3
-            (
-                4,
-                (2, 1),
-                [
-                    (4, 3), (4, 1),
-                ],
-            ),
-            # Case #4
-            (
-                5,
-                (2, 1),
-                [
-                    (5, 4), (5, 2),
-                ],
-            ),
-            # Case #5
-            (
-                10,
-                (2, 1),
-                [
-                    (10, 9), (10, 3), (10, 7), (10, 1),
-                ],
-            ),
-            # Case #6
-            (
-                2,
-                (3, 1),
-                [],
-            ),
-            # Case #7
-            (
-                3,
-                (3, 1),
-                [
-                    (3, 1),
-                ],
-            ),
-            # Case #8
-            (
-                4,
-                (3, 1),
-                [],
-            ),
-            # Case #9
-            (
-                5,
-                (3, 1),
-                [
-                    (5, 3), (5, 1),
-                ],
-            ),
-            # Case #10
-            (
-                10,
-                (3, 1),
-                [],
-            ),
-
-        ],
-    )
-    def test_KSRMTree__search_root__strict_mode(self, n, root, expected_pairs):
-        expected = expected_pairs
-
-        received = list(KSRMTree().search_root(n, root, strict=True))
 
         assert received == expected
 
@@ -332,89 +309,35 @@ class TestKSRMTree:
             (
                 4,
                 [
-                    (1, 1), (2, 1), (3, 2), (4, 3), (4, 1), (3, 1),
+                    (1, 1), (2, 1), (3, 2), (3, 1), (4, 3), (4, 1),
                 ],
             ),
             # Case #5
             (
                 5,
                 [
-                    (1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1),
-                    (3, 1), (5, 3), (5, 1),
+                    (1, 1), (2, 1), (3, 2), (4, 3), (4, 1), (3, 1),
+                    (5, 4), (5, 3), (5, 2), (5, 1),
                 ],
             ),
             # Case #6
             (
                 10,
                 [
-                    (1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6),
-                    (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2), (5, 2),
-                    (8, 5), (9, 2), (4, 1), (7, 4), (10, 7), (9, 4), (6, 1),
-                    (8, 1), (10, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3),
-                    (5, 1), (9, 5), (7, 1), (9, 1),
+                    (1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5),
+                    (7, 6), (8, 7), (9, 8), (8, 3), (7, 2), (5, 2),
+                    (8, 5), (9, 2), (4, 1), (7, 4), (9, 4), (6, 1),
+                    (8, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3),
+                    (5, 1), (9, 5), (7, 1), (9, 1), (10, 9), (10, 7),
+                    (10, 3), (10, 1),
                 ],
             ),
         ],
     )
-    def test_KSRMTree_search__not_strict_mode(self, n, expected_pairs):
+    def test_KSRMTree_search(self, n, expected_pairs):
         expected = expected_pairs
 
         received = list(KSRMTree().search(n))
-
-        assert received == expected
-
-    @pytest.mark.parametrize(
-        """n,
-           expected_pairs""",
-        [
-            # Case #1
-            (
-                1,
-                [
-                    (1, 1),
-                ]
-            ),
-            # Case #2
-            (
-                2,
-                [
-                    (2, 1),
-                ],
-            ),
-            # Case #3
-            (
-                3,
-                [
-                    (3, 2), (3, 1),
-                ],
-            ),
-            # Case #4
-            (
-                4,
-                [
-                    (4, 3), (4, 1),
-                ],
-            ),
-            # Case #5
-            (
-                5,
-                [
-                    (5, 4), (5, 2), (5, 3), (5, 1),
-                ],
-            ),
-            # Case #6
-            (
-                10,
-                [
-                    (10, 9), (10, 3), (10, 7), (10, 1),
-                ],
-            ),
-        ],
-    )
-    def test_KSRMTree_search__strict_mode(self, n, expected_pairs):
-        expected = expected_pairs
-
-        received = list(KSRMTree().search(n, strict=True))
 
         assert received == expected
 
@@ -463,31 +386,32 @@ class TestCoprimePairs:
             (
                 4,
                 [
-                    (1, 1), (2, 1), (3, 2), (4, 3), (4, 1), (3, 1),
+                    (1, 1), (2, 1), (3, 2), (3, 1), (4, 3), (4, 1),
                 ],
             ),
             # Case #5
             (
                 5,
                 [
-                    (1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1),
-                    (3, 1), (5, 3), (5, 1),
+                    (1, 1), (2, 1), (3, 2), (3, 1), (4, 3), (4, 1),
+                    (5, 4), (5, 3), (5, 2), (5, 1),
                 ],
             ),
             # Case #6
             (
                 10,
                 [
-                    (1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6),
-                    (8, 7), (9, 8), (10, 9), (10, 3), (8, 3), (7, 2), (5, 2),
-                    (8, 5), (9, 2), (4, 1), (7, 4), (10, 7), (9, 4), (6, 1),
-                    (8, 1), (10, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3),
-                    (5, 1), (9, 5), (7, 1), (9, 1),
+                    (1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5),
+                    (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5),
+                    (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3),
+                    (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7),
+                    (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7),
+                    (10, 3), (10, 1),
                 ],
             ),
         ],
     )
-    def test_coprime_pairs__non_strict_mode(self, n, expected_pairs):
+    def test_coprime_pairs(self, n, expected_pairs):
         expected = tuple(expected_pairs)
 
         received = coprime_pairs(n)
@@ -495,61 +419,6 @@ class TestCoprimePairs:
         assert received == expected
 
     @pytest.mark.parametrize(
-        """n,
-           expected_pairs""",
-        [
-            # Case #1
-            (
-                1,
-                [
-                    (1, 1),
-                ]
-            ),
-            # Case #2
-            (
-                2,
-                [
-                    (2, 1),
-                ],
-            ),
-            # Case #3
-            (
-                3,
-                [
-                    (3, 2), (3, 1),
-                ],
-            ),
-            # Case #4
-            (
-                4,
-                [
-                    (4, 3), (4, 1),
-                ],
-            ),
-            # Case #5
-            (
-                5,
-                [
-                    (5, 4), (5, 2), (5, 3), (5, 1),
-                ],
-            ),
-            # Case #6
-            (
-                10,
-                [
-                    (10, 9), (10, 3), (10, 7), (10, 1),
-                ],
-            ),
-        ],
-    )
-    def test_coprime_pairs__strict_mode(self, n, expected_pairs):
-        expected = tuple(expected_pairs)
-
-        received = coprime_pairs(n, strict=True)
-
-        assert received == expected
-
-    @pytest.mark.parametrize(
         "n",
         [
             1,
@@ -561,23 +430,8 @@ class TestCoprimePairs:
             1000,
         ]
     )
-    def test_coprime_pairs__non_strict_mode__verify_against_summatory_totient_value(self, n):
+    def test_coprime_pairs__verify_against_summatory_totient_value(self, n):
         assert len(coprime_pairs(n)) == sum(map(sympy.totient, range(1, n + 1)))
-
-    @pytest.mark.parametrize(
-        "n",
-        [
-            1,
-            2,
-            3,
-            4,
-            10,
-            100,
-            1000,
-        ]
-    )
-    def test_coprime_pairs__strict_mode__verify_against_totient_value(self, n):
-        assert len(coprime_pairs(n, strict=True)) == sympy.totient(n)
 
 
 class TestFareySequence:

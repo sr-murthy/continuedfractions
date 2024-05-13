@@ -2,8 +2,8 @@ from __future__ import annotations
 
 
 __all__ = [
-    'coprime_pairs',
     'coprime_integers',
+    'coprime_pairs',
     'farey_sequence',
     'KSRMTree',
 ]
@@ -32,11 +32,22 @@ KSRMNode: TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM cop
 KSRMBranch: NamedCallableProxy          #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
-@functools.cache
-def coprime_integers(n: int, /) -> tuple[int]:
-    """Returns a tuple of all integers :math:`1 \\leq m < n` coprime to the given positive integer :math:`n`.
+def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> Generator[int, None, None]:
+    """A private function which generates a sequence of integers :math:`1 \\leq m < n` coprime to the given positive integer :math:`n`.
 
     The tuple is sorted in descending order of magnitude.
+
+    The optional ``start`` and ``stop`` parameters can be used to bound the
+    the range of integers in which integers coprime to the given :math:`n` are
+    sought.
+
+    For :math:`n = 1, 2` the ``start`` value is effectively ignored, but
+    if :math:`n > 2` then the ``start`` value must be an integer in the range
+    :math:`1..n - 2`.
+
+    The ``stop`` value defaults to ``None``, which is then internally
+    initialised to :math:`n`; if :math:`n > 1` and ``stop`` is given then it
+    must be an integer in the range ``start + 1..n``.
 
     Parameters
     ----------
@@ -44,14 +55,160 @@ def coprime_integers(n: int, /) -> tuple[int]:
         The positive integer for which coprime integers :math:`m < n` are
         sought.
 
-    Returns
-    -------
-    tuple
-        A tuple of all integers :math:`1 \\leq m < n` coprime to the given
+    start : int, default=1
+        The lower bound of the range of integers in which integers coprime
+        to the given :math:`n` are sought. For :math:`n = 1, 2` the ``start``
+        value is effectively ignored, but if :math:`n > 2` then the ``start``
+        value must be in the range :math:`1..n - 2`.
+
+    stop : int, default=None
+        The upper bound of the range of integers in which integers coprime
+        to the given :math:`n` are sought. The ``stop`` value defaults to
+        ``None``, which is then internally initialised to :math:`n`; if
+        :math:`n > 1` and ``stop`` is given then it must be an integer in the
+        range ``start + 1..n``.
+
+    Yields
+    ------
+    int
+        A sequence of integers :math:`1 \\leq m < n` coprime to the given
         positive integer :math:`n`.
 
     Examples
     --------
+    Examples using the default ``start`` and ``stop`` values:
+
+    >>> tuple(_coprime_integers(1))
+    (1,)
+    >>> tuple(_coprime_integers(2))
+    (1,)
+    >>> tuple(_coprime_integers(3))
+    (2, 1)
+    >>> tuple(_coprime_integers(4))
+    (3, 1)
+    >>> tuple(_coprime_integers(5))
+    (4, 3, 2, 1)
+    >>> tuple(_coprime_integers(6))
+    (5, 1)
+    >>> tuple(_coprime_integers(7))
+    (6, 5, 4, 3, 2, 1)
+    >>> tuple(_coprime_integers(8))
+    (7, 5, 3, 1)
+    >>> tuple(_coprime_integers(9))
+    (8, 7, 5, 4, 2, 1)
+    >>> tuple(_coprime_integers(10))
+    (9, 7, 3, 1)
+    >>> tuple(_coprime_integers(11))
+    (10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+
+    Examples using custom ``start`` and ``stop`` values:
+
+    >>> tuple(_coprime_integers(3, start=0))
+    Traceback (most recent call last):
+    ...
+    ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
+    >>> tuple(_coprime_integers(3, start=2))
+    (2,)
+    >>> tuple(_coprime_integers(3, start=3))
+    Traceback (most recent call last):
+    ...
+    ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
+    >>> tuple(_coprime_integers(23, start=5, stop=21))
+    (21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5)
+    >>> tuple(_coprime_integers(5, start=2))
+    (4, 3, 2)
+    >>> tuple(_coprime_integers(5, start=3))
+    (4, 3)
+    >>> tuple(_coprime_integers(6, start=2))
+    (5,)
+    >>> tuple(_coprime_integers(6, start=3))
+    (5,)
+    >>> tuple(_coprime_integers(6, start=4))
+    (5,)
+    >>> tuple(_coprime_integers(7, start=2))
+    (6, 5, 4, 3, 2)
+    >>> tuple(_coprime_integers(7, start=3))
+    (6, 5, 4, 3)
+    >>> tuple(_coprime_integers(7, start=4))
+    (6, 5, 4)
+    >>> tuple(_coprime_integers(7, start=5))
+    (6, 5)
+    """
+    if not isinstance(n, int) or n < 1 or (n > 1 and start not in range(1, n)) or (n > 1 and stop and stop not in range(start + 1, n + 1)):
+        raise ValueError(
+            "`n` must be a positive integer; if `n` > 1 then the "
+            "`start` value must be a positive integer in the range 1..n - 1; "
+            "and if given the `stop` value must be a positive integer in the "
+            "range `start` + 1..n"
+        )
+
+    if n in (1, 2):
+        yield 1
+    else:
+        stop = stop or n
+        q, r = divmod((stop - start + 1), 10 ** 3)
+
+        if q == 0:
+            yield from filter(lambda m: math.gcd(m, n) == 1, range(stop, start - 1, -1))
+        else:
+            _start = ((10 ** 3) * q) + (1 if r > 0 else 0)
+            
+            while _start >= start:
+                yield from filter(lambda m: math.gcd(m, n) == 1, range(stop, _start - 1, -1))
+                stop = _start - 1
+                q -= 1
+                _start = ((10 ** 3) * q) + 1
+
+
+@functools.cache
+def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[int]:
+    """A function which returns a sequence of integers :math:`1 \\leq m < n` coprime to the given positive integer :math:`n`.
+
+    Wrapper for the private :py:class:`~continuedfractions.sequences._coprime_integers`.
+
+    The tuple is sorted in descending order of magnitude.
+
+    The optional ``start`` and ``stop`` parameters can be used to bound the
+    the range of integers in which integers coprime to the given :math:`n` are
+    sought.
+
+    For :math:`n = 1, 2` the ``start`` value is effectively ignored, but
+    if :math:`n > 2` then the ``start`` value must be an integer in the range
+    :math:`1..n - 2`.
+
+    The ``stop`` value defaults to ``None``, which is then internally
+    initialised to :math:`n`; if :math:`n > 1` and ``stop`` is given then it
+    must be an integer in the range ``start + 1..n``.
+
+    Parameters
+    ----------
+    n : int
+        The positive integer for which coprime integers :math:`m < n` are
+        sought.
+
+    start : int, default=1
+        The lower bound of the range of integers in which integers coprime
+        to the given :math:`n` are sought. For :math:`n = 1, 2` the ``start``
+        value is effectively ignored, but if :math:`n > 2` then the ``start``
+        value must be in the range :math:`1..n - 2`.
+
+    stop : int, default=None
+        The upper bound of the range of integers in which integers coprime
+        to the given :math:`n` are sought. The ``stop`` value defaults to
+        ``None``, which is then internally initialised to :math:`n`; if
+        :math:`n > 1` and ``stop`` is given then it must be an integer in the
+        range ``start + 1..n``.
+
+    Returns
+    -------
+    tuple
+        A sequence of integers :math:`1 \\leq m < n` coprime to the given
+        positive integer :math:`n`.
+
+    Examples
+    --------
+    Examples using the default ``start`` and ``stop`` values:
+
     >>> coprime_integers(1)
     (1,)
     >>> coprime_integers(2)
@@ -72,17 +229,45 @@ def coprime_integers(n: int, /) -> tuple[int]:
     (8, 7, 5, 4, 2, 1)
     >>> coprime_integers(10)
     (9, 7, 3, 1)
+    >>> coprime_integers(11)
+    (10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+
+    Examples using custom ``start`` and ``stop`` values:
+
+    >>> coprime_integers(3, start=2)
+    (2,)
+    >>> coprime_integers(3, start=3)
+    Traceback (most recent call last):
+    ...    
+    ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
+    >>> coprime_integers(23, start=5, stop=21)
+    (21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5)
+    >>> coprime_integers(5, start=2)
+    (4, 3, 2)
+    >>> coprime_integers(5, start=3)
+    (4, 3)
+    >>> coprime_integers(6, start=2)
+    (5,)
+    >>> coprime_integers(6, start=3)
+    (5,)
+    >>> coprime_integers(6, start=4)
+    (5,)
+    >>> coprime_integers(7, start=2)
+    (6, 5, 4, 3, 2)
+    >>> coprime_integers(7, start=3)
+    (6, 5, 4, 3)
+    >>> coprime_integers(7, start=4)
+    (6, 5, 4)
+    >>> coprime_integers(7, start=5)
+    (6, 5)
     """
-    if not isinstance(n, int) or n < 1:
-        raise ValueError("`n` must be a positive integer >= 1")
+    return tuple(_coprime_integers(n, start=start, stop=stop))
 
-    if n == 1:
-        return (1,)
-
-    return tuple(chain((n - 1,), tuple(filter(lambda m: math.gcd(m, n) == 1, range(n - 2, 0, -1)))))
-
-
+# These lists will be initialised every time the module is (re-)loaded, and
+# has the effect of caching the function for the values of ``n`` which are
+# are used below: 1 to 1000, and then 10 ^^ 4, 10 ^^ 5, 10 ^^ 6, 10 ^^ 7.
 [coprime_integers(n) for n in range(1, 1001)]
+[coprime_integers(10 ** k) for k in range(4, 8)]
 
 
 class KSRMTree:
@@ -191,7 +376,7 @@ class KSRMTree:
         return self
 
     @property
-    def roots(self) -> Literal[((2, 1), (3, 1))]:
+    def roots(self) -> Literal[tuple([(2, 1), (3, 1)])]:
         """:py:class:`tuple`: The tuple of roots of the KSRM tree, which are :math:`(2, 1)` and :math:`(3, 1)`.
 
         For more details see the following papers:
@@ -459,6 +644,7 @@ class KSRMTree:
         --------
         Searching from the root :math:`(2, 1)` for coprime pairs for
         :math:`n = 5`:
+
         >>> tree = KSRMTree()
         >>> list(tree.search_root(5, (2, 1)))
         [(2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1)]
@@ -588,6 +774,7 @@ class KSRMTree:
         Examples
         --------
         A few examples of invalid and valid searches:
+
         >>> tree = KSRMTree()
         >>> list(tree.search("not an integer"))
         Traceback (most recent call last):
@@ -654,6 +841,7 @@ def coprime_pairs(n: int, /) -> tuple[KSRMNode]:
     Examples
     --------
     A few examples of coprime pairs generation:
+
     >>> coprime_pairs(1)
     ((1, 1),)
     >>> coprime_pairs(2)
@@ -674,6 +862,9 @@ def coprime_pairs(n: int, /) -> tuple[KSRMNode]:
     return tuple(chain(KSRMTree().search(n - 1), product([n], coprime_integers(n))))
 
 
+# These lists will be initialised every time the module is (re-)loaded, and
+# has the effect of caching the function for the values of ``n`` which are
+# are used below: 1 to 101.
 [coprime_pairs(n) for n in range(1, 101)]
 
 

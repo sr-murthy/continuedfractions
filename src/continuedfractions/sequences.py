@@ -273,26 +273,30 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
 class KSRMTree:
     """An implicit/generative tree class implementation of the Kanga-Saunders-Randall-Mitchell (KSRM) disjointed ternary tree for pairs of (positive) coprime integers.
 
-    The term "KSRM tree" is the author's, and refers to a single tree
-    that combines the trees presented in the following papers:
+    The term "KSRM trees" is the author's, and refers to the trees presented in the following papers:
 
-    #. A. R. Kanga, *The Family Tree of Pythagorean Triplets*, Bulletin of the Institute of Mathematics and Its Applications **26**, 15 (1990).
-    #. R. Saunders and T. Randall, *The Family Tree of the Pythagorean Triplets Revisited*, The Mathematical Gazette **78**, 190 (1994).
-    #. D. W. Mitchell, *An Alternative Characterisation of All Primitive Pythagorean Triples*, The Mathematical Gazette **85**, 273 (2001).
+    * Kanga, A. R. (1990). The Family Tree of Pythagorean Triplets. The Mathematical Gazette, 26(15), 15-17.
+    * Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+    * Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
 
     .. note::
 
-       The author could not access the Kanga paper, but the core result is
-       described clearly in the papers of Saunders and Randall, and of
+       The class is named ``KSRMTree`` purely for convenience, but it is
+       actually a representation of two (ternary) subtrees.
+
+    .. note::
+
+       The author could not access the Kanga paper online, but the core result
+       is described clearly in the papers of Saunders and Randall, and of
        Mitchell.
 
-    The trees presented in these papers are directly related to so-called
-    `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_,
+    These trees are directly related to so-called `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_,
     but have a fundamental consequence for the generation of coprime pairs: all
     pairs of (positive) coprime integers :math:`(a, b)`, where
-    :math:`1 \\leq b < a`, can be represented as nodes in a disjoint ternary
-    tree, with two "parents" (root nodes), :math:`(2, 1)` and :math:`(3, 1)`,
-    in which each parent node has exactly three child nodes of the form:
+    :math:`1 \\leq b < a`, can be represented as nodes in one of two ternary
+    trees, the first which has the "parent" node :math:`(2, 1)` and the second
+    which has the parent node :math:`(3, 1)`. Each node has three children
+    given by the relations:
 
     .. math::
 
@@ -302,10 +306,7 @@ class KSRMTree:
                                 (a + 2b, b), \\hskip{3em} \\text{ branch #} 3                   
                                 \\end{cases}
 
-    where :math:`1 \\leq b < a`, with two pairs of initial values given by
-    :math:`(a=2, b=1)`, and :math:`(a=3, b=1)`. Each node in the tree is the
-    parent of all nodes that branch from it, but the nodes :math:`(2, 1)` and
-    :math:`(3, 1)` are canonical.
+    where :math:`1 \\leq b < a`.
 
     Generating coprime pairs can then be implemented by a generative search
     procedure that starts separately from the parents :math:`(2, 1)` and
@@ -328,14 +329,14 @@ class KSRMTree:
        The tree starting at the root :math:`(3, 1)` will only contain pairs of
        odd coprimes, under the maps described above.
 
-    If we let :math:`k = 1` denote the 1st generation consisting only of the
-    two roots :math:`(2, 1)` and :math:`(3, 1)`, then the :math:`k`-th
-    generation for either tree will have a total of :math:`3^{k - 1}`
-    children, the total number of all members up to and including the
-    :math:`k`-generation will be
-    :math:`1 + 3 + 3^2 + \\ldots 3^{k - 1} = \\frac{3^k - 1}{2}`, and the
+    If we let :math:`k = 0` denote the :math:`0`-th generation consisting only
+    of the two roots :math:`(2, 1)` and :math:`(3, 1)`, then for
+    :math:`k \\geq 1` the :math:`k`-th generation, for either tree, will have a
+    total of :math:`3^k` children, the total number of all members up to and
+    including the :math:`k`-th generation will be
+    :math:`1 + 3 + 3^2 + \\ldots + 3^k = \\frac{3^{k + 1} - 1}{2}`, and the
     total number of all members in both trees up to and including the
-    :math:`k`-th generation will be :math:`3^k - 1`.
+    :math:`k`-th generation will be :math:`3^{k + 1} - 1`.
 
     The number of coprime pairs generated for a given :math:`n \\geq 1` is
     given by:
@@ -381,13 +382,13 @@ class KSRMTree:
 
     @property
     def roots(self) -> Literal[tuple([(2, 1), (3, 1)])]:
-        """:py:class:`tuple`: The tuple of roots of the KSRM tree, which are :math:`(2, 1)` and :math:`(3, 1)`.
+        """:py:class:`tuple`: The tuple of roots of the KSRM trees, which are :math:`(2, 1)` and :math:`(3, 1)`.
 
         For more details see the following papers:
 
-        #. A. R. Kanga, *The Family Tree of Pythagorean Triplets*, Bulletin of the Institute of Mathematics and Its Applications **26**, 15 (1990).
-        #. R. Saunders and T. Randall, *The Family Tree of the Pythagorean Triplets Revisited*, The Mathematical Gazette **78**, 190 (1994).
-        #. D. W. Mitchell, *An Alternative Characterisation of All Primitive Pythagorean Triples*, The Mathematical Gazette **85**, 273 (2001).
+        * Kanga, A. R. (1990). The Family Tree of Pythagorean Triplets. The Mathematical Gazette, 26(15), 15-17.
+        * Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+        * Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
 
         Examples
         --------
@@ -398,7 +399,7 @@ class KSRMTree:
 
     @property
     def branches(self) -> tuple[KSRMBranch]:    # noqa: F821
-        """:py:class:`tuple`: The tuple of three branch generating functions of the KSRM tree.
+        """:py:class:`tuple`: The tuple of three branch generating functions of the KSRM trees.
 
         There are three branch generating functions, given by the mappings:
 
@@ -412,9 +413,9 @@ class KSRMTree:
 
         For more details see the following papers:
 
-        #. A. R. Kanga, *The Family Tree of Pythagorean Triplets*, Bulletin of the Institute of Mathematics and Its Applications **26**, 15 (1990).
-        #. R. Saunders and T. Randall, *The Family Tree of the Pythagorean Triplets Revisited*, The Mathematical Gazette **78**, 190 (1994).
-        #. D. W. Mitchell, *An Alternative Characterisation of All Primitive Pythagorean Triples*, The Mathematical Gazette **85**, 273 (2001).
+        * Kanga, A. R. (1990). The Family Tree of Pythagorean Triplets. The Mathematical Gazette, 26(15), 15-17.
+        * Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+        * Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
 
         Examples
         --------
@@ -459,9 +460,9 @@ class KSRMTree:
         *,
         node_bound: int = None
     ) -> tuple[KSRMNode, KSRMBranch, int, KSRMBranch]:  # noqa: F821
-        """Backtracks on the KSRM coprime pairs tree.
+        """Backtracks on the KSRM coprime pairs trees.
 
-        A private function that backtracks on the KSRM coprime pairs tree: the
+        A private function that backtracks on the KSRM coprime pairs trees: the
         procedure is that, given a (positive) integer :math:`n > 2`, for which
         coprime pairs are being sought, and a sequence (list) of pairs of
         visited nodes and their associated generating branches in the KSRM
@@ -473,7 +474,7 @@ class KSRMTree:
 
         .. note::
 
-           One key property of the KSRM tree is that, for a given search value
+           One key property of the KSRM trees is that, for a given search value
            :math:`n`, if the current node is :math:`(a, b) = (n, b)` and the
            successor node on the first branch, :math:`(2a - b, a)`, fails the
            test :math:`2a - b \\leq n`, then so will the successor nodes on
@@ -587,7 +588,7 @@ class KSRMTree:
         return cur_node, cur_branch, cur_index, last_branch
 
     def search_root(self, n: int, root: KSRMNode, /) -> Generator[KSRMNode, None, None]:
-        """Backtracking depth-first branch-and-bound search (in pre-order, NLMR) of the KSRM coprime pairs tree from the given root node to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
+        """Backtracking depth-first branch-and-bound search (in pre-order, NLMR) of the KSRM coprime pairs trees from the given root node to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
 
         The given root node need not be the canonical roots, :math:`(2, 1)`,
         :math:`(3, 1)`, but can be any of their successor nodes.
@@ -615,7 +616,7 @@ class KSRMTree:
 
         .. note::
 
-           One key property of the KSRM tree used in this implementation is
+           One key property of the KSRM trees used in this implementation is
            that for a given integer :math:`n \\geq 1`, if the current node is
            :math:`(a, b) = (n, b)` and the child node on the first branch,
            :math:`(2a - b, a)`, fails the test :math:`2a - b \\leq n`, then
@@ -754,7 +755,7 @@ class KSRMTree:
         return
 
     def search(self, n: int, /) -> Generator[KSRMNode, None, None]:
-        """Backtracking depth-first branch-and-bound search (in pre-order, NLMR) of the KSRM coprime pairs tree to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
+        """Backtracking depth-first branch-and-bound search (in pre-order, NLMR) of the KSRM coprime pairs trees to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
     
         See the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`
         method for details of the implementation for the root-based search.
@@ -818,8 +819,10 @@ class KSRMTree:
 def coprime_pairs(n: int, /) -> tuple[KSRMNode]:
     """A function wrapper to return a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
 
-    Calls the :py:meth:`continuedfractions.sequences.KSRMTree.search` to
-    perform the search.
+    Calls the KSRM tree :py:meth:`~continuedfractions.sequences.KSRMTree.search`
+    to perform the search up to :math:`n - 1` and then uses
+    :py:func:`~continuedfractions.sequences.coprime_integers` for the search
+    for pairs involving :math:`n`.
 
     A :py:class:`ValueError` is raised if ``n`` is not an :py:class:`int`
     or is an :py:class:`int` less than :math:`1`.

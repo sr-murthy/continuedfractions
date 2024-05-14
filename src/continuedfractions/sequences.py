@@ -809,12 +809,8 @@ class KSRMTree:
         elif n > 1:
             yield from self.search_root(n - 1, self.roots[0])
 
-        if n > 2 and n % 2 == 0:
-            yield from self.search_root(n - 1, self.roots[1])
-        elif n > 2 and n % 2 == 1:
-            yield from self.search_root(n - 1, self.roots[1])
-
         if n > 2:
+            yield from self.search_root(n - 1, self.roots[1])
             yield from tuple(product([n], coprime_integers(n)))
 
 

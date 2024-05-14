@@ -25,20 +25,22 @@ If you wish to contribute please first ensure you have `SSH access to GitHub <ht
 
 If not please follow the SSH instructions linked above.
 
-Once you’ve forked the repository, it is recommended to clone your fork over SSH:
+Once you’ve forked the repository, you can clone your fork, e.g. over SSH:
 
 .. code:: python
 
    git clone git+ssh://git@github.com/<fork user>/continuedfractions
+
+You can create additional remotes for the parent project to enable easier syncing, or you can simply create PRs directly against the parent project.
 
 .. _contributing.dependencies-and-pdm:
 
 Dependencies & PDM
 ==================
 
-As mentioned earlier, the package has no (production) dependencies, but groups of development requirements are specified in the
-``[tool.pdm.dev-dependencies]`` section of the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_. Of these only the ``'test'`` dependencies,
-including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_, are important.
+The package has no external (production) dependencies - some development dependencies are specified in the
+``[tool.pdm.dev-dependencies]`` section of the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_, but they are not mandatory. Of these, the most important are probably the ``'test'`` dependencies,
+including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_:
 
 .. code:: toml
 
@@ -105,7 +107,7 @@ Linting warnings should be addressed first. The doctests serve as acceptance tes
 Documentation
 =============
 
-`Project documentation <https://continuedfractions.readthedocs.io/en/stable/>`_ is defined and built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_, and deployed to `Read The Docs <https://readthedocs.org>`_. Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
+`Project documentation <https://continuedfractions.readthedocs.io/en/latest/>`_ is defined and built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_, and deployed to `Read The Docs <https://readthedocs.org>`_. Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
 
 The Sphinx documentation can be built locally on any branch from the **project root** using:
 
@@ -137,8 +139,8 @@ The CI/CD pipelines are defined in the `CI YML <.github/workflows/ci.yml>`_, and
 Versioning and Releases
 =======================
 
-The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.11.33`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.12.0`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 
-Pipelines for releases (and also documentation) will be added as part of a future release.
+Pipelines for releases will be added as part of a future release.

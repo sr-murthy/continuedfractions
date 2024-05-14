@@ -107,10 +107,10 @@ extensions = ['jupyter_sphinx',
 #     For more on all available autodoc defaults see
 #         https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#confval-autodoc_default_options
 autodoc_default_options = {
-    'exclude-members': '__weakref__,__slots__,__match_args__',
+    'exclude-members': '__call__,__weakref__,__slots__,__match_args__',
     'member-order': 'bysource',
     'private-members': False,
-    'special-members': '__call__, __eq__, __init__, __new__'
+    'special-members': '__eq__, __init__, __new__'
 }
 
 # Sphinx autodoc autosummary settings
@@ -130,10 +130,12 @@ intersphinx_mapping = {
     'networkx': ('https://networkx.org/documentation/stable/', None),
     'numpy':  ('https://numpy.org/doc/stable/', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
+    'pdm': ('https://pdm.fming.dev/latest/', None),
     'pygraphviz': ('https://pygraphviz.github.io/documentation/stable/', None),
     'pytest': ('https://docs.pytest.org/en/7.4.x/', None),
     'python': ('https://docs.python.org/3', None),
     'scipy': ('https://docs.scipy.org/doc/scipy/', None),
+    'sympy': ('https://docs.sympy.org/latest/', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
 }
 
@@ -195,7 +197,7 @@ html_sidebars = {
     "sources/getting-started": [],
     "sources/creating-continued-fractions": [],
     "sources/exploring-continued-fractions": [],
-    "sources/mediants": [],
+    "sources/sequences": [],
     "sources/contributing": [],
     "sources/continuedfractions/*": ["sidebar-nav-bs"],
 }

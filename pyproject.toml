@@ -27,10 +27,14 @@ license = {file = "LICENSE"}
 
 dependencies = [
 ]
+
 readme = "README.md"
+
 keywords = [
     "computational number theory",
+    "coprime integers",
     "continued fractions",
+    "farey sequences",
     "irrational numbers",
     "mediants",
     "number theory",
@@ -38,6 +42,7 @@ keywords = [
     "rational numbers",
     "real numbers",
 ]
+
 classifiers = [
         "Environment :: Console",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
@@ -64,7 +69,7 @@ build-backend = "pdm.backend"
 
 [project.urls]
 Homepage = "https://github.com/sr-murthy/continuedfractions"
-Documentation = "https://continuedfractions.readthedocs.io/en/stable/"
+Documentation = "https://continuedfractions.readthedocs.io/en/latest/"
 Repository = "https://github.com/sr-murthy/continuedfractions"
 
 # For working with PDM, including configuration and usage see:
@@ -128,6 +133,7 @@ test = [
     "pytest",
     "pytest-cov",
     "pytest-xdist",
+    "sympy",
 ]
 tox = [
 #    "tox",

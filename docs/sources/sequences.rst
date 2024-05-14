@@ -352,8 +352,8 @@ This can be checked by constructing a :py:class:`~continuedfractions.sequences.K
    ((2, 1), (3, 1))
    >>> tree.branches
    (NamedCallableProxy("KSRM tree branch #1: (x, y) |--> (2x - y, x)"),
-   NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
-   NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
+    NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
+    NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
 
 The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables, one for each of the three branches, and each takes two integers as arguments. The nodes can be generated manually as follows:
 

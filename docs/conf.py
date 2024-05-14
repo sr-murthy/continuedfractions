@@ -197,7 +197,7 @@ html_sidebars = {
     "sources/getting-started": [],
     "sources/creating-continued-fractions": [],
     "sources/exploring-continued-fractions": [],
-    "sources/mediants": [],
+    "sources/sequences": [],
     "sources/contributing": [],
     "sources/continuedfractions/*": ["sidebar-nav-bs"],
 }

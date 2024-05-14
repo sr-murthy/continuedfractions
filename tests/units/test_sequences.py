@@ -542,9 +542,19 @@ class TestCoprimePairs:
             2,
             3,
             4,
+            5,
+            6,
+            7,
+            8,
+            9,
             10,
+            11,
+            99,
             100,
+            101,
+            999,
             1000,
+            1001,
         ]
     )
     def test_coprime_pairs__verify_against_summatory_totient_value(self, n):

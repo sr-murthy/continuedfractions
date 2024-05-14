@@ -47,7 +47,7 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> Generat
 
     The ``stop`` value defaults to ``None``, which is then internally
     initialised to :math:`n`; if :math:`n > 1` and ``stop`` is given then it
-    must be an integer in the range ``start + 1..n``.
+    must be an integer in the range :math:`\\text{start} + 1..n`.
 
     Parameters
     ----------
@@ -66,7 +66,7 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> Generat
         to the given :math:`n` are sought. The ``stop`` value defaults to
         ``None``, which is then internally initialised to :math:`n`; if
         :math:`n > 1` and ``stop`` is given then it must be an integer in the
-        range ``start + 1..n``.
+        range :math:`\\text{start} + 1..n`.
 
     Yields
     ------
@@ -178,7 +178,7 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
 
     The ``stop`` value defaults to ``None``, which is then internally
     initialised to :math:`n`; if :math:`n > 1` and ``stop`` is given then it
-    must be an integer in the range ``start + 1..n``.
+    must be an integer in the range :math:`\\text{start} + 1..n`.
 
     Parameters
     ----------
@@ -197,7 +197,7 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
         to the given :math:`n` are sought. The ``stop`` value defaults to
         ``None``, which is then internally initialised to :math:`n`; if
         :math:`n > 1` and ``stop`` is given then it must be an integer in the
-        range ``start + 1..n``.
+        range :math:`\\text{start} + 1..n`.
 
     Returns
     -------
@@ -273,81 +273,85 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
 class KSRMTree:
     """An implicit/generative tree class implementation of the Kanga-Saunders-Randall-Mitchell (KSRM) disjointed ternary tree for pairs of (positive) coprime integers.
 
-    The term "KSRM tree" is the author's, and refers to a consolidation of
-    related but different trees presented by different authors in the
-    following papers:
+    The term "KSRM tree" is the author's, and refers to a single tree
+    that combines the trees presented in the following papers:
 
     #. A. R. Kanga, *The Family Tree of Pythagorean Triplets*, Bulletin of the Institute of Mathematics and Its Applications **26**, 15 (1990).
     #. R. Saunders and T. Randall, *The Family Tree of the Pythagorean Triplets Revisited*, The Mathematical Gazette **78**, 190 (1994).
     #. D. W. Mitchell, *An Alternative Characterisation of All Primitive Pythagorean Triples*, The Mathematical Gazette **85**, 273 (2001).
 
+    .. note::
+
+       The author could not access the Kanga paper, but the core result is
+       described clearly in the papers of Saunders and Randall, and of
+       Mitchell.
+
     The trees presented in these papers are directly related to so-called
     `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_,
     but have a fundamental consequence for the generation of coprime pairs: all
-    pairs of (positive) coprime integers :math:`(r, s)`, can be represented as
-    nodes in a disjoint ternary tree, with two "parents" (root nodes),
-    :math:`(2, 1)` and :math:`(3, 1)`, in which each parent node has exactly
-    three child nodes of the form:
+    pairs of (positive) coprime integers :math:`(a, b)`, where
+    :math:`1 \\leq b < a`, can be represented as nodes in a disjoint ternary
+    tree, with two "parents" (root nodes), :math:`(2, 1)` and :math:`(3, 1)`,
+    in which each parent node has exactly three child nodes of the form:
 
     .. math::
 
-       (r^\\prime, s^\\prime) = \\begin{cases}
-                                (2r - s, r), \\hskip{3em} \\text{ branch #} 1 \\\\
-                                (2r + s, r), \\hskip{3em} \\text{ branch #} 2 \\\\
-                                (r + 2s, s), \\hskip{3em} \\text{ branch #} 3                   
+       (a^\\prime, b^\\prime) = \\begin{cases}
+                                (2a - b, a), \\hskip{3em} \\text{ branch #} 1 \\\\
+                                (2a + b, a), \\hskip{3em} \\text{ branch #} 2 \\\\
+                                (a + 2b, b), \\hskip{3em} \\text{ branch #} 3                   
                                 \\end{cases}
 
-    where :math:`r, s \\geq 1` and :math:`r > s`, with two pairs of initial
-    values given by :math:`(r=2, s=1)`, and :math:`(r=3, s=1)`. Each node in
-    the tree is the parent of all nodes that branch from it, but the nodes
-    :math:`(2, 1)` and :math:`(3, 1)` are canonical.
+    where :math:`1 \\leq b < a`, with two pairs of initial values given by
+    :math:`(a=2, b=1)`, and :math:`(a=3, b=1)`. Each node in the tree is the
+    parent of all nodes that branch from it, but the nodes :math:`(2, 1)` and
+    :math:`(3, 1)` are canonical.
 
-    This can be understood more concretely as a generative procedure
-    (or algorithm) for pairs of (positive) coprime integers, namely: start
-    separately from the parents :math:`(2, 1)` and :math:`(3, 1)`, and apply
-    the functions given by the mappings below to each parent:
+    Generating coprime pairs can then be implemented by a generative search
+    procedure that starts separately from the parents :math:`(2, 1)` and
+    :math:`(3, 1)`, and applies the functions given by the mappings below to
+    each parent:
 
     .. math::
 
        \\begin{align}
-       (r, s) &\\longmapsto (2r - s, r) \\\\
-       (r, s) &\\longmapsto (2r + s, r) \\\\
-       (r, s) &\\longmapsto (r + 2s, s)
+       (a, b) &\\longmapsto (2a - b, a) \\\\
+       (a, b) &\\longmapsto (2a + b, a) \\\\
+       (a, b) &\\longmapsto (a + 2b, b)
        \\end{align}
 
-    producing the "1st generation" of :math:`3 + 3 = 6` triplets. Repeat the
-    same procedure ad infinitum for each generation.
+    producing the "1st generation" of :math:`3 + 3 = 6` triplets. This can be
+    repeated ad infinitum as required.
 
     .. note::
 
-       The tree starting at the root :math:`(3, 1)` can only produce odd pairs
-       of coprimes, under the maps described above.
+       The tree starting at the root :math:`(3, 1)` will only contain pairs of
+       odd coprimes, under the maps described above.
 
-    For each integer :math:`k \\geq 1` the :math:`k`-th generation (for both
-    trees) will have a total of :math:`2 \\cdot 3^k` children, and the total
-    number of all family members up to the :math:`k`-generation will be
-    :math:`2(1 + 3 + 3^2 + \\ldots 3^k) = 3(3^k - 1)`.
+    If we let :math:`k = 1` denote the 1st generation consisting only of the
+    two roots :math:`(2, 1)` and :math:`(3, 1)`, then the :math:`k`-th
+    generation for either tree will have a total of :math:`3^{k - 1}`
+    children, the total number of all members up to and including the
+    :math:`k`-generation will be
+    :math:`1 + 3 + 3^2 + \\ldots 3^{k - 1} = \\frac{3^k - 1}{2}`, and the
+    total number of all members in both trees up to and including the
+    :math:`k`-th generation will be :math:`3^k - 1`.
 
-    Given a positive integer :math:`n` we may ask how many coprime pairs
-    :math:`(r, s)` exist such that :math:`r \\leq n` (where as defined above
-    we may assume :math:`r > s`). The generative procedure described above,
-    augmented with a strategy of pruning branches whose root nodes
-    :math:`(r, s)` do not satisfy the condition :math:`r \\leq n`, including
-    all the satisfying intermediate visited nodes, will always terminate and
-    provide an answer with:
+    The number of coprime pairs generated for a given :math:`n \\geq 1` is
+    given by:
 
     .. math::
 
-       1 + \\phi(1) + \\phi(2) + \\cdots + \\phi(n) = 1 + \\sum_{k = 1}^n \\phi(k)
+       \\phi(1) + \\phi(2) + \\cdots + \\phi(n) = \\sum_{k = 1}^n \\phi(k)
 
-    coprime pairs, where :math:`\\phi(k)` is `Euler's totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_.
+    where :math:`\\phi(k)` is `Euler's totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_.
 
-    This requires a brief explanation: if :math:`\\mathcal{C}_n` denotes the
-    set of all pairwise coprime integers :math:`r, s \\geq 1`, with
-    :math:`r > s`, such that :math:`r \\leq n`, then :math:`\\mathcal{C}_n`
-    will only contain pairs of type :math:`(r, k)`, for some
-    :math:`r < k \\leq n` such that :math:`(r, k) = 1`. For each such :math:`k`
-    there are :math:`\\phi(k)` integers, which proves the relation above.
+    This is because if :math:`\\mathcal{C}_n` denotes the set of all coprime
+    pairs :math:`(a, b)`, with :math:`1 \\leq b < a \\leq n`, then it can be
+    partitioned into disjoint subsets :math:`\\mathcal{C}_k`, where
+    :math:`k=1,2,\\ldots,n`, and each :math:`\\mathcal{C}_k` contains
+    :math:`\\phi(k)` pairs :math:`(k, j)`, where
+    :math:`1 \\leq j < k \\leq n` and :math:`(k, j) = 1`.
     """
 
     # The two slots for the private attributes for the key tree features - the
@@ -401,9 +405,9 @@ class KSRMTree:
         .. math::
 
            \\begin{align}
-           (r, s) &\\longmapsto (2r - s, r) \\\\
-           (r, s) &\\longmapsto (2r + s, r) \\\\
-           (r, s) &\\longmapsto (r + 2s, s)
+           (a, b) &\\longmapsto (2a - b, a) \\\\
+           (a, b) &\\longmapsto (2a + b, a) \\\\
+           (a, b) &\\longmapsto (a + 2b, b)
            \\end{align}
 
         For more details see the following papers:
@@ -470,9 +474,9 @@ class KSRMTree:
         .. note::
 
            One key property of the KSRM tree is that, for a given search value
-           :math:`n`, if the current node is :math:`(r, s) = (n, s)` and the
-           successor node on the first branch, :math:`(2r - s, r)`, fails the
-           test :math:`2r - s \\leq n`, then so will the successor nodes on
+           :math:`n`, if the current node is :math:`(a, b) = (n, b)` and the
+           successor node on the first branch, :math:`(2a - b, a)`, fails the
+           test :math:`2a - b \\leq n`, then so will the successor nodes on
            the second and third branches.
 
            This means in the case of a node failure in the search on the first
@@ -509,7 +513,7 @@ class KSRMTree:
             the KSRM coprime pairs tree.
 
         node_bound : int, default=None
-            A bound to check that :math:`r < n` for a node :math:`(r, s)`. The
+            A bound to check that :math:`a < n` for a node :math:`(a, b)`. The
             actual default value is the incoming :math:`n`, and this is set
             internally.
 
@@ -545,7 +549,7 @@ class KSRMTree:
         >>> tree._backtrack(8, visited)
         ((3, 2), NamedCallableProxy("KSRM tree branch #1: (x, y) |--> (2x - y, x)"), 1, NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"))
         """
-        # Set the node bound for ``r``: so we require ``r < n`` for the
+        # Set the node bound for ``r``: so we require ``a < n`` for the
         # backtracked target node.
         node_bound = node_bound or n
 
@@ -569,7 +573,7 @@ class KSRMTree:
         # current node and generating branch, and also set the generating
         # branch of the last visited node before the current node.
         #
-        # If the current node passes the test ``r < n` and we are not on the
+        # If the current node passes the test ``a < n` and we are not on the
         # last branch, return the current node, generating branch, index
         # and the generating branch of the last visited node before the current
         # node.
@@ -593,16 +597,16 @@ class KSRMTree:
 
         The search implementation is an iterative version of a backtracking
         depth-first branch-and-bound search (DFS), in which nodes are traversed
-        in pre-order, NLMR (next -> left -> mid -> right) and bounds and checks
+        in pre-order, NLMR (root -> left -> mid -> right) and bounds and checks
         are applied to the nodes, before further traversal or backtracking:
         
-        #. Visit the current node :math:`(r, s)` and check :math:`r \\leq n`.
+        #. Visit the current node :math:`(a, b)` and check :math:`a \\leq n`.
         #. If the check is successful iteratively traverse the current node's
            first child and its children, then the second child and its 
            children, and then the third child and its children, applying the
-           check :math:`r \\leq n` to each visited node.
+           check :math:`a \\leq n` to each visited node.
         #. If a check fails for any node backtrack to the nearest previously
-           visited node which meets a stricter check :math:`r < n` and which
+           visited node which meets a stricter check :math:`a < n` and which
            has unvisited child nodes, while pruning all visited intermediate
            nodes after the backtracked target node and leading up to the failed
            node, including the failed node. By design the backtracked target
@@ -613,16 +617,16 @@ class KSRMTree:
 
            One key property of the KSRM tree used in this implementation is
            that for a given integer :math:`n \\geq 1`, if the current node is
-           :math:`(r, s) = (n, s)` and the child node on the first branch,
-           :math:`(2r - s, r)`, fails the test :math:`2r - s \\leq n`, then
+           :math:`(a, b) = (n, b)` and the child node on the first branch,
+           :math:`(2a - b, a)`, fails the test :math:`2a - b \\leq n`, then
            so will the child nodes on the second and third branches, and
            thus all three children can be pruned.
 
         Parameters
         ----------
         n : int
-            The positive integer for which coprime pairs :math:`(r, s)`, with
-            :math:`1 \\leq s < r \\leq n`, are sought.
+            The positive integer for which coprime pairs :math:`(a, b)`, with
+            :math:`1 \\leq b < a \\leq n`, are sought.
 
         root : tuple
             The "root" node from which to search - this can be either of the
@@ -637,8 +641,8 @@ class KSRMTree:
         Yields
         ------
         tuple
-            Pairs of coprime integers :math:`(r, s)`, with
-            :math:`1 \\leq s < r \\leq n`.
+            Pairs of coprime integers :math:`(a, b)`, with
+            :math:`1 \\leq b < a \\leq n`.
 
         Examples
         --------
@@ -698,19 +702,23 @@ class KSRMTree:
             if cur_branch is None:
                 cur_branch = self.branches[0]
 
-            # Generate and visit the next node ``(r, s)``, where ``1 <= s < r``
-            # and ``gcd(r, s) = 1`` is guaranteed by the nature of the
+            # Generate and visit the next node ``(a, b)``, where ``1 <= b < a``
+            # and ``gcd(a, b) = 1`` is guaranteed by the nature of the
             # generating branches.
             cur_node = cur_branch(*cur_node)
             visited.append((cur_node, cur_branch))
             num_nodes_searched += 1
 
-            # If the node satisfies ``r <= n`` and generate it if either in
-            # non-strict mode, or in strict mode and the current node
-            # ``(r, s)`` satisfies ``r == n``; then, update the variable
-            # storing the generating branch of the successor node of the
-            # current node, and set the current (next generating) branch to
+            # If the node satisfies ``a <= n`` and generate it, then update the
+            # variable storing the generating branch of the successor node of
+            # the current node, and set the current (next generating) branch to
             # branch #1, and continue the DFS.
+            #
+            # If the node does not satisfy ``a <= n`` backtrack to the nearest
+            # satisfying non-root node, prune any unnecessary nodes as needed,
+            # and continue the DFS on unexplored branches. If there are no
+            # nearest satisfying non-root nodes and all remaining branches have
+            # been explored the DFS has ended, and so exit.
             if cur_node[0] <= n:
                 yield cur_node
                 last_branch = cur_branch
@@ -757,8 +765,8 @@ class KSRMTree:
         Parameters
         ----------
         n : int
-            The positive integer for which coprime pairs :math:`(r, s)`, with
-            :math:`1 \\leq s < r \\leq n`, are sought.
+            The positive integer for which coprime pairs :math:`(a, b)`, with
+            :math:`1 \\leq b < a \\leq n`, are sought.
 
         Raises
         ------
@@ -768,8 +776,8 @@ class KSRMTree:
         Yields
         ------
         tuple
-            Pairs of coprime integers :math:`(r, s)`, with
-            :math:`1 \\leq s < r \\leq n`.
+            Pairs of coprime integers :math:`(a, b)`, with
+            :math:`1 \\leq b < a \\leq n`.
 
         Examples
         --------
@@ -823,8 +831,8 @@ def coprime_pairs(n: int, /) -> tuple[KSRMNode]:
     Parameters
     ----------
     n : int
-        The positive integer for which coprime pairs :math:`(r, s)`, with
-        :math:`1 \\leq s < r \\leq n`, are sought.
+        The positive integer for which coprime pairs :math:`(a, b)`, with
+        :math:`1 \\leq b < a \\leq n`, are sought.
 
     Raises
     ------
@@ -835,8 +843,8 @@ def coprime_pairs(n: int, /) -> tuple[KSRMNode]:
     Returns
     -------
     tuple
-        A :py:class:`tuple` of pairs of coprime integers :math:`(r, s)`, with
-        :math:`1 \\leq s < r \\leq n`.
+        A :py:class:`tuple` of pairs of coprime integers :math:`(a, b)`, with
+        :math:`1 \\leq b < a \\leq n`.
 
     Examples
     --------
@@ -888,13 +896,14 @@ def farey_sequence(n: int, /) -> tuple[ContinuedFraction]:
               \\hskip{3em} k \\geq 2
        \\end{align}
 
-    The restriction :math:`(a, b) = 1` (meaning :math:`a` and :math:`b` must
-    be coprime) on the numerators and denominators of the fractions in
-    :math:`F_n`, combined with :math:`b \\leq n`, means that for each
-    :math:`b \\leq n` it contains exactly :math:`\\phi(b)`` fractions of the
-    form :math:`\\frac{a}{b}` where :math:`(a, b) = 1`.
+    If we write the fractions in :math:`F_n` as :math:`\\frac{b}{a}` where
+    :math:`a > b` then the restriction :math:`(a, b) = 1` (meaning :math:`a`
+    and :math:`b` must be coprime), combined with :math:`a \\leq n`, means that
+    for each :math:`a \\leq n` :math:`F_n` contains exactly :math:`\\phi(a)``
+    fractions of the form :math:`\\frac{b}{a}` where :math:`(a, b) = 1`.
 
-    This means that the length :math:`|F_n|` of :math:`F_n` is given by:
+    As :math:`F_n` also contains the special fraction :math:`\\frac{0}{1}` it
+    means that the length :math:`|F_n|` of :math:`F_n` is given by:
 
     .. math::
 

@@ -216,7 +216,7 @@ The :py:func:`~continuedfractions.sequences.coprime_integers` function can be us
    >>> coprime_integers(100)
    (99, 97, 93, 91, 89, 87, 83, 81, 79, 77, 73, 71, 69, 67, 63, 61, 59, 57, 53, 51, 49, 47, 43, 41, 39, 37, 33, 31, 29, 27, 23, 21, 19, 17, 13, 11, 9, 7, 3, 1)
 
-For a given positive integer :math:`n` the result is a tuple of positive integers coprime to :math:`n`, in descending order, always ending with :math:`1`. If :math:`n` is not a positive integer a :py:class:`ValueError` is raised.
+The result is a tuple of positive integers coprime to :math:`n`, in descending order, always ending with :math:`1`. If :math:`n` is not a positive integer a :py:class:`ValueError` is raised.
 
 The count of the coprimes sequence returned by :py:func:`~continuedfractions.sequences.coprime_integers` for a given :math:`n \geq 1` is consistent with `totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_ :math:`\phi(n)`, on which it is based, and this can be verified using the Sympy :py:class:`~sympy.ntheory.factor_.totient` callable.
 
@@ -292,7 +292,7 @@ For a given positive integer :math:`n` the :py:func:`~continuedfractions.sequenc
    >>> coprime_pairs(10)
    ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5), (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7), (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1))
 
-For a given :math:`n \geq 1` the result is a tuple of integer pairs :math:`(a, b)` such that :math:`(a, b) = 1` and :math:`1 \leq b < a \leq n`, and the number of such pairs is given by:
+The result is a tuple of integer pairs :math:`(a, b)` such that :math:`(a, b) = 1` and :math:`1 \leq b < a \leq n`, and the number of such pairs is given by:
 
 .. math::
 
@@ -316,18 +316,22 @@ We can check the counts using the `summatory totient function <https://en.wikipe
 
 A naive implementation of a coprime pairs generating function would involve a search for pairs of integers (in a bounded interval), and would therefore have quadratic worst-case time complexity. The :py:func:`~continuedfractions.sequences.coprime_pairs` function uses a different approach based on ternary trees, as described below.
 
-.. _sequences.ksrm-tree:
+.. _sequences.ksrm-trees:
 
-KSRM Tree
-~~~~~~~~~
+KSRM Trees
+----------
 
-The :py:class:`~continuedfractions.sequences.KSRMTree` class is an implicit/generative class implementation of a disjointed ternary tree for representing (and generating) pairs of (positive) coprime integers, as presented in separate papers by A. R. Kanga, and `R. Saunders and T. Randall <https://doi.org/10.2307/3618576>`_, and `W. Mitchell <https://doi.org/10.2307/3622017>`_. This tree is referred to as the "KSRM tree".
+The :py:class:`~continuedfractions.sequences.KSRMTree` class is an implicit/generative class implementation of two ternary trees for representing (and generating) all pairs of (positive) coprime integers, as presented in separate papers by A. R. Kanga, and `R. Saunders and T. Randall <https://doi.org/10.2307/3618576>`_, and `W. Mitchell <https://doi.org/10.2307/3622017>`_.
 
 .. note::
 
-   The author could not access the Kanga paper, but the core result is described clearly in the papers of Saunders and Randall, and of Mitchell.
+   The class is named ``KSRMTree`` purely for convenience, but it is actually a representation of two (ternary) subtrees.
 
-Firstly, we describe some background material on the KSRM tree, which is a unified version of trees presented in the papers listed above. These papers are largely concerned with so-called `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in a disjoint ternary tree, with two "parents" (root nodes), :math:`(2, 1)` and :math:`(3, 1)`, in which each parent node has exactly three child nodes of the form:
+.. note::
+
+   The author could not access the Kanga paper online, but the core result is described clearly in the papers of Saunders and Randall, and of Mitchell.
+
+Firstly, we describe some background material on the KSRM trees, which are presented in the papers listed above. These papers are largely concerned with so-called `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node has three children given by the relations:
 
 .. math::
 
@@ -337,9 +341,32 @@ Firstly, we describe some background material on the KSRM tree, which is a unifi
                           (a + 2b, b), \hskip{3em} \text{ branch #} 3                   
                           \end{cases}
 
-where :math:`1 \leq b < a`, with two pairs of initial values given by :math:`(a=2, b=1)`, and :math:`(a=3, b=1)`. Each node in the tree is the parent of all nodes that branch from it, but the nodes :math:`(2, 1)` and :math:`(3, 1)` are canonical.
+where :math:`1 \leq b < a`.
 
-Generating coprime pairs can then be implemented by a generative search procedure that starts separately from the parents :math:`(2, 1)` and :math:`(3, 1)`, and applies the functions given by the mappings below to each parent:
+This can be checked by constructing a :py:class:`~continuedfractions.sequences.KSRMTree` instance, and checking the roots and branches, which are exposed as properties.
+
+.. code:: python
+    
+   >>> tree = KSRMTree()
+   >>> tree.roots
+   ((2, 1), (3, 1))
+   >>> tree.branches
+   (NamedCallableProxy("KSRM tree branch #1: (x, y) |--> (2x - y, x)"),
+   NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
+   NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
+
+The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables, one for each of the three branches, and each takes two integers as arguments. The nodes can be generated manually as follows:
+
+.. code:: python
+
+   # Generating the 1st generation of children for the root ``(2, 1)``
+   >>> [tree.branches[k](2, 1) for k in range(3)]
+   [(3, 2), (5, 2), (4, 1)]
+   # Generating the 1st generation of children for the root ``(3, 1)``
+   >>> [tree.branches[k](3, 1) for k in range(3)]
+   [(5, 3), (7, 3), (5, 1)]
+
+The generation of coprime pairs via the trees can then be implemented with a generative search procedure that starts separately from the parents :math:`(2, 1)` and :math:`(3, 1)`, and applies the functions given by the mappings below to each parent:
 
 .. math::
 
@@ -355,15 +382,13 @@ producing the "1st generation" of :math:`3 + 3 = 6` triplets. This can be repeat
 
    The tree with the root :math:`(3, 1)` only contains coprime pairs of odd integers, under the maps described above.
 
-If we let :math:`k = 1` denote the 1st generation consisting only of the two roots :math:`(2, 1)` and :math:`(3, 1)`, then the :math:`k`-th generation for either tree will have a total of :math:`3^{k - 1}` children, the total number of all members up to and including the :math:`k`-generation will be :math:`1 + 3 + 3^2 + \ldots 3^{k - 1} = \frac{3^k - 1}{2}`, and the total number of all members in both trees up to and including the :math:`k`-th generation will be :math:`3^k - 1`.
+If we let :math:`k = 0` denote the :math:`0`-th generation consisting only of the two roots :math:`(2, 1)` and :math:`(3, 1)`, then for :math:`k \geq 1` the :math:`k`-th generation, for either tree, will have a total of :math:`3^k` children, the total number of all members up to and including the :math:`k`-th generation will be :math:`1 + 3 + 3^2 + \ldots + 3^k = \frac{3^{k + 1} - 1}{2}`, and the total number of all members in both trees up to and including the :math:`k`-th generation will be :math:`3^{k + 1} - 1`.
 
-The number of coprime pairs generated for an :math:`n \geq 1` is given by:
+For :math:`k = 2` (two generations) we have the following graphical representation:
 
-.. math::
-
-   \phi(1) + \phi(2) + \cdots + \phi(n) = \sum_{k = 1}^n \phi(k)
-
-where :math:`\phi(k)` is the totient function.
+.. figure:: ../_static/ksrm-tree-depth2.png
+   :align: left
+   :alt: The KSRM Coprime Pairs Trees for two generations
 
 The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main method :py:meth:`~continuedfractions.sequences.KSRMTree.search`, which is a search function wrapper and generator that implements the procedure described above, and explores both roots :math:`(2, 1)` and :math:`(3, 1)`, in sequence.
 
@@ -381,7 +406,15 @@ The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main m
    >>> list(tree.search(10))
    [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (9, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1)]
 
-The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a `branch-and-bound <https://en.wikipedia.org/wiki/Branch_and_bound>`_ `depth-first search <https://en.wikipedia.org/wiki/Depth-first_search>`_ of the KSRM tree, with pre-order traversal of nodes (root-left-mid-right or NLMR), and backtracking and pruning. Some examples are given below.
+The number of coprime pairs generated for a given :math:`n \geq 1` is given by:
+
+.. math::
+
+   \phi(1) + \phi(2) + \cdots + \phi(n) = \sum_{k = 1}^n \phi(k)
+
+where :math:`\phi(k)` is the totient function.
+
+The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a `branch and bound <https://en.wikipedia.org/wiki/Branch_and_bound>`_, `depth first search <https://en.wikipedia.org/wiki/Depth-first_search>`_ of the KSRM trees, with pre-order traversal of nodes (root-left-mid-right or NLMR), and backtracking and pruning. Some examples are given below.
 
 .. code:: python
 
@@ -391,20 +424,17 @@ The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wr
    >>> assert tree.roots[0] == (2, 1)
    >>> list(tree.search_root(5, tree.roots[0]))
    [(2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1)]
-
-   The same type of search from the root :math:`(3, 1)`:
-
    >>> list(tree.search_root(5, (3, 1)))
    [(3, 1), (5, 3), (5, 1)]
    >>> assert tree.roots[1] == (3, 1)
    >>> list(tree.search_root(5, tree.roots[1]))
    [(3, 1), (5, 3), (5, 1)]
 
-The input is a positive integer :math:`n` and the result is a generator of coprime pairs, yielded in order of traversal, starting from the (given) root node. The tree is only traversed for :math:`n > 1`. More details on the implementation, including the depth-first search, branch-and-bound, pruning and backtracking and so on can be found in the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` API documentation.
+The result for a given :math:`n \geq 1` is a generator of coprime pairs, yielded in order of traversal, starting from the (given) root node. The tree is only traversed for :math:`n > 1`. More details on the implementation, including the depth-first search, branch-and-bound, pruning and backtracking and so on can be found in the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` API documentation.
 
 The implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` is guaranteed to terminate for any given :math:`n`, as only there is always a finite subset of nodes :math:`(a, b)` satisfying the conditions :math:`1 \leq b < a \leq n` and :math:`(a, b) = 1`, and nodes that don't satisfy these conditions are discarded (pruned).
 
-As the KSRM tree is a ternary tree the worst case time complexity of search is given by :math:`O(3^d)`, where :math:`3` is the (constant) branching factor, and :math:`d` is the depth to which the search is performed. Theoretically, the space complexity is :math:`O(3d)`, but nodes are generated as Python :py:class:`int` pairs from generating functions, and the pruning of nodes and backtracking ensures that for most of the search only a fraction of the full set of :math:`3d` are nodes are ever stored all at once.
+As the KSRM trees are ternary trees the worst case time complexity of search, for either tree, is given by :math:`O(3^d)`, where :math:`3` is the (constant) branching factor, and :math:`d` is the depth to which the search is performed. Theoretically, the space complexity is :math:`O(3d)`, but nodes are generated as Python :py:class:`int` pairs from generating functions, and the pruning of nodes and backtracking ensures that for almost all of the search, for any given :math:`n`, only a fraction of the full set of :math:`3d` are nodes are ever stored all at once.
 
 .. _sequences.farey-sequences:
 
@@ -431,7 +461,7 @@ The Farey sequence :math:`F_n` of order :math:`n` is an (ordered) sequence of (i
                                                 & \text{ or } b = a = 1
    \end{align}
 
-The special case is when :math:`n = 1` and :math:`F_1` is:
+The special case is when :math:`n = 1` and :math:`F_1` is given by:
 
 .. math::
 

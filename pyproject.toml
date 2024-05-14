@@ -31,19 +31,16 @@ dependencies = [
 readme = "README.md"
 
 keywords = [
-    "backtracking search",
     "computational number theory",
     "coprime integers",
     "continued fractions",
-    "depth first search",
-    "farey sequence",
+    "farey sequences",
     "irrational numbers",
     "mediants",
     "number theory",
     "rational approximation",
     "rational numbers",
     "real numbers",
-    "tree search",
 ]
 
 classifiers = [
@@ -72,7 +69,7 @@ build-backend = "pdm.backend"
 
 [project.urls]
 Homepage = "https://github.com/sr-murthy/continuedfractions"
-Documentation = "https://continuedfractions.readthedocs.io/en/stable/"
+Documentation = "https://continuedfractions.readthedocs.io/en/latest/"
 Repository = "https://github.com/sr-murthy/continuedfractions"
 
 # For working with PDM, including configuration and usage see:

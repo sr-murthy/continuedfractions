@@ -16,6 +16,7 @@ The package is designed to:
 -  operate on them fully as rational numbers and instances of the standard library
    :py:class:`fractions.Fraction` class
 -  support approximations and experimental computations for irrational numbers
+-  explore other objects related to continued fractions, such as mediants, sequences of coprime integers, and Farey sequences
 
 You can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`.
 

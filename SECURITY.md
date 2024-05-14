@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-The package currently only uses Python standard libraries (see the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml)), and has no 3rd party dependencies. Therefore the only security / vulnerability alerts that are relevant relate to [Python itself](https://www.cvedetails.com/vulnerability-list/vendor_id-10210/product_id-18230/Python-Python.html), which would be addressed within Python itself.
+The package currently only uses Python standard libraries (see the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml)), and has no 3rd party dependencies. Therefore the only security / vulnerability alerts that are relevant relate to [Python itself](https://www.cvedetails.com/vulnerability-list/vendor_id-10210/product_id-18230/Python-Python.html), which would be addressed within Python.
 
 If 3rd party dependencies are added there may be security patches applied as and when needed.
 

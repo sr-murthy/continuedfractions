@@ -34,7 +34,7 @@ The `continuedfractions` package is designed for:
 * exploring their key properties, such as elements/coefficients, convergents, segments, remainders, and others
 * operating on them as rationals and instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class
 * supporting approximations and experimental computations for irrational numbers
-* exploring other objects related to continued fractions, such as mediants, sequences of coprime integers, and Farey sequences
+* exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 

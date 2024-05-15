@@ -8,15 +8,15 @@ continuedfractions
 
 A simple extension of the Python :py:mod:`fractions` standard library for working with `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
 
-The package is designed to:
+The package is designed for:
 
--  make it easy to construct continued fractions as Python objects
--  explore their key continued fractions properties, such as elements/coefficients,
+-  working with continued fractions as Python objects
+-  exploring their key continued fractions properties, such as elements/coefficients,
    convergents, remainders, and other numerical properties etc.
--  operate on them fully as rational numbers and instances of the standard library
+-  operating on them fully as rational numbers and instances of the standard library
    :py:class:`fractions.Fraction` class
--  support approximations and experimental computations for irrational numbers
--  explore other objects related to continued fractions, such as mediants, sequences of coprime integers, and Farey sequences
+-  supporting approximations and experimental computations for irrational numbers
+-  exploring other objects related to continued fractions, such as mediants, sequences of coprime integers, and Farey sequences
 
 You can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`.
 

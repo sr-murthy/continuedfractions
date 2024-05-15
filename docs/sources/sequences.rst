@@ -224,7 +224,7 @@ The count of the coprimes sequence returned by :py:func:`~continuedfractions.seq
 
    >>> import sympy
    >>> assert len(coprime_integers(1)) == sympy.totient(1) == 1
-   >>> assert  len(coprime_integers(2)) == sympy.totient(2) == 1
+   >>> assert len(coprime_integers(2)) == sympy.totient(2) == 1
    >>> assert len(coprime_integers(3)) == sympy.totient(3) == 2
    >>> assert len(coprime_integers(4)) == sympy.totient(4) == 2
    >>> assert len(coprime_integers(5)) == sympy.totient(5) == 4
@@ -341,7 +341,7 @@ Firstly, we describe some background material on the KSRM trees, which are prese
                           (a + 2b, b), \hskip{3em} \text{ branch #} 3                   
                           \end{cases}
 
-where :math:`1 \leq b < a`.
+where :math:`1 \leq b < a` and :math:`(a, b) = 1`.
 
 This can be checked by constructing a :py:class:`~continuedfractions.sequences.KSRMTree` instance, and checking the roots and branches, which are exposed as properties.
 
@@ -352,8 +352,8 @@ This can be checked by constructing a :py:class:`~continuedfractions.sequences.K
    ((2, 1), (3, 1))
    >>> tree.branches
    (NamedCallableProxy("KSRM tree branch #1: (x, y) |--> (2x - y, x)"),
-   NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
-   NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
+    NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
+    NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
 
 The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables, one for each of the three branches, and each takes two integers as arguments. The nodes can be generated manually as follows:
 
@@ -376,7 +376,7 @@ The generation of coprime pairs via the trees can then be implemented with a gen
    (a, b) &\longmapsto (a + 2b, b)
    \end{align}
 
-producing the "1st generation" of :math:`3 + 3 = 6` triplets. This can be repeated ad infinitum as required.
+producing the "1st generation" of :math:`3 + 3 = 6` pairs. This can be repeated ad infinitum as required.
 
 .. note::
 
@@ -414,7 +414,7 @@ The number of coprime pairs generated for a given :math:`n \geq 1` is given by:
 
 where :math:`\phi(k)` is the totient function.
 
-The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a `branch and bound <https://en.wikipedia.org/wiki/Branch_and_bound>`_, `depth first search <https://en.wikipedia.org/wiki/Depth-first_search>`_ of the KSRM trees, with pre-order traversal of nodes (root-left-mid-right or NLMR), and backtracking and pruning. Some examples are given below.
+The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a `branch and bound <https://en.wikipedia.org/wiki/Branch_and_bound>`_ `depth first search <https://en.wikipedia.org/wiki/Depth-first_search>`_ of the KSRM trees, with pre-ordered traversal of nodes (root-left-mid-right or NLMR), and backtracking and pruning. Some examples are given below.
 
 .. code:: python
 
@@ -494,7 +494,7 @@ and this can be checked with the :py:func:`~continuedfractions.sequences.farey_s
    >>> farey_sequence(5)
    (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
 
-For :math:`n > 1` we can write the fractions in :math:`F_n` as :math:`\frac{b}{a}` where :math:`a > b`: then the restriction :math:`(a, b) = 1` (meaning :math:`a` and :math:`b` must be coprime), combined with :math:`a \leq n`, means that :math:`F_n` contains, for each :math:`a \leq n`, exactly :math:`\phi(a)` fractions of the form :math:`\frac{b}{a}` where :math:`a > b` and :math:`(a, b) = 1`, and :math:`\phi(k)` is `Euler's totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_.
+For :math:`n > 1` we can write the fractions in :math:`F_n` as :math:`\frac{b}{a}` where :math:`a > b`: then the restriction :math:`(a, b) = 1` (meaning :math:`a` and :math:`b` must be coprime), combined with :math:`a \leq n`, means that :math:`F_n` contains, for each :math:`a \leq n`, exactly :math:`\phi(a)` fractions of the form :math:`\frac{b}{a}` where :math:`a > b` and :math:`(a, b) = 1`, and :math:`\phi(k)` is the totient function.
 
 As :math:`F_n` also contains the special fraction :math:`\frac{0}{1}` as its initial element, it means that the length :math:`|F_n|` of :math:`F_n` is given by:
 
@@ -508,7 +508,7 @@ For :math:`n > 1` the sequence :math:`F_n` contains all elements of :math:`F_{n 
 
    |F_n| = |F_{n - 1}| + \phi(n)
 
-As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :py:func:`~continuedfractions.sequences.farey_sequence`, which uses the former, can be checked using the `summatory totient function <https://en.wikipedia.org/wiki/Totient_summatory_function>`_:
+As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :py:func:`~continuedfractions.sequences.farey_sequence`, which uses the former, can be checked using the summatory totient function:
 
 .. code:: python
 

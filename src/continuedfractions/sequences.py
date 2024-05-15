@@ -306,7 +306,7 @@ class KSRMTree:
                                 (a + 2b, b), \\hskip{3em} \\text{ branch #} 3                   
                                 \\end{cases}
 
-    where :math:`1 \\leq b < a`.
+    where :math:`1 \\leq b < a` and :math:`(a, b) = 1`.
 
     Generating coprime pairs can then be implemented by a generative search
     procedure that starts separately from the parents :math:`(2, 1)` and
@@ -598,7 +598,7 @@ class KSRMTree:
 
         The search implementation is an iterative version of a backtracking
         depth-first branch-and-bound search (DFS), in which nodes are traversed
-        in pre-order, NLMR (root -> left -> mid -> right) and bounds and checks
+        in NLMR pre-order (root -> left -> mid -> right) and bounds and checks
         are applied to the nodes, before further traversal or backtracking:
         
         #. Visit the current node :math:`(a, b)` and check :math:`a \\leq n`.

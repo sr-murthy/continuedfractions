@@ -432,9 +432,9 @@ The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wr
 
 The result for a given :math:`n \geq 1` is a generator of coprime pairs, yielded in order of traversal, starting from the (given) root node. The tree is only traversed for :math:`n > 1`. More details on the implementation, including the depth-first search, branch-and-bound, pruning and backtracking and so on can be found in the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` API documentation.
 
-The implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` is guaranteed to terminate for any given :math:`n`, as only there is always a finite subset of nodes :math:`(a, b)` satisfying the conditions :math:`1 \leq b < a \leq n` and :math:`(a, b) = 1`, and nodes that don't satisfy these conditions are discarded (pruned).
+The implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` is guaranteed to terminate for any given :math:`n`, as there is always a finite subset of nodes :math:`(a, b)` satisfying the conditions :math:`1 \leq b < a \leq n` and :math:`(a, b) = 1`, and nodes that don't satisfy these conditions are discarded (pruned).
 
-As the KSRM trees are ternary trees the worst case time complexity of search, for either tree, is given by :math:`O(3^d)`, where :math:`3` is the (constant) branching factor, and :math:`d` is the depth to which the search is performed. Theoretically, the space complexity is :math:`O(3d)`, but nodes are generated as Python :py:class:`int` pairs from generating functions, and the pruning of nodes and backtracking ensures that for almost all of the search, for any given :math:`n`, only a fraction of the full set of :math:`3d` are nodes are ever stored all at once.
+As the KSRM trees are ternary trees the worst case time complexity of search, for either tree, is given by :math:`O(3^d)`, where :math:`3` is the (constant) branching factor, and :math:`d` is the depth to which the search is performed. Theoretically, the space complexity is :math:`O(3d)`, but the pruning of nodes and backtracking ensures that for almost all of the search for any given :math:`n` only some fraction of :math:`d` nodes, along a single branch, are ever stored all at once.
 
 .. _sequences.farey-sequences:
 
@@ -450,6 +450,15 @@ The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used
    (ContinuedFraction(0, 1), ContinuedFraction(1, 10), ContinuedFraction(1, 9), ContinuedFraction(1, 8), ContinuedFraction(1, 7), ContinuedFraction(1, 6), ContinuedFraction(1, 5), ContinuedFraction(2, 9), ContinuedFraction(1, 4), ContinuedFraction(2, 7), ContinuedFraction(3, 10), ContinuedFraction(1, 3), ContinuedFraction(3, 8), ContinuedFraction(2, 5), ContinuedFraction(3, 7), ContinuedFraction(4, 9), ContinuedFraction(1, 2), ContinuedFraction(5, 9), ContinuedFraction(4, 7), ContinuedFraction(3, 5), ContinuedFraction(5, 8), ContinuedFraction(2, 3), ContinuedFraction(7, 10), ContinuedFraction(5, 7), ContinuedFraction(3, 4), ContinuedFraction(7, 9), ContinuedFraction(4, 5), ContinuedFraction(5, 6), ContinuedFraction(6, 7), ContinuedFraction(7, 8), ContinuedFraction(8, 9), ContinuedFraction(9, 10), ContinuedFraction(1, 1))
 
 The result is a tuple of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances in ascending order of magnitude, starting with ``ContinuedFraction(0, 1)`` and ending with ``ContinuedFraction(1, 1)``.
+
+.. note::
+
+   Often it is easier to read off sequences of fractions (both :py:class:`fractions.Fraction` and :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`) in the form ``a/b`` - for this purpose it is useful to print them in the following way:
+
+   .. code:: python
+
+      >>> print(', '.join([str(frac) for frac in farey_sequence(10)]))
+      0, 1/10, 1/9, 1/8, 1/7, 1/6, 1/5, 2/9, 1/4, 2/7, 3/10, 1/3, 3/8, 2/5, 3/7, 4/9, 1/2, 5/9, 4/7, 3/5, 5/8, 2/3, 7/10, 5/7, 3/4, 7/9, 4/5, 5/6, 6/7, 7/8, 8/9, 9/10, 1
 
 The Farey sequence :math:`F_n` of order :math:`n` is an (ordered) sequence of (irreducible) rational numbers, called **Farey fractions**, in the closed unit interval :math:`[0, 1]`, which can be defined as follows:
 
@@ -522,7 +531,19 @@ As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :p
    >>> assert len(farey_sequence(1000)) == 1 + sum(map(sympy.totient, range(1, 1001))) == 304193
    >>> assert len(farey_sequence(10000)) == 1 + sum(map(sympy.totient, range(1, 10001))) == 30397487
 
-Farey sequences have quite interesting properties and relations, as described `here <https://en.wikipedia.org/wiki/Farey_sequence>`_. They are connected to :ref:`mediants <sequences.mediants>` and finite simple continued fractions via `Farey neighbours <https://en.wikipedia.org/wiki/Farey_sequence#Farey_neighbours>`_.
+Farey sequences have some interesting properties and connections with mediants and continued fractions, as described `here <https://en.wikipedia.org/wiki/Farey_sequence>`_. In relation to :ref:`mediants <sequences.mediants>` there is the notion of `Farey neighbours <https://en.wikipedia.org/wiki/Farey_sequence#Farey_neighbours>`_, which are simply three consecutive Farey fractions in a Farey sequence :math:`F_n` where the middle fraction is the mediant of the neighbouring fractions: if :math:`\frac{a}{b}, \frac{p}{q}, \frac{c}{d}` are consecutive Farey fractions in some :math:`F_n` then :math:`\frac{p}{q}` is the mediant of :math:`\frac{a}{b}` and :math:`\frac{c}{d}`.
+
+This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence`:
+
+.. code:: python
+
+   >>> f3 = farey_sequence(3)
+   >>> f3
+   (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
+   >>> assert f3[0].left_mediant(f3[2]) == f3[1]
+   >>> assert f3[1].left_mediant(f3[3]) == f3[2]
+   >>> assert f3[2].left_mediant(f3[4]) == f3[3]
+
 
 .. _sequences.references:
 

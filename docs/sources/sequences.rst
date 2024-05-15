@@ -432,7 +432,7 @@ The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wr
 
 The result for a given :math:`n \geq 1` is a generator of coprime pairs, yielded in order of traversal, starting from the (given) root node. The tree is only traversed for :math:`n > 1`. More details on the implementation, including the depth-first search, branch-and-bound, pruning and backtracking and so on can be found in the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` API documentation.
 
-The implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` is guaranteed to terminate for any given :math:`n`, as only there is always a finite subset of nodes :math:`(a, b)` satisfying the conditions :math:`1 \leq b < a \leq n` and :math:`(a, b) = 1`, and nodes that don't satisfy these conditions are discarded (pruned).
+The implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` is guaranteed to terminate for any given :math:`n`, as there is always a finite subset of nodes :math:`(a, b)` satisfying the conditions :math:`1 \leq b < a \leq n` and :math:`(a, b) = 1`, and nodes that don't satisfy these conditions are discarded (pruned).
 
 As the KSRM trees are ternary trees the worst case time complexity of search, for either tree, is given by :math:`O(3^d)`, where :math:`3` is the (constant) branching factor, and :math:`d` is the depth to which the search is performed. Theoretically, the space complexity is :math:`O(3d)`, but the pruning of nodes and backtracking ensures that for almost all of the search for any given :math:`n` only some fraction of :math:`d` nodes, along a single branch, are ever stored all at once.
 

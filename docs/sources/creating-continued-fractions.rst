@@ -409,14 +409,14 @@ References
 
 [2] Barrow, J. D. (2000, June 1). Chaos in Numberland: The secret life of continued fractions. Plus.Maths.org. Retrieved February 19, 2024, from https://plus.maths.org/content/chaos-numberland-secret-life-continued-fractions
 
-[4] Khinchin, A. Y. (1997). Continued Fractions. Dover Publications.
+[3] Continued Fraction. (2024, March 31). In Wikipedia. https://en.wikipedia.org/wiki/Continued_fraction
 
-[5] Nemiroff, R. J. (n.d.). The Square Root of Two to 1 Million Digits. Astronomy Picture of the Day. Retrieved March 13, 2024, from https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil
+[4] Python Software Foundation (n.d.). Decimal - Decimal fixed point and floating point arithmetic. Python 3.12.3 Documentation. Retrieved February 21, 2024, from https://docs.python.org/3/library/decimal.html
 
-[6] Python Software Foundation (n.d.). Decimal - Decimal fixed point and floating point arithmetic. Python 3.12.3 Documentation. Retrieved February 21, 2024, from https://docs.python.org/3/library/decimal.html
+[5] Python Software Foundation (n.d.). Floating Point Arithmetic: Issues and Limitations. Python 3.12.3 Documentation. Retrieved February 20, 2024, from https://docs.python.org/3/tutorial/floatingpoint.html
 
-[7] Python Software Foundation (n.d.). Floating Point Arithmetic: Issues and Limitations. Python 3.12.3 Documentation. Retrieved February 20, 2024, from https://docs.python.org/3/tutorial/floatingpoint.html
+[6] Python Software Foundation (n.d.). Fractions - Rational numbers. Python 3.12.3 Documentation. Retrieved February 21, 2024, from https://docs.python.org/3/library/fractions.html
 
-[8] Python Software Foundation (n.d.). Fractions - Rational numbers. Python 3.12.3 Documentation. Retrieved February 21, 2024, from https://docs.python.org/3/library/fractions.html
+[7] Khinchin, A. Y. (1997). Continued Fractions. Dover Publications.
 
-[9] Continued Fraction. (2024, March 31). In Wikipedia. https://en.wikipedia.org/wiki/Continued_fraction
+[8] Nemiroff, R. J. (n.d.). The Square Root of Two to 1 Million Digits. Astronomy Picture of the Day. Retrieved March 13, 2024, from https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil

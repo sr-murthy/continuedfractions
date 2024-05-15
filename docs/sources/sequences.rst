@@ -550,18 +550,18 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 References
 ==========
 
-[1] Khinchin, A. Y. (1997). Continued Fractions. Dover Publications.
+[1] Branch and bound. (2024, May 4). In Wikipedia. https://en.wikipedia.org/wiki/Branch_and_bound
 
-[2] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+[2] Coprime integers. (2024, May 7). In Wikipedia. https://en.wikipedia.org/wiki/Coprime_integers
 
-[3] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
+[3] Farey sequence. (2024, May 11). In Wikipedia. https://en.wikipedia.org/wiki/Farey_sequence
 
-[4] Branch and bound. (2024, May 4). In Wikipedia. https://en.wikipedia.org/wiki/Branch_and_bound
+[4] Khinchin, A. Y. (1997). Continued Fractions. Dover Publications.
 
-[5] Coprime integers. (2024, May 7). In Wikipedia. https://en.wikipedia.org/wiki/Coprime_integers
+[5] Mediant (mathematics). (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Mediant_(mathematics)
 
-[6] Farey sequence. (2024, May 11). In Wikipedia. https://en.wikipedia.org/wiki/Farey_sequence
+[6] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
 
-[7] Mediant (mathematics). (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Mediant_(mathematics)
-   
+[7] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
+
 [8] Stern-Brocot tree. (2023, December 28). In Wikipedia. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree

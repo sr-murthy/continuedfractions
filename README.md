@@ -33,8 +33,15 @@ The `continuedfractions` package is designed for:
 * working with (finite) continued fractions as Python objects
 * exploring their key properties, such as elements/coefficients, convergents, segments, remainders, and others
 * operating on them as rationals and instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class
-* supporting approximations and experimental computations for irrational numbers
+* supporting approximations of and experimental computations for irrational numbers
 * exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
+
+Currently, it does **not** support the following features:
+
+* infinite and generalised continued fractions
+* symbolic computations
+
+These are [planned](https://github.com/sr-murthy/continuedfractions/issues) for future releases.
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 

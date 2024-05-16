@@ -109,7 +109,7 @@ extensions = ['jupyter_sphinx',
 autodoc_default_options = {
     'exclude-members': '__call__,__weakref__,__slots__,__match_args__',
     'member-order': 'bysource',
-    'private-members': False,
+    'private-members': True,
     'special-members': '__eq__, __init__, __new__'
 }
 
@@ -191,7 +191,7 @@ html_context = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 # General (non-theme) HTML output options
-html_baseurl = 'https://continuedfractions.readthedocs.io/en/stable/'
+html_baseurl = 'https://continuedfractions.readthedocs.io/en/latest/'
 
 html_sidebars = {
     "sources/getting-started": [],

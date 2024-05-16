@@ -59,9 +59,10 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
 
 There is also a corresponding :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant` method, which gives you the same value for :math:`k = 1`. The definitions of "right-mediant" and "left-mediant" are given in the :ref:`next section <sequences.mediants.generalised>`, but the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` is sufficient for computing simple mediants.
 
-In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`.
+In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`. 
 
-This is an ordering property that links mediants to ordered sequences of rational numbers such as `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_, and tree orderings such as the `Stern-Brocot tree <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>`_. The package provides a :py:func:`~continuedfractions.sequences.farey_sequence <Farey sequence function>` that is described in more detail :ref:`here <sequences.farey-sequences>`.
+This is an ordering property that links mediants to ordered sequences of rational numbers such as `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_, which are described in more detail :ref:`here <sequences.farey-sequences>`,
+and also tree orderings such as the `Stern-Brocot tree <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>`_.
 
 .. _sequences.mediants.generalised:
 
@@ -325,13 +326,13 @@ The :py:class:`~continuedfractions.sequences.KSRMTree` class is an implicit/gene
 
 .. note::
 
-   The class is named ``KSRMTree`` purely for convenience, but it is actually a representation of two (ternary) subtrees.
+   The class is named ``KSRMTree`` purely for convenience, but it is actually a representation of two (ternary) trees.
 
 .. note::
 
-   The author could not access the Kanga paper online, but the core result is described clearly in the papers of Saunders and Randall, and of Mitchell.
+   The author could not access the Kanga paper online, but the core result is described in the papers of Saunders and Randall, and of Mitchell.
 
-Firstly, we describe some background material on the KSRM trees, which are presented in the papers listed above. These papers are largely concerned with so-called `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node has three children given by the relations:
+Firstly, we describe some background material on the KSRM trees, which are presented in the papers mentioned above. These papers are largely concerned with so-called `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node has three children given by the relations:
 
 .. math::
 
@@ -341,9 +342,9 @@ Firstly, we describe some background material on the KSRM trees, which are prese
                           (a + 2b, b), \hskip{3em} \text{ branch #} 3                   
                           \end{cases}
 
-where :math:`1 \leq b < a` and :math:`(a, b) = 1`.
+where :math:`(a, b)` is any starting node, and :math:`1 \leq b < a` and :math:`(a, b) = 1`. The result :math:`(a^\prime, b^\prime)` is a coprime pair.
 
-This can be checked by constructing a :py:class:`~continuedfractions.sequences.KSRMTree` instance, and checking the roots and branches, which are exposed as properties.
+We can inspect the roots and branches by constructing a :py:class:`~continuedfractions.sequences.KSRMTree` instance, and looking at the :py:attr:`~continuedfractions.sequences.KSRMTree.roots` and :py:attr:`~continuedfractions.sequences.KSRMTree.branches` properties.
 
 .. code:: python
     
@@ -355,7 +356,7 @@ This can be checked by constructing a :py:class:`~continuedfractions.sequences.K
     NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
     NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
 
-The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables, one for each of the three branches, and each takes two integers as arguments. The nodes can be generated manually as follows:
+The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables (instances of :py:class:`~continuedfractions.utils.NamedCallableProxy`), one for each of the three branches, and each takes two (coprime) integers :math:`a, b`, with :math:`1 \leq b < a`, as arguments. The nodes can be generated manually as follows:
 
 .. code:: python
 
@@ -390,7 +391,7 @@ For :math:`k = 2` (two generations) we have the following graphical representati
    :align: left
    :alt: The KSRM Coprime Pairs Trees for two generations
 
-The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main method :py:meth:`~continuedfractions.sequences.KSRMTree.search`, which is a search function wrapper and generator that implements the procedure described above, and explores both roots :math:`(2, 1)` and :math:`(3, 1)`, in sequence.
+The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main search method :py:meth:`~continuedfractions.sequences.KSRMTree.search`, which is a wrapper and generator that implements the procedure described above.
 
 .. code:: python
 
@@ -414,7 +415,9 @@ The number of coprime pairs generated for a given :math:`n \geq 1` is given by:
 
 where :math:`\phi(k)` is the totient function.
 
-The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a `branch and bound <https://en.wikipedia.org/wiki/Branch_and_bound>`_ `depth first search <https://en.wikipedia.org/wiki/Depth-first_search>`_ of the KSRM trees, with pre-ordered traversal of nodes (root-left-mid-right or NLMR), and backtracking and pruning. Some examples are given below.
+The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a `branch and bound <https://en.wikipedia.org/wiki/Branch_and_bound>`_ `depth first search <https://en.wikipedia.org/wiki/Depth-first_search>`_ of the KSRM trees, with pre-ordered traversal of nodes (root-left-mid-right or NLMR), and backtracking and pruning. The backtracking function is implemented as the private method :py:meth:`~continuedfractions.sequences.KSRMTree._backtrack`.
+
+Some examples are given below.
 
 .. code:: python
 
@@ -476,7 +479,7 @@ The special case is when :math:`n = 1` and :math:`F_1` is given by:
 
    F_1 = \left(\frac{0}{1}, \frac{1}{1}\right)
 
-The fractional elements of :math:`F_n` are written in ascending order of magnitude. The first five Farey sequences are listed below:
+The elements of :math:`F_n` are written in ascending order of magnitude. The first five Farey sequences are listed below:
 
 .. math::
 
@@ -517,6 +520,10 @@ For :math:`n > 1` the sequence :math:`F_n` contains all elements of :math:`F_{n 
 
    |F_n| = |F_{n - 1}| + \phi(n)
 
+.. note::
+
+   For any :math:`n \geq 1` the fraction :math:`\frac{1}{n}` first occurs as a Farey fraction in the Farey sequence :math:`F_n`. Also, the fraction :math:`\frac{1}{2}` is the middle term in any Farey sequence :math:`F_n` where :math:`n \geq 2`.
+
 As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :py:func:`~continuedfractions.sequences.farey_sequence`, which uses the former, can be checked using the summatory totient function:
 
 .. code:: python
@@ -531,19 +538,19 @@ As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :p
    >>> assert len(farey_sequence(1000)) == 1 + sum(map(sympy.totient, range(1, 1001))) == 304193
    >>> assert len(farey_sequence(10000)) == 1 + sum(map(sympy.totient, range(1, 10001))) == 30397487
 
-Farey sequences have some interesting properties and connections with mediants and continued fractions, as described `here <https://en.wikipedia.org/wiki/Farey_sequence>`_. In relation to :ref:`mediants <sequences.mediants>` there is the notion of `Farey neighbours <https://en.wikipedia.org/wiki/Farey_sequence#Farey_neighbours>`_, which are simply three consecutive Farey fractions in a Farey sequence :math:`F_n` where the middle fraction is the mediant of the neighbouring fractions: if :math:`\frac{a}{b}, \frac{p}{q}, \frac{c}{d}` are consecutive Farey fractions in some :math:`F_n` then :math:`\frac{p}{q}` is the mediant of :math:`\frac{a}{b}` and :math:`\frac{c}{d}`.
+Farey sequences have some interesting properties and connections with mediants and continued fractions, as described `here <https://en.wikipedia.org/wiki/Farey_sequence>`_. In relation to :ref:`mediants <sequences.mediants>` there is the notion of `Farey neighbours <https://en.wikipedia.org/wiki/Farey_sequence#Farey_neighbours>`_, which are simply adjacent or consecutive Farey fractions in a Farey sequence :math:`F_n`. Specifically, if fractions :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, with :math:`\frac{a}{b} < \frac{c}{d}`, are Farey neighbours in a Farey sequence :math:`F_n`, where we may assume that :math:`n` is the smallest such index, then:
 
-This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence`:
+* the mediant :math:`\frac{a + c}{b + d}` is a Farey fraction which first appears in the Farey sequence :math:`F_{b + d}`.
+* the difference :math:`\frac{c}{d} - \frac{a}{b} = \frac{bc - ad}{bd} = \frac{1}{bd}` is a Farey fraction which first appears in the Farey sequence :math:`F_{bd}`.
+
+This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence`, taking :math:`\frac{a}{b} = \frac{2}{3}` and :math:`\frac{c}{d} = \frac{3}{4}`, which first occur as Farey neighbours in the Farey sequence :math:`F_4`:
 
 .. code:: python
 
-   >>> f3 = farey_sequence(3)
-   >>> f3
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
-   >>> assert f3[0].left_mediant(f3[2]) == f3[1]
-   >>> assert f3[1].left_mediant(f3[3]) == f3[2]
-   >>> assert f3[2].left_mediant(f3[4]) == f3[3]
-
+   >>> print(', '.join([str(frac) for frac in farey_sequence(4)]))
+   0, 1/4, 1/3, 1/2, 2/3, 3/4, 1
+   >>> assert ContinuedFraction(2, 3).left_mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
+   >>> assert ContinuedFraction(3, 4) - ContinuedFraction(2, 3) in farey_sequence(12)
 
 .. _sequences.references:
 
@@ -554,14 +561,16 @@ References
 
 [2] Coprime integers. (2024, May 7). In Wikipedia. https://en.wikipedia.org/wiki/Coprime_integers
 
-[3] Farey sequence. (2024, May 11). In Wikipedia. https://en.wikipedia.org/wiki/Farey_sequence
+[3] Depth-first search. (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Depth-first_search
 
-[4] Khinchin, A. Y. (1997). Continued Fractions. Dover Publications.
+[4] Farey sequence. (2024, May 11). In Wikipedia. https://en.wikipedia.org/wiki/Farey_sequence
 
-[5] Mediant (mathematics). (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Mediant_(mathematics)
+[5] Khinchin, A. Y. (1997). Continued Fractions. Dover Publications.
 
-[6] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+[6] Mediant (mathematics). (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Mediant_(mathematics)
 
-[7] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
+[7] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
 
-[8] Stern-Brocot tree. (2023, December 28). In Wikipedia. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
+[8] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
+
+[9] Stern-Brocot tree. (2023, December 28). In Wikipedia. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree

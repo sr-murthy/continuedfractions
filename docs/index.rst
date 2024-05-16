@@ -15,8 +15,17 @@ The package is designed for:
    convergents, remainders, and other numerical properties etc.
 -  operating on them fully as rational numbers and instances of the standard library
    :py:class:`fractions.Fraction` class
--  supporting approximations and experimental computations for irrational numbers
+-  supporting approximations of and experimental computations for irrational numbers
 -  exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
+
+.. note::
+
+   Currently, it does **not** support the following features:
+
+   * infinite and generalised continued fractions
+   * symbolic computations
+
+   These are `planned <https://github.com/sr-murthy/continuedfractions/issues>`_ for future releases.
 
 You can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`.
 

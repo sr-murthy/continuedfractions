@@ -59,9 +59,10 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
 
 There is also a corresponding :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant` method, which gives you the same value for :math:`k = 1`. The definitions of "right-mediant" and "left-mediant" are given in the :ref:`next section <sequences.mediants.generalised>`, but the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` is sufficient for computing simple mediants.
 
-In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`.
+In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`. 
 
-This is an ordering property that links mediants to ordered sequences of rational numbers such as `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_, and tree orderings such as the `Stern-Brocot tree <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>`_. The package provides a :py:func:`~continuedfractions.sequences.farey_sequence <Farey sequence function>` that is described in more detail :ref:`here <sequences.farey-sequences>`.
+This is an ordering property that links mediants to ordered sequences of rational numbers such as `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_, which are described in more detail :ref:`here <sequences.farey-sequences>`,
+and also tree orderings such as the `Stern-Brocot tree <https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree>`_.
 
 .. _sequences.mediants.generalised:
 
@@ -355,7 +356,7 @@ We can inspect the roots and branches by constructing a :py:class:`~continuedfra
     NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
     NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
 
-The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables (instances of :py:class:`~continuedfractions.utiils.NamedCallableProxy`), one for each of the three branches, and each takes two (coprime) integers :math:`a, b`, with :math:`1 \leq b < a`, as arguments. The nodes can be generated manually as follows:
+The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables (instances of :py:class:`~continuedfractions.utils.NamedCallableProxy`), one for each of the three branches, and each takes two (coprime) integers :math:`a, b`, with :math:`1 \leq b < a`, as arguments. The nodes can be generated manually as follows:
 
 .. code:: python
 
@@ -478,7 +479,7 @@ The special case is when :math:`n = 1` and :math:`F_1` is given by:
 
    F_1 = \left(\frac{0}{1}, \frac{1}{1}\right)
 
-The fractional elements of :math:`F_n` are written in ascending order of magnitude. The first five Farey sequences are listed below:
+The elements of :math:`F_n` are written in ascending order of magnitude. The first five Farey sequences are listed below:
 
 .. math::
 
@@ -519,6 +520,10 @@ For :math:`n > 1` the sequence :math:`F_n` contains all elements of :math:`F_{n 
 
    |F_n| = |F_{n - 1}| + \phi(n)
 
+.. note::
+
+   For any :math:`n \geq 1` the fraction :math:`\frac{1}{n}` first occurs as a Farey fraction in the Farey sequence :math:`F_n`. Also, the fraction :math:`\frac{1}{2}` is the middle term in any Farey sequence :math:`F_n` where :math:`n \geq 2`.
+
 As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :py:func:`~continuedfractions.sequences.farey_sequence`, which uses the former, can be checked using the summatory totient function:
 
 .. code:: python
@@ -533,19 +538,19 @@ As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :p
    >>> assert len(farey_sequence(1000)) == 1 + sum(map(sympy.totient, range(1, 1001))) == 304193
    >>> assert len(farey_sequence(10000)) == 1 + sum(map(sympy.totient, range(1, 10001))) == 30397487
 
-Farey sequences have some interesting properties and connections with mediants and continued fractions, as described `here <https://en.wikipedia.org/wiki/Farey_sequence>`_. In relation to :ref:`mediants <sequences.mediants>` there is the notion of `Farey neighbours <https://en.wikipedia.org/wiki/Farey_sequence#Farey_neighbours>`_, which are simply adjacent or consecutive Farey fractions in a Farey sequence :math:`F_n` where the middle fraction is the mediant of the neighbouring fractions: to be more precise, if :math:`\frac{a}{b}, \frac{p}{q}, \frac{c}{d}` are consecutive Farey fractions in some :math:`F_n` then :math:`\frac{p}{q}` is the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, and :math:`\frac{p}{q}` first occurs in the Farey sequence :math:`F_{q} = F_{b + d}`.
+Farey sequences have some interesting properties and connections with mediants and continued fractions, as described `here <https://en.wikipedia.org/wiki/Farey_sequence>`_. In relation to :ref:`mediants <sequences.mediants>` there is the notion of `Farey neighbours <https://en.wikipedia.org/wiki/Farey_sequence#Farey_neighbours>`_, which are simply adjacent or consecutive Farey fractions in a Farey sequence :math:`F_n`. Specifically, if fractions :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, with :math:`\frac{a}{b} < \frac{c}{d}`, are Farey neighbours in a Farey sequence :math:`F_n`, where we may assume that :math:`n` is the smallest such index, then:
 
-This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence`:
+* the mediant :math:`\frac{a + c}{b + d}` is a Farey fraction which first appears in the Farey sequence :math:`F_{b + d}`.
+* the difference :math:`\frac{c}{d} - \frac{a}{b} = \frac{bc - ad}{bd} = \frac{1}{bd}` is a Farey fraction which first appears in the Farey sequence :math:`F_{bd}`.
+
+This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence`, taking :math:`\frac{a}{b} = \frac{2}{3}` and :math:`\frac{c}{d} = \frac{3}{4}`, which first occur as Farey neighbours in the Farey sequence :math:`F_4`:
 
 .. code:: python
 
-   >>> f3 = farey_sequence(3)
-   >>> f3
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
-   >>> assert f3[0].left_mediant(f3[2]) == f3[1]
-   >>> assert f3[1].left_mediant(f3[3]) == f3[2]
-   >>> assert f3[2].left_mediant(f3[4]) == f3[3]
-
+   >>> print(', '.join([str(frac) for frac in farey_sequence(4)]))
+   0, 1/4, 1/3, 1/2, 2/3, 3/4, 1
+   >>> assert ContinuedFraction(2, 3).left_mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
+   >>> assert ContinuedFraction(3, 4) - ContinuedFraction(2, 3) in farey_sequence(12)
 
 .. _sequences.references:
 

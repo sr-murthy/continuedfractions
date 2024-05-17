@@ -165,7 +165,7 @@ duplication on `main`.
 ## Versioning and Releases
 
 The [PyPI package](https://pypi.org/project/continuedfractions/) is
-currently at version `0.12.5` - the goal is to use [semantic
+currently at version `0.12.7` - the goal is to use [semantic
 versioning](https://semver.org/) consistently for all future releases,
 but some earlier releases do not comply with strict semantic versioning.
 

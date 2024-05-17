@@ -86,10 +86,10 @@ For :math:`k = 1` the left- and right-mediants are identical to the simple media
 .. math::
 
    \begin{align}
-   \frac{a + kc}{b + kd} - \left(\frac{ka + c}{kb + d}\right) &= \frac{(a + kc)(kb + d) - (b + kd)(ka + c)}{(b + kd)(kb + d)} \
-                                                 &= \frac{k^2(bc - ad) - (bc - ad)}{(b + kd)(kb + d)} \
-                                                 &= \frac{(bc - ad)(k^2 - 1)}{(b + kd)(kb + d)} \
-                                                 &\geq 0
+   \frac{a + kc}{b + kd} - \left(\frac{ka + c}{kb + d}\right) &= \frac{(a + kc)(kb + d) - (b + kd)(ka + c)}{(b + kd)(kb + d)} \\
+                                                              &= \frac{k^2(bc - ad) - (bc - ad)}{(b + kd)(kb + d)} \\
+                                                              &= \frac{(bc - ad)(k^2 - 1)}{(b + kd)(kb + d)} \\
+                                                              &\geq 0
    \end{align}
 
 where equality holds if and only if :math:`k = 1`.
@@ -194,7 +194,11 @@ And then the right-mediants:
 Coprime Integers
 ================
 
-Two integers :math:`a, b` are said to be **coprime** (or **relatively prime**) if their `greatest common divisor <https://en.wikipedia.org/wiki/Greatest_common_divisor>`_ is :math:`1` - this is also written as :math:`(a, b) = 1`. Coprimality has a number of important and interesting `properties <https://en.wikipedia.org/wiki/Coprime_integers#Properties>`_ that are beyond the scope of the package documentation, but of relevance here are the features it provides for:
+Two integers :math:`a, b` are said to be **coprime** (or **relatively prime**) if their `greatest common divisor (GCD) <https://en.wikipedia.org/wiki/Greatest_common_divisor>`_ is :math:`1` - this is also written as :math:`(a, b) = 1`. This occurs if and only :math:`a` has no prime factors in common with :math:`b`.
+
+The notion of coprimality can be extended to finite sets of integers: a finite set of integers :math:`S = \{a, b, c, \ldots\}` can be called coprime if the GCD of all the integers in :math:`S` is :math:`1`. A stronger condition is met by :math:`S` if it is **pairwise coprime**, which means the GCD of any two integers in :math:`S` is :math:`1`. The latter implies the former, but the converse does not necessarily hold.
+
+Coprimality has a number of important and interesting `properties <https://en.wikipedia.org/wiki/Coprime_integers#Properties>`_ that are beyond the scope of the package documentation, but of relevance here are the features it provides for:
 
 * computing a sequence of all (positive) integers coprime to a given positive integer :math:`n`
 * computing a sequence of all pairs of (positive) coprime integers not exceeding a given positive integer :math:`n`
@@ -206,7 +210,7 @@ These are described in more detail below.
 Integers Coprime to a Given Integer
 -----------------------------------
 
-The :py:func:`~continuedfractions.sequences.coprime_integers` function can be used to compute an (ordered) sequence of integers coprime to a given positive integer :math:`n`:
+The :py:func:`~continuedfractions.sequences.coprime_integers` function can be used to compute an (ordered) sequence of (positive) integers coprime to a given positive integer :math:`n`:
 
 .. code:: python
 
@@ -217,7 +221,7 @@ The :py:func:`~continuedfractions.sequences.coprime_integers` function can be us
    >>> coprime_integers(100)
    (99, 97, 93, 91, 89, 87, 83, 81, 79, 77, 73, 71, 69, 67, 63, 61, 59, 57, 53, 51, 49, 47, 43, 41, 39, 37, 33, 31, 29, 27, 23, 21, 19, 17, 13, 11, 9, 7, 3, 1)
 
-The result is a tuple of positive integers coprime to :math:`n`, in descending order, always ending with :math:`1`. If :math:`n` is not a positive integer a :py:class:`ValueError` is raised.
+The result, for a given integer :math:`n \geq 1`, is always a tuple of positive integers coprime to :math:`n`, in descending order, and ending with :math:`1`. If :math:`n` is not a positive integer a :py:class:`ValueError` is raised.
 
 The count of the coprimes sequence returned by :py:func:`~continuedfractions.sequences.coprime_integers` for a given :math:`n \geq 1` is consistent with `totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_ :math:`\phi(n)`, on which it is based, and this can be verified using the Sympy :py:class:`~sympy.ntheory.factor_.totient` callable.
 
@@ -293,7 +297,7 @@ For a given positive integer :math:`n` the :py:func:`~continuedfractions.sequenc
    >>> coprime_pairs(10)
    ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5), (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7), (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1))
 
-The result is a tuple of integer pairs :math:`(a, b)` such that :math:`(a, b) = 1` and :math:`1 \leq b < a \leq n`, and the number of such pairs is given by:
+The result, for a given integer :math:`n \geq 1` is a tuple of integer pairs :math:`(a, b)` such that :math:`(a, b) = 1` and :math:`1 \leq b < a \leq n`, and the number of such pairs is given by:
 
 .. math::
 
@@ -332,7 +336,7 @@ The :py:class:`~continuedfractions.sequences.KSRMTree` class is an implicit/gene
 
    The author could not access the Kanga paper online, but the core result is described in the papers of Saunders and Randall, and of Mitchell.
 
-Firstly, we describe some background material on the KSRM trees, which are presented in the papers mentioned above. These papers are largely concerned with so-called `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node has three children given by the relations:
+Firstly, we describe some background material on the KSRM trees, which are presented in the papers mentioned above. These papers are largely concerned with so-called `primitive Pythagorean triples <https://en.wikipedia.org/wiki/Pythagorean_triple#Elementary_properties_of_primitive_Pythagorean_triples>`_, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node, starting with the parent nodes, has three children given by the relations:
 
 .. math::
 
@@ -342,7 +346,8 @@ Firstly, we describe some background material on the KSRM trees, which are prese
                           (a + 2b, b), \hskip{3em} \text{ branch #} 3                   
                           \end{cases}
 
-where :math:`(a, b)` is any starting node, and :math:`1 \leq b < a` and :math:`(a, b) = 1`. The result :math:`(a^\prime, b^\prime)` is a coprime pair.
+all of which are coprime. The children of these nodes by the same branch relations are also coprime, and so on. For the original proofs please refer to the papers. However it is easy to see the reasoning: if :math:`a, b` are coprime integers, with :math:`1 \leq b < a`, then :math:`2a \pm b \equiv_a \pm b` and hence :math:`(2a \pm b, a) = 1`, while :math:`a + 2b \equiv_b a` and hence :math:`(a + 2b, b) = 1`. Conversely, if :math:`(a^\prime, b^\prime)` is any coprime pair, with :math:`1 \leq b^\prime < a^\prime`, then either 
+:math:`b < a^\prime < 2b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of :math:`(b^\prime, 2b^\prime - a^\prime)` along the 1st branch, or :math:`2b < a^\prime < 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of :math:`(b^\prime, a^\prime - 2b^\prime)` along the 2nd branch, or :math:`a^\prime > 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of :math:`(a^\prime - 2b^\prime, b^\prime)` along the 3rd branch.
 
 We can inspect the roots and branches by constructing a :py:class:`~continuedfractions.sequences.KSRMTree` instance, and looking at the :py:attr:`~continuedfractions.sequences.KSRMTree.roots` and :py:attr:`~continuedfractions.sequences.KSRMTree.branches` properties.
 
@@ -356,7 +361,7 @@ We can inspect the roots and branches by constructing a :py:class:`~continuedfra
     NamedCallableProxy("KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
     NamedCallableProxy("KSRM tree branch #3: (x, y) |--> (x + 2y, y)"))
 
-The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables (instances of :py:class:`~continuedfractions.utils.NamedCallableProxy`), one for each of the three branches, and each takes two (coprime) integers :math:`a, b`, with :math:`1 \leq b < a`, as arguments. The nodes can be generated manually as follows:
+The :py:attr:`~continuedfractions.sequences.KSRMTree.branches` property is a tuple of callables (instances of :py:class:`~continuedfractions.utils.NamedCallableProxy`), one for each of the three branches. Each callable takes two (coprime) integers :math:`a, b`, with :math:`1 \leq b < a`, as arguments. The nodes can be generated manually as follows:
 
 .. code:: python
 

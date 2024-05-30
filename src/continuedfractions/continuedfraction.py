@@ -30,6 +30,7 @@ from continuedfractions.lib import (
     convergent,
     fraction_from_elements,
     left_mediant,
+    mediant,
     right_mediant,
 )
 
@@ -514,9 +515,6 @@ class ContinuedFraction(Fraction):
         where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`,
         and :math:`q_1 = p_1`.
 
-        The method is cached (with :py:func:`functools.cache`), which makes
-        calls after the initial call much faster.
-
         Parameters
         ----------
         k : int
@@ -553,9 +551,6 @@ class ContinuedFraction(Fraction):
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` instance.
 
-        The property is cached (with :py:func:`functools.lru_cache`), which makes
-        calls after the initial call much faster.
-
         Examples
         --------
         >>> cf = ContinuedFraction('3.245')
@@ -577,9 +572,6 @@ class ContinuedFraction(Fraction):
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` instance.
 
-        The property is cached (with :py:func:`functools.lru_cache`), which makes
-        calls after the initial call much faster.
-
         Examples
         --------
         >>> ContinuedFraction('3.245').even_order_convergents
@@ -597,9 +589,6 @@ class ContinuedFraction(Fraction):
 
         Each convergent is indexed by its order and is also a
         :py:class:`ContinuedFraction` instance.
-
-        The property is cached (with :py:func:`functools.lru_cache`), which makes
-        calls after the initial call much faster.
 
         Examples
         --------
@@ -623,9 +612,6 @@ class ContinuedFraction(Fraction):
         .. math::
 
             R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
-
-        The method is cached (with :py:func:`functools.cache`), which makes calls
-        after the initial call much faster.
 
         Parameters
         ----------
@@ -792,9 +778,6 @@ class ContinuedFraction(Fraction):
         For more information consult the
         `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
 
-        The method is cached (with :py:func:`functools.cache`), which makes calls
-        after the initial call much faster.
-
         Parameters
         ----------
         other : fractions.Fraction, ContinuedFraction
@@ -829,6 +812,48 @@ class ContinuedFraction(Fraction):
         >>> assert c1.left_mediant(c2, k=100) < c1.right_mediant(c2, k=100)
         """
         return self.__class__(right_mediant(self, other, k=k))
+
+    @functools.cache
+    def mediant(self, other: Fraction, /) -> ContinuedFraction:
+        """Returns the simple mediant of the continued fraction with another continued fraction instance.
+        
+        The simple mediant of two rational numbers :math:`r = \\frac{a}{b}`
+        and :math:`s = \\frac{c}{d}`, where :math:`b, d, b + d \\neq 0`, is
+        defined as:
+        
+        .. math::
+
+           \\frac{a + c}{b + d}
+
+        The resulting value :math:`\\frac{a + c}{b + d}` is the same as the
+        1st order left- or right-mediant of :math:`r = \\frac{a}{b}`
+        and :math:`s = \\frac{c}{d}`. So this method would produce the same
+        result as the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant`
+        or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant`
+        methods where the order :math:`k` is set to :math:`1`.
+
+        For more information consult the
+        `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
+
+        Parameters
+        ----------
+        other : fractions.Fraction, ContinuedFraction
+            The other continued fraction instance.
+        
+        Returns
+        -------
+        ContinuedFraction
+            The simple mediant of the original fraction and the other continued
+            fraction instance.
+
+        Examples
+        --------
+        >>> ContinuedFraction(1, 2).mediant(ContinuedFraction(3, 5))
+        ContinuedFraction(4, 7)
+        >>> assert ContinuedFraction(1, 2).mediant(ContinuedFraction(3, 5)) == ContinuedFraction(1, 2).left_mediant(ContinuedFraction(3, 5), k=1)
+        >>> assert ContinuedFraction(1, 2).mediant(ContinuedFraction(3, 5)) == ContinuedFraction(1, 2).right_mediant(ContinuedFraction(3, 5), k=1)
+        """
+        return self.__class__(mediant(self, other))
 
 
 if __name__ == "__main__":      # pragma: no cover

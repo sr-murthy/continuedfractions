@@ -33,7 +33,9 @@ class TestContinuedFraction:
 	       expected_order,
 	       expected_khinchin_mean,
 	       expected_convergents,
-	       expected_ref_right_order1_mediant,
+	       expected_ref_right_order2_mediant,
+	       expected_ref_left_order2_mediant,
+	       expected_ref_simple_mediant,
 	       expected_float_value,
 	       expected_decimal_value""",
 	    [
@@ -48,6 +50,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(1, 1),
 	        		1: ContinuedFraction(3, 2)
 	        	}),
+	        	ContinuedFraction(5, 4),
+	        	ContinuedFraction(7, 5),
 	        	ContinuedFraction(4, 3),
 	        	3 / 2,
 	        	Decimal('1.5')
@@ -63,6 +67,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(1, 1),
 	        		1: ContinuedFraction(3, 2)
 	        	}),
+	        	ContinuedFraction(5, 4),
+	        	ContinuedFraction(7, 5),
 	        	ContinuedFraction(4, 3),
 	        	3 / 2,
 	        	Decimal('1.5')
@@ -77,6 +83,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: ContinuedFraction(-5000, 1),
 	        	}),
+	        	ContinuedFraction(-1666, 1),
+	        	ContinuedFraction(-3333, 1),
 	        	ContinuedFraction(-4999, 2),
 	        	-5000.0,
 	        	Decimal('-5000')
@@ -94,6 +102,8 @@ class TestContinuedFraction:
 	        		2: ContinuedFraction(159, 49),
 	        		3: ContinuedFraction(649, 200)
 	        	}),
+	        	ContinuedFraction(651, 202),
+	        	ContinuedFraction(1299, 401),
 	        	ContinuedFraction(650, 201),
 	        	3.245,
 	        	Decimal('3.245')
@@ -113,6 +123,8 @@ class TestContinuedFraction:
 	              	3: ContinuedFraction(-159, 49),
 	              	4: ContinuedFraction(-649, 200)
 				}),
+				ContinuedFraction(-647, 202),
+				ContinuedFraction(-1297, 401),
 				ContinuedFraction(-216, 67),
 				-3.245,
 				Decimal('-3.245')
@@ -130,6 +142,8 @@ class TestContinuedFraction:
 	        		2: ContinuedFraction(159, 49),
 	        		3: ContinuedFraction(649, 200)
 	        	}),
+	        	ContinuedFraction(651, 202),
+	        	ContinuedFraction(1299, 401),
 	        	ContinuedFraction(650, 201),
 	        	3.245,
 	        	Decimal('3.245')
@@ -146,6 +160,8 @@ class TestContinuedFraction:
 	        		1: ContinuedFraction(1, 3),
 	        		2: ContinuedFraction(3333, 10000)
 	        	}),
+	        	ContinuedFraction(3335, 10002),
+	        	ContinuedFraction(1, 3),
 	        	ContinuedFraction(3334, 10001),
 	        	0.3333,
 	        	Decimal('0.3333')
@@ -163,6 +179,8 @@ class TestContinuedFraction:
 	              	2: ContinuedFraction(-1, 3),
 	              	3: ContinuedFraction(-3333, 10000)
 	        	}),
+	        	ContinuedFraction(-3331, 10002),
+	        	ContinuedFraction(-6665, 20001),
 	        	ContinuedFraction(-3332, 10001),
 	        	-0.3333,
 	        	Decimal('-0.3333')
@@ -179,6 +197,8 @@ class TestContinuedFraction:
 	        		1: ContinuedFraction(-5, 1),
 	        		2: ContinuedFraction(-21, 4)
 	        	}),
+	        	ContinuedFraction(-19, 6),
+	        	ContinuedFraction(-41, 9),
 	        	ContinuedFraction(-4, 1),
 	        	-5.25,
 	        	Decimal('-5.25')
@@ -193,6 +213,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: ContinuedFraction(123456789, 1),
 	        	}),
+	        	ContinuedFraction(123456791, 3),
+	        	ContinuedFraction(246913579, 3),
 	        	ContinuedFraction(61728395, 1),
 	        	123456789.0,
 	        	Decimal('123456789')
@@ -209,6 +231,8 @@ class TestContinuedFraction:
 	        		1: ContinuedFraction(1, 3),
 	        		2: ContinuedFraction(3, 10)	
 	        	}),
+	        	ContinuedFraction(5, 12),
+	        	ContinuedFraction(1, 3),
 	        	ContinuedFraction(4, 11),
 	        	0.3,
 	        	Decimal('0.3')
@@ -224,6 +248,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(0, 1),
 	        		1: ContinuedFraction(1, 10)
 	        	}),
+	        	ContinuedFraction(1, 4),
+	        	ContinuedFraction(1, 7),
 	        	ContinuedFraction(2, 11),
 	        	0.1,
 	        	Decimal('0.1')
@@ -242,6 +268,8 @@ class TestContinuedFraction:
 					3: ContinuedFraction(-159, 49),
 					4: ContinuedFraction(-649, 200)
 	        	}),
+				ContinuedFraction(-647, 202),
+				ContinuedFraction(-1297, 401),
 	        	ContinuedFraction(-216, 67),
 	        	-3.245,
 	        	Decimal('-3.245')
@@ -256,6 +284,8 @@ class TestContinuedFraction:
 	        	MappingProxyType({
 	        		0: ContinuedFraction(123456789, 1),
 	        	}),
+	        	ContinuedFraction(123456791, 3),
+	        	ContinuedFraction(246913579, 3),	        	
 	        	ContinuedFraction(61728395, 1),
 	        	123456789.0,
 	        	Decimal('123456789')
@@ -271,6 +301,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(1, 1),
 	        		1: ContinuedFraction(3, 2)
 	        	}),
+	        	ContinuedFraction(5, 4),
+	        	ContinuedFraction(7, 5),
 	        	ContinuedFraction(4, 3),
 	        	1.5,
 	        	Decimal('1.5')
@@ -286,6 +318,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(-4, 1),
 	        		1: ContinuedFraction(-15, 4)
 	        	}),
+	        	ContinuedFraction(-13, 6),
+	        	ContinuedFraction(-29, 9),
 	        	ContinuedFraction(-14, 5),
 	        	-3.75,
 	        	Decimal('-3.75')
@@ -303,6 +337,8 @@ class TestContinuedFraction:
 	        		2: ContinuedFraction(159, 49),
 	        		3: ContinuedFraction(649, 200)
 	        	}),
+	        	ContinuedFraction(651, 202),
+	        	ContinuedFraction(1299, 401),	        	
 	        	ContinuedFraction(650, 201),
 	        	3.245,
 	        	Decimal('3.245')
@@ -318,6 +354,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(0, 1),
 	        		1: ContinuedFraction(1, 10)
 	        	}),
+	        	ContinuedFraction(1, 4),
+	        	ContinuedFraction(1, 7),	        	
 	        	ContinuedFraction(2, 11),
 	        	0.1,
 	        	Decimal('0.1')
@@ -333,6 +371,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(0, 1),
 	        		1: ContinuedFraction(1, 20)
 	        	}),
+	        	ContinuedFraction(3, 22),
+	        	ContinuedFraction(3, 41),
 	        	ContinuedFraction(2, 21),
 	        	0.05,
 	        	Decimal('0.05')
@@ -348,6 +388,8 @@ class TestContinuedFraction:
 	        		0: ContinuedFraction(0, 1),
 	        		1: ContinuedFraction(1, 4)
 	        	}),
+	        	ContinuedFraction(1, 2),
+	        	ContinuedFraction(1, 3),
 	        	ContinuedFraction(2, 5),
 	        	0.25,
 	        	Decimal('0.25')
@@ -374,6 +416,8 @@ class TestContinuedFraction:
 					11: ContinuedFraction(9095, 12507),
 					12: ContinuedFraction(60357, 83000)
 				}),
+				ContinuedFraction(60359, 83002),
+				ContinuedFraction(120715, 166001),
 	        	ContinuedFraction(60358, 83001),
 	        	0.7271927710843373,
 	        	Decimal('0.7271927710843373493975903614')
@@ -388,7 +432,9 @@ class TestContinuedFraction:
 		expected_order,
 		expected_khinchin_mean,
 		expected_convergents,
-		expected_ref_right_order1_mediant,
+		expected_ref_right_order2_mediant,
+		expected_ref_left_order2_mediant,
+		expected_ref_simple_mediant,
 		expected_float_value,
 		expected_decimal_value
 	):
@@ -434,6 +480,12 @@ class TestContinuedFraction:
 		# Compare the order-order convergents using the ``.odd_order_convergents` property
 		assert received.odd_order_convergents == MappingProxyType({k: expected_convergents[k] for k in range(1, received.order + 1, 2)})
 
+		# Compare the 2nd order right- and left-mediants, and also the simple
+		# mediant, using a reference continued fraction of ``1/1``
+		assert received.right_mediant(1, k=2) == expected_ref_right_order2_mediant
+		assert received.left_mediant(1, k=2) == expected_ref_left_order2_mediant
+		assert received.mediant(1) == expected_ref_simple_mediant
+
 		expected_remainders = tuple(
 			ContinuedFraction.from_elements(*expected_elements[k:])
 			for k in range(received.order + 1)
@@ -446,9 +498,6 @@ class TestContinuedFraction:
 
 		# Compare the remainders using the ``.remainders`` property
 		assert tuple(received.remainders.values()) == expected_remainders
-
-		assert received.right_mediant(1, k=1) == expected_ref_right_order1_mediant
-		assert received.left_mediant(1, k=1) == expected_ref_right_order1_mediant
 
 	@pytest.mark.parametrize(
 		"invalid_elements",
@@ -539,6 +588,23 @@ class TestContinuedFraction:
 	def test_ContinuedFraction__right_mediant__two_fractions__correct_mediant_returned(self, cf1, cf2, k, expected_right_mediant):
 	
 		assert cf1.right_mediant(cf2, k=k) == expected_right_mediant
+
+	@pytest.mark.parametrize(
+	    "cf1, cf2, expected_simple_mediant",
+	    [
+	        (ContinuedFraction(1, 2), Fraction(3, 5), ContinuedFraction(4, 7)),
+	        (ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(4, 7)),
+	        (ContinuedFraction(1, 2), ContinuedFraction(0), ContinuedFraction(1, 3)),
+	        (ContinuedFraction(1, 2), Fraction(1, 2), ContinuedFraction(1, 2)),
+	        (ContinuedFraction(1, -2), ContinuedFraction(1, 2), ContinuedFraction(0, 1)),
+	        (ContinuedFraction(-1, 2), Fraction(1), ContinuedFraction(0, 1)),
+	        (ContinuedFraction(-1, 2), ContinuedFraction(-1), ContinuedFraction(-2, 3)),
+	        (ContinuedFraction(-1, 2), Fraction(1, -2), ContinuedFraction(-1, 2)),
+	    ],
+	)
+	def test_ContinuedFraction__simple_mediant__two_fractions__correct_mediant_returned(self, cf1, cf2, expected_simple_mediant):
+	
+		assert cf1.mediant(cf2) == expected_simple_mediant
 
 	def test_ContinuedFraction__rational_operations(self):
 		f0 = ContinuedFraction(2, 1)

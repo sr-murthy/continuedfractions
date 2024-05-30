@@ -21,6 +21,15 @@ The (simple) **mediant** of two rational numbers :math:`\frac{a}{b}` and :math:`
 
    \frac{a + c}{b + d}
 
+Given two :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances it is possible to compute their mediant using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method:
+
+.. code::
+
+   >>> ContinuedFraction(1, 2).mediant(ContinuedFraction(2, 3))
+   ContinuedFraction(3, 5)
+
+The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
+
 .. _sequences.mediants.properties:
 
 Properties
@@ -42,9 +51,7 @@ From the assumptions above this can be proved easily from the following relation
                        &= \frac{c}{d} \cdot \frac{1 + \frac{a}{c}}{1 + \frac{b}{d}}
    \end{align}
 
-Mediants can give good rational approximations to real numbers.
-
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` method which can be used to calculate (simple) mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` instances. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance. A few examples are given below of how to calculate mediants.
+Mediants can give good rational approximations to real numbers. We can verify these properties with some examples.
 
 .. code:: python
 
@@ -52,12 +59,10 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
    ContinuedFraction(3, 5)
    >>> ContinuedFraction('0.6').elements
    (0, 1, 1, 2)
-   >>> ContinuedFraction(1, 2).right_mediant(ContinuedFraction('2/3'))
+   >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
    ContinuedFraction(3, 5)
-   >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).right_mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
+   >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
    # True
-
-There is also a corresponding :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant` method, which gives you the same value for :math:`k = 1`. The definitions of "right-mediant" and "left-mediant" are given in the :ref:`next section <sequences.mediants.generalised>`, but the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` is sufficient for computing simple mediants.
 
 In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`. 
 
@@ -346,8 +351,8 @@ Firstly, we describe some background material on the KSRM trees, which are prese
                           (a + 2b, b), \hskip{3em} \text{ branch #} 3                   
                           \end{cases}
 
-all of which are coprime. The children of these nodes by the same branch relations are also coprime, and so on. For the original proofs please refer to the papers. However it is easy to see the reasoning: if :math:`a, b` are coprime integers, with :math:`1 \leq b < a`, then :math:`2a \pm b \equiv_a \pm b` and hence :math:`(2a \pm b, a) = 1`, while :math:`a + 2b \equiv_b a` and hence :math:`(a + 2b, b) = 1`. Conversely, if :math:`(a^\prime, b^\prime)` is any coprime pair, with :math:`1 \leq b^\prime < a^\prime`, then either 
-:math:`b < a^\prime < 2b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of :math:`(b^\prime, 2b^\prime - a^\prime)` along the 1st branch, or :math:`2b < a^\prime < 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of :math:`(b^\prime, a^\prime - 2b^\prime)` along the 2nd branch, or :math:`a^\prime > 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of :math:`(a^\prime - 2b^\prime, b^\prime)` along the 3rd branch.
+all of which are coprime. The children of these nodes by the same branch relations are also coprime, and so on. For the original proofs please refer to the papers. However it is easy to see the reasoning: if :math:`a, b` are coprime integers, with :math:`1 \leq b < a`, then :math:`2a \pm b \equiv \pm b \left(\text{mod }a \right)` and hence :math:`(2a \pm b, a) = 1`, while :math:`a + 2b \equiv a \left(\text{mod }b \right)` and hence :math:`(a + 2b, b) = 1`. Conversely, if :math:`(a^\prime, b^\prime)` is any coprime pair, with :math:`1 \leq b^\prime < a^\prime`, then either 
+:math:`b < a^\prime < 2b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of the smaller coprime pair :math:`(b^\prime, 2b^\prime - a^\prime)` along the 1st branch, or :math:`2b < a^\prime < 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of the smaller coprime pair :math:`(b^\prime, a^\prime - 2b^\prime)` along the 2nd branch, or :math:`a^\prime > 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of the smaller coprime pair :math:`(a^\prime - 2b^\prime, b^\prime)` along the 3rd branch. The smallest coprime pair that can be obtained in this process of getting the parent node is either :math:`(2, 1)` or :math:`(3, 1)`.
 
 We can inspect the roots and branches by constructing a :py:class:`~continuedfractions.sequences.KSRMTree` instance, and looking at the :py:attr:`~continuedfractions.sequences.KSRMTree.roots` and :py:attr:`~continuedfractions.sequences.KSRMTree.branches` properties.
 
@@ -554,7 +559,7 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 
    >>> print(', '.join([str(frac) for frac in farey_sequence(4)]))
    0, 1/4, 1/3, 1/2, 2/3, 3/4, 1
-   >>> assert ContinuedFraction(2, 3).left_mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
+   >>> assert ContinuedFraction(2, 3).mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
    >>> assert ContinuedFraction(3, 4) - ContinuedFraction(2, 3) in farey_sequence(12)
 
 .. _sequences.references:

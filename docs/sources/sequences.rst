@@ -21,6 +21,15 @@ The (simple) **mediant** of two rational numbers :math:`\frac{a}{b}` and :math:`
 
    \frac{a + c}{b + d}
 
+Given two :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances it is possible to compute their mediant using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.mediant` method:
+
+.. code::
+
+   >>> ContinuedFraction(1, 2).mediant(ContinuedFraction(2, 3))
+   ContinuedFraction(3, 5)
+
+The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
+
 .. _sequences.mediants.properties:
 
 Properties
@@ -42,9 +51,7 @@ From the assumptions above this can be proved easily from the following relation
                        &= \frac{c}{d} \cdot \frac{1 + \frac{a}{c}}{1 + \frac{b}{d}}
    \end{align}
 
-Mediants can give good rational approximations to real numbers.
-
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` method which can be used to calculate (simple) mediants with other :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` or :py:class:`fractions.Fraction` instances. The result is also a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance. A few examples are given below of how to calculate mediants.
+Mediants can give good rational approximations to real numbers. We can verify these properties with some examples.
 
 .. code:: python
 
@@ -52,12 +59,10 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
    ContinuedFraction(3, 5)
    >>> ContinuedFraction('0.6').elements
    (0, 1, 1, 2)
-   >>> ContinuedFraction(1, 2).right_mediant(ContinuedFraction('2/3'))
+   >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
    ContinuedFraction(3, 5)
-   >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).right_mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
+   >>> assert ContinuedFraction(1, 2) < ContinuedFraction(1, 2).mediant(Fraction(3, 4)) < ContinuedFraction(3, 4)
    # True
-
-There is also a corresponding :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant` method, which gives you the same value for :math:`k = 1`. The definitions of "right-mediant" and "left-mediant" are given in the :ref:`next section <sequences.mediants.generalised>`, but the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant` is sufficient for computing simple mediants.
 
 In particular, the mediant :math:`\frac{a + c}{b + d}` of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` has the property that **if** :math:`bc - ad = 1` then :math:`\frac{a + c}{b + d}` is the fraction with the smallest denominator lying in the (open) interval :math:`(\frac{a}{b}, \frac{c}{d})`. As :math:`\frac{1}{2}` and :math:`\frac{2}{3}` satisfy the relation :math:`bc - ad = 2\cdot2 - 1\cdot3 = 4 - 3 = 1` it follows that their mediant :math:`\frac{3}{5}` is the "next" (or "first")  fraction after :math:`\frac{1}{2}`, but before :math:`\frac{2}{3}`, compared to any other fraction in that interval with a denominator :math:`\geq b + d = 5`. 
 
@@ -554,7 +559,7 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 
    >>> print(', '.join([str(frac) for frac in farey_sequence(4)]))
    0, 1/4, 1/3, 1/2, 2/3, 3/4, 1
-   >>> assert ContinuedFraction(2, 3).left_mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
+   >>> assert ContinuedFraction(2, 3).mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
    >>> assert ContinuedFraction(3, 4) - ContinuedFraction(2, 3) in farey_sequence(12)
 
 .. _sequences.references:

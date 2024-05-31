@@ -111,13 +111,10 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
     """
     num, denom = r.as_integer_ratio()
 
-    quo, rem = divmod(num, denom)
-    yield quo
-
-    while rem > 0:
-        num, denom = denom, rem
+    while denom:
         quo, rem = divmod(num, denom)
         yield quo
+        num, denom = denom, rem
 
 
 def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int, None, None]:

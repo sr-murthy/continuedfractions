@@ -30,7 +30,7 @@ See the [project docs](https://continuedfractions.readthedocs.io/en/latest/) for
 
 The `continuedfractions` package is designed for:
 
-* working with (finite) continued fractions as Python objects
+* working with (finite) continued fractions as Python objects, in an object-oriented way
 * exploring their key properties, such as elements/coefficients, convergents, segments, remainders, and others
 * operating on them as rationals and instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class
 * supporting approximations of and experimental computations for irrational numbers

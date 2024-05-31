@@ -46,12 +46,12 @@ From the assumptions above this can be proved easily from the following relation
 .. math::
 
    \begin{align}
-   \frac{a}{b} < \frac{c}{d} &\iff \frac{c}{a} > \frac{d}{b} \iff \frac{a}{c} < \frac{b}{d} \
-   \frac{a + c}{b + d} &= \frac{a}{b} \cdot \frac{1 + \frac{c}{a}}{1 + \frac{d}{b}} \
+   \frac{a}{b} < \frac{c}{d} &\iff \frac{c}{a} > \frac{d}{b} \iff \frac{a}{c} < \frac{b}{d} \\
+   \frac{a + c}{b + d} &= \frac{a}{b} \cdot \frac{1 + \frac{c}{a}}{1 + \frac{d}{b}} \\
                        &= \frac{c}{d} \cdot \frac{1 + \frac{a}{c}}{1 + \frac{b}{d}}
    \end{align}
 
-Mediants can give good rational approximations to real numbers. We can verify these properties with some examples.
+Mediants can give good rational approximations to real numbers. We can illustrate the core mediant property with some examples.
 
 .. code:: python
 

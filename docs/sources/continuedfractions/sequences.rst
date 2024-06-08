@@ -8,4 +8,4 @@
 
 .. automodule:: continuedfractions.sequences
     :members:
-    :private-members: _coprime_integers, _coprime_pairs, _backtrack
+    :private-members: _backtrack

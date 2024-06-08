@@ -228,6 +228,29 @@ The :py:func:`~continuedfractions.sequences.coprime_integers` function can be us
 
 The result, for a given integer :math:`n \geq 1`, is always a tuple of positive integers coprime to :math:`n`, in descending order, and ending with :math:`1`. If :math:`n` is not a positive integer a :py:class:`ValueError` is raised.
 
+.. note::
+
+   There is also a generator version :py:func:`~continuedfractions.sequences.coprime_integers_generator`, which is actually used by :py:func:`~continuedfractions.sequences.coprime_integers`. Here are a few examples of using the generator version:
+
+   .. code:: python
+
+      >>> gen = coprime_integers_generator(10)
+      >>> while True:
+      ...     try:
+      ...         print(next(gen))
+      ...     except StopIteration:
+      ...         break
+      ...
+      9
+      7
+      3
+      1
+      >>> from itertools import takewhile
+      >>> tuple(takewhile(lambda x: x > 5, coprime_integers_generator(10)))
+      (9, 7)
+
+   Both :py:func:`~continuedfractions.sequences.coprime_integers_generator` and :py:func:`~continuedfractions.sequences.coprime_integers` have the same argument structure, but :py:func:`~continuedfractions.sequences.coprime_integers` is cached while the generator version is not.
+
 The count of the coprimes sequence returned by :py:func:`~continuedfractions.sequences.coprime_integers` for a given :math:`n \geq 1` is consistent with `totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_ :math:`\phi(n)`, on which it is based, and this can be verified using the Sympy :py:class:`~sympy.ntheory.factor_.totient` callable.
 
 .. code:: python
@@ -302,7 +325,35 @@ For a given positive integer :math:`n` the :py:func:`~continuedfractions.sequenc
    >>> coprime_pairs(10)
    ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5), (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7), (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1))
 
-The result, for a given integer :math:`n \geq 1` is a tuple of integer pairs :math:`(a, b)` such that :math:`(a, b) = 1` and :math:`1 \leq b < a \leq n`, and the number of such pairs is given by:
+The result, for a given integer :math:`n \geq 1` is a tuple of integer pairs :math:`(a, b)` such that :math:`(a, b) = 1` and :math:`1 \leq b < a \leq n`.
+
+.. note::
+
+   There is also a generator version :py:func:`~continuedfractions.sequences.coprime_pairs_generator`, which is actually used by :py:func:`~continuedfractions.sequences.coprime_pairs`. Below is an example of using the generator version:
+
+   .. code:: python
+
+      >>> gen = coprime_pairs_generator(5)
+      >>> while True:
+      ...     try:
+      ...         print(next(gen))
+      ...     except StopIteration:
+      ...         break
+      ...
+      (1, 1)
+      (2, 1)
+      (3, 2)
+      (3, 1)
+      (4, 3)
+      (4, 1)
+      (5, 4)
+      (5, 3)
+      (5, 2)
+      (5, 1)
+
+   Both :py:func:`~continuedfractions.sequences.coprime_pairs_generator` and :py:func:`~continuedfractions.sequences.coprime_pairs` have the same argument structure, but :py:func:`~continuedfractions.sequences.coprime_pairs` is cached while the generator version is not.
+
+The count of the coprime pairs sequence returned by :py:func:`~continuedfractions.sequences.coprime_pairs` for a given :math:`n` is given by:
 
 .. math::
 
@@ -466,12 +517,32 @@ The result is a tuple of :py:class:`~continuedfractions.continuedfraction.Contin
 
 .. note::
 
-   Often it is easier to read off sequences of fractions (both :py:class:`fractions.Fraction` and :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`) in the form ``a/b`` - for this purpose it is useful to print them in the following way:
+   There is also a generator version :py:func:`~continuedfractions.sequences.farey_sequence_generator`, which is actually used by :py:func:`~continuedfractions.sequences.farey_sequence`. Below is an example of using the generator version:
 
    .. code:: python
 
-      >>> print(', '.join([str(frac) for frac in farey_sequence(10)]))
-      0, 1/10, 1/9, 1/8, 1/7, 1/6, 1/5, 2/9, 1/4, 2/7, 3/10, 1/3, 3/8, 2/5, 3/7, 4/9, 1/2, 5/9, 4/7, 3/5, 5/8, 2/3, 7/10, 5/7, 3/4, 7/9, 4/5, 5/6, 6/7, 7/8, 8/9, 9/10, 1
+      >>> tuple(farey_sequence_generator(5))
+      (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
+      >>> gen = farey_sequence_generator(5)
+      >>> while True:
+      ...     try:
+      ...         print(next(gen))
+      ...     except StopIteration:
+      ...         break
+      ...
+      0
+      1/5
+      1/4
+      1/3
+      2/5
+      1/2
+      3/5
+      2/3
+      3/4
+      4/5
+      1
+
+   Both :py:func:`~continuedfractions.sequences.farey_sequence_generator` and :py:func:`~continuedfractions.sequences.farey_sequence` have the same argument structure, but :py:func:`~continuedfractions.sequences.farey_sequence` is cached while the generator version is not.
 
 The Farey sequence :math:`F_n` of order :math:`n` is an (ordered) sequence of (irreducible) rational numbers, called **Farey fractions**, in the closed unit interval :math:`[0, 1]`, which can be defined as follows:
 

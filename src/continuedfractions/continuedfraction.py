@@ -256,12 +256,38 @@ class ContinuedFraction(Fraction):
         return self
 
     def __eq__(self, other, /) -> bool:
+        """Custom equality check.
+
+        Compares the sequence of elements/coefficients of ``self`` with
+        that of ``other`` if ``other`` is also a
+        :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
+        instance, otherwise calls the superclass :py:class:`~fractions.Fraction`
+        equality check.
+
+        Returns
+        -------
+        bool
+            The boolean result of the equality check.
+        """
         if isinstance(other, self.__class__):
             return self._elements == other._elements
 
         return super().__eq__(other)
 
     def __hash__(self) -> int:
+        """Custom hash.
+
+        Custom hash which hashes the sequence of elements/coefficients - as
+        this is always defined as a finite, non-empty tuple the hash is
+        always defined.
+
+        Returns
+        -------
+        int
+            The hash of the
+            :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
+            instance.
+        """
         return hash(self._elements)
 
     def __add__(self, other, /):

@@ -255,6 +255,15 @@ class ContinuedFraction(Fraction):
     
         return self
 
+    def __eq__(self, other, /) -> bool:
+        if isinstance(other, self.__class__):
+            return self._elements == other._elements
+
+        return super().__eq__(other)
+
+    def __hash__(self) -> int:
+        return hash(self._elements)
+
     def __add__(self, other, /):
         return self.__class__(super().__add__(other))
 

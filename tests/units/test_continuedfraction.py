@@ -1,6 +1,7 @@
 # -- IMPORTS --
 
 # -- Standard libraries --
+
 import decimal
 
 # Set the :py:mod:`decimal` context for the test computations in this module
@@ -544,6 +545,89 @@ class TestContinuedFraction:
 
 			assert received == expected
 			assert received.elements == expected.elements
+
+	@pytest.mark.parametrize(
+		"instance, invalid_elements",
+		[
+			(ContinuedFraction(1, 2), ()),
+			(ContinuedFraction(1, 2), ("invalid", 1)),
+			(ContinuedFraction(1, 2), (1, 2, 0)),
+			(ContinuedFraction(1, 2), (1, 2, -1)),
+		],
+	)
+	def test_ContinuedFraction__extend__invalid_elements__value_error_raised(self, instance, invalid_elements):
+		with pytest.raises(ValueError):
+			instance.extend(*invalid_elements)
+
+	@pytest.mark.parametrize(
+		"instance, new_elements, expected_comparative_instance",
+		[
+			(ContinuedFraction(0, 1), (2,), ContinuedFraction(1, 2)),
+			(ContinuedFraction(1, 1), (2,), ContinuedFraction(3, 2)),
+			(ContinuedFraction(3, 2), (3,), ContinuedFraction(10, 7)),
+			(ContinuedFraction(649, 200), (5, 2), ContinuedFraction(7457, 2298)),
+			(ContinuedFraction(-415, 93), (2, 1, 5), ContinuedFraction(-7403, 1659))
+		]
+	)
+	def test_ContinuedFraction__extend__valid_elements__correctly_extended(self, instance, new_elements, expected_comparative_instance):
+		original_id = id(instance)
+		original_elements = instance.elements
+
+		instance.extend(*new_elements)
+
+		assert id(instance) == original_id
+		assert instance == expected_comparative_instance
+		assert hash(instance) == hash(expected_comparative_instance)
+		assert instance == ContinuedFraction.from_elements(*original_elements, *new_elements)
+		assert instance.order == expected_comparative_instance.order
+		assert instance.convergents == expected_comparative_instance.convergents
+		assert instance.remainders == expected_comparative_instance.remainders
+		assert instance.khinchin_mean == expected_comparative_instance.khinchin_mean
+
+	@pytest.mark.parametrize(
+		"instance, invalid_elements",
+		[
+			(ContinuedFraction(1, 2), ()),
+			(ContinuedFraction(1, 2), ("invalid", 1)),
+			(ContinuedFraction(649, 200), (4, 12)),
+			(ContinuedFraction(649, 200), (3, 4, 12, 4)),
+			(ContinuedFraction(649, 200), (3, 4, 4)),
+		],
+	)
+	def test_ContinuedFraction__truncate__invalid_elements__value_error_raised(self, instance, invalid_elements):
+		with pytest.raises(ValueError):
+			instance.truncate(*invalid_elements)
+
+	@pytest.mark.parametrize(
+		"instance, tail_elements, expected_comparative_instance",
+		[
+			(ContinuedFraction(1, 2), (2,), ContinuedFraction(0, 1)),
+			(ContinuedFraction(3, 2), (2,), ContinuedFraction(1, 1)),
+			(ContinuedFraction(649, 200), (4,), ContinuedFraction(159, 49)),
+			(ContinuedFraction(649, 200), (12, 4,), ContinuedFraction(13, 4)),
+			(ContinuedFraction(649, 200), (4, 12, 4,), ContinuedFraction(3, 1)),
+			(ContinuedFraction(-415, 93), (7,), ContinuedFraction(-58, 13)),
+			(ContinuedFraction(-415, 93), (6, 7,), ContinuedFraction(-9, 2)),
+			(ContinuedFraction(-415, 93), (1, 6, 7,), ContinuedFraction(-4, 1)),
+			(ContinuedFraction(-415, 93), (1, 1, 6, 7,), ContinuedFraction(-5, 1)),
+		]
+	)
+	def test_ContinuedFraction__truncate__valid_elements__correctly_truncated(self, instance, tail_elements, expected_comparative_instance):
+		original_id = id(instance)
+		original_elements = instance.elements
+		order = instance.order
+		truncation_length = len(tail_elements)
+
+		instance.truncate(*tail_elements)
+
+		assert id(instance) == original_id
+		assert instance == expected_comparative_instance
+		assert hash(instance) == hash(expected_comparative_instance)
+		assert instance == ContinuedFraction.from_elements(*original_elements[:order + 1 - truncation_length])
+		assert instance.order == expected_comparative_instance.order
+		assert instance.convergents == expected_comparative_instance.convergents
+		assert instance.remainders == expected_comparative_instance.remainders
+		assert instance.khinchin_mean == expected_comparative_instance.khinchin_mean
 
 	@pytest.mark.parametrize(
 	    "cf1, cf2, k, expected_left_mediant",

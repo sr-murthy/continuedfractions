@@ -146,7 +146,14 @@ However, in the :ref:`next section <creating-continued-fractions.from-elements>`
 Creating Continued Fractions From Elements/Coefficients
 =======================================================
 
-Continued fractions can also be constructed from sequences of elements, using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method.
+Continued fractions can also be constructed from sequences of elements, using either the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method, :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend`, or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.drop` methods. Each is described below.
+
+.. _creating-continued-fractions.creation-from-complete-element-sequence:
+
+New Instances From a Complete Sequence of Elements
+--------------------------------------------------
+
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method allows new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances to be created from a complete (ordered) sequence of elements. Some examples are given below.
 
 .. code:: python
 
@@ -162,7 +169,26 @@ Continued fractions can also be constructed from sequences of elements, using th
    >>> cf_negative_inverse.elements
    (-1, 1, 2, 4, 12, 4)
 
-The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc. Here is an example for approximating :math:`\sqrt{2}` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
+The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc.
+
+A :py:class:`ValueError` is raised if the given elements are not integers, or if any tail elements are not positive integers.
+
+.. code:: python
+
+   >>> ContinuedFraction.from_elements('0', 1)
+   ...
+   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+   >>> ContinuedFraction.from_elements(0, 1, 2.5)
+   ...
+   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+   >>> ContinuedFraction.from_elements(1, 0)
+   ...
+   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+   >>> ContinuedFraction.from_elements(1, -1)
+   ...
+   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+
+Here is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
 
 .. code:: python
 
@@ -173,6 +199,86 @@ The given sequence of elements can be arbitrarily long, subject to the limitatio
 The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` is division-free and uses a well known recurrence relation for convergents of simple continued fractions, which is described :ref:`here <exploring-continued-fractions.fast-algorithms>`.
 
 For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>` or experimental computations.
+
+.. _creating-continued-fractions.inplace-extension:
+
+In-place Extension by New/Additional Elements
+---------------------------------------------
+
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method allows the in-place modification of existing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances by extending the sequence of elements from an (ordered) sequence of new (or additional) elements - the new elements are added to the existing tail in the given order. Some examples are given below.
+
+.. code:: python
+
+   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> id(cf)
+   4762928384
+   >>> cf.extend(5, 2)
+   >>> cf
+   ContinuedFraction(7457, 2298)
+   >>> cf.elements
+   (3, 4, 12, 4, 5, 2)
+   >>> assert cf == ContinuedFraction.from_elements(3, 4, 12, 4, 5, 2)
+   # True
+   >>> id(cf)
+   4762928384
+
+The result is an in-place modification of the existing instance, with the same object ID as before. All other attributes or properties will reflect the new values as determined by the complete sequence of elements formed by the original elements and the new elements provided with :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend`.
+
+A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.g. not positive integers.
+
+.. code:: python
+
+   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> cf.extend(0, 4)
+   ...
+   ValueError: The elements/coefficients to be added to the tail must be positive integers.
+   >>> cf.extend(1, -1)
+   ...
+   ValueError: The elements/coefficients to be added to the tail must be positive integers.
+
+.. _creating-continued-fractions.inplace-truncation:
+
+In-place Truncation of Tail Elements
+------------------------------------
+
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method allows the in-place modification of existing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances by truncating a segment of the tail elements - the tail elements to be truncated are removed from the existing tail in the given order. Some examples are given below.
+
+.. code:: python
+
+   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> id(cf)
+   4921448896
+   >>> cf.truncate(12, 4)
+   >>> cf
+   ContinuedFraction(13, 4)
+   >>> cf.elements
+   (3, 4)
+   >>> assert cf == ContinuedFraction.from_elements(3, 4)
+   # True
+   >>> id(cf)
+   4921448896
+
+The result is an in-place modification of the existing instance, with the same object ID as before. All other attributes or properties will reflect the new values as determined by the complete sequence of elements formed by the truncation of the tail elements provided with :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate`.
+
+A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.g. not positive integers, or do not form a valid segment of the existing tail.
+
+.. code:: python
+
+   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> cf.truncate(0, 4)
+   ...
+   ValueError: The elements/coefficients to be truncated from the tail must form a valid segment of the existing tail.
+   >>> cf.truncate(3, 4, 12, 4)
+   ...
+   ValueError: The elements/coefficients to be truncated from the tail must form a valid segment of the existing tail.
 
 .. _creating-continued-fractions.rational-operations:
 

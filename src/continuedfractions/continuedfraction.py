@@ -255,8 +255,8 @@ class ContinuedFraction(Fraction):
     
         return self
 
-    def extend(self, *new_elements) -> None:
-        """Performs an in-place modification of the instance by extending the tail of the current sequence of elements.
+    def extend(self, *new_elements: int) -> None:
+        """Performs an in-place extension of the tail of the current sequence of elements.
 
         Raises a :py:class:`ValueError` if there are no new elements, or are
         not positive integers.
@@ -269,8 +269,8 @@ class ContinuedFraction(Fraction):
         Parameters
         ----------
         elements
-            An (ordered) sequence of new elements by which the tail of the
-            existing sequence of elements is extended.
+            An (ordered) sequence of new (integer) elements by which the tail
+            of the existing sequence of elements is extended.
 
         Raises
         ------
@@ -280,7 +280,6 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-
         >>> cf = ContinuedFraction('3.245')
         >>> cf
         ContinuedFraction(649, 200)
@@ -324,8 +323,8 @@ class ContinuedFraction(Fraction):
         self._numerator, self._denominator = fraction.as_integer_ratio()
         self._elements = elements
 
-    def truncate(self, *tail_elements) -> None:
-        """Performs an in-place modification of the instance by truncating the tail of the existing sequence of elements.
+    def truncate(self, *tail_elements: int) -> None:
+        """Performs an in-place truncation of the tail of the existing sequence of elements.
 
         Raises a :py:class:`ValueError` if the tail elements provided are not
         positive integers, or do not form a segment of the existing tail. This
@@ -351,8 +350,8 @@ class ContinuedFraction(Fraction):
         Parameters
         ----------
         tail_elements
-            An (ordered) sequence of elements to truncate from the tail of the
-            existing sequence of elements.
+            An (ordered) sequence of (integer) elements to truncate from the
+            tail of the existing sequence of elements.
 
         Raises
         ------
@@ -362,7 +361,6 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-
         >>> cf = ContinuedFraction('3.245')
         >>> cf
         ContinuedFraction(649, 200)

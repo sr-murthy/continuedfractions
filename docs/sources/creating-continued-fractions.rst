@@ -205,7 +205,7 @@ For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFr
 In-place Extension by New/Additional Elements
 ---------------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method allows the in-place modification of existing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances by extending the sequence of elements from an (ordered) sequence of new (or additional) elements - the new elements are added to the existing tail in the given order. Some examples are given below.
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance from new (or additional) sequence of elements - the new elements are added to the tail in the given order. Some examples are given below.
 
 .. code:: python
 
@@ -245,7 +245,7 @@ A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.
 In-place Truncation of Tail Elements
 ------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method allows the in-place modification of existing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances by truncating a segment of the tail elements - the tail elements to be truncated are removed from the existing tail in the given order. Some examples are given below.
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method can be used to perform an in-place truncation of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance instances by truncating a given sequence of tail elements - the tail elements to be truncated are removed from the existing tail in the given order. Some examples are given below.
 
 .. code:: python
 

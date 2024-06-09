@@ -255,6 +255,169 @@ class ContinuedFraction(Fraction):
     
         return self
 
+    def extend(self, *new_elements) -> None:
+        """Performs an in-place modification of the instance by extending the tail of the current sequence of elements.
+
+        Raises a :py:class:`ValueError` if there are no new elements, or are
+        not positive integers.
+
+        .. note::
+
+           As this method performs an in-place modification of the existing/
+           current instance the object ID remains the same.
+
+        Parameters
+        ----------
+        elements
+            An (ordered) sequence of new elements by which the tail of the
+            existing sequence of elements is extended.
+
+        Raises
+        ------
+        ValueError
+            If no new elements provided, or the new elements provided are not
+            positive integers.
+
+        Examples
+        --------
+
+        >>> cf = ContinuedFraction('3.245')
+        >>> cf
+        ContinuedFraction(649, 200)
+        >>> cf.elements
+        (3, 4, 12, 4)
+        >>> cf.order
+        3
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
+        >>> cf.remainders
+        mappingproxy({0: ContinuedFraction(649, 200), 1: ContinuedFraction(200, 49), 2: ContinuedFraction(49, 4), 3: ContinuedFraction(4, 1)})
+        >>> cf.extend(5, 2)
+        >>> cf
+        ContinuedFraction(7457, 2298)
+        >>> cf.elements
+        (3, 4, 12, 4, 5, 2)
+        >>> cf.order
+        5
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200), 4: ContinuedFraction(3404, 1049), 5: ContinuedFraction(7457, 2298)})
+        >>> cf.remainders
+        mappingproxy({0: ContinuedFraction(7457, 2298), 1: ContinuedFraction(2298, 563), 2: ContinuedFraction(563, 46), 3: ContinuedFraction(46, 11), 4: ContinuedFraction(11, 2), 5: ContinuedFraction(2, 1)})
+        >>> cf = ContinuedFraction(649, 200)
+        >>> cf.extend(0, 1)
+        Traceback (most recent call last):
+        ...
+        ValueError: The elements/coefficients to be added to the tail must be positive integers.
+        >>> cf.extend(1, -1)
+        Traceback (most recent call last):
+        ...
+        ValueError: The elements/coefficients to be added to the tail must be positive integers.
+        """
+        if not new_elements or any(not isinstance(x, int) or x < 1 for x in new_elements):
+            raise ValueError(
+                "The elements/coefficients to be added to the tail must be "
+                "positive integers."
+            )
+
+        elements = self._elements + new_elements
+        fraction = convergent(len(elements) - 1, *elements)
+        self._numerator, self._denominator = fraction.as_integer_ratio()
+        self._elements = elements
+
+    def truncate(self, *tail_elements) -> None:
+        """Performs an in-place modification of the instance by truncating the tail of the existing sequence of elements.
+
+        Raises a :py:class:`ValueError` if the tail elements provided are not
+        positive integers, or do not form a segment of the existing tail. This
+        includes the case where the length of the tail elements provided exceed
+        the length of the existing tail, i.e. the order of the continued
+        fraction represented by the instance.
+
+        .. note::
+
+           The tail elements provided must be positive integers which form a
+           subsequence of the tail of the original sequence ending with the
+           last element, e.g. with respect to the complete sequence of elements
+           ``(3, 4, 12, 4)`` a value of ``12, 4`` for ``*tail_elements`` would
+           be valid, but ``4, 12`` would be invalid as it does not represent
+           a segment of the tail, and ``3, 4, 12, 4`` would also be invalid
+           as it includes the head ``3``.
+
+        .. note::
+
+           As this method performs an in-place modification of the existing/
+           current instance the object ID remains the same.
+
+        Parameters
+        ----------
+        tail_elements
+            An (ordered) sequence of elements to truncate from the tail of the
+            existing sequence of elements.
+
+        Raises
+        ------
+        ValueError
+            If no tail elements are provided, or the tail elements provided do
+            not represent a valid segment of the existing tail.
+
+        Examples
+        --------
+
+        >>> cf = ContinuedFraction('3.245')
+        >>> cf
+        ContinuedFraction(649, 200)
+        >>> cf.elements
+        (3, 4, 12, 4)
+        >>> cf.order
+        3
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
+        >>> cf.remainders
+        mappingproxy({0: ContinuedFraction(649, 200), 1: ContinuedFraction(200, 49), 2: ContinuedFraction(49, 4), 3: ContinuedFraction(4, 1)})
+        >>> cf.truncate(12, 4)
+        >>> cf
+        ContinuedFraction(13, 4)
+        >>> cf.elements
+        (3, 4)
+        >>> cf.order
+        1
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4)})
+        >>> cf.remainders
+        mappingproxy({0: ContinuedFraction(13, 4), 1: ContinuedFraction(4, 1)})
+        >>> cf = ContinuedFraction(649, 200)
+        >>> cf.truncate(4, 12)
+        Traceback (most recent call last):
+        ...
+        ValueError: The elements/coefficients to be truncated from the tail must form a valid segment of the existing tail.
+        >>> cf.truncate(3, 4, 12, 4)
+        Traceback (most recent call last):
+        ...
+        ValueError: The elements/coefficients to be truncated from the tail must form a valid segment of the existing tail.
+        """
+        order = self.order
+        truncation_length = len(tail_elements)
+
+        if not tail_elements or truncation_length > order or self._elements[order + 1 - truncation_length:] != tail_elements:
+            raise ValueError(
+                "The elements/coefficients to be truncated from the tail must "
+                "form a valid segment of the existing tail."
+            )
+
+        elements = self._elements[:order + 1 - truncation_length]
+
+        # A step to ensure uniqueness of the simple form of the continued
+        # fraction - if the last element is ``1`` it can be "removed" by
+        # adding it to the second last element, thereby shortening the
+        # sequence by one element. The resulting simple continued
+        # fraction becomes unique for the number that is represented.
+        if len(elements) > 1 and elements[-1] == 1:
+            elements = elements[:-2] + (elements[-2] + 1,)
+
+        fraction = convergent(len(elements) - 1, *elements)
+        self._numerator, self._denominator = fraction.as_integer_ratio()
+        self._elements = elements
+
     def __eq__(self, other, /) -> bool:
         """Custom equality check.
 
@@ -446,7 +609,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def elements(self) -> tuple[int]:
-        """:py:class:`tuple`: The sequence of elements of the continued fraction.
+        """:py:class:`tuple`: The (ordered) sequence of elements of the continued fraction.
 
         Examples
         --------

@@ -8,10 +8,10 @@ Creating Continued Fractions
 
 It's useful to start with the basic mathematics of continued fractions, using a simple example.
 
-.. _creating-continued-fractions.basic-math:
+.. _creating-continued-fractions.basics:
 
-The Basic Math
-==============
+The Basics
+==========
 
 Consider the `rational number <https://en.wikipedia.org/wiki/Rational_number>`_ :math:`\frac{649}{200} = \frac{3 \times 200 + 49}{200} = 3.245` which has a continued fraction representation, or simply, a continued fraction, given by:
 
@@ -87,7 +87,7 @@ A :py:class:`decimal.Decimal` value of ``ContinuedFraction(649, 200)`` is also a
 Decimal Precision
 -----------------
 
-The Python :py:mod:`decimal` library can, in principle, support arbitrary precision arithmetic, subject to the limitations of the running environment, system, hardware etc. It does this via `context objects <https://docs.python.org/3.12/library/decimal.html#context-objects>`_ for :py:class:`~decimal.Decimal` instances, in which you can set the precision of the :py:class:`~decimal.Decimal` values in your current environment to whatever is appropriate to your computation or experiment, subject to the limitations of your environment and/or system.
+According to the documentation the Python :py:mod:`decimal` library supports arbitrary precision arithmetic, subject to the limitations of the running environment, system, hardware etc. It does this via `context objects <https://docs.python.org/3.12/library/decimal.html#context-objects>`_ for :py:class:`~decimal.Decimal` instances, in which you can set the precision of the :py:class:`~decimal.Decimal` values in your current environment to whatever is appropriate to your computation or experiment, subject to the limitations of your environment and/or system.
 
 An example is given below:
 

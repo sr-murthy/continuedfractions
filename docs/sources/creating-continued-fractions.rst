@@ -146,7 +146,7 @@ However, in the :ref:`next section <creating-continued-fractions.from-elements>`
 Creating Continued Fractions From Elements/Coefficients
 =======================================================
 
-Continued fractions can also be constructed from sequences of elements, using either the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method, :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend`, or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.drop` methods. Each is described below.
+Continued fractions can also be constructed from sequences of elements, using either the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method, or the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance methods. Each is described below.
 
 .. _creating-continued-fractions.creation-from-complete-element-sequence:
 

@@ -41,7 +41,7 @@ Each is summarised below. Or you can go straight to the :doc:`API reference <api
 .. _getting-started.package-structure.continuedfractions_lib:
 
 ``continuedfractions.lib``
-++++++++++++++++++++++++++
+--------------------------
 
 This is a library of standalone functions:
 
@@ -58,7 +58,7 @@ This is a library of standalone functions:
 .. _getting-started.package-structure.continuedfractions_continuedfraction:
 
 ``continuedfractions.continuedfraction``
-++++++++++++++++++++++++++++++++++++++++
+----------------------------------------
 
 This is a library containing a single main class:
 
@@ -67,13 +67,13 @@ This is a library containing a single main class:
 .. _getting-started.package-structure.continuedfractions_sequences:
 
 ``continuedfractions.sequences``
-++++++++++++++++++++++++++++++++
+--------------------------------
 
 This is a library of functions and classes relating to ordered sequences and structures of integers and rational numbers, such as (currently) coprime integers, Farey sequences and (in the future) the Stern-Brocot tree:
 
 - :py:func:`~continuedfractions.sequences.coprime_integers_generator` - generates a sequence of integers `coprime <https://en.wikipedia.org/wiki/Coprime_integers>`_ (or relatively prime) to a given positive integer.
 - :py:func:`~continuedfractions.sequences.coprime_integers` - wrapper of :py:func:`~continuedfractions.sequences.coprime_integers_generator` which returns tuples.
-- :py:class:`~continuedfractions.sequences.KSRMTree` - implements an implicit/generative class for the Kanga-Saunders-Randall-Mitchell (KSRM) ternary trees for representing and generating pairs of (positive) coprime integers.
+- :py:class:`~continuedfractions.sequences.KSRMTree` - an implicit/generative class implementation of the :ref:`Kanga-Saunders-Randall-Mitchell (KSRM) ternary trees <sequences.ksrm-trees>` for representing and generating pairs of (positive) coprime integers.
 - :py:func:`~continuedfractions.sequences.coprime_pairs_generator` - generates a sequence of all pairs of (positive) coprime integers less than or equal to a given positive integer. Uses the KSRM tree :py:meth:`~continuedfractions.sequences.KSRMTree.search` method to perform the search.
 - :py:func:`~continuedfractions.sequences.coprime_pairs` - wrapper of :py:func:`~continuedfractions.sequences.coprime_pairs_generator` which returns tuples.
 - :py:func:`~continuedfractions.sequences.farey_sequence_generator` - generates a sequence of rational numbers called a `Farey sequence <https://en.wikipedia.org/wiki/Farey_sequence>`_ for a given positive integer. Uses the :py:func:`~continuedfractions.sequences.coprime_integers` and :py:func:`~continuedfractions.sequences.coprime_pairs` functions.

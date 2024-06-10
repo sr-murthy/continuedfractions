@@ -297,8 +297,8 @@ Examples with combinations of the optional parameters are given below.
 
 .. _sequences.coprime-integers.integer-pairs:
 
-Pairs of Coprime Integers
--------------------------
+Pairs of Coprime Integers in a Bounded Interval
+-----------------------------------------------
 
 For a given positive integer :math:`n` the :py:func:`~continuedfractions.sequences.coprime_pairs` function can be used to compute an (ordered) sequence of integer pairs :math:`(a, b)` coprime to each other, such that :math:`a, b \leq n`:
 

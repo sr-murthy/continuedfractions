@@ -1,26 +1,55 @@
+google-site-verification  
+3F2Jbz15v4TUv5j0vDJAA-mSyHmYIJq0okBoro3-WMY
+
 # Contributing
+
+Contributors and contributions are welcome. Please read these guidelines
+first.
+
+## Git
 
 The project homepage is on
 [GitHub](https://github.com/sr-murthy/continuedfractions).
 
-Contributors and contributions are welcome via pull requests from a fork
-targeting the parent `main`
-[branch](https://github.com/sr-murthy/continuedfractions/tree/main).
+Contributors can open pull requests from a fork targeting the parent
+`main`
+[branch](https://github.com/sr-murthy/continuedfractions/tree/main). But
+it may be a good first step to create an
+[issue](https://github.com/sr-murthy/continuedfractions/issues) or open
+a [discussion
+topic](https://github.com/sr-murthy/continuedfractions/discussions).
 
 A simple Git workflow, using a feature and/or fix branch created off the
 `main` branch of your fork, is recommended.
 
-## Cloning
+## Repo
 
 If you wish to contribute please first ensure you have [SSH access to
 GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh).
-If you do then this should work:
+This basically involves creating a project-specific SSH keypair - if you
+don't already have one - and adding it to GitHub. If you have done this
+successfully then this verification step should work:
 
 ``` bash
 ssh -vT git@github.com
 ```
 
-If not please follow the SSH instructions linked above.
+Some SSH configuration may be required: on MacOS or Linux your
+user-defined SSH configuration file (`~/.ssh/config`) should look
+something like this:
+
+``` shell
+Host github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  ForwardAgent yes
+  Preferredauthentications publickey
+  IdentityFile ~/.ssh/<SSH private key filename>
+  PasswordAuthentication no
+```
+
+For Windows please consult the [Windows OpenSSH
+documentation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration).
 
 Once you’ve forked the repository, you can clone your fork, e.g. over
 SSH:
@@ -72,8 +101,8 @@ pdm install -v --dev
 ```
 
 > [!NOTE]
-> It is important to note that the `pdm install` uses either the default
-> `pdm.lock` lockfile, or one specified with `-L <lockfile>`. Multiple
+> It is important to note that `pdm install` uses either the default
+> lockfile (`pdm.lock`), or one specified with `-L <lockfile>`. Multiple
 > lockfiles can be generated and maintained. Refer to the [PDM install
 > documentation](https://pdm-project.org/latest/reference/cli/#install)
 > for more information.
@@ -106,10 +135,13 @@ pdm export -v -f requirements --dev -o docs/requirements.txt
 For more information on PDM lockfiles and installing requirements see
 the [PDM documentation](https://pdm-project.org/latest/).
 
-## Makefile and Tests
+## Tests
 
-The [Makefile](Makefile) defines three main targets: `lint` for Ruff
-linting, `doctests` for running
+Tests are defined in the `tests` folder, and should be run with
+[pytest](https://pytest-cov.readthedocs.io/en/latest/).
+
+For convenience different types of test targets are defined in the
+[Makefile](Makefile): `lint` for Ruff linting, `doctests` for running
 [doctests](https://docs.python.org/3/library/doctest.html) and
 `unittests` for running unittests and measuring coverage, using `pytest`
 and the `pytest-cov` plugin:
@@ -153,7 +185,7 @@ or via [PDM](https://pdm.fming.dev/latest/):
 pdm install -v --dev --no-editable --no-self
 ```
 
-## Continuous Integration and Deployment (CI/CD)
+## CI/CD
 
 The CI/CD pipelines are defined in the [CI
 YML](.github/workflows/ci.yml), and pipelines for all branches include a
@@ -165,7 +197,7 @@ duplication on `main`.
 ## Versioning and Releases
 
 The [PyPI package](https://pypi.org/project/continuedfractions/) is
-currently at version `0.12.7` - the goal is to use [semantic
+currently at version `0.14.1` - the goal is to use [semantic
 versioning](https://semver.org/) consistently for all future releases,
 but some earlier releases do not comply with strict semantic versioning.
 

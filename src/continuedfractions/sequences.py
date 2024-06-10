@@ -160,12 +160,18 @@ def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -
         q, r = divmod((stop - start + 1), 10 ** 3)
 
         if q == 0:
-            yield from filter(lambda m: math.gcd(m, n) == 1, range(stop, start - 1, -1))
+            yield from filter(
+                lambda m: math.gcd(m, n) == 1,
+                range(stop, start - 1, -1)
+            )
         else:
             _start = ((10 ** 3) * q) + (1 if r > 0 else 0)
             
             while _start >= start:
-                yield from filter(lambda m: math.gcd(m, n) == 1, range(stop, _start - 1, -1))
+                yield from filter(
+                    lambda m: math.gcd(m, n) == 1,
+                    range(stop, _start - 1, -1)
+                )
                 stop = _start - 1
                 q -= 1
                 _start = ((10 ** 3) * q) + 1
@@ -184,8 +190,8 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
     :math:`n` are sought.
 
     For :math:`n = 1, 2` the ``start`` value is effectively ignored, but
-    if :math:`n > 2` then the ``start`` value must be an integer in the range
-    :math:`1..n - 2`.
+    if :math:`n > 1` then the ``start`` value must be an integer in the range
+    :math:`1..n - 1`.
 
     The ``stop`` value defaults to ``None``, which is then internally
     initialised to :math:`n`; if :math:`n > 1` and ``stop`` is given then it
@@ -200,8 +206,8 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
     start : int, default=1
         The lower bound of the range of (positive) integers in which integers
         coprime to the given :math:`n` are sought. For :math:`n = 1, 2` the
-        ``start`` value is effectively ignored, but if :math:`n > 2` then the
-        ``start`` value must be in the range :math:`1..n - 2`.
+        ``start`` value is effectively ignored, but if :math:`n > 1` then the
+        ``start`` value must be in the range :math:`1..n - 1`.
 
     stop : int, default=None
         The upper bound of the range of (positive) integers in which integers
@@ -800,7 +806,10 @@ def coprime_pairs_generator(n: int, /) -> Generator[KSRMNode, None, None]:
     if n == 1:
         yield (1, 1)
     else:
-        yield from chain(KSRMTree().search(n - 1), product([n], coprime_integers(n)))
+        yield from chain(
+            KSRMTree().search(n - 1),
+            product([n], coprime_integers(n))
+        )
 
 
 @functools.cache

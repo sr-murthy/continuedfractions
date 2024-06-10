@@ -8,10 +8,10 @@ Creating Continued Fractions
 
 It's useful to start with the basic mathematics of continued fractions, using a simple example.
 
-.. _creating-continued-fractions.basic-math:
+.. _creating-continued-fractions.basics:
 
-The Basic Math
-==============
+The Basics
+==========
 
 Consider the `rational number <https://en.wikipedia.org/wiki/Rational_number>`_ :math:`\frac{649}{200} = \frac{3 \times 200 + 49}{200} = 3.245` which has a continued fraction representation, or simply, a continued fraction, given by:
 
@@ -87,7 +87,7 @@ A :py:class:`decimal.Decimal` value of ``ContinuedFraction(649, 200)`` is also a
 Decimal Precision
 -----------------
 
-The Python :py:mod:`decimal` library can, in principle, support arbitrary precision arithmetic, subject to the limitations of the running environment, system, hardware etc. It does this via `context objects <https://docs.python.org/3.12/library/decimal.html#context-objects>`_ for :py:class:`~decimal.Decimal` instances, in which you can set the precision of the :py:class:`~decimal.Decimal` values in your current environment to whatever is appropriate to your computation or experiment, subject to the limitations of your environment and/or system.
+According to the documentation the Python :py:mod:`decimal` library supports arbitrary precision arithmetic, subject to the limitations of the running environment, system, hardware etc. It does this via `context objects <https://docs.python.org/3.12/library/decimal.html#context-objects>`_ for :py:class:`~decimal.Decimal` instances, in which you can set the precision of the :py:class:`~decimal.Decimal` values in your current environment to whatever is appropriate to your computation or experiment, subject to the limitations of your environment and/or system.
 
 An example is given below:
 
@@ -146,7 +146,7 @@ However, in the :ref:`next section <creating-continued-fractions.from-elements>`
 Creating Continued Fractions From Elements/Coefficients
 =======================================================
 
-Continued fractions can also be constructed from sequences of elements, using either the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method, :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend`, or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.drop` methods. Each is described below.
+Continued fractions can also be constructed from sequences of elements, using either the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method, or the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance methods. Each is described below.
 
 .. _creating-continued-fractions.creation-from-complete-element-sequence:
 
@@ -205,7 +205,7 @@ For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFr
 In-place Extension by New/Additional Elements
 ---------------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method allows the in-place modification of existing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances by extending the sequence of elements from an (ordered) sequence of new (or additional) elements - the new elements are added to the existing tail in the given order. Some examples are given below.
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance from new (or additional) sequence of elements - the new elements are added to the tail in the given order. Some examples are given below.
 
 .. code:: python
 
@@ -245,7 +245,7 @@ A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.
 In-place Truncation of Tail Elements
 ------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method allows the in-place modification of existing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances by truncating a segment of the tail elements - the tail elements to be truncated are removed from the existing tail in the given order. Some examples are given below.
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method can be used to perform an in-place truncation of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance instances by truncating a given sequence of tail elements - the tail elements to be truncated are removed from the existing tail in the given order. Some examples are given below.
 
 .. code:: python
 

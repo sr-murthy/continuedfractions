@@ -111,7 +111,7 @@ Tests :fas:`microscope`
 
 Tests are defined in the :file:`tests` folder, and should be run with `pytest <https://pytest-cov.readthedocs.io/en/latest/>`_.
 
-For convenience different types of test targets are defined in the `Makefile <Makefile>`_: ``lint`` for Ruff linting, ``doctests`` for running
+For convenience different types of test targets are defined in the `Makefile <https://github.com/sr-murthy/continuedfractions/blob/main/Makefile>`_: ``lint`` for Ruff linting, ``doctests`` for running
 `doctests <https://docs.python.org/3/library/doctest.html>`_ and ``unittests`` for running unittests and measuring coverage, using
 ``pytest`` and the ``pytest-cov`` plugin:
 
@@ -153,7 +153,7 @@ or via `PDM <https://pdm.fming.dev/latest/>`_:
 CI/CD :fas:`circle-play`
 ========================
 
-The CI/CD pipelines are defined in the `CI YML <.github/workflows/ci.yml>`_, and pipelines for all branches include a tests stage, consisting of Ruff linting, Python doctests, and unit tests, in that order. This will be amended in the future to ensure that tests are only run on updates to PRs targeting ``main``, to avoid duplication on ``main``.
+The CI/CD pipelines are defined in the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ and the `CodeQL Analysis YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml>`_, and pipelines for all branches include a tests stage, consisting of Ruff linting, Python doctests, and unit tests, in that order. This will be amended in the future to ensure that tests are only run on updates to PRs targeting ``main``, to avoid duplication on ``main``.
 
 .. _contributing.versioning-and-releases:
 

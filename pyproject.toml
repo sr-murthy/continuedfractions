@@ -135,10 +135,6 @@ test = [
     "pytest-xdist",
     "sympy",
 ]
-tox = [
-#    "tox",
-#    "tox-pdm",
-]
 deploy = [
     "twine>=4.0.2",
 ]

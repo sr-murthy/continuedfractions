@@ -8,4 +8,4 @@
 
 .. automodule:: continuedfractions.continuedfraction
     :members:
-    :special-members: __new__, __eq__, __hash__, __neg__, 
+    :special-members: __new__, __eq__, __hash__, __neg__, __divmod__, __rdivmod__

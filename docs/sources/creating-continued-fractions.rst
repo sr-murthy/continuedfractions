@@ -205,7 +205,7 @@ For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFr
 In-place Extension by New/Additional Elements
 ---------------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance from new (or additional) sequence of elements - the new elements are added to the tail in the given order. Some examples are given below.
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance from new elements - the new elements are added to the tail in the given order. Some examples are given below.
 
 .. code:: python
 

@@ -125,7 +125,7 @@ Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.con
 Even- and Odd-order Convergents
 -------------------------------
 
-It is known that even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula:
+It is known that even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula for the difference between consecutive convergents:
 
 .. math::
 
@@ -142,14 +142,14 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
 
 As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are :py:class:`types.MappingProxyType` objects, and are keyed by convergent order.
 
-The different behaviour of even- and odd-order convergents can be illustrated by looking at them for a ``ContinuedFraction`` approximation of :math:`\sqrt{2}` with :math:`100` 2s in the tail:
+The different behaviour of even- and odd-order convergents can be illustrated by looking at them for a ``ContinuedFraction`` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail:
 
 .. code:: python
 
    # Increase the current context precision to 100 digits
    >>> decimal.getcontext().prec = 100
    #
-   # Construct an approximation for the square root of 2, with 100 2s in the tail
+   # Construct an approximation for the square root of 2, with one hundred 2s in the tail
    >>> cf = ContinuedFraction.from_elements(1, *([2] * 100))
    >>> cf
    >>> ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
@@ -221,9 +221,9 @@ The first, more general definition is used here, and has been implemented in the
    >>> cf.semiconvergent(3, 7)
    ContinuedFraction(-415, 93)
 
-The :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` of the convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` is the semiconvergent of the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the convergent :math:`\frac{p_k}{q_k}`. For a fixed :math:`k` the semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, upper-bounded by :math:`\frac{p_k}{q_k}`, and thus has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
+The :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` of the convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` is the semiconvergent of the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, upper-bounded by :math:`\frac{p_k}{q_k}`, and thus has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
 
-For a fixed :math:`m` the semiconvergents have the same alternating behaviour in :math:`k` as the convergents: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
+The semiconvergents have the same alternating behaviour in :math:`k` as the convergents: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
 
 .. math::
 
@@ -310,11 +310,11 @@ We can illustrate rational approximation with the :py:meth:`~continuedfractions.
 
 With the 10th convergent of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <exploring-continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
 
-If we use the 100th convergent (with :math:`101` elements consisting of the integer part  :math:`1`, plus a tail of 100 twos), we get more accurate results:
+If we use the 100th convergent (with :math:`101` elements consisting of the integer part  :math:`1`, plus a tail of one hundred 2s), we get more accurate results:
 
 .. code:: python
 
-   # Create a `ContinuedFraction` from the sequence 1, 2, 2, 2, ..., 2, with 100 2s in the tail
+   # Create a `ContinuedFraction` from the sequence 1, 2, 2, 2, ..., 2, with one hundred 2s in the tail
    >>> sqrt2_100 = ContinuedFraction.from_elements(1, *[2] * 100)
    ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
    >>> sqrt2_100.elements

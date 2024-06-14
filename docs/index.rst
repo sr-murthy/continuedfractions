@@ -8,22 +8,20 @@ continuedfractions
 
 A simple extension of the Python :py:mod:`fractions` standard library for working with `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
 
-The package is designed for:
+The package is designed for users interested in:
 
--  working with continued fractions as Python objects, in an object-oriented way
--  exploring their key continued fractions properties, such as elements/coefficients,
-   convergents, remainders, and other numerical properties etc.
--  operating on them fully as rational numbers and instances of the standard library
-   :py:class:`fractions.Fraction` class
--  supporting approximations of and experimental computations for irrational numbers
--  exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
+- working with (finite) continued fractions as Python objects, in an intuitive object-oriented way
+- exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
+- operating on them as rationals and instances of the standard library :py:class:`fractions.Fraction` class
+- making approximations of and experimental computations for irrational numbers
+- exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
 
 .. note::
 
    Currently, it does **not** support the following features:
 
    * infinite and generalised continued fractions
-   * symbolic computations
+   * symbolic representations of or operations with continued fractions
 
    These are `planned <https://github.com/sr-murthy/continuedfractions/issues>`_ for future releases.
 

@@ -133,7 +133,7 @@ and right-mediants:
    >>> cf1.right_mediant(cf2, k=100).as_decimal()
    Decimal('0.5996015936254980079681274900')
 
-As :math:`k \longrightarrow \infty` the left- and right-mediants form different, strictly monotonic, sequences 
+As :math:`k \longrightarrow \infty` the sequences of left- and right-mediants separate into two, strictly monotonic, sequences 
 converging to opposite limits: the left-mediants form a strictly decreasing sequence lower-bounded by :math:`\frac{a}{b}`:
 
 .. math::
@@ -158,7 +158,7 @@ thus converging to :math:`\frac{c}{d}`:
 
    \lim_{k \to \infty} \frac{a + kc}{b + kd} = \lim_{k \to \infty} \frac{\frac{a}{k} + c}{\frac{b}{k} + d} = \frac{c}{d}
 
-We can see with the ``ContinuedFraction(1, 2)`` and ``ContinuedFraction(3, 5)`` instances used in the examples above, starting with the left-mediants:
+We can see this with the ``ContinuedFraction(1, 2)`` and ``ContinuedFraction(3, 5)`` instances used in the examples above, starting with the left-mediants:
 
 .. code:: python
 
@@ -193,6 +193,8 @@ And then the right-mediants:
    ContinuedFraction(3000001, 5000002)
    >>> cf1.right_mediant(cf2, k=10 ** 6).as_decimal()
    Decimal('0.5999999600000159999936000026')
+
+A particular class of right-mediants are known as `semiconvergents <https://en.wikipedia.org/wiki/Continued_fraction#Semiconvergents>`_, and are described in more detail :ref:`here <exploring-continued-fractions.semiconvergents>`.
 
 .. _sequences.coprime-integers:
 
@@ -498,7 +500,7 @@ The result for a given :math:`n \geq 1` is a generator of coprime pairs, yielded
 
 The implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` is guaranteed to terminate for any given :math:`n`, as there is always a finite subset of nodes :math:`(a, b)` satisfying the conditions :math:`1 \leq b < a \leq n` and :math:`(a, b) = 1`, and nodes that don't satisfy these conditions are discarded (pruned).
 
-As the KSRM trees are ternary trees the worst case time complexity of search, for either tree, is given by :math:`O(3^d)`, where :math:`3` is the (constant) branching factor, and :math:`d` is the depth to which the search is performed. Theoretically, the space complexity is :math:`O(3d)`, but the pruning of nodes and backtracking ensures that for almost all of the search for any given :math:`n` only some fraction of :math:`d` nodes, along a single branch, are ever stored all at once.
+As the KSRM trees are (infinite) ternary trees the worst case time complexity of search for a given :math:`n`, for either tree, is given by :math:`O(3^d)`, where :math:`3` is the (constant) branching factor, and :math:`d` is the depth to which the search is performed. Theoretically, the space complexity is :math:`O(3d)`, but the pruning of nodes and backtracking ensures that for almost all of the search for any given :math:`n` only some fraction of :math:`d` nodes, along a single branch, are ever stored all at once.
 
 .. _sequences.farey-sequences:
 

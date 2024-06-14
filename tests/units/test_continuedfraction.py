@@ -690,6 +690,52 @@ class TestContinuedFraction:
 	
 		assert cf1.mediant(cf2) == expected_simple_mediant
 
+	@pytest.mark.parametrize(
+		"k, m",
+		[
+			("not an int", -1),
+			("not an int", 0),
+			("not an int", 1),
+			(-1, "not an int"),
+			(0, "not an int"),
+			(1, "not an int"),
+			("not an int", "not an int"),
+			(0, 0),
+			(1, 0),
+			(0, 1),
+			(-1, -1),
+			(1, -1),
+			(-1, 1),
+			(5, 1),
+		]
+	)
+	def test_ContinuedFraction__semiconvergent__invalid_args(self, k, m):
+		test_cf = ContinuedFraction(-415, 93)
+
+		with pytest.raises(ValueError):
+			test_cf.semiconvergent(k, m)
+
+	@pytest.mark.parametrize(
+		"k, m, expected_semiconvergent",
+		[
+			(1, 1, ContinuedFraction(-9, 2)),
+			(2, 1, ContinuedFraction(-13, 3)),
+			(2, 2, ContinuedFraction(-22, 5)),
+			(3, 1, ContinuedFraction(-67, 15)),
+			(3, 2, ContinuedFraction(-125, 28)),
+			(3, 3, ContinuedFraction(-183, 41)),
+			(4, 1, ContinuedFraction(-473, 106)),
+			(4, 2, ContinuedFraction(-888, 199)),
+			(4, 3, ContinuedFraction(-1303, 292)),
+			(4, 4, ContinuedFraction(-1718, 385)),
+		]
+	)
+	def test_ContinuedFraction__semiconvergent__valid_args__correct_semiconvergent_returned(self, k, m, expected_semiconvergent):
+		test_cf = ContinuedFraction(-415, 93)
+
+		assert test_cf.semiconvergent(k, m) == expected_semiconvergent
+		assert test_cf.semiconvergent(k, m) == test_cf.convergents[k - 1].right_mediant(test_cf.convergents[k], k=m)
+
 	def test_ContinuedFraction__rational_operations(self):
 		f0 = ContinuedFraction(2, 1)
 		f1 = ContinuedFraction(649, 200)

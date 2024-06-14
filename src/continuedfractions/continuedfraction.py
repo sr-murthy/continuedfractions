@@ -797,6 +797,74 @@ class ContinuedFraction(Fraction):
         })
 
     @functools.cache
+    def semiconvergent(self, k: int, m: int, /) -> ContinuedFraction:
+        """Returns the :math:`m`-th semiconvergent of two consecutive convergents :math:`p_{k - 1}` and :math:`p_k` of a (finite, simple) continued fraction.
+
+        The integer :math:`k` must be positive and determine two consecutive
+        convergents :math:`p_{k - 1}` and :math:`p_k` of a (finite, simple)
+        continued fraction.
+
+        The integer :math:`m` can be any positive integer.
+
+        Parameters
+        ----------
+        k : int
+            The integer :math:`k` determining two consecutive convergents
+            :math:`p_{k - 1}` and :math:`p_k` of a (finite, simple) continued
+            fraction
+            :math:`[a_0; a_1, \\ldots, a_{k}, a_{k + 1}, \\ldots, a_n]`.
+
+        m : int
+            The index of the semiconvergent of the convergents
+            :math:`p_{k - 1}` and :math:`p_k`.
+
+        Returns
+        -------
+        ContinuedFraction
+            The :math:`m`-th semiconvergent of the convergents
+            :math:`p_{k - 1}` and :math:`p_k`.
+
+        Raises
+        ------
+        ValueError
+            If :math:`k` or :math:`m` are not positive integers, or :math:`k`
+            is an integer that does **not** satisfy :math:`1 \\leq k \\leq n`
+            where :math:`n` is the order of the (finite, simple) continued
+            fraction of which :math:`p_{k - 1}` and :math:`p_k` are
+            convergents.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction(-415, 93)
+        >>> cf.elements
+        (-5, 1, 1, 6, 7)
+        >>> cf.convergents
+        mappingproxy({0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)})
+        >>> cf.semiconvergent(3, 1)
+        ContinuedFraction(-67, 15)
+        >>> cf.semiconvergent(3, 2)
+        ContinuedFraction(-125, 28)
+        >>> cf.semiconvergent(3, 3)
+        ContinuedFraction(-183, 41)
+        >>> cf.semiconvergent(3, 4)
+        ContinuedFraction(-241, 54)
+        >>> cf.semiconvergent(3, 5)
+        ContinuedFraction(-299, 67)
+        >>> cf.semiconvergent(3, 6)
+        ContinuedFraction(-357, 80)
+        >>> cf.semiconvergent(3, 7)
+        ContinuedFraction(-415, 93)
+        """
+        if not isinstance(k, int) or k not in range(1, self.order + 1) or not isinstance(m, int) or m < 1:
+            raise ValueError(
+                "`k` and `m` must be positive integers and `k` must be an "
+                "integer in the range `1..n` where `n` is the order of the "
+                "continued fraction"
+            )
+
+        return self.convergents[k - 1].right_mediant(self.convergents[k], k=m)
+
+    @functools.cache
     def remainder(self, k: int, /) -> ContinuedFraction:
         """Returns the :math:`k`-th remainder of the continued fraction.
 

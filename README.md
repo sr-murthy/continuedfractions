@@ -28,18 +28,18 @@ See the [project docs](https://continuedfractions.readthedocs.io/en/latest/) for
 
 [Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
 
-The `continuedfractions` package is designed for:
+The `continuedfractions` package is designed for users interested in:
 
-* working with (finite) continued fractions as Python objects, in an object-oriented way
-* exploring their key properties, such as elements/coefficients, convergents, segments, remainders, and others
+* working with (finite) continued fractions as Python objects, in an intuitive object-oriented way
+* exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
 * operating on them as rationals and instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class
-* supporting approximations of and experimental computations for irrational numbers
+* making approximations of and experimental computations for irrational numbers
 * exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
 
 Currently, it does **not** support the following features:
 
 * infinite and generalised continued fractions
-* symbolic computations
+* symbolic representations of or operations with continued fractions
 
 These are [planned](https://github.com/sr-murthy/continuedfractions/issues) for future releases.
 

@@ -25,7 +25,7 @@ The **elements** (or coefficients) of a (possibly infinite), simple continued fr
    >>> cf.elements
    (3, 4, 12, 4)
 
-The **order** of a continued fraction is defined to be number of its elements **after** the first. Thus, for ``ContinuedFraction(649, 200)`` the order is ``3``:
+The **order** of a continued fraction is defined to be number of its tail elements, i.e. the elements defining the fractional part of the number represented by the continued fraction. Thus, for ``ContinuedFraction(649, 200)`` the order is ``3``:
 
 .. code:: python
 
@@ -125,7 +125,7 @@ Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.con
 Even- and Odd-order Convergents
 -------------------------------
 
-It is known that even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula:
+It is known that even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula for the difference between consecutive convergents:
 
 .. math::
 
@@ -142,14 +142,14 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
 
 As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are :py:class:`types.MappingProxyType` objects, and are keyed by convergent order.
 
-The different behaviour of even- and odd-order convergents can be illustrated by looking at them for a ``ContinuedFraction`` approximation of :math:`\sqrt{2}` with :math:`100` 2s in the tail:
+The different behaviour of even- and odd-order convergents can be illustrated by looking at them for a ``ContinuedFraction`` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail:
 
 .. code:: python
 
    # Increase the current context precision to 100 digits
    >>> decimal.getcontext().prec = 100
    #
-   # Construct an approximation for the square root of 2, with 100 2s in the tail
+   # Construct an approximation for the square root of 2, with one hundred 2s in the tail
    >>> cf = ContinuedFraction.from_elements(1, *([2] * 100))
    >>> cf
    >>> ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
@@ -177,6 +177,81 @@ The different behaviour of even- and odd-order convergents can be illustrated by
    >>> ContinuedFraction(-1, 14280)
    >>> cf.odd_order_convergents[9] - cf.odd_order_convergents[7]
    >>> ContinuedFraction(-1, 485112)
+
+.. _exploring-continued-fractions.semiconvergents:
+
+Semiconvergents
+---------------
+
+`Semiconvergents <https://en.wikipedia.org/wiki/Continued_fraction#Semiconvergents>`_ are :ref:`mediants <sequences.mediants>` of consecutive convergents of continued fractions. More precisely, if :math:`\frac{p_{k - 1}}{ q_{k - 1}}` and :math:`\frac{p_k}{q_k}` are consecutive convergents of a (possibly infinite) continued fraction :math:`[a_0;a_1,a_2,\ldots,a_k, a_{k + 1}, \ldots]`, and :math:`m` is any positive integer, then the fraction:
+
+.. math::
+
+    \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}
+
+is called a **semiconvergent** of :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}`. This is also the :ref:`right-mediant <sequences.mediants.generalised>` of order :math:`m` of the two (consecutive) convergents, and is an intermediate fraction between them.
+
+.. note::
+
+   If the number represented by a continued fraction is an integer it has only one convergent - itself - and thus no semiconvergents. 
+
+Some definitions of semiconvergents are more restricted: one such definition is the same as above, except that :math:`m` is required to be an integer in the range :math:`0..a_{k + 1}`, i.e. :math:`0 \leq m \leq a_{k + 1}`, where the corner cases are :math:`m = 0` in which case the semiconvergent is equal to :math:`\frac{p_{k - 1}}{q_{k - 1}}`, and :math:`m = a_{n + 1}` (if this is defined) in which the case the semiconvergent is equal to :math:`\frac{p_{k + 1}}{q_{k + 1}}`. Another restrictive definition is also the same as the first definition above except that :math:`m` is required to be an integer in the range :math:`1..a_{k + 1} - 1`, i.e. :math:`0 < m < a_{k + 1}`. In this latter definition, the two corner cases listed above are excluded.
+
+The first, more general definition is used here, and has been implemented in the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class as the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.semiconvergent` method. A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7]` for :math:`-\frac{415}{93}`.
+
+.. code:: python
+
+   >>> cf = ContinuedFraction(-415, 93)
+   >>> cf.elements
+   (-5, 1, 1, 6, 7)
+   >>> cf.convergents
+   mappingproxy({0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)})
+   >>> cf.semiconvergent(3, 1)
+   ContinuedFraction(-67, 15)
+   >>> cf.semiconvergent(3, 2)
+   ContinuedFraction(-125, 28)
+   >>> cf.semiconvergent(3, 3)
+   ContinuedFraction(-183, 41)
+   >>> cf.semiconvergent(3, 4)
+   ContinuedFraction(-241, 54)
+   >>> cf.semiconvergent(3, 5)
+   ContinuedFraction(-299, 67)
+   >>> cf.semiconvergent(3, 6)
+   ContinuedFraction(-357, 80)
+   >>> cf.semiconvergent(3, 7)
+   ContinuedFraction(-415, 93)
+
+The :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` of the convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` is the semiconvergent of the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, upper-bounded by :math:`\frac{p_k}{q_k}`, and thus has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
+
+The semiconvergents have the same alternating behaviour in :math:`k` as the convergents: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
+
+.. math::
+
+   \begin{align}
+   \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} - \frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k} &=
+   \frac{p_kq_{k - 1} - p_{k - 1}q_k}{q_{k - 1}^2 + (2m - 1)q_kq_{k - 1} + m(m - 1)q_k^2} \\ &=
+   \frac{(-1)^{k + 1}}{q_{k - 1}^2 + (2m - 1)q_kq_{k - 1} + m(m - 1)q_k^2}
+   \end{align}
+
+This can be illustrated again using the continued fraction for :math:`-\frac{415}{93}`:
+
+.. code:: python
+
+   >>> cf = ContinuedFraction(-415, 93)
+   >>> cf.elements
+   (-5, 1, 1, 6, 7)
+   >>> cf.convergents
+   mappingproxy({0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)})
+   >>> cf.semiconvergent(2, 1) - cf.semiconvergent(1, 1)
+   ContinuedFraction(1, 6)
+   >>> cf.semiconvergent(3, 1) - cf.semiconvergent(2, 1)
+   ContinuedFraction(-2, 15)
+   >>> cf.semiconvergent(4, 1) - cf.semiconvergent(3, 1)
+   ContinuedFraction(7, 1590)
+
+.. note::
+
+   When calling :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.semiconvergent` note that values of :math:`k`, which determines the :math:`k`-th convergent of a continued fraction, cannot exceed the order of the continued fraction.
 
 .. _exploring-continued-fractions.rational-approximation:
 
@@ -235,11 +310,11 @@ We can illustrate rational approximation with the :py:meth:`~continuedfractions.
 
 With the 10th convergent of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <exploring-continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
 
-If we use the 100th convergent (with :math:`101` elements consisting of the integer part  :math:`1`, plus a tail of 100 twos), we get more accurate results:
+If we use the 100th convergent (with :math:`101` elements consisting of the integer part  :math:`1`, plus a tail of one hundred 2s), we get more accurate results:
 
 .. code:: python
 
-   # Create a `ContinuedFraction` from the sequence 1, 2, 2, 2, ..., 2, with 100 2s in the tail
+   # Create a `ContinuedFraction` from the sequence 1, 2, 2, 2, ..., 2, with one hundred 2s in the tail
    >>> sqrt2_100 = ContinuedFraction.from_elements(1, *[2] * 100)
    ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
    >>> sqrt2_100.elements
@@ -263,9 +338,7 @@ The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this 
     >>> sqrt2_100.as_decimal()
     Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
 
-Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is accurate up to 75 digits in the fractional part, but deviates from the `true value <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_ after 76th digit onwards.
-
-This example also highlights the fact that "almost all" square roots of positive integers are irrational, even though the set of positive integers which are perfect squares and the set of positive integers which are not perfect squares are both countably infinite - the former is an infinitely sparser subset of the integers.
+Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is accurate up to 75 digits in the fractional part, but deviates from the `true value <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_ after the 76th digit onwards.
 
 .. _exploring-continued-fractions.remainders:
 

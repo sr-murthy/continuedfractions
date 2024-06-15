@@ -551,7 +551,7 @@ The Farey sequence :math:`F_n` of order :math:`n` is an (ordered) sequence of (i
 .. math::
 
    \begin{align}
-   F_n = \left(\frac{b}{a}\right) \text{ s.t. } & (a, b) = 1 \text{ and } 1 \leq b < a \leq n,\\
+   F_n = \left(\frac{b}{a}\right) \text{ s.t. } & 1 \leq b < a \leq n,\\
                                                 & \text{ or } b = 0, a = 1, \\
                                                 & \text{ or } b = a = 1
    \end{align}
@@ -561,6 +561,8 @@ The special case is when :math:`n = 1` and :math:`F_1` is given by:
 .. math::
 
    F_1 = \left(\frac{0}{1}, \frac{1}{1}\right)
+
+For :math:`n \geq 2` the requirement that :math:`1 \leq b < a \leq n` means the fractions :math:`\frac{b}{a} \neq \frac{0}{1}, \frac{1}{1}` must be irreducible, which implies coprimality :math:`(a, b) = 1`.
 
 The elements of :math:`F_n` are written in ascending order of magnitude. The first five Farey sequences are listed below:
 
@@ -589,7 +591,7 @@ and this can be checked with the :py:func:`~continuedfractions.sequences.farey_s
    >>> farey_sequence(5)
    (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
 
-For :math:`n > 1` we can write the fractions in :math:`F_n` as :math:`\frac{b}{a}` where :math:`a > b`: then the restriction :math:`(a, b) = 1` (meaning :math:`a` and :math:`b` must be coprime), combined with :math:`a \leq n`, means that :math:`F_n` contains, for each :math:`a \leq n`, exactly :math:`\phi(a)` fractions of the form :math:`\frac{b}{a}` where :math:`a > b` and :math:`(a, b) = 1`, and :math:`\phi(k)` is the totient function.
+For :math:`n > 1` we can write the fractions in :math:`F_n` as :math:`\frac{b}{a}` where :math:`a > b`: the coprimality condition :math:`(a, b) = 1`, combined with :math:`a \leq n`, means that :math:`F_n` contains, for each :math:`a \leq n`, exactly :math:`\phi(a)` fractions of the form :math:`\frac{b}{a}` where :math:`a > b` and :math:`(a, b) = 1`, and :math:`\phi(k)` is the totient function.
 
 As :math:`F_n` also contains the special fraction :math:`\frac{0}{1}` as its initial element, it means that the length :math:`|F_n|` of :math:`F_n` is given by:
 
@@ -632,6 +634,8 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 
    >>> print(', '.join([str(frac) for frac in farey_sequence(4)]))
    0, 1/4, 1/3, 1/2, 2/3, 3/4, 1
+   >>> print(', '.join([str(frac) for frac in farey_sequence(7)]))
+   0, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 2/5, 3/7, 1/2, 4/7, 3/5, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 1
    >>> assert ContinuedFraction(2, 3).mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
    >>> assert ContinuedFraction(3, 4) - ContinuedFraction(2, 3) in farey_sequence(12)
 

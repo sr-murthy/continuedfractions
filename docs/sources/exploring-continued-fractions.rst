@@ -58,7 +58,7 @@ The elements and orders of :py:class:`~continuedfractions.continuedfraction.Cont
 Convergents and Rational Approximations
 =======================================
 
-For an integer :math:`k >= 0` the (simple) :math:`k`-th **convergent** :math:`C_k` of a simple continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the rational number :math:`\frac{p_k}{q_k}` with the simple continued fraction :math:`[a_0; a_1,\ldots,a_k]` formed from the first :math:`k + 1` elements of the original.
+For an integer :math:`k \geq 0` the (simple) :math:`k`-th **convergent** :math:`C_k` of a simple continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the rational number :math:`\frac{p_k}{q_k}` with the simple continued fraction :math:`[a_0; a_1,\ldots,a_k]` formed from the first :math:`k + 1` elements of the original.
 
 .. math::
 
@@ -197,7 +197,9 @@ is called a **semiconvergent** of :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:
 
 Some definitions of semiconvergents are more restricted: one such definition is the same as above, except that :math:`m` is required to be an integer in the range :math:`0..a_{k + 1}`, i.e. :math:`0 \leq m \leq a_{k + 1}`, where the corner cases are :math:`m = 0` in which case the semiconvergent is equal to :math:`\frac{p_{k - 1}}{q_{k - 1}}`, and :math:`m = a_{n + 1}` (if this is defined) in which the case the semiconvergent is equal to :math:`\frac{p_{k + 1}}{q_{k + 1}}`. Another restrictive definition is also the same as the first definition above except that :math:`m` is required to be an integer in the range :math:`1..a_{k + 1} - 1`, i.e. :math:`0 < m < a_{k + 1}`. In this latter definition, the two corner cases listed above are excluded.
 
-The first, more general definition is used here, and has been implemented in the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class as the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.semiconvergent` method. A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7]` for :math:`-\frac{415}{93}`.
+The first, more general definition is used here, and has been implemented in the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class as the (cached) :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.semiconvergent` method. This takes two arguments: a positive integer :math:`k` determining two consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}, \frac{p_k}{q_k}` for which to take a semiconvergent, and a positive integer :math:`m` for the index of the semiconvergent (see the definition of "right-mediant" :ref:`here <sequences.mediants.generalised>`).
+
+A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7]` for :math:`-\frac{415}{93}`.
 
 .. code:: python
 
@@ -221,7 +223,7 @@ The first, more general definition is used here, and has been implemented in the
    >>> cf.semiconvergent(3, 7)
    ContinuedFraction(-415, 93)
 
-The :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` of the convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` is the semiconvergent of the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, upper-bounded by :math:`\frac{p_k}{q_k}`, and thus has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
+The :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` of the convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` is the semiconvergent of the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, bounded on one side by :math:`\frac{p_k}{q_k}` (the side depends on whether :math:`k` is odd or even), and has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
 
 The semiconvergents have the same alternating behaviour in :math:`k` as the convergents: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
 
@@ -242,12 +244,14 @@ This can be illustrated again using the continued fraction for :math:`-\frac{415
    (-5, 1, 1, 6, 7)
    >>> cf.convergents
    mappingproxy({0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)})
-   >>> cf.semiconvergent(2, 1) - cf.semiconvergent(1, 1)
+   >>> cf.semiconvergent(1, 2) - cf.semiconvergent(1, 1)
    ContinuedFraction(1, 6)
-   >>> cf.semiconvergent(3, 1) - cf.semiconvergent(2, 1)
-   ContinuedFraction(-2, 15)
-   >>> cf.semiconvergent(4, 1) - cf.semiconvergent(3, 1)
-   ContinuedFraction(7, 1590)
+   >>> cf.semiconvergent(2, 2) - cf.semiconvergent(2, 1)
+   ContinuedFraction(-1, 15)
+   >>> cf.semiconvergent(3, 2) - cf.semiconvergent(3, 1)
+   ContinuedFraction(1, 420)
+   >>> cf.semiconvergent(4, 2) - cf.semiconvergent(4, 1)
+   ContinuedFraction(-1, 21094)
 
 .. note::
 

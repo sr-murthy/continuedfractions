@@ -684,7 +684,7 @@ class KSRMTree:
                     return
 
                 # Otherwise, switch to the generating branch of the "next"
-                # child node - branch #2 if the current branch is branch #2, or
+                # child node - branch #2 if the current branch is branch #1, or
                 # branch #3 if the current branch is #2 - and continue the
                 # search.
                 cur_branch = self.branches[1] if last_branch == self.branches[0] else self.branches[-1]

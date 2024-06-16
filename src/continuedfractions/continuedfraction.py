@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from continuedfractions.lib import (
     continued_fraction_rational,
     convergent,
+    convergents,
     fraction_from_elements,
     left_mediant,
     mediant,
@@ -756,8 +757,8 @@ class ContinuedFraction(Fraction):
         (ContinuedFraction(3, 1), ContinuedFraction(159, 49))
         """
         return MappingProxyType({
-            k: self.convergent(k)
-            for k in range(self.order + 1)
+            k: self.__class__(convergent_)
+            for k, convergent_ in enumerate(convergents(*self._elements))
         })
 
     @property

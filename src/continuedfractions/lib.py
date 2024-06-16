@@ -2,6 +2,7 @@ __all__ = [
     'continued_fraction_real',
     'continued_fraction_rational',
     'convergent',
+    'convergents',
     'fraction_from_elements',
     'left_mediant',
     'mediant',
@@ -302,6 +303,68 @@ def convergent(k: int, *elements: int) -> Fraction:
         c, d = p, q
 
     return Fraction(p, q)
+
+
+def convergents(*elements: int) -> Generator[Fraction, None, None]:
+    """Generates an (ordered) sequence of convergents of a (finite, simple) continued fraction given as a sequence of its elements.
+
+    If :math:`n` is the order of the continued fraction represented by the
+    given sequence of its elements then convergents of orders
+    :math:`0, 1, \\ldots, n` are generated in that order.
+
+    Parameters
+    ----------
+    *elements : `int`
+        A variable-length sequence of integer elements of a (simple, finite)
+        continued fraction.
+
+    Yields
+    -------
+    fractions.Fraction
+        Each element generated is a :py:class:`fractions.Fraction` instance and
+        a :math:`k`-order convergent of the given continued fraction.
+
+    Raises
+    ------
+    ValueError
+        If there are any non-integer elements, or the tail elements are not
+        positive integers.
+
+    Examples
+    --------
+    >>> tuple(convergents(3))
+    (Fraction(3, 1),)
+    >>> tuple(convergents(3, 2))
+    (Fraction(3, 1), Fraction(7, 2))
+    >>> tuple(convergents(3, 4, 12, 4))
+    (Fraction(3, 1), Fraction(13, 4), Fraction(159, 49), Fraction(649, 200))
+    >>> tuple(convergents(-5, 1, 1, 6, 7))
+    (Fraction(-5, 1), Fraction(-4, 1), Fraction(-9, 2), Fraction(-58, 13), Fraction(-415, 93))
+    >>> tuple(convergents(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+    (Fraction(1, 1), Fraction(3, 2), Fraction(10, 7), Fraction(43, 30), Fraction(225, 157), Fraction(1393, 972), Fraction(9976, 6961), Fraction(81201, 56660), Fraction(740785, 516901), Fraction(7489051, 5225670))
+
+    """
+    if any(not isinstance(elem, int) or (elem <= 0 and i > 0) for i, elem in enumerate(elements)):
+        raise ValueError(
+            "Continued fraction elements must be integers, and all "
+            "tail elements (from the 1st element onwards) must be positive."
+        )
+
+    n = len(elements)
+
+    a, b = elements[0], 1
+    yield Fraction(a, b)
+
+    if n > 1:
+        c, d = (elements[1] * a) + b, elements[1]
+        yield Fraction(c, d)
+
+        if n > 2:
+            for e in elements[2:n + 1]:
+                p, q = (e * c) + a, (e * d) + b
+                yield Fraction(p, q)
+                a, b = c, d
+                c, d = p, q
 
 
 def fraction_from_elements(*elements: int) -> Fraction:

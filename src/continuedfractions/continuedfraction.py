@@ -799,7 +799,7 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def semiconvergent(self, k: int, m: int, /) -> ContinuedFraction:
-        """Returns the :math:`m`-th semiconvergent of two consecutive convergents :math:`p_{k - 1}` and :math:`p_k` of a (finite, simple) continued fraction.
+        """Returns the :math:`m`-th semiconvergent of two consecutive convergents :math:`p_{k - 1}` and :math:`p_k` of the continued fraction instance.
 
         The integer :math:`k` must be positive and determine two consecutive
         convergents :math:`p_{k - 1}` and :math:`p_k` of a (finite, simple)

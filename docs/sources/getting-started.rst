@@ -54,7 +54,7 @@ This is a library of standalone functions:
 
 .. note::
 
-   There are also two "wrapper" functions for computing left- and right-mediants - :py:func:`~continuedfractions.lib.left_mediant` and :py:func:`~continuedfractions.lib.right_mediant` - but these just call :py:func:`~continuedfractions.lib.mediant`.
+   There are also two "wrapper" functions for computing left- and right-mediants - :py:func:`~continuedfractions.lib.left_mediant` and :py:func:`~continuedfractions.lib.right_mediant` - which are partial bindings of :py:func:`~continuedfractions.lib.mediant`.
 
 .. _getting-started.package-structure.continuedfractions_continuedfraction:
 
@@ -63,14 +63,14 @@ This is a library of standalone functions:
 
 This is a library containing a single main class:
 
-- :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` - a subclass of :py:class:`fractions.Fraction`, designed to represent (finite) simple continued fractions as Python objects, which are fully operable as rational numbers.
+- :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` - a subclass of :py:class:`fractions.Fraction`, designed to represent (finite, simple) continued fractions as Python objects, which are fully operable as rational numbers.
 
 .. _getting-started.package-structure.continuedfractions_sequences:
 
 ``continuedfractions.sequences``
 --------------------------------
 
-This is a library of functions and classes relating to ordered sequences and structures of integers and rational numbers, such as (currently) coprime integers, Farey sequences and (in the future) the Stern-Brocot tree:
+This is a library of functions and classes relating to ordered sequences and structures of integers and rational numbers, such as coprime integers, coprime pair trees, and Farey sequences:
 
 - :py:func:`~continuedfractions.sequences.coprime_integers_generator` - generates a sequence of integers `coprime <https://en.wikipedia.org/wiki/Coprime_integers>`_ (or relatively prime) to a given positive integer.
 - :py:func:`~continuedfractions.sequences.coprime_integers` - wrapper of :py:func:`~continuedfractions.sequences.coprime_integers_generator` which returns tuples.

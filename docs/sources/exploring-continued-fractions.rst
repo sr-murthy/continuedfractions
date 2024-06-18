@@ -64,7 +64,7 @@ For an integer :math:`k \geq 0` the (simple) :math:`k`-th **convergent** :math:`
 
    C_k = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 \ddots \cfrac{1}{a_{k-1} + \cfrac{1}{a_k}}}}
 
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergent` method to compute the :math:`k`-order convergent for :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` provides a :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergent` method to compute the :math:`k`-th convergent for :math:`k=0,1,\ldots,n`, where :math:`n` is the order of the continued fraction.
 
 .. code:: python
 
@@ -100,49 +100,45 @@ Convergents have very important properties that are key to fast approximation al
 
 where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`, and :math:`q_1 = p_1`. This formula is faithfully implemented by the :py:meth:`~continuedfractions.lib.convergent` method, and is much faster than recursive implementations or even alternative iterative approaches involving repeated integer or :py:class:`fractions.Fraction` division - the key is to avoid division completely, and this is exactly what the formula enables.
 
-It is also possible to get all of the convergents at once using the **cached** :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property:
+It is also possible to get all of the convergents at once using the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property, which returns a generated, enumerated sequence of convergents:
 
 .. code:: python
 
-   >>> ContinuedFraction(649 200).convergents
-   mappingproxy({0: ContinuedFraction(3, 1),
-                 1: ContinuedFraction(13, 4),
-                 2: ContinuedFraction(159, 49),
-                 3: ContinuedFraction(649, 200)})
+   >>> tuple(ContinuedFraction(649 200).convergents)
+   ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
 
-The result is a :py:class:`types.MappingProxyType` object, and is keyed by convergent order :math:`0, 1,\ldots, n`.
+The return of a generator of an enumerated sequence is helpful as it allows the caller to define an appropriate static data structure to store all the convergents, if required, e.g. via a dict keyed by convergent index :math:`0, 1,\ldots, n`.
 
 .. code:: python
 
    >>> cf = ContinuedFraction(649 200)
-   >>> cf.convergents[0], cf.convergents[2]
-   (ContinuedFraction(3, 1), ContinuedFraction(159, 49))
-
-Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.convergent` method the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property is cached, and is thus much faster when needing to make repeated use of the convergents.
+   >>> cf_convergents = dict(cf.convergents)
+   >>> cf_convergents
+   {0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)}
 
 .. _exploring-continued-fractions.even-and-odd-order-convergents:
 
-Even- and Odd-order Convergents
--------------------------------
+Even- and Odd-Indexed Convergents
+---------------------------------
 
-It is known that even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula for the difference between consecutive convergents:
+It is known that even- and odd-indexed convergents behave differently: the even-indexed convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-indexed convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula for the difference between consecutive convergents:
 
 .. math::
 
    \frac{p_k}{q_k} - \frac{p_{k - 1}}{q_{k - 1}} = \frac{(-1)^k}{q_kq_{k - 1}}, \hskip{3em} k \geq 1
 
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides (cached) properties for even-order convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_order_convergents`) and odd-order convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_order_convergents`), as illustrated below.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides (cached) properties for even-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_convergents`) and odd-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_convergents`), as illustrated below.
 
 .. code:: python
 
-   >>> ContinuedFraction(649 200).even_order_convergents
-   mappingproxy({0: ContinuedFraction(3, 1), 2: ContinuedFraction(159, 49)})
-   >>> ContinuedFraction(649 200).odd_order_convergents
-   mappingproxy({1: ContinuedFraction(13, 4), 3: ContinuedFraction(649, 200)})
+   >>> tuple(ContinuedFraction(649 200).even_convergents)
+   ((0, ContinuedFraction(3, 1)), 2: ContinuedFraction(159, 49)))
+   >>> tuple(ContinuedFraction(649 200).odd_convergents)
+   ((1, ContinuedFraction(13, 4)), (3, ContinuedFraction(649, 200)))
 
-As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are :py:class:`types.MappingProxyType` objects, and are keyed by convergent order.
+As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are generators of enumerated sequences where the enumeration is by convergent index.
 
-The different behaviour of even- and odd-order convergents can be illustrated by looking at them for a ``ContinuedFraction`` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail:
+The different behaviour of even- and odd-indexed convergents can be illustrated by looking at them for a ``ContinuedFraction`` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail:
 
 .. code:: python
 
@@ -156,26 +152,28 @@ The different behaviour of even- and odd-order convergents can be illustrated by
    >>> cf.as_decimal()
    Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
    #
-   # Look at the differences between consecutive even-order convergents
-   >>> cf.even_order_convergents[2] - cf.even_order_convergents[0]
+   # Look at the differences between consecutive even-indexed convergents
+   >>> cf_even_convergents = tuple(cf.even_convergents)
+   >>> cf_even_convergents[2] - cf_even_convergents[0]
    >>> ContinuedFraction(2, 5)
-   >>> cf.even_order_convergents[4] - cf.even_order_convergents[2]
+   >>> cf_even_convergents[4] - cf_even_convergents[2]
    >>> ContinuedFraction(2, 145)
-   >>> cf.even_order_convergents[6] - cf.even_order_convergents[4]
+   >>> cf_even_convergents[6] - cf_even_convergents[4]
    >>> ContinuedFraction(2, 4901)
-   >>> cf.even_order_convergents[8] - cf.even_order_convergents[6]
+   >>> cf_even_convergents[8] - cf_even_convergents[6]
    >>> ContinuedFraction(2, 166465)
-   >>> cf.even_order_convergents[10] - cf.even_order_convergents[8]
+   >>> cf_even_convergents[10] - cf_even_convergents[8]
    >>> ContinuedFraction(2, 5654885)
    #
-   # Look at the differences between consecutive odd-order convergents
-   >>> cf.odd_order_convergents[3] - cf.odd_order_convergents[1]
+   # Look at the differences between consecutive odd-indexed convergents
+   >>> cf_odd_convergents = tuple(cf.odd_convergents)
+   >>> cf_odd_convergents[3] - cf_odd_convergents[1]
    >>> ContinuedFraction(-1, 12)
-   >>> cf.odd_order_convergents[5] - cf.odd_order_convergents[3]
+   >>> cf_odd_convergents[5] - cf_odd_convergents[3]
    >>> ContinuedFraction(-1, 420)
-   >>> cf.odd_order_convergents[7] - cf.odd_order_convergents[5]
+   >>> cf_odd_convergents[7] - cf_odd_convergents[5]
    >>> ContinuedFraction(-1, 14280)
-   >>> cf.odd_order_convergents[9] - cf.odd_order_convergents[7]
+   >>> cf_odd_convergents[9] - cf_odd_convergents[7]
    >>> ContinuedFraction(-1, 485112)
 
 .. _exploring-continued-fractions.semiconvergents:
@@ -206,8 +204,8 @@ A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7
    >>> cf = ContinuedFraction(-415, 93)
    >>> cf.elements
    (-5, 1, 1, 6, 7)
-   >>> cf.convergents
-   mappingproxy({0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)})
+   >>> dict(cf.convergents)
+   {0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)}
    >>> cf.semiconvergent(3, 1)
    ContinuedFraction(-67, 15)
    >>> cf.semiconvergent(3, 2)
@@ -242,8 +240,8 @@ This can be illustrated again using the continued fraction for :math:`-\frac{415
    >>> cf = ContinuedFraction(-415, 93)
    >>> cf.elements
    (-5, 1, 1, 6, 7)
-   >>> cf.convergents
-   mappingproxy({0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)})
+   >>> dict(cf.convergents)
+   {0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)}
    >>> cf.semiconvergent(1, 2) - cf.semiconvergent(1, 1)
    ContinuedFraction(1, 6)
    >>> cf.semiconvergent(2, 2) - cf.semiconvergent(2, 1)
@@ -362,24 +360,20 @@ If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a ratio
    >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
    (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 
-It is also possible to get all of the remainders at once using the **cached** :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property:
+It is also possible to get all of the remainders at once using the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property, which returns a generator of an enumerated sequence of the remainders:
 
 .. code:: python
 
-   >>> cf.remainders
-   mappingproxy({0: ContinuedFraction(649, 200),
-                 1: ContinuedFraction(200, 49),
-                 2: ContinuedFraction(49, 4),
-                 3: ContinuedFraction(4, 1)})
+   >>> tuple(cf.remainders)
+   ((0: ContinuedFraction(649, 200)), (1, ContinuedFraction(200, 49)), (2, ContinuedFraction(49, 4)), (3, ContinuedFraction(4, 1)))
 
-The result is a :py:class:`types.MappingProxyType` object, and is keyed by remainder index :math:`0, 1,\ldots, n`.
+As with convergents the result is a generator of an enumerated sequence, as it allows the caller to define a more appropriate static data structure to store all the remainders, if required.
 
 .. code:: python
 
+   >>> cf_remainders = dict(cf.remainders)
    >>> cf.remainders[0], cf.remainders[2]
    (ContinuedFraction(649, 200), ContinuedFraction(49, 4))
-
-Unlike the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property is cached, and is thus much faster when needing to make repeated use of the remainders.
 
 Using the simple continued fraction of :math:`\frac{649}{200}` we can verify that these remainders are mathematically correct.
 

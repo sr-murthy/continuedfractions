@@ -205,9 +205,9 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int,
 
 
 def convergent(k: int, *elements: int) -> Fraction:
-    """Returns the :math:`k`-th convergent of a simple continued fraction from a sequence of its elements.
+    """Returns the :math:`k`-th convergent of a (simple) continued fraction from a sequence of its elements.
 
-    Given a simple continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
+    Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
     :math:`k`-th convergent is defined as:
 
     .. math::

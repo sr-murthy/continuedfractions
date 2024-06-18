@@ -636,7 +636,13 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
    0, 1/4, 1/3, 1/2, 2/3, 3/4, 1
    >>> print(', '.join([str(frac) for frac in farey_sequence(7)]))
    0, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 2/5, 3/7, 1/2, 4/7, 3/5, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 1
+   >>> ContinuedFraction(2, 3).mediant(ContinuedFraction(3, 4))
+   ContinuedFraction(5, 7)
    >>> assert ContinuedFraction(2, 3).mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
+   >>> ContinuedFraction(3, 4) - ContinuedFraction(2, 3)
+   ContinuedFraction(1, 12)
+   >>> print(', '.join([str(frac) for frac in farey_sequence(12)]))
+   0, 1/12, 1/11, 1/10, 1/9, 1/8, 1/7, 1/6, 2/11, 1/5, 2/9, 1/4, 3/11, 2/7, 3/10, 1/3, 4/11, 3/8, 2/5, 5/12, 3/7, 4/9, 5/11, 1/2, 6/11, 5/9, 4/7, 7/12, 3/5, 5/8, 7/11, 2/3, 7/10, 5/7, 8/11, 3/4, 7/9, 4/5, 9/11, 5/6, 6/7, 7/8, 8/9, 9/10, 10/11, 11/12, 1
    >>> assert ContinuedFraction(3, 4) - ContinuedFraction(2, 3) in farey_sequence(12)
 
 .. _sequences.references:

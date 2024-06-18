@@ -309,8 +309,8 @@ def convergents(*elements: int) -> Generator[Fraction, None, None]:
     """Generates an (ordered) sequence of convergents of a (finite, simple) continued fraction given as a sequence of its elements.
 
     If :math:`n` is the order of the continued fraction represented by the
-    given sequence of its elements then convergents of orders
-    :math:`0, 1, \\ldots, n` are generated in that order.
+    given sequence of its elements then :math:`n + 1` convergents
+    :math:`C_0, C_1, \\ldots, C_n` are generated in that order.
 
     Parameters
     ----------
@@ -319,10 +319,10 @@ def convergents(*elements: int) -> Generator[Fraction, None, None]:
         continued fraction.
 
     Yields
-    -------
+    ------
     fractions.Fraction
         Each element generated is a :py:class:`fractions.Fraction` instance and
-        a :math:`k`-order convergent of the given continued fraction.
+        a :math:`k`-th convergent of the given continued fraction.
 
     Raises
     ------

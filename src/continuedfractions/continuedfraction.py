@@ -744,7 +744,10 @@ class ContinuedFraction(Fraction):
 
         The convergents are generated as tuples of :py:class:`int` and
         :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
-        instances, where the integers represent the orders of the convergents.
+        instances, where the integers represent the indices of the convergents.
+
+        If :math:`n` is the order of the continued fraction then :math:`n + 1`
+        convergents :math:`C_0, C_1, \\ldots, C_n` are generated in that order.
 
         Yields
         ------
@@ -765,9 +768,12 @@ class ContinuedFraction(Fraction):
     def even_convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
         """Generates an enumerated sequence of all even-order convergents of the continued fraction.
 
-        The even-order convergents are generated as tuples of :py:class:`int`
-        and :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
-        instances, where the integers represent the orders of the convergents.
+        The convergents are generated as tuples of :py:class:`int` and
+        :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
+        instances, where the integers represent the indices of the convergents.
+
+        If :math:`n` is the order of the continued fraction then only the even-
+        indexed convergents :math:`C_0, C_2, C_4, \\ldots` are generated.
 
         Yields
         ------
@@ -787,9 +793,12 @@ class ContinuedFraction(Fraction):
     def odd_convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
         """Generates an enumerated sequence of all odd-order convergents of the continued fraction.
 
-        The odd-order convergents are generated as tuples of :py:class:`int`
-        and :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
-        instances, where the integers represent the orders of the convergents.
+        The convergents are generated as tuples of :py:class:`int` and
+        :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
+        instances, where the integers represent the indices of the convergents.
+
+        If :math:`n` is the order of the continued fraction then only the odd-
+        indexed convergents :math:`C_1, C_3, C_5, \\ldots` are generated.
 
         Yields
         ------

@@ -107,7 +107,7 @@ It is also possible to get all of the convergents at once using the :py:attr:`~c
    >>> tuple(ContinuedFraction(649 200).convergents)
    ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
 
-The return of a generator of an enumerated sequence is helpful as it allows the caller to define an appropriate static data structure to store all the convergents, if required, e.g. via a dict keyed by convergent index :math:`0, 1,\ldots, n`.
+The return of a generator of an enumerated sequence is helpful as it allows the caller to define an appropriate static data structure to store all the convergents by index, if required, e.g. via a dict:
 
 .. code:: python
 
@@ -127,7 +127,7 @@ It is known that even- and odd-indexed convergents behave differently: the even-
 
    \frac{p_k}{q_k} - \frac{p_{k - 1}}{q_{k - 1}} = \frac{(-1)^k}{q_kq_{k - 1}}, \hskip{3em} k \geq 1
 
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides (cached) properties for even-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_convergents`) and odd-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_convergents`), as illustrated below.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides properties for generating even-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_convergents`) and odd-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_convergents`), as illustrated below.
 
 .. code:: python
 

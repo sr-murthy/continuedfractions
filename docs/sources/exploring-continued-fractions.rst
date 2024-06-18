@@ -84,12 +84,16 @@ Using the simple continued fraction :math:`[3; 4, 12, 4]` of :math:`\frac{649}{2
    & C_3 &&= [3; 4, 12, 4] = 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{649}{200} = 3.245
    \end{alignat*}
 
+.. note::
+
+   The index of a convergent of a continued fraction may be different from its order as a continued fraction, e.g. for the rational :math:`-\frac{415}{93}` which has the simple continued fraction :math:`[-5; 1, 1, 6, 7]`, the :math:`1`-st convergent is the integer :math:`-4` with the continued fraction :math:`[-5; 1] = [-4;]` of order :math:`0`, and the :math:`2`-nd convergent is the rational :math:`-\frac{9}{2}` with the continued fraction :math:`[-5; 1, 1] = [-5; 2]` of order :math:`1`.
+
 .. _exploring-continued-fractions.fast-algorithms:
 
 Fast Algorithms for Computing Convergents
 -----------------------------------------
 
-Convergents have very important properties that are key to fast approximation algorithms. The first of these is a recurrence relation between the convergents given by:
+Convergents have very important properties that are key to fast approximation algorithms. A key property in this regard is a recurrence relation between the convergents given by:
 
 .. math::
    
@@ -98,16 +102,16 @@ Convergents have very important properties that are key to fast approximation al
    q_k &= a_kq_{k - 1} + q_{k - 2},        \hskip{3em}    k \geq 3
    \end{align}
 
-where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`, and :math:`q_1 = p_1`. This formula is faithfully implemented by the :py:meth:`~continuedfractions.lib.convergent` method, and is much faster than recursive implementations or even alternative iterative approaches involving repeated integer or :py:class:`fractions.Fraction` division - the key is to avoid division completely, and this is exactly what the formula enables.
+where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`, and :math:`q_1 = p_1`. This formula is faithfully implemented by the :py:meth:`~continuedfractions.lib.convergent` method, and the implementation is much faster than recursive implementations (recursive in the programming sense of a function or routine calling itself) or even alternative iterative approaches involving repeated integer or :py:class:`fractions.Fraction` division - the key is to avoid division completely, and this is exactly what the formula enables.
 
-It is also possible to get all of the convergents at once using the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property, which returns a generated, enumerated sequence of convergents:
+This is also used in the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property, which returns a generator of an enumerated sequence of all the convergents of the continued fraction:
 
 .. code:: python
 
    >>> tuple(ContinuedFraction(649 200).convergents)
    ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
 
-The return of a generator of an enumerated sequence is helpful as it allows the caller to define an appropriate static data structure to store all the convergents by index, if required, e.g. via a dict:
+The return of a generator of an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances is helpful as it allows the caller to define an appropriate static data structure to store all the convergents by index, if required, e.g. via a dict:
 
 .. code:: python
 
@@ -121,7 +125,7 @@ The return of a generator of an enumerated sequence is helpful as it allows the 
 Even- and Odd-Indexed Convergents
 ---------------------------------
 
-It is known that even- and odd-indexed convergents behave differently: the even-indexed convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-indexed convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula for the difference between consecutive convergents:
+The even- and odd-indexed convergents behave differently: the even-indexed convergents :math:`C_0,C_2,C_4,\ldots` strictly increase, while the odd-indexed convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease, both at a decreasing rate. This is captured by the formula for the difference between consecutive convergents:
 
 .. math::
 
@@ -136,9 +140,9 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
    >>> tuple(ContinuedFraction(649 200).odd_convergents)
    ((1, ContinuedFraction(13, 4)), (3, ContinuedFraction(649, 200)))
 
-As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are generators of enumerated sequences where the enumeration is by convergent index.
+As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are generators of enumerated sequences of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, where the enumeration is by convergent index.
 
-The different behaviour of even- and odd-indexed convergents can be illustrated by looking at them for a ``ContinuedFraction`` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail:
+The different behaviour of even- and odd-indexed convergents can be illustrated by looking at them for an approximation of :math:`\sqrt{2}` with one hundred 2s in the tail:
 
 .. code:: python
 
@@ -187,7 +191,13 @@ Semiconvergents
 
     \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}
 
-is called a **semiconvergent** of :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}`. This is also the :ref:`right-mediant <sequences.mediants.generalised>` of order :math:`m` of the two (consecutive) convergents, and is an intermediate fraction between them.
+is called a **semiconvergent** of :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}`. This is also the :ref:`right-mediant <sequences.mediants.generalised>` of order :math:`m` of the two (consecutive) convergents, and is an intermediate fraction between them. So:
+
+.. math::
+
+   \frac{p_{k - 1}}{q_{k - 1}} \leq \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \leq \frac{p_k}{q_k}
+
+where :math:`\frac{p_{k - 1}}{q_{k - 1}}, \frac{p_k}{q_k}` are assumed to be consecutive convergents such that :math:`\frac{p_{k - 1}}{q_{k - 1}} \leq \frac{p_k}{q_k}`. If on the other hand :math:`\frac{p_{k - 1}}{q_{k - 1}} \geq \frac{p_k}{q_k}` the inequality above would be reversed.
 
 .. note::
 
@@ -347,7 +357,7 @@ Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is 
 Remainders
 ==========
 
-The :math:`k`-th remainder :math:`R_k` of a simple continued fraction :math:`[a_0; a_1,\ldots]` is the simple continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`.
+The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` is the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`.
 
 .. math::
 
@@ -367,7 +377,7 @@ It is also possible to get all of the remainders at once using the :py:attr:`~co
    >>> tuple(cf.remainders)
    ((0: ContinuedFraction(649, 200)), (1, ContinuedFraction(200, 49)), (2, ContinuedFraction(49, 4)), (3, ContinuedFraction(4, 1)))
 
-As with convergents the result is a generator of an enumerated sequence, as it allows the caller to define a more appropriate static data structure to store all the remainders, if required.
+As with convergents the result is a generator of an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, as it allows the caller to define a more appropriate static data structure to store all the remainders, if required.
 
 .. code:: python
 

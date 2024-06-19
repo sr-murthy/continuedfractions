@@ -434,7 +434,7 @@ This represents a **division-free** algorithm for computing the simple continued
 
 .. note::
 
-   This algorithm can be combined with the :ref:`basic rule <creating-continued-fractions.basic-rules>` for the simple continued fraction of the multiplicative inverse of a given positive rational number to yield division-free algorithms for computing simple continued fractions for multiplying and dividing pairs of rational numbers, and also for taking exponents of rational numbers with integers. These will be implemented in :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` in future releases.
+   This algorithm can be combined with the :ref:`basic rule <creating-continued-fractions.basic-rules>` for the simple continued fraction of the multiplicative inverse of a given positive rational number to yield division-free algorithms for computing simple continued fractions for multiplying and dividing pairs of rational numbers, and also for taking exponents of rational numbers with integers.
 
 We can illustrate the negation relations above with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances for small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
 

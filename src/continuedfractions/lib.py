@@ -43,7 +43,7 @@ _RATIONAL_FORMAT = re.compile(r"""
 
 
 def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
-    """Generates elements/coefficients of the finite, simple continued fraction for the given rational number.
+    """Generates a unique sequence of elements (coefficients) of a (finite, simple) continued fraction of a rational number.
 
     The resulting sequence of elements defines a continued fraction of the form:
 
@@ -57,7 +57,10 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
 
        [a_0; a_1, a_2\\ldots, a_n]
 
-    The order of the continued fraction is said to be :math:`n`.
+    The order of the continued fraction is said to be :math:`n`. If the last
+    element :math:`a_n = 1` the sequence can be rewritten as
+    :math:`[a_0; a_1, a_2\\ldots, a_{n - 1} + 1]`, which is then unique as a
+    simple continued fraction representation of the rational number.
 
     Negative rational numbers can also be represented in this way, provided we
     use the `Euclidean division lemma <https://en.wikipedia.org/wiki/Euclid%27s_lemma>`_.
@@ -72,13 +75,13 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
     Parameters
     ----------
     r : `fractions.Fraction`
-        The rational number to represented as a continued fraction.
+        The rational number to represented as a simple continued fraction.
 
     Yields
     ------
     int
-        Elements of a unique, finite "simple" continued fraction representation
-        of the given rational number.
+        Elements of a unique simple continued fraction of the given rational
+        number.
 
     Examples
     --------
@@ -119,7 +122,10 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
 
 
 def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int, None, None]:
-    """Generates elements/coefficients of a simple continued fraction of the given real number.
+    """Generates a finite sequence of elements (coefficients) of a (simple) continued fraction of the given real number.
+
+    The result is a finite sequence even though the given number :math:`x` may
+    be irrational or not exactly representable as a real number. 
 
     The simple continued fraction representation of :math:`x` is a number of
     the form
@@ -132,6 +138,9 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int,
     :math:`a_1,a_2\\ldots` are the (non-negative) quotients obtained by a
     repeated application of `Euclidean division <https://en.wikipedia.org/wiki/Euclidean_division>`_
     to the fractional part :math:`x - [x]`, which is called the remainder.
+
+    If the last element :math:`a_n = 1` the sequence can be rewritten as
+    :math:`[a_0; a_1, a_2\\ldots, a_{n - 1} + 1]`.
 
     As Python :py:class:`float` values, like all floating point
     implementations, are `finite precision representations <https://docs.python.org/3/tutorial/floatingpoint.html>`_
@@ -306,7 +315,7 @@ def convergent(k: int, *elements: int) -> Fraction:
 
 
 def convergents(*elements: int) -> Generator[Fraction, None, None]:
-    """Generates an (ordered) sequence of convergents of a (finite, simple) continued fraction given as a sequence of its elements.
+    """Generates a sequence of convergents of a (simple) continued fraction from a sequence of its elements.
 
     If :math:`n` is the order of the continued fraction represented by the
     given sequence of its elements then :math:`n + 1` convergents
@@ -368,7 +377,7 @@ def convergents(*elements: int) -> Generator[Fraction, None, None]:
 
 
 def fraction_from_elements(*elements: int) -> Fraction:
-    """Returns the rational number represented by a simple (finite) continued fraction from a sequence of its elements.
+    """Returns the rational number represented by a (simple) continued fraction from a sequence of its elements.
 
     The elements must be given as positional arguments, which means that if
     they are contained in an iterable then they must be unpacked using the

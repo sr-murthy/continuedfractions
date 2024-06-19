@@ -45,15 +45,16 @@ Each is summarised below. Or you can go straight to the :doc:`API reference <api
 
 This is a library of standalone functions:
 
--  :py:meth:`~continuedfractions.lib.continued_fraction_rational` - generates the (ordered) sequence of elements (coefficients) of the unique simple continued fraction of a given rational number, given as a :py:class:`fractions.Fraction` instance.
--  :py:meth:`~continuedfractions.lib.continued_fraction_real` - generates the sequence of elements of a simple continued fraction of a real number, given as a single :py:class:`int`, :py:class:`float`, :py:class:`str`, or :py:class:`decimal.Decimal` value; the results for :py:class:`float` inputs may be approximate and not necessarily unique.
-- :py:meth:`~continuedfractions.lib.fraction_from_elements` - returns a :py:class:`fractions.Fraction` instance of the rational number represented by a simple continued fraction with the given sequence of elements.
--  :py:meth:`~continuedfractions.lib.convergent` - returns the :math:`k`-th convergent (for a positive integer :math:`k`) from a sequence of elements of a (finite) simple continued fraction; the convergent is returned as a :py:class:`fractions.Fraction` instance.
+-  :py:meth:`~continuedfractions.lib.continued_fraction_rational` - generates a unique sequence of elements (coefficients) of a (finite, simple) continued fraction of a rational number given as a :py:class:`fractions.Fraction` instance.
+-  :py:meth:`~continuedfractions.lib.continued_fraction_real` - generates a finite sequence of elements of a continued fraction of a real number given as a single :py:class:`int`, :py:class:`float`, :py:class:`str`, or :py:class:`decimal.Decimal` value; the results for :py:class:`float` inputs may be approximate and not necessarily unique.
+- :py:meth:`~continuedfractions.lib.fraction_from_elements` - returns a :py:class:`fractions.Fraction` instance of the rational number represented by a continued fraction from a sequence of its elements.
+-  :py:meth:`~continuedfractions.lib.convergent` - returns the :math:`k`-th convergent (for a positive integer :math:`k`) from a sequence of elements of a continued fraction; the convergent is returned as a :py:class:`fractions.Fraction` instance.
+- :py:meth:`~continuedfractions.lib.convergents` - generates a sequence of all convergents of a continued fraction from a sequence of its elements.
 -  :py:meth:`~continuedfractions.lib.mediant` - returns the :math:`k`-th left or right mediant of two rational numbers, given as :py:class:`fractions.Fraction` values; the mediant is returned as a :py:class:`fractions.Fraction` instance.
 
 .. note::
 
-   There are also two "wrapper" functions for computing left- and right-mediants - :py:func:`~continuedfractions.lib.left_mediant` and :py:func:`~continuedfractions.lib.right_mediant` - but these just call :py:func:`~continuedfractions.lib.mediant`.
+   There are also two "wrapper" functions for computing left- and right-mediants - :py:func:`~continuedfractions.lib.left_mediant` and :py:func:`~continuedfractions.lib.right_mediant` - which are partial bindings of :py:func:`~continuedfractions.lib.mediant`.
 
 .. _getting-started.package-structure.continuedfractions_continuedfraction:
 
@@ -62,14 +63,14 @@ This is a library of standalone functions:
 
 This is a library containing a single main class:
 
-- :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` - a subclass of :py:class:`fractions.Fraction`, designed to represent (finite) simple continued fractions as Python objects, which are fully operable as rational numbers.
+- :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` - a subclass of :py:class:`fractions.Fraction`, designed to represent (finite, simple) continued fractions as Python objects, which are fully operable as rational numbers.
 
 .. _getting-started.package-structure.continuedfractions_sequences:
 
 ``continuedfractions.sequences``
 --------------------------------
 
-This is a library of functions and classes relating to ordered sequences and structures of integers and rational numbers, such as (currently) coprime integers, Farey sequences and (in the future) the Stern-Brocot tree:
+This is a library of functions and classes relating to ordered sequences and structures of integers and rational numbers, such as coprime integers, coprime pair trees, and Farey sequences:
 
 - :py:func:`~continuedfractions.sequences.coprime_integers_generator` - generates a sequence of integers `coprime <https://en.wikipedia.org/wiki/Coprime_integers>`_ (or relatively prime) to a given positive integer.
 - :py:func:`~continuedfractions.sequences.coprime_integers` - wrapper of :py:func:`~continuedfractions.sequences.coprime_integers_generator` which returns tuples.

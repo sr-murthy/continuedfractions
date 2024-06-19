@@ -2,6 +2,7 @@ __all__ = [
     'continued_fraction_real',
     'continued_fraction_rational',
     'convergent',
+    'convergents',
     'fraction_from_elements',
     'left_mediant',
     'mediant',
@@ -42,7 +43,7 @@ _RATIONAL_FORMAT = re.compile(r"""
 
 
 def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
-    """Generates elements/coefficients of the finite, simple continued fraction for the given rational number.
+    """Generates a unique sequence of elements (coefficients) of a (finite, simple) continued fraction of a rational number.
 
     The resulting sequence of elements defines a continued fraction of the form:
 
@@ -56,7 +57,10 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
 
        [a_0; a_1, a_2\\ldots, a_n]
 
-    The order of the continued fraction is said to be :math:`n`.
+    The order of the continued fraction is said to be :math:`n`. If the last
+    element :math:`a_n = 1` the sequence can be rewritten as
+    :math:`[a_0; a_1, a_2\\ldots, a_{n - 1} + 1]`, which is then unique as a
+    simple continued fraction representation of the rational number.
 
     Negative rational numbers can also be represented in this way, provided we
     use the `Euclidean division lemma <https://en.wikipedia.org/wiki/Euclid%27s_lemma>`_.
@@ -71,13 +75,13 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
     Parameters
     ----------
     r : `fractions.Fraction`
-        The rational number to represented as a continued fraction.
+        The rational number to represented as a simple continued fraction.
 
     Yields
     ------
     int
-        Elements of a unique, finite "simple" continued fraction representation
-        of the given rational number.
+        Elements of a unique simple continued fraction of the given rational
+        number.
 
     Examples
     --------
@@ -118,7 +122,10 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
 
 
 def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int, None, None]:
-    """Generates elements/coefficients of a simple continued fraction of the given real number.
+    """Generates a finite sequence of elements (coefficients) of a (simple) continued fraction of the given real number.
+
+    The result is a finite sequence even though the given number :math:`x` may
+    be irrational or not exactly representable as a real number. 
 
     The simple continued fraction representation of :math:`x` is a number of
     the form
@@ -131,6 +138,9 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int,
     :math:`a_1,a_2\\ldots` are the (non-negative) quotients obtained by a
     repeated application of `Euclidean division <https://en.wikipedia.org/wiki/Euclidean_division>`_
     to the fractional part :math:`x - [x]`, which is called the remainder.
+
+    If the last element :math:`a_n = 1` the sequence can be rewritten as
+    :math:`[a_0; a_1, a_2\\ldots, a_{n - 1} + 1]`.
 
     As Python :py:class:`float` values, like all floating point
     implementations, are `finite precision representations <https://docs.python.org/3/tutorial/floatingpoint.html>`_
@@ -204,9 +214,9 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int,
 
 
 def convergent(k: int, *elements: int) -> Fraction:
-    """Returns the :math:`k`-th convergent of a simple continued fraction from a sequence of its elements.
+    """Returns the :math:`k`-th convergent of a (simple) continued fraction from a sequence of its elements.
 
-    Given a simple continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
+    Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
     :math:`k`-th convergent is defined as:
 
     .. math::
@@ -304,8 +314,70 @@ def convergent(k: int, *elements: int) -> Fraction:
     return Fraction(p, q)
 
 
+def convergents(*elements: int) -> Generator[Fraction, None, None]:
+    """Generates a sequence of convergents of a (simple) continued fraction from a sequence of its elements.
+
+    If :math:`n` is the order of the continued fraction represented by the
+    given sequence of its elements then :math:`n + 1` convergents
+    :math:`C_0, C_1, \\ldots, C_n` are generated in that order.
+
+    Parameters
+    ----------
+    *elements : `int`
+        A variable-length sequence of integer elements of a (simple, finite)
+        continued fraction.
+
+    Yields
+    ------
+    fractions.Fraction
+        Each element generated is a :py:class:`fractions.Fraction` instance and
+        a :math:`k`-th convergent of the given continued fraction.
+
+    Raises
+    ------
+    ValueError
+        If there are any non-integer elements, or the tail elements are not
+        positive integers.
+
+    Examples
+    --------
+    >>> tuple(convergents(3))
+    (Fraction(3, 1),)
+    >>> tuple(convergents(3, 2))
+    (Fraction(3, 1), Fraction(7, 2))
+    >>> tuple(convergents(3, 4, 12, 4))
+    (Fraction(3, 1), Fraction(13, 4), Fraction(159, 49), Fraction(649, 200))
+    >>> tuple(convergents(-5, 1, 1, 6, 7))
+    (Fraction(-5, 1), Fraction(-4, 1), Fraction(-9, 2), Fraction(-58, 13), Fraction(-415, 93))
+    >>> tuple(convergents(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+    (Fraction(1, 1), Fraction(3, 2), Fraction(10, 7), Fraction(43, 30), Fraction(225, 157), Fraction(1393, 972), Fraction(9976, 6961), Fraction(81201, 56660), Fraction(740785, 516901), Fraction(7489051, 5225670))
+
+    """
+    if any(not isinstance(elem, int) or (elem <= 0 and i > 0) for i, elem in enumerate(elements)):
+        raise ValueError(
+            "Continued fraction elements must be integers, and all "
+            "tail elements (from the 1st element onwards) must be positive."
+        )
+
+    n = len(elements)
+
+    a, b = elements[0], 1
+    yield Fraction(a, b)
+
+    if n > 1:
+        c, d = (elements[1] * a) + b, elements[1]
+        yield Fraction(c, d)
+
+        if n > 2:
+            for e in elements[2:n + 1]:
+                p, q = (e * c) + a, (e * d) + b
+                yield Fraction(p, q)
+                a, b = c, d
+                c, d = p, q
+
+
 def fraction_from_elements(*elements: int) -> Fraction:
-    """Returns the rational number represented by a simple (finite) continued fraction from a sequence of its elements.
+    """Returns the rational number represented by a (simple) continued fraction from a sequence of its elements.
 
     The elements must be given as positional arguments, which means that if
     they are contained in an iterable then they must be unpacked using the

@@ -13,6 +13,7 @@ from continuedfractions.lib import (
 	continued_fraction_real,
 	fraction_from_elements,
 	convergent,
+	convergents,
 	mediant,
 )
 
@@ -155,6 +156,50 @@ class TestConvergent:
 	def test_convergent__valid_elements__correct_convergent_returned(self, k, elements, expected_convergent):
 	
 		assert convergent(k, *elements) == expected_convergent
+
+
+class TestConvergents:
+
+	@pytest.mark.parametrize(
+		"invalid_elements",
+		[
+			(0, 0),
+			(1, 0),
+			(1, -1),
+			(3, 0, 12, 4),
+			(-3, -1, 12, 4),
+			(3, 4, 0, 4),
+			(-3, 4, -1, 4),
+			(3, 4, 12, 0),
+			(-3, 4, 12, -1),
+			(3, 0, 0, 4),
+			(-3, 0, 12, 0),
+			(3, 4, 0, 0),
+			(-3, 0, -1, 4),
+			(3, 0, 12, -1),
+			(-3, 4, 0, -1),
+		]
+	)
+	def test_convergents__invalid_elements__value_error_raised(self, invalid_elements):
+		with pytest.raises(ValueError):
+			list(convergents(*invalid_elements))
+	@pytest.mark.parametrize(
+		"in_elements, expected_convergents",
+		[
+			((3,), (Fraction(3, 1),)),
+			((-3,), (Fraction(-3, 1),)),
+			((0,), (Fraction(0, 1),)),
+			((0, 2), (Fraction(0, 1), Fraction(1, 2),)),
+			((-1, 2), (Fraction(-1, 1), Fraction(-1, 2),)),
+			((1, 2,), (Fraction(1, 1), Fraction(3, 2),)),
+			((3, 2,), (Fraction(3, 1), Fraction(7, 2),)),
+			((3, 4, 12, 4), (Fraction(3, 1), Fraction(13, 4), Fraction(159, 49), Fraction(649, 200),)),
+			((-4, 1, 3, 12, 4), (Fraction(-4, 1), Fraction(-3, 1), Fraction(-13, 4), Fraction(-159, 49), Fraction(-649, 200),)),
+		]
+	)
+	def test_convergents__valid_elements__correct_convergents_generated(self, in_elements, expected_convergents):
+		assert tuple(convergents(*in_elements)) == tuple(expected_convergents)
+
 
 class TestMediant:
 

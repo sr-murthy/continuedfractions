@@ -17,8 +17,7 @@ import sys
 from decimal import Decimal
 from fractions import Fraction
 from pathlib import Path
-from types import MappingProxyType
-from typing import Any
+from typing import Any, Generator
 
 # -- 3rd party libraries --
 
@@ -28,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from continuedfractions.lib import (
     continued_fraction_rational,
     convergent,
+    convergents,
     fraction_from_elements,
     left_mediant,
     mediant,
@@ -116,7 +116,7 @@ class ContinuedFraction(Fraction):
         Returns
         -------
         ContinuedFraction
-            A full instance of :py:class:`ContinuedFraction`.
+            A :py:class:`ContinuedFraction` instance.
 
         Examples
         --------
@@ -287,10 +287,10 @@ class ContinuedFraction(Fraction):
         (3, 4, 12, 4)
         >>> cf.order
         3
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
-        >>> cf.remainders
-        mappingproxy({0: ContinuedFraction(649, 200), 1: ContinuedFraction(200, 49), 2: ContinuedFraction(49, 4), 3: ContinuedFraction(4, 1)})
+        >>> tuple(cf.convergents)
+        ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
+        >>> tuple(cf.remainders)
+        ((0, ContinuedFraction(649, 200)), (1, ContinuedFraction(200, 49)), (2, ContinuedFraction(49, 4)), (3, ContinuedFraction(4, 1)))
         >>> cf.extend(5, 2)
         >>> cf
         ContinuedFraction(7457, 2298)
@@ -298,10 +298,10 @@ class ContinuedFraction(Fraction):
         (3, 4, 12, 4, 5, 2)
         >>> cf.order
         5
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200), 4: ContinuedFraction(3404, 1049), 5: ContinuedFraction(7457, 2298)})
-        >>> cf.remainders
-        mappingproxy({0: ContinuedFraction(7457, 2298), 1: ContinuedFraction(2298, 563), 2: ContinuedFraction(563, 46), 3: ContinuedFraction(46, 11), 4: ContinuedFraction(11, 2), 5: ContinuedFraction(2, 1)})
+        >>> tuple(cf.convergents)
+        ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)), (4, ContinuedFraction(3404, 1049)), (5, ContinuedFraction(7457, 2298)))
+        >>> tuple(cf.remainders)
+        ((0, ContinuedFraction(7457, 2298)), (1, ContinuedFraction(2298, 563)), (2, ContinuedFraction(563, 46)), (3, ContinuedFraction(46, 11)), (4, ContinuedFraction(11, 2)), (5, ContinuedFraction(2, 1)))
         >>> cf = ContinuedFraction(649, 200)
         >>> cf.extend(0, 1)
         Traceback (most recent call last):
@@ -368,10 +368,10 @@ class ContinuedFraction(Fraction):
         (3, 4, 12, 4)
         >>> cf.order
         3
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
-        >>> cf.remainders
-        mappingproxy({0: ContinuedFraction(649, 200), 1: ContinuedFraction(200, 49), 2: ContinuedFraction(49, 4), 3: ContinuedFraction(4, 1)})
+        >>> tuple(cf.convergents)
+        ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
+        >>> tuple(cf.remainders)
+        ((0, ContinuedFraction(649, 200)), (1, ContinuedFraction(200, 49)), (2, ContinuedFraction(49, 4)), (3, ContinuedFraction(4, 1)))
         >>> cf.truncate(12, 4)
         >>> cf
         ContinuedFraction(13, 4)
@@ -379,10 +379,10 @@ class ContinuedFraction(Fraction):
         (3, 4)
         >>> cf.order
         1
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4)})
-        >>> cf.remainders
-        mappingproxy({0: ContinuedFraction(13, 4), 1: ContinuedFraction(4, 1)})
+        >>> tuple(cf.convergents)
+        ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)))
+        >>> tuple(cf.remainders)
+        ((0, ContinuedFraction(13, 4)), (1, ContinuedFraction(4, 1)))
         >>> cf = ContinuedFraction(649, 200)
         >>> cf.truncate(4, 12)
         Traceback (most recent call last):
@@ -639,8 +639,8 @@ class ContinuedFraction(Fraction):
     def khinchin_mean(self) -> Decimal | None:
         """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
 
-        We define the Khinchin mean :math:`K_n` of a simple continued fraction
-        :math:`[a_0; a_1, a_2, \\ldots, a_n]` as:
+        We define the Khinchin mean :math:`K_n` of a (simple) continued
+        fraction :math:`[a_0; a_1, a_2, \\ldots, a_n]` as:
 
         .. math::
 
@@ -686,7 +686,7 @@ class ContinuedFraction(Fraction):
     def convergent(self, k: int, /) -> ContinuedFraction:
         """Returns the :math:`k`-th (simple) convergent of the continued fraction.
 
-        Given a simple continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
+        Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
         :math:`k`-th convergent is defined as:
 
         .. math::
@@ -695,9 +695,8 @@ class ContinuedFraction(Fraction):
 
         The result is a :py:class:`fractions.Fraction` instance.
         
-        The integer :math:`k` is called the order of the convergent, and if 
-        :math:`[a_0;a_1,a_2,\\ldots]` is finite of order :math:`n` then it has
-        exactly :math:`n + 1` convergents :math:`C_0,C_1,C_2,\\ldots,C_n` where
+        If  the continued fraction is of order :math:`n` then it has exactly
+        :math:`n + 1` convergents :math:`C_0,C_1,C_2,\\ldots,C_n` where
         the :math:`k`-th convergent :math:`C_k = \\frac{p_k}{q_k}` is given by
         the recurrence relation:
 
@@ -714,7 +713,7 @@ class ContinuedFraction(Fraction):
         Parameters
         ----------
         k : int
-            The order of the convergent, as described above.
+            The index of the convergent, as described above.
 
         Returns
         -------
@@ -740,65 +739,84 @@ class ContinuedFraction(Fraction):
         return self.__class__(convergent(k, *self._elements))
 
     @property
-    @functools.lru_cache
-    def convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-order convergents of the continued fraction, keyed by order.
+    def convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+        """Generates an enumerated sequence of all convergents of the continued fraction.
 
-        Each convergent is indexed by its order and is also a
-        :py:class:`ContinuedFraction` instance.
+        The convergents are generated as tuples of :py:class:`int` and
+        :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
+        instances, where the integers represent the indices of the convergents.
+
+        If :math:`n` is the order of the continued fraction then :math:`n + 1`
+        convergents :math:`C_0, C_1, \\ldots, C_n` are generated in that order.
+
+        Yields
+        ------
+        tuple
+            A tuple of convergent index (:py:class:`int`) and convergents
+            (:py:class:`~continuedfractions.continuedfraction.ContinuedFraction`)
+            of the continued fraction.
 
         Examples
         --------
         >>> cf = ContinuedFraction('3.245')
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)})
-        >>> cf.convergents[0], cf.convergents[2]
-        (ContinuedFraction(3, 1), ContinuedFraction(159, 49))
+        >>> tuple(cf.convergents)
+        ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
         """
-        return MappingProxyType({
-            k: self.convergent(k)
-            for k in range(self.order + 1)
-        })
+        yield from enumerate(map(self.__class__, convergents(*self._elements)))
 
     @property
-    @functools.lru_cache
-    def even_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """:py:class:`types.MappingProxyType`: An immutable dict of all even-order convergents of the continued fraction, keyed by order.
+    def even_convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+        """Generates an enumerated sequence of all even-order convergents of the continued fraction.
 
-        Each convergent is indexed by its order and is also a
-        :py:class:`ContinuedFraction` instance.
+        The convergents are generated as tuples of :py:class:`int` and
+        :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
+        instances, where the integers represent the indices of the convergents.
+
+        If :math:`n` is the order of the continued fraction then only the even-
+        indexed convergents :math:`C_0, C_2, C_4, \\ldots` are generated.
+
+        Yields
+        ------
+        tuple
+            A tuple of convergent index (:py:class:`int`) and convergents
+            (:py:class:`~continuedfractions.continuedfraction.ContinuedFraction`)
+            of the continued fraction.
 
         Examples
         --------
-        >>> ContinuedFraction('3.245').even_order_convergents
-        mappingproxy({0: ContinuedFraction(3, 1), 2: ContinuedFraction(159, 49)})
+        >>> tuple(ContinuedFraction('3.245').even_convergents)
+        ((0, ContinuedFraction(3, 1)), (2, ContinuedFraction(159, 49)))
         """
-        return MappingProxyType({
-            k: self.convergents[k]
-            for k in range(0, self.order + 1, 2)
-        })
+        yield from filter(lambda t: t[0] % 2 == 0, self.convergents)
 
     @property
-    @functools.lru_cache
-    def odd_order_convergents(self) -> MappingProxyType[int, ContinuedFraction]:
-        """:py:class:`types.MappingProxyType`: An immutable dict of all odd-order convergents of the continued fraction, keyed by order.
+    def odd_convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+        """Generates an enumerated sequence of all odd-order convergents of the continued fraction.
 
-        Each convergent is indexed by its order and is also a
-        :py:class:`ContinuedFraction` instance.
+        The convergents are generated as tuples of :py:class:`int` and
+        :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
+        instances, where the integers represent the indices of the convergents.
+
+        If :math:`n` is the order of the continued fraction then only the odd-
+        indexed convergents :math:`C_1, C_3, C_5, \\ldots` are generated.
+
+        Yields
+        ------
+        tuple
+            A tuple of convergent index (:py:class:`int`) and convergents
+            (:py:class:`~continuedfractions.continuedfraction.ContinuedFraction`)
+            of the continued fraction.
 
         Examples
         --------
-        >>> ContinuedFraction('3.245').odd_order_convergents
-        mappingproxy({1: ContinuedFraction(13, 4), 3: ContinuedFraction(649, 200)})
+        >>> tuple(ContinuedFraction('3.245').odd_convergents)
+        ((1, ContinuedFraction(13, 4)), (3, ContinuedFraction(649, 200)))
         """
-        return MappingProxyType({
-            k: self.convergents[k]
-            for k in range(1, self.order + 1, 2)
-        })
+        yield from filter(lambda t: t[0] % 2 == 1, self.convergents)
 
     @functools.cache
     def semiconvergent(self, k: int, m: int, /) -> ContinuedFraction:
-        """Returns the :math:`m`-th semiconvergent of two consecutive convergents :math:`p_{k - 1}` and :math:`p_k` of a (finite, simple) continued fraction.
+        """Returns the :math:`m`-th semiconvergent of two consecutive convergents :math:`p_{k - 1}` and :math:`p_k` of the continued fraction.
 
         The integer :math:`k` must be positive and determine two consecutive
         convergents :math:`p_{k - 1}` and :math:`p_k` of a (finite, simple)
@@ -838,8 +856,8 @@ class ContinuedFraction(Fraction):
         >>> cf = ContinuedFraction(-415, 93)
         >>> cf.elements
         (-5, 1, 1, 6, 7)
-        >>> cf.convergents
-        mappingproxy({0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)})
+        >>> tuple(cf.convergents)
+        ((0, ContinuedFraction(-5, 1)), (1, ContinuedFraction(-4, 1)), (2, ContinuedFraction(-9, 2)), (3, ContinuedFraction(-58, 13)), (4, ContinuedFraction(-415, 93)))
         >>> cf.semiconvergent(3, 1)
         ContinuedFraction(-67, 15)
         >>> cf.semiconvergent(3, 2)
@@ -862,7 +880,7 @@ class ContinuedFraction(Fraction):
                 "continued fraction"
             )
 
-        return self.convergents[k - 1].right_mediant(self.convergents[k], k=m)
+        return self.convergent(k - 1).right_mediant(self.convergent(k), k=m)
 
     @functools.cache
     def remainder(self, k: int, /) -> ContinuedFraction:
@@ -905,28 +923,40 @@ class ContinuedFraction(Fraction):
         return self.__class__.from_elements(*self._elements[k:])
 
     @property
-    @functools.lru_cache
-    def remainders(self) -> MappingProxyType[int, ContinuedFraction]:
-        """:py:class:`types.MappingProxyType`: An immutable dict of all :math:`k`-th remainders of the continued fraction, keyed by order.
+    def remainders(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+        """Generates an enumerated sequence of all remainders of the continued fraction.
 
-        Each remainder is indexed by its order and is also a
-        :py:class:`ContinuedFraction` instance.
+        The :math:`k`-th remainder :math:`R_k` of a (simple) continued
+        fraction :math:`[a_0; a_1,\\ldots]` is the continued fraction
+        :math:`[a_k;a_{k + 1},\\ldots]`, obtained from the original by
+        "removing" the elements of the :math:`(k - 1)`-st convergent
+        :math:`C_{k - 1} := [a_0;a_1,\\ldots,a_{k - 1}]`.
 
-        The property is cached (with :py:func:`functools.lru_cache`), which makes
-        calls after the initial call much faster.
+        .. math::
+
+           R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
+
+        If the original continued fraction is of finite order then so is the
+        one for :math:`R_k`, which is then also a rational number.
+
+        The remainders are generated as tuples of :py:class:`int`
+        and :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
+        instances, where the integers represent the orders of the remainders.
+
+        Yields
+        ------
+        tuple
+            A tuple of convergent order (:py:class:`int`) and convergents
+            (:py:class:`~continuedfractions.continuedfraction.ContinuedFraction`)
+            of the continued fraction.
 
         Examples
         --------
         >>> cf = ContinuedFraction('3.245')
-        >>> cf.remainders
-        mappingproxy({0: ContinuedFraction(649, 200), 1: ContinuedFraction(200, 49), 2: ContinuedFraction(49, 4), 3: ContinuedFraction(4, 1)})
-        >>> cf.remainders[0], cf.remainders[2]
-        (ContinuedFraction(649, 200), ContinuedFraction(49, 4))
+        >>> tuple(cf.convergents)
+        ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
         """
-        return MappingProxyType({
-            k: self.remainder(k)
-            for k in range(self.order + 1)
-        })
+        yield from enumerate(self.remainder(k) for k in range(self.order + 1))
 
     @functools.cache
     def left_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
@@ -1079,7 +1109,7 @@ class ContinuedFraction(Fraction):
 
     @functools.cache
     def mediant(self, other: Fraction, /) -> ContinuedFraction:
-        """Returns the simple mediant of the continued fraction with another continued fraction instance.
+        """Returns the simple mediant of the continued fraction with another continued fraction.
         
         The simple mediant of two rational numbers :math:`r = \\frac{a}{b}`
         and :math:`s = \\frac{c}{d}`, where :math:`b, d, b + d \\neq 0`, is
@@ -1102,13 +1132,13 @@ class ContinuedFraction(Fraction):
         Parameters
         ----------
         other : fractions.Fraction, ContinuedFraction
-            The other continued fraction instance.
+            The other continued fraction.
         
         Returns
         -------
         ContinuedFraction
             The simple mediant of the original fraction and the other continued
-            fraction instance.
+            fraction.
 
         Examples
         --------

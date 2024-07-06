@@ -31,6 +31,7 @@ from continuedfractions.lib import (
     fraction_from_elements,
     left_mediant,
     mediant,
+    remainder,
     right_mediant,
 )
 
@@ -693,7 +694,7 @@ class ContinuedFraction(Fraction):
 
            C_k = a_0 + \\cfrac{1}{a_1 + \\cfrac{1}{a_2 \\ddots \\cfrac{1}{a_{k-1} + \\cfrac{1}{a_k}}}}
 
-        The result is a :py:class:`fractions.Fraction` instance.
+        The result is a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
         
         If  the continued fraction is of order :math:`n` then it has exactly
         :math:`n + 1` convergents :math:`C_0,C_1,C_2,\\ldots,C_n` where
@@ -886,14 +887,34 @@ class ContinuedFraction(Fraction):
     def remainder(self, k: int, /) -> ContinuedFraction:
         """Returns the :math:`k`-th remainder of the continued fraction.
 
-        The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction
-        :math:`[a_0; a_1,\\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\\ldots]`,
-        obtained from the original by "removing" the elements of the :math:`(k - 1)`-st
-        convergent :math:`C_{k - 1} = (a_0,a_1,\\ldots,a_{k - 1})`.
+        Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
+        :math:`k`-th remainder :math:`R_k` is the (simple) continued fraction
+        :math:`[a_k; a_{k + 1}, a_{k + 2}, \\ldots]`:
 
         .. math::
 
-            R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
+           R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
+
+        where :math:`R_0` is just the original continued fraction, i.e.
+        :math:`R_0 = [a_0; a_1, a_2, \\ldots]`.
+
+        The result is a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
+
+        The remainders satisfy the recurrence relation:
+
+        .. math::
+
+           R_{k - 1} = a_{k - 1} + \\frac{1}{R_k}, \\hskip{3em} k \\geq 1
+
+        If the original continued fraction is finite then its remainders are all
+        finite and rational.
+
+        As this class implements finite simple continued fractions, this method
+        always produces rational numbers.
+
+        The integer :math:`k` must be non-negative and cannot exceed the order
+        of the continued fraction, i.e. the number of its tail elements, and 
+        the tail elements must define a valid finite simple continued fraction.
 
         Parameters
         ----------
@@ -920,7 +941,7 @@ class ContinuedFraction(Fraction):
         >>> cf.remainder(7)
         ContinuedFraction(5, 1)
         """
-        return self.__class__.from_elements(*self._elements[k:])
+        return self.__class__(remainder(k, *self._elements))
 
     @property
     def remainders(self) -> Generator[tuple[int, ContinuedFraction], None, None]:

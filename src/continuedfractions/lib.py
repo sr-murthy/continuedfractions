@@ -6,6 +6,8 @@ __all__ = [
     'fraction_from_elements',
     'left_mediant',
     'mediant',
+    'remainder',
+    #'remainders',
     'right_mediant',
 ]
 
@@ -419,6 +421,124 @@ def fraction_from_elements(*elements: int) -> Fraction:
         raise ValueError("Continued fraction elements must be integers")
 
     return convergent(len(elements) - 1, *elements)
+
+
+def remainder(k: int, *elements: int) -> Fraction:
+    """Returns the :math:`k`-th remainder of a (simple) continued fraction from a sequence of its elements.
+
+    Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
+    :math:`k`-th remainder :math:`R_k` is the (simple) continued fraction
+    :math:`[a_k; a_{k + 1}, a_{k + 2}, \\ldots]`:
+
+    .. math::
+
+       R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
+
+    where :math:`R_0` is just the original continued fraction, i.e.
+    :math:`R_0 = [a_0; a_1, a_2, \\ldots]`.
+
+    The remainders satisfy the recurrence relation:
+
+    .. math::
+
+       R_{k - 1} = a_{k - 1} + \\frac{1}{R_k}, \\hskip{3em} k \\geq 1
+
+    If the original continued fraction is finite then its remainders are all
+    finite and rational.
+
+    As this library only deals with finite continued fractions, this function
+    always produces rational numbers in the form of
+    :py:class:`~fractions.Fraction` instances.
+
+    The integer :math:`k` must be non-negative and cannot exceed the order
+    of the continued fraction, i.e. the number of its tail elements.
+
+    A :py:class:`ValueError` is raised if :math:`k` is not an integer, or is an
+    integer greater than the number of elements, or if any of the elements are
+    not integers, or if any of the tail elements are not positive integers.
+
+    Parameters
+    ----------
+    k : `int`
+        The index of the remainder. Must be a non-negative integer not
+        exceeding the order of the continued fraction.
+
+    *elements : `int`
+        A variable-length sequence of integer elements of a (simple) continued
+        fraction.
+
+    Returns
+    -------
+    fractions.Fraction
+        A rational fraction constructed from the given sequence of elements of
+        a continued fraction, representing its :math:`k`-th remainder, as
+        defined above.
+
+    Raises
+    ------
+    ValueError
+        If :math:`k` is not an integer, or is an integer greater than the
+        number of elements, or if any of the elements are not integers, or if
+        any of the tail elements are not positive integers.
+
+    Examples
+    --------
+    >>> remainder(0, 3, 4, 12, 4)
+    Fraction(649, 200)
+    >>> remainder(1, 3, 4, 12, 4)
+    Fraction(200, 49)
+    >>> remainder(2, 3, 4, 12, 4)
+    Fraction(49, 4)
+    >>> remainder(3, 3, 4, 12, 4)
+    Fraction(4, 1)
+    >>> remainder(0, -5, 1, 1, 6, 7)
+    Fraction(-415, 93)
+    >>> remainder(1, -5, 1, 1, 6, 7)
+    Fraction(93, 50)
+    >>> remainder(2, -5, 1, 1, 6, 7)
+    Fraction(50, 43)
+    >>> remainder(3, -5, 1, 1, 6, 7)
+    Fraction(43, 7)
+    >>> remainder(4, -5, 1, 1, 6, 7)
+    Fraction(7, 1)
+    >>> remainder(-1, 3, 4, 12, 4)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
+    >>> remainder(4, 3, 4, 12, 4)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
+    >>> remainder(1, 3, 0, 12, 4)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
+    >>> remainder(1, 3, -1, 12, 4)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
+    """
+    n = len(elements) - 1
+
+    if not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
+        raise ValueError(
+            "`k` must be a non-negative integer not exceeding the order of \n"
+            "the continued fraction (number of tail elements), and the tail \n"
+            "elements must all be positive integers."
+        )
+
+    if k == n:
+        return Fraction(elements[-1], 1)
+
+    return fraction_from_elements(*elements[k:])
 
 
 def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> Fraction:

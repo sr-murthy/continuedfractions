@@ -364,23 +364,25 @@ def convergents(*elements: int) -> Generator[Fraction, None, None]:
     (Fraction(1, 1), Fraction(3, 2), Fraction(10, 7), Fraction(43, 30), Fraction(225, 157), Fraction(1393, 972), Fraction(9976, 6961), Fraction(81201, 56660), Fraction(740785, 516901), Fraction(7489051, 5225670))
 
     """
-    if any(not isinstance(elem, int) or (elem <= 0 and i > 0) for i, elem in enumerate(elements)):
+    # Define the order of the continued fraction - may be ``-1`` if no elements
+    # are given.
+    n = len(elements) - 1
+
+    if n == -1 or any(not isinstance(elements[i], int) or (elements[i] <= 0 and i > 0) for i in range(n + 1)):
         raise ValueError(
-            "Continued fraction elements must be integers, and all "
+            "Continued fraction elements must be integers, and all \n"
             "tail elements (from the 1st element onwards) must be positive."
         )
-
-    n = len(elements)
 
     a, b = elements[0], 1
     yield Fraction(a, b)
 
-    if n > 1:
+    if n > 0:
         c, d = (elements[1] * a) + b, elements[1]
         yield Fraction(c, d)
 
-        if n > 2:
-            for e in elements[2:n + 1]:
+        if n > 1:
+            for e in elements[2:]:
                 p, q = (e * c) + a, (e * d) + b
                 yield Fraction(p, q)
                 a, b = c, d

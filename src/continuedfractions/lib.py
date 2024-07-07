@@ -7,7 +7,7 @@ __all__ = [
     'left_mediant',
     'mediant',
     'remainder',
-    #'remainders',
+    'remainders',
     'right_mediant',
 ]
 
@@ -322,16 +322,20 @@ def convergent(k: int, *elements: int) -> Fraction:
 
 
 def convergents(*elements: int) -> Generator[Fraction, None, None]:
-    """Generates a sequence of convergents of a (simple) continued fraction from a sequence of its elements.
+    """Generates an (ordered) sequence of all convergents of a (simple) continued fraction from a sequence of its elements.
 
     If :math:`n` is the order of the continued fraction represented by the
-    given sequence of its elements then :math:`n + 1` convergents
-    :math:`C_0, C_1, \\ldots, C_n` are generated in that order.
+    given sequence of its elements then there are :math:`n + 1` convergents
+    :math:`C_0, C_1, \\ldots, C_n`, and the function generates these in that
+    order.
+
+    See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#convergents-and-rational-approximations>`_
+    for more details on convergents.
 
     Parameters
     ----------
     *elements : `int`
-        A variable-length sequence of integer elements of a (simple, finite)
+        A variable-length sequence of integer elements of a (simple)
         continued fraction.
 
     Yields
@@ -448,12 +452,17 @@ def remainder(k: int, *elements: int) -> Fraction:
 
        R_{k - 1} = a_{k - 1} + \\frac{1}{R_k}, \\hskip{3em} k \\geq 1
 
-    If the original continued fraction is finite then its remainders are all
-    finite and rational.
+    If the continued fraction :math:`[a_0; a_1, a_2,\\ldots]` is finite of
+    order :math:`n` then all :math:`R_k` are rational. If we let
+    :math:`R_k = \\frac{s_k}{t_k}` then the recurrence relation above can
+    be written as:
+
+    .. math::
+
+       R_{k - 1} = \\frac{s_{k - 1}}{t_{k - 1}} = \\frac{a_{k - 1}s_k + t_k}{s_k}, \\hskip{3em} k \\geq 1
 
     As this library only deals with finite continued fractions, this function
-    always produces rational numbers in the form of
-    :py:class:`~fractions.Fraction` instances.
+    always produces remainders as instances of :py:class:`~fractions.Fraction`.
 
     The integer :math:`k` must be non-negative and cannot exceed the order
     of the continued fraction, i.e. the number of its tail elements.
@@ -544,6 +553,90 @@ def remainder(k: int, *elements: int) -> Fraction:
         return Fraction(elements[-1], 1)
 
     return fraction_from_elements(*elements[k:])
+
+
+def remainders(*elements: int) -> Generator[Fraction, None, None]:
+    """Generates an (ordered) sequence of all remainders of a (simple) continued fraction from a sequence of its elements in descending order of index.
+
+    If :math:`n` is the order of the continued fraction represented by the
+    given sequence of its elements then there are :math:`n + 1` remainders
+    :math:`R_0, R_1, \\ldots, R_n`, and the function generates these in
+    reverse order :math:`R_0, R_1, \\ldots, R_n`.
+
+    See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#remainders>`_
+    for more details on remainders.
+
+    Parameters
+    ----------
+    *elements : `int`
+        A variable-length sequence of integer elements of a (simple)
+        continued fraction.
+
+    Yields
+    ------
+    fractions.Fraction
+        Each element generated is a :py:class:`fractions.Fraction` instance and
+        a :math:`k`-th remainder of the given continued fraction.
+
+    Raises
+    ------
+    ValueError
+        If no elements are given, or there are any non-integer elements, or
+        the tail elements are not positive integers.
+
+    Examples
+    --------
+    >>> tuple(remainders(3))
+    (Fraction(3, 1),)
+    >>> tuple(remainders(3, 2))
+    (Fraction(2, 1), Fraction(7, 2))
+    >>> tuple(remainders(3, 4, 12, 4))
+    (Fraction(4, 1), Fraction(49, 4), Fraction(200, 49), Fraction(649, 200))
+    >>> tuple(remainders(-5, 1, 1, 6, 7))
+    (Fraction(7, 1), Fraction(43, 7), Fraction(50, 43), Fraction(93, 50), Fraction(-415, 93))
+    >>> tuple(remainders(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+    (Fraction(10, 1), Fraction(91, 10), Fraction(738, 91), Fraction(5257, 738), Fraction(32280, 5257), Fraction(166657, 32280), Fraction(698908, 166657), Fraction(2263381, 698908), Fraction(5225670, 2263381), Fraction(7489051, 5225670))
+    >>> tuple(remainders())
+    Traceback (most recent call last):
+    ...
+    ValueError: Continued fraction elements must be integers, and all 
+    tail elements (from the 1st element onwards) must be positive.
+    >>> tuple(remainders(0, 0))
+    Traceback (most recent call last):
+    ...
+    ValueError: Continued fraction elements must be integers, and all 
+    tail elements (from the 1st element onwards) must be positive.
+    >>> tuple(remainders(1, 0))
+    Traceback (most recent call last):
+    ...
+    ValueError: Continued fraction elements must be integers, and all 
+    tail elements (from the 1st element onwards) must be positive.
+    >>> tuple(remainders(1, 2, -1))
+    Traceback (most recent call last):
+    ...
+    ValueError: Continued fraction elements must be integers, and all 
+    tail elements (from the 1st element onwards) must be positive.
+    """
+    # Define the order of the continued fraction - may be ``-1`` if no elements
+    # are given.
+    n = len(elements) - 1
+
+    if n == -1 or any(not isinstance(elements[i], int) or (elements[i] <= 0 and i > 0) for i in range(n + 1)):
+        raise ValueError(
+            "Continued fraction elements must be integers, and all \n"
+            "tail elements (from the 1st element onwards) must be positive."
+        )
+
+    a, b = elements[-1], 1
+    yield Fraction(a, b)
+
+    if n > 0:
+        i = n - 1
+
+        while i >= 0:
+            a, b = elements[i] * a + b, a
+            yield Fraction(a, b)
+            i -= 1
 
 
 def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> Fraction:

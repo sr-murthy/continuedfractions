@@ -51,6 +51,7 @@ This is a library of standalone functions for (finite, simple) continued fractio
 -  :py:meth:`~continuedfractions.lib.convergent` - returns the :math:`k`-th convergent of a continued fraction from a sequence of elements as a :py:class:`fractions.Fraction` instance.
 - :py:meth:`~continuedfractions.lib.convergents` - generates a sequence of all convergents of a continued fraction from a sequence of its elements.
 -  :py:meth:`~continuedfractions.lib.remainder` - returns the :math:`k`-th remainder of a continued fraction from a sequence of elements as a :py:class:`fractions.Fraction` instance.
+- :py:meth:`~continuedfractions.lib.remainders` - generates a sequence of all remainders of a continued fraction from a sequence of its elements.
 -  :py:meth:`~continuedfractions.lib.mediant` - returns the :math:`k`-th left or right mediant of two rational numbers, given as :py:class:`fractions.Fraction` values; the mediant is returned as a :py:class:`fractions.Fraction` instance.
 
 .. note::
@@ -62,7 +63,7 @@ This is a library of standalone functions for (finite, simple) continued fractio
 ``continuedfractions.continuedfraction``
 ----------------------------------------
 
-This is a library containing a single main class:
+This is a library containing a single main class that implements (finite, simple) continued fractions.
 
 - :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` - a subclass of :py:class:`fractions.Fraction`, designed to represent (finite, simple) continued fractions as Python objects, which are fully operable as rational numbers.
 

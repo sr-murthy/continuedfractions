@@ -284,18 +284,23 @@ def convergent(k: int, *elements: int) -> Fraction:
     >>> convergent(-1, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer less than the number of
-    elements of the continued fraction.
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
     >>> convergent(4, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer less than the number of
-    elements of the continued fraction.
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
     """
-    if not isinstance(k, int) or k < 0 or k >= len(elements) or any(not isinstance(e, int) for e in elements):
+    n = len(elements) - 1
+
+    if not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
         raise ValueError(
-            "`k` must be a non-negative integer less than the number of\n"
-            "elements of the continued fraction."
+            "`k` must be a non-negative integer not exceeding the order of \n"
+            "the continued fraction (number of tail elements), and the tail \n"
+            "elements must all be positive integers."
         )
 
     a, b = elements[0], 1

@@ -111,7 +111,7 @@ The same formula is also involved in the implementation of the :py:attr:`~contin
    >>> tuple(ContinuedFraction(649, 200).convergents)
    ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
 
-Returning a generator of an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances allows the user to define an appropriate static data structure to store all the convergents by index, if required, e.g. via a dict:
+The result is an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, which can be converted into a more accessible data structure, such as a dict:
 
 .. code:: python
 
@@ -398,20 +398,19 @@ If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a ratio
    >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
    (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 
-It is also possible to get all of the remainders at once using the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property, which returns a generator of an enumerated sequence of the remainders:
+It is also possible to get all of the remainders at once using the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property, which returns a generator of an enumerated sequence of the remainders in descending order of index:
 
 .. code:: python
 
    >>> tuple(cf.remainders)
-   ((0: ContinuedFraction(649, 200)), (1, ContinuedFraction(200, 49)), (2, ContinuedFraction(49, 4)), (3, ContinuedFraction(4, 1)))
+   ((3, ContinuedFraction(4, 1)), (2, ContinuedFraction(49, 4)), (1, ContinuedFraction(200, 49)), (0, ContinuedFraction(649, 200)))
 
-As with convergents the result is a generator of an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, as it allows the caller to define a more appropriate static data structure to store all the remainders, if required.
+As with convergents the result is a generator of an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, which can be converted into something more accessible, such as a dict:
 
 .. code:: python
 
-   >>> cf_remainders = dict(cf.remainders)
-   >>> cf_remainders[0], cf_remainders[2]
-   (ContinuedFraction(649, 200), ContinuedFraction(49, 4))
+   >>> dict(ContinuedFraction('3.245').remainders)
+   {3: ContinuedFraction(4, 1), 2: ContinuedFraction(49, 4), 1: ContinuedFraction(200, 49), 0: ContinuedFraction(649, 200)}
 
 Using the simple continued fraction of :math:`\frac{649}{200}` we can verify that these remainders are mathematically correct.
 
@@ -431,7 +430,13 @@ Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` th
 
    R_{k - 1} = a_{k - 1} + \frac{1}{R_k}, \hskip{3em} k \geq 1
 
-where :math:`\frac{1}{R_k}` is a symbolic expression for the number represented by the inverted simple continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`.
+where :math:`\frac{1}{R_k}` is a symbolic expression for the number represented by the inverted simple continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`. If the continued fraction :math:`[a_0; a_1, a_2,\ldots]` is finite of order :math:`n` and we let :math:`R_k = \frac{s_k}{t_k}` then the recurrence relation above can be written as:
+
+.. math::
+
+   R_{k - 1} = \frac{s_{k - 1}}{t_{k - 1}} = \frac{a_{k - 1}s_k + t_k}{s_k}, \hskip{3em} k \geq 1
+
+This is used to implement the remainders functionality in the library function :py:func:`~continuedfractions.lib.remainders`.
 
 Khinchin Means & Khinchin's Constant
 ====================================

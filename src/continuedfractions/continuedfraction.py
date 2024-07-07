@@ -31,6 +31,8 @@ from continuedfractions.lib import (
     fraction_from_elements,
     left_mediant,
     mediant,
+    remainder,
+    remainders,
     right_mediant,
 )
 
@@ -290,7 +292,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(cf.convergents)
         ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
         >>> tuple(cf.remainders)
-        ((0, ContinuedFraction(649, 200)), (1, ContinuedFraction(200, 49)), (2, ContinuedFraction(49, 4)), (3, ContinuedFraction(4, 1)))
+        ((3, ContinuedFraction(4, 1)), (2, ContinuedFraction(49, 4)), (1, ContinuedFraction(200, 49)), (0, ContinuedFraction(649, 200)))
         >>> cf.extend(5, 2)
         >>> cf
         ContinuedFraction(7457, 2298)
@@ -301,7 +303,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(cf.convergents)
         ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)), (4, ContinuedFraction(3404, 1049)), (5, ContinuedFraction(7457, 2298)))
         >>> tuple(cf.remainders)
-        ((0, ContinuedFraction(7457, 2298)), (1, ContinuedFraction(2298, 563)), (2, ContinuedFraction(563, 46)), (3, ContinuedFraction(46, 11)), (4, ContinuedFraction(11, 2)), (5, ContinuedFraction(2, 1)))
+        ((5, ContinuedFraction(2, 1)), (4, ContinuedFraction(11, 2)), (3, ContinuedFraction(46, 11)), (2, ContinuedFraction(563, 46)), (1, ContinuedFraction(2298, 563)), (0, ContinuedFraction(7457, 2298)))
         >>> cf = ContinuedFraction(649, 200)
         >>> cf.extend(0, 1)
         Traceback (most recent call last):
@@ -371,7 +373,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(cf.convergents)
         ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
         >>> tuple(cf.remainders)
-        ((0, ContinuedFraction(649, 200)), (1, ContinuedFraction(200, 49)), (2, ContinuedFraction(49, 4)), (3, ContinuedFraction(4, 1)))
+        ((3, ContinuedFraction(4, 1)), (2, ContinuedFraction(49, 4)), (1, ContinuedFraction(200, 49)), (0, ContinuedFraction(649, 200)))
         >>> cf.truncate(12, 4)
         >>> cf
         ContinuedFraction(13, 4)
@@ -382,7 +384,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(cf.convergents)
         ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)))
         >>> tuple(cf.remainders)
-        ((0, ContinuedFraction(13, 4)), (1, ContinuedFraction(4, 1)))
+        ((1, ContinuedFraction(4, 1)), (0, ContinuedFraction(13, 4)))
         >>> cf = ContinuedFraction(649, 200)
         >>> cf.truncate(4, 12)
         Traceback (most recent call last):
@@ -693,7 +695,7 @@ class ContinuedFraction(Fraction):
 
            C_k = a_0 + \\cfrac{1}{a_1 + \\cfrac{1}{a_2 \\ddots \\cfrac{1}{a_{k-1} + \\cfrac{1}{a_k}}}}
 
-        The result is a :py:class:`fractions.Fraction` instance.
+        The result is a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
         
         If  the continued fraction is of order :math:`n` then it has exactly
         :math:`n + 1` convergents :math:`C_0,C_1,C_2,\\ldots,C_n` where
@@ -886,14 +888,34 @@ class ContinuedFraction(Fraction):
     def remainder(self, k: int, /) -> ContinuedFraction:
         """Returns the :math:`k`-th remainder of the continued fraction.
 
-        The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction
-        :math:`[a_0; a_1,\\ldots]` as the continued fraction :math:`[a_k;a_{k + 1},\\ldots]`,
-        obtained from the original by "removing" the elements of the :math:`(k - 1)`-st
-        convergent :math:`C_{k - 1} = (a_0,a_1,\\ldots,a_{k - 1})`.
+        Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
+        :math:`k`-th remainder :math:`R_k` is the (simple) continued fraction
+        :math:`[a_k; a_{k + 1}, a_{k + 2}, \\ldots]`:
 
         .. math::
 
-            R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
+           R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
+
+        where :math:`R_0` is just the original continued fraction, i.e.
+        :math:`R_0 = [a_0; a_1, a_2, \\ldots]`.
+
+        The result is a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
+
+        The remainders satisfy the recurrence relation:
+
+        .. math::
+
+           R_{k - 1} = a_{k - 1} + \\frac{1}{R_k}, \\hskip{3em} k \\geq 1
+
+        If the original continued fraction is finite then its remainders are all
+        finite and rational.
+
+        As this class implements finite simple continued fractions, this method
+        always produces rational numbers.
+
+        The integer :math:`k` must be non-negative and cannot exceed the order
+        of the continued fraction, i.e. the number of its tail elements, and 
+        the tail elements must define a valid finite simple continued fraction.
 
         Parameters
         ----------
@@ -920,43 +942,38 @@ class ContinuedFraction(Fraction):
         >>> cf.remainder(7)
         ContinuedFraction(5, 1)
         """
-        return self.__class__.from_elements(*self._elements[k:])
+        return self.__class__(remainder(k, *self._elements))
 
     @property
     def remainders(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
-        """Generates an enumerated sequence of all remainders of the continued fraction.
+        """Generates an enumerated sequence of all remainders of the continued fraction in descending order of index.
 
-        The :math:`k`-th remainder :math:`R_k` of a (simple) continued
-        fraction :math:`[a_0; a_1,\\ldots]` is the continued fraction
-        :math:`[a_k;a_{k + 1},\\ldots]`, obtained from the original by
-        "removing" the elements of the :math:`(k - 1)`-st convergent
-        :math:`C_{k - 1} := [a_0;a_1,\\ldots,a_{k - 1}]`.
+        If :math:`n` is the order of the continued fraction then there are
+        :math:`n + 1` remainders :math:`R_0, R_1, \\ldots, R_n`, and the method
+        generates these in reverse order :math:`R_0, R_1, \\ldots, R_n`.
 
-        .. math::
-
-           R_k = a_k + \\cfrac{1}{a_{k + 1} + \\cfrac{1}{a_{k + 2} \\ddots }}
-
-        If the original continued fraction is of finite order then so is the
-        one for :math:`R_k`, which is then also a rational number.
+        See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#remainders>`_
+        for more details on remainders.
 
         The remainders are generated as tuples of :py:class:`int`
         and :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
-        instances, where the integers represent the orders of the remainders.
+        instances, where the integers represent the indexes of the remainders.
 
         Yields
         ------
         tuple
-            A tuple of convergent order (:py:class:`int`) and convergents
+            A tuple of remainder indices (:py:class:`int`) and remainders
             (:py:class:`~continuedfractions.continuedfraction.ContinuedFraction`)
             of the continued fraction.
 
         Examples
         --------
-        >>> cf = ContinuedFraction('3.245')
-        >>> tuple(cf.convergents)
-        ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
+        >>> tuple(ContinuedFraction('3.245').remainders)
+        ((3, ContinuedFraction(4, 1)), (2, ContinuedFraction(49, 4)), (1, ContinuedFraction(200, 49)), (0, ContinuedFraction(649, 200)))
+        >>> tuple(ContinuedFraction(-415, 93).remainders)
+        ((4, ContinuedFraction(7, 1)), (3, ContinuedFraction(43, 7)), (2, ContinuedFraction(50, 43)), (1, ContinuedFraction(93, 50)), (0, ContinuedFraction(-415, 93)))
         """
-        yield from enumerate(self.remainder(k) for k in range(self.order + 1))
+        yield from zip(reversed(range(self.order + 1)), map(self.__class__, remainders(*self._elements)))
 
     @functools.cache
     def left_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:

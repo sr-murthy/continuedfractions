@@ -11,10 +11,12 @@ import pytest
 from continuedfractions.lib import (
 	continued_fraction_rational,
 	continued_fraction_real,
-	fraction_from_elements,
 	convergent,
 	convergents,
+	fraction_from_elements,
 	mediant,
+	remainder,
+	remainders,
 )
 
 
@@ -130,6 +132,10 @@ class TestConvergent:
 	        (1, [1, 2.]),
 	        (1, [1., 2.]),
 	        (-1, [1, 2]),
+	        (2, [1, 2]),
+	        (1, [1, 0, 2]),
+	        (1, [1, 1, -1]),
+	        (1, [1, 1, 0, -2]),
 	        (2, [1, Decimal('2')]),
 	    ],
 	)
@@ -199,6 +205,96 @@ class TestConvergents:
 	)
 	def test_convergents__valid_elements__correct_convergents_generated(self, in_elements, expected_convergents):
 		assert tuple(convergents(*in_elements)) == tuple(expected_convergents)
+
+
+class TestRemainder:
+
+	@pytest.mark.parametrize(
+	    "k, elements",
+	    [
+	        (1, [1., 2.]),
+	        (1, [1, 2.]),
+	        (1, [1., 2.]),
+	        (-1, [1, 2, 3]),
+	       	(3, [1, 2, 3]),
+	       	(1, [1, 0, 3]),
+	       	(1, [1, 2, -1]),
+	       	(1, [1, 0, -1]),
+	        (2, [1, Decimal('2')]),
+	    ],
+	)
+	def test_remainder__invalid_elements__value_error_raised(self, k, elements):
+		with pytest.raises(ValueError):
+			remainder(k, *elements)
+
+	@pytest.mark.parametrize(
+	    "k, elements, expected_remainder",
+	    [
+	    	(0, [0], Fraction(0, 1)),
+	    	(0, [1], Fraction(1, 1)),
+	    	(0, [1, 2], Fraction(3, 2)),
+	        (1, [1, 2], Fraction(2, 1)),
+	        (0, [-5000], Fraction(-5000, 1)),
+	        (0, [3, 4, 12, 4], Fraction(649, 200)),
+	        (1, [3, 4, 12, 4], Fraction(200, 49)),
+	        (2, [3, 4, 12, 4], Fraction(49, 4)),
+	        (3, [3, 4, 12, 4], Fraction(4, 1)),
+	        (0, [-5, 1, 1, 6, 7], Fraction(-415, 93)),
+	        (1, [-5, 1, 1, 6, 7], Fraction(93, 50)),
+	        (2, [-5, 1, 1, 6, 7], Fraction(50, 43)),
+	        (3, [-5, 1, 1, 6, 7], Fraction(43, 7)),
+	        (4, [-5, 1, 1, 6, 7], Fraction(7, 1)),
+	    ],
+	)
+	def test_remainder__valid_elements__correct_remainder_returned(self, k, elements, expected_remainder):
+	
+		assert remainder(k, *elements) == expected_remainder
+
+
+class TestRemainders:
+
+	@pytest.mark.parametrize(
+		"invalid_elements",
+		[
+			(),
+			(0, 0),
+			(1, 0),
+			(1, -1),
+			(3, 0, 12, 4),
+			(-3, -1, 12, 4),
+			(3, 4, 0, 4),
+			(-3, 4, -1, 4),
+			(3, 4, 12, 0),
+			(-3, 4, 12, -1),
+			(3, 0, 0, 4),
+			(-3, 0, 12, 0),
+			(3, 4, 0, 0),
+			(-3, 0, -1, 4),
+			(3, 0, 12, -1),
+			(-3, 4, 0, -1),
+		]
+	)
+	def test_remainders__invalid_elements__value_error_raised(self, invalid_elements):
+		with pytest.raises(ValueError):
+			tuple(remainders(*invalid_elements))
+
+	@pytest.mark.parametrize(
+		"in_elements, expected_remainders",
+		[
+			((0,), (Fraction(0, 1),)),
+			((1,), (Fraction(1, 1),)),
+			((-1,), (Fraction(-1, 1),)),
+			((0, 2), (Fraction(2, 1), Fraction(1, 2),)),
+			((-1, 2), (Fraction(2, 1), Fraction(-1, 2),)),
+			((1, 2,), (Fraction(2, 1), Fraction(3, 2),)),
+			((3, 2,), (Fraction(2, 1), Fraction(7, 2),)),
+			((3, 4, 12, 4), (Fraction(4, 1), Fraction(49, 4), Fraction(200, 49), Fraction(649, 200))),
+			((-4, 1, 3, 12, 4), (Fraction(4, 1), Fraction(49, 4), Fraction(151, 49), Fraction(200, 151), Fraction(-649, 200),)),
+			((-5, 1, 1, 6, 7), (Fraction(7, 1), Fraction(43, 7), Fraction(50, 43), Fraction(93, 50), Fraction(-415, 93))),
+		]
+	)
+	def test_remainders__valid_elements__correct_remainders_generated(self, in_elements, expected_remainders):
+		assert tuple(remainders(*in_elements)) == tuple(expected_remainders)
 
 
 class TestMediant:

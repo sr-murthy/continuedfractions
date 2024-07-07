@@ -10,7 +10,7 @@ A simple extension of the Python :py:mod:`fractions` standard library for workin
 
 The package is designed for users interested in:
 
-- working with (finite) continued fractions as Python objects, in an intuitive object-oriented way
+- learning about and working with (finite) continued fractions as Python objects, in an intuitive object-oriented way
 - exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
 - operating on them as rationals and instances of the standard library :py:class:`fractions.Fraction` class
 - making approximations of and experimental computations for irrational numbers

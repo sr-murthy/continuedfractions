@@ -236,7 +236,7 @@ The even- and odd-indexed convergents behave differently: the even-indexed conve
 
 .. math::
 
-   \frac{p_k}{q_k} - \frac{p_{k - 1}}{q_{k - 1}} = \frac{(-1)^k}{q_kq_{k - 1}}, \hskip{3em} k \geq 1
+   \frac{p_k}{q_k} - \frac{p_{k - 1}}{q_{k - 1}} = \frac{(-1)^{k + 1}}{q_kq_{k - 1}}, \hskip{3em} k \geq 1
 
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides properties for generating even-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_convergents`) and odd-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_convergents`), as illustrated below.
 
@@ -385,13 +385,15 @@ This can be illustrated again using the continued fraction for :math:`-\frac{415
 Remainders
 ==========
 
-The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` is the continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`.
+The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the (simple) continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`.
 
 .. math::
 
    R_k = a_k + \cfrac{1}{a_{k + 1} + \cfrac{1}{a_{k + 2} \ddots }}
 
-If :math:`[a_0; a_1,\ldots]` is of finite order then each :math:`R_k` is a rational number. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order of the original.
+where :math:`R_0 = x`.
+
+If :math:`[a_0; a_1,\ldots]` is of finite order :math:`n` then :math:`R_k` is of order :math:`(n - k)`. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order of the original.
 
 .. code:: python
 

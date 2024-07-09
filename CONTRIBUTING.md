@@ -170,7 +170,7 @@ The Sphinx documentation can be built locally on any branch from the
 **project root** using:
 
 ``` bash
-make -C docs "html"
+make -C docs html
 ```
 
 First, ensure that you have installed the docs Python requirements,

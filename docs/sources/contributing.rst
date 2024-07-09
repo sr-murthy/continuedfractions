@@ -118,8 +118,8 @@ For convenience different types of test targets are defined in the `Makefile <ht
 .. code:: bash
 
    make lint
-   make doctests
    make unittests
+   make doctests
 
 Linting warnings should be addressed first. The doctests serve as acceptance tests, and are best run after the unit tests.
 

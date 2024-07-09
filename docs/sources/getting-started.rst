@@ -6,9 +6,9 @@
 Getting Started
 ===============
 
-This is a `PyPI package <https://pypi.org/project/continuedfractions/>`_ which uses only Python standard libraries, and is supported on Python 3.10, 3.11 & 3.12 on the latest **Ubuntu Linux**, **MacOS**, and **Windows** platforms, **except** for Python 3.10 where MacOS 13 is used instead of MacOS 14 or higher (see `this <https://github.com/actions/setup-python/issues/865>`_ for more details on why).
+This is a `PyPI package <https://pypi.org/project/continuedfractions/>`_ which uses only Python standard libraries, and is supported on Python 3.10, 3.11 & 3.12 on the latest **Ubuntu Linux**, **MacOS**, and **Windows** versions, **except** for Python 3.10 where MacOS 13 is used instead of MacOS 14 or higher (see `this <https://github.com/actions/setup-python/issues/865>`_ for more details on why).
 
-See the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ for more information on the CI testing strategies. Generally, the package will install and run fine in any Python 3.10, 3.11 or 3.12 environment on any Linux, Mac OS, or Windows platform.
+See the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ for more details on the CI testing strategies. Generally, the package should install and run in any Python 3.10, 3.11 or 3.12 environment on any Linux, Mac OS, or Windows platform.
 
 .. _getting-started.installation:
 
@@ -21,7 +21,7 @@ A standard ``pip`` install is sufficient:
 
    pip install continuedfractions
 
-If you are interested in contributing please start with the :doc:`contributions guidelines <contributing>`.
+If you are interested in contributing please start with the :doc:`contributions guide <contributing>`.
 
 .. _getting-started.package-structure:
 

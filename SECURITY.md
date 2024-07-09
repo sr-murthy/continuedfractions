@@ -6,7 +6,7 @@ The package currently only uses Python standard libraries (see the [project TOML
 
 A listing of current security / vulnerability alerts is available via [Dependabot](https://github.com/sr-murthy/continuedfractions/security) - these are usually related to sub-dependencies of optional or development dependencies, and are addressed via dedicated PRs as they arise.
 
-The repository is enabled with a number of features to ensure security, including [CodeQL analysis](https://github.com/sr-murthy/continuedfractions/actions/workflows/codeql-analysis.yml), 
+The repository is enabled with a number of features to ensure security, including [CodeQL analysis](https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql), 
 [Dependabot alerts](https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts) and [secrets scanning](https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning).
 
 ## Reporting a Vulnerability

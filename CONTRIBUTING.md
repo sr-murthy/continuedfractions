@@ -141,15 +141,16 @@ Tests are defined in the `tests` folder, and should be run with
 [pytest](https://pytest-cov.readthedocs.io/en/latest/).
 
 For convenience different types of test targets are defined in the
-[Makefile](Makefile): `lint` for Ruff linting, `doctests` for running
+[Makefile](https://github.com/sr-murthy/continuedfractions/blob/main/Makefile):
+`lint` for Ruff linting, `doctests` for running
 [doctests](https://docs.python.org/3/library/doctest.html) and
 `unittests` for running unittests and measuring coverage, using `pytest`
 and the `pytest-cov` plugin:
 
 ``` bash
 make lint
-make doctests
 make unittests
+make doctests
 ```
 
 Linting warnings should be addressed first. The doctests serve as
@@ -169,7 +170,7 @@ The Sphinx documentation can be built locally on any branch from the
 **project root** using:
 
 ``` bash
-make -C docs "html"
+make -C docs html
 ```
 
 First, ensure that you have installed the docs Python requirements,
@@ -188,16 +189,18 @@ pdm install -v --dev --no-editable --no-self
 ## CI/CD
 
 The CI/CD pipelines are defined in the [CI
-YML](.github/workflows/ci.yml), and pipelines for all branches include a
-tests stage, consisting of Ruff linting, Python doctests, and unit
-tests, in that order. This will be amended in the future to ensure that
-tests are only run on updates to PRs targeting `main`, to avoid
-duplication on `main`.
+YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
+and the [CodeQL Analysis
+YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml),
+and pipelines for all branches include a tests stage, consisting of Ruff
+linting, Python doctests, and unit tests, in that order. This will be
+amended in the future to ensure that tests are only run on updates to
+PRs targeting `main`, to avoid duplication on `main`.
 
 ## Versioning and Releases
 
 The [PyPI package](https://pypi.org/project/continuedfractions/) is
-currently at version `0.14.1` - the goal is to use [semantic
+currently at version `0.17.2` - the goal is to use [semantic
 versioning](https://semver.org/) consistently for all future releases,
 but some earlier releases do not comply with strict semantic versioning.
 

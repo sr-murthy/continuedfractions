@@ -6,20 +6,20 @@
 Getting Started
 ===============
 
-This is a `PyPI package <https://pypi.org/project/continuedfractions/>`_ which uses only Python standard libraries, and is supported on any **Linux**, **Mac OS** or **Windows** system supporting **Python 3.10**, **3.11**, or **3.12**. It is CI-tested on these versions of Python on **Ubuntu Linux** (22.04.4 LTS, x64), **Mac OS** (13.6.6, x64) and **Windows** (Windows Server 2022 21H2, x64 + x86), but should generally install on any other platform supporting these Python versions.
+This is a `PyPI package <https://pypi.org/project/continuedfractions/>`_ which uses only Python standard libraries, and is supported on Python 3.10, 3.11 & 3.12 on the latest **Ubuntu Linux**, **MacOS**, and **Windows** versions. See the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ for more details on the CI testing strategies. Generally, the package should install and run in any Python 3.10, 3.11 or 3.12 environment on any Linux, Mac OS, or Windows platform.
 
 .. _getting-started.installation:
 
 Installation
 ============
 
-A standard ``pip`` install is sufficient:
+A standard :program:`pip` install (with the :code:`-U` "upgrade" option to get the latest version) is sufficient:
 
 .. code:: python
 
-   pip install continuedfractions
+   pip install -U continuedfractions
 
-If you are interested in contributing please start with the :doc:`contributions guidelines <contributing>`.
+If you are interested in contributing please start with the :doc:`contributions guide <contributing>`.
 
 .. _getting-started.package-structure:
 
@@ -80,4 +80,4 @@ This is a library of functions and classes relating to ordered sequences and str
 - :py:func:`~continuedfractions.sequences.coprime_pairs_generator` - generates a sequence of all pairs of (positive) coprime integers less than or equal to a given positive integer. Uses the KSRM tree :py:meth:`~continuedfractions.sequences.KSRMTree.search` method to perform the search.
 - :py:func:`~continuedfractions.sequences.coprime_pairs` - wrapper of :py:func:`~continuedfractions.sequences.coprime_pairs_generator` which returns tuples.
 - :py:func:`~continuedfractions.sequences.farey_sequence_generator` - generates a sequence of rational numbers called a `Farey sequence <https://en.wikipedia.org/wiki/Farey_sequence>`_ for a given positive integer. Uses the :py:func:`~continuedfractions.sequences.coprime_integers` and :py:func:`~continuedfractions.sequences.coprime_pairs` functions.
-- :py:func:`~continuedfractions.sequences.farey_sequence` - wrapper of :py:func:`~continuedfractions.sequences.farey_sequence_generator` which returns tuples
+- :py:func:`~continuedfractions.sequences.farey_sequence` - wrapper of :py:func:`~continuedfractions.sequences.farey_sequence_generator` which returns tuples.

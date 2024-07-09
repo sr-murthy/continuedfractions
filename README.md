@@ -21,7 +21,7 @@ A simple extension of the Python [`fractions`](https://docs.python.org/3/library
 
 The [PyPI package](https://pypi.org/project/continuedfractions/) is updated as necessary with improvements, features and fixes. Only standard libraries are used, and the package can be installed on any **Linux**, **Mac OS** or **Windows** system supporting **Python 3.10**, **3.11**, or **3.12**.
 ```shell
-pip install continuedfractions
+pip install -U continuedfractions
 ```
 
 See the [project docs](https://continuedfractions.readthedocs.io/en/latest/) for more details, which includes the [API reference](https://continuedfractions.readthedocs.io/en/latest/sources/api-reference.html).

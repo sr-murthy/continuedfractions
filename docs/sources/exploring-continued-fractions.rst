@@ -36,7 +36,7 @@ All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance
 
 .. code:: python
 
-   >> ContinuedFraction(3).order
+   >>> ContinuedFraction(3).order
    0
 
 The elements and orders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are well behaved with respect to all rational operations supported by
@@ -426,7 +426,7 @@ Using the simple continued fraction of :math:`\frac{649}{200}` we can verify tha
    & R_3 &&= [4;] = 4 = \frac{4}{1}
    \end{alignat*}
 
-Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_1,R_2,\ldots` satisfy the following relation:
+Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_0,R_1,\ldots` satisfy the recurrence relation:
 
 .. math::
 
@@ -438,7 +438,7 @@ where :math:`\frac{1}{R_k}` is a symbolic expression for the number represented 
 
    R_{k - 1} = \frac{s_{k - 1}}{t_{k - 1}} = \frac{a_{k - 1}s_k + t_k}{s_k}, \hskip{3em} k \geq 1
 
-This is used to implement the remainders functionality in the library function :py:func:`~continuedfractions.lib.remainders`.
+This is used to implement the core remainders library function :py:func:`~continuedfractions.lib.remainders`, which is called by the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction` class method :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainders`.
 
 Khinchin Means & Khinchin's Constant
 ====================================

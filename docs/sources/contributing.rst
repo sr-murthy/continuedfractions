@@ -118,8 +118,8 @@ For convenience different types of test targets are defined in the `Makefile <ht
 .. code:: bash
 
    make lint
-   make doctests
    make unittests
+   make doctests
 
 Linting warnings should be addressed first. The doctests serve as acceptance tests, and are best run after the unit tests.
 
@@ -134,7 +134,7 @@ The Sphinx documentation can be built locally on any branch from the **project r
 
 .. code:: bash
 
-   make -C docs "html"
+   make -C docs html
 
 First, ensure that you have installed the docs Python requirements, which include all development dependencies, either via :program:`pip`:
 
@@ -160,7 +160,7 @@ The CI/CD pipelines are defined in the `CI YML <https://github.com/sr-murthy/con
 Versioning and Releases :fas:`upload`
 =====================================
 
-The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.17.1`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.17.2`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 

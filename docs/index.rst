@@ -6,11 +6,11 @@
 continuedfractions
 ==================
 
-A simple extension of the Python :py:mod:`fractions` standard library for working with `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
+A simple extension of the Python :py:mod:`fractions` standard library for working with (finite, simple) `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
 
 The package is designed for users interested in:
 
-- learning about and working with (finite) continued fractions as Python objects, in an intuitive object-oriented way
+- learning about and working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
 - exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
 - operating on them as rationals and instances of the standard library :py:class:`fractions.Fraction` class
 - making approximations of and experimental computations for irrational numbers
@@ -25,7 +25,7 @@ The package is designed for users interested in:
 
    These are `planned <https://github.com/sr-murthy/continuedfractions/issues>`_ for future releases.
 
-You can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`.
+Interested users can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`. If you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
 
 Prelude
 -------

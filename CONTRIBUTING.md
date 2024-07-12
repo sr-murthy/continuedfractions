@@ -200,7 +200,7 @@ PRs targeting `main`, to avoid duplication on `main`.
 ## Versioning and Releases
 
 The [PyPI package](https://pypi.org/project/continuedfractions/) is
-currently at version `0.17.3` - the goal is to use [semantic
+currently at version `0.17.4` - the goal is to use [semantic
 versioning](https://semver.org/) consistently for all future releases,
 but some earlier releases do not comply with strict semantic versioning.
 

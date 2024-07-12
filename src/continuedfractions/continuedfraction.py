@@ -973,7 +973,10 @@ class ContinuedFraction(Fraction):
         >>> tuple(ContinuedFraction(-415, 93).remainders)
         ((4, ContinuedFraction(7, 1)), (3, ContinuedFraction(43, 7)), (2, ContinuedFraction(50, 43)), (1, ContinuedFraction(93, 50)), (0, ContinuedFraction(-415, 93)))
         """
-        yield from zip(reversed(range(self.order + 1)), map(self.__class__, remainders(*self._elements)))
+        yield from zip(
+            reversed(range(self.order + 1)),
+            map(self.__class__, remainders(*self._elements))
+        )
 
     @functools.cache
     def left_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
@@ -1172,8 +1175,8 @@ if __name__ == "__main__":      # pragma: no cover
     #
     #     python -m doctest -v src/continuedfractions/continuedfraction.py
     #
-    # NOTE: the doctest examples using where `float` or ``decimal.Decimal``
-            # values assume a context precision of 28 digits
+    # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
+    #       assume a context precision of 28 digits.
     decimal.getcontext().prec = 28
     import doctest
     doctest.testmod()

@@ -135,7 +135,7 @@ pdm export -v -f requirements --dev -o docs/requirements.txt
 For more information on PDM lockfiles and installing requirements see
 the [PDM documentation](https://pdm-project.org/latest/).
 
-## Tests
+## Tests `microscope`
 
 Tests are defined in the `tests` folder, and should be run with
 [pytest](https://pytest-cov.readthedocs.io/en/latest/).

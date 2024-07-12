@@ -128,6 +128,7 @@ class TestConvergent:
 	@pytest.mark.parametrize(
 	    "k, elements",
 	    [
+	    	(1, []),
 	        (1, [1., 2.]),
 	        (1, [1, 2.]),
 	        (1, [1., 2.]),
@@ -212,6 +213,7 @@ class TestRemainder:
 	@pytest.mark.parametrize(
 	    "k, elements",
 	    [
+	    	(1, []),
 	        (1, [1., 2.]),
 	        (1, [1, 2.]),
 	        (1, [1., 2.]),

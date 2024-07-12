@@ -17,7 +17,7 @@
 
 # continuedfractions
 
-A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
+A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
 
 The [PyPI package](https://pypi.org/project/continuedfractions/) is updated as necessary with improvements, features and fixes. Only standard libraries are used, and the package can be installed on any **Linux**, **Mac OS** or **Windows** system supporting **Python 3.10**, **3.11**, or **3.12**.
 ```shell
@@ -41,7 +41,7 @@ Currently, it does **not** support the following features:
 * infinite and generalised continued fractions
 * symbolic representations of or operations with continued fractions
 
-These are [planned](https://github.com/sr-murthy/continuedfractions/issues) for future releases.
+Some - but not necessarily all - of these features may be considered for [future release](https://github.com/sr-murthy/continuedfractions/issues).
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 

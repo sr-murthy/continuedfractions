@@ -507,7 +507,7 @@ As the KSRM trees are infinite ternary trees the worst-case time and space compl
 Farey Sequences
 ===============
 
-The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used to generate `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_:
+The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used to compute `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_:
 
 .. code:: python
 

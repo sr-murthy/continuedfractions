@@ -500,14 +500,14 @@ The result for a given :math:`n \geq 1` is a generator of coprime pairs, yielded
 
 The implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` is guaranteed to terminate for any given :math:`n`, as there is always a finite subset of nodes :math:`(a, b)` satisfying the conditions :math:`1 \leq b < a \leq n` and :math:`(a, b) = 1`, and nodes that don't satisfy these conditions are discarded (pruned).
 
-As the KSRM trees are infinite ternary trees the worst-case time and space complexity of a standard DFS, for a given :math:`n`, on either tree, are determined by the (variable) search depth :math:`d`, and the (constant) branching factor of :math:`3`. The current implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`, which uses DFS, has a worst-case time complexity which is exponential (:math:`O(3^d)`) - optimising it would require a different approach where the search is not based on branch-by-branch traversal, but on a precalculated sequence of the exact nodes which meet the search criteria for a given :math:`n`. There is a `repository issue/ticket <https://github.com/sr-murthy/continuedfractions/issues/109>`_ for this optimisation. For space complexity the combination of backtracking and pruning "failed" nodes in the search ensures that for any given :math:`n` the smallest fraction of nodes are stored in memory at any given time - see the :py:meth:`~continuedfractions.sequences.KSRMTree._backtrack` and :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` methods for more details.
+As the KSRM trees are infinite ternary trees the worst-case time and space complexity of a standard DFS, for a given :math:`n`, on either tree, are determined by the (variable) search depth :math:`d`, and the (constant) branching factor of :math:`3`. The current implementation of :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`, which uses DFS, has a worst-case time complexity which is exponential (:math:`O(3^d)`) - optimising it would require a different approach where the search is based not on the standard DFS traversal and bounds test of nodes, but on calculating the sequence of the exact nodes which meet the search criteria for a given :math:`n`. There is a `repository issue/ticket <https://github.com/sr-murthy/continuedfractions/issues/109>`_ for this optimisation. For space complexity the combination of backtracking and pruning "failed" nodes in the search ensures that for any given :math:`n` the smallest fraction of nodes are stored in memory at any given time - see the :py:meth:`~continuedfractions.sequences.KSRMTree._backtrack` and :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` methods for more details.
 
 .. _sequences.farey-sequences:
 
 Farey Sequences
 ===============
 
-The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used to generate `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_:
+The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used to compute `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_:
 
 .. code:: python
 

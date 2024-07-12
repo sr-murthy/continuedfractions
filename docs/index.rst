@@ -23,7 +23,7 @@ The package is designed for users interested in:
    * infinite and generalised continued fractions
    * symbolic representations of or operations with continued fractions
 
-   These are `planned <https://github.com/sr-murthy/continuedfractions/issues>`_ for future releases.
+   Some - but not necessarily all - of these features may be considered for `future release <https://github.com/sr-murthy/continuedfractions/issues>`_.
 
 Interested users can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`. If you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
 

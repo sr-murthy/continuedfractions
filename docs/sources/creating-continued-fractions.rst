@@ -68,6 +68,18 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance
 
    But passing a numeric literal such as ``649/200`` will result in an evaluation of the decimal integer division using `binary floating point division <https://docs.python.org/3/tutorial/floatingpoint.html>`_, thus producing a fractional approximation, in this case, ``ContinuedFraction(3653545197704315, 1125899906842624)``.
 
+The elements of ``ContinuedFraction(649, 200)`` can be obtained via the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.elements` property, which returns a tuple of non-negative integers, and the order :math:`3` via the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.order` property:
+
+.. code:: python
+
+   >>> cf = ContinuedFraction(649, 200)
+   >>> cf.elements
+   (3, 4, 12, 4)
+   >>> cf.order
+   3
+
+For more details on the elements and order properties see :ref:`this <exploring-continued-fractions.elements-and-orders>`.
+
 The float value of ``ContinuedFraction(649, 200)`` is available via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.as_float()` method, in this case, a value of :math:`3.245`.
 
 .. code:: python
@@ -382,7 +394,7 @@ To understand the difference in the sequence of elements between a "positive" an
                &= [a_0 = q; a_1, \ldots, a_n]
    \end{align}
 
-where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. If :math:`v = 1` then :math:`R_1 = [b;]` and :math:`[q; b]` is the simple continued fraction of :math:`\frac{a}{b}`. However, if :math:`v > 1` then :math:`R_1` is defined and :math:`\frac{1}{R_1}` is a symbolic expression for the rational number which is the (multiplicative) inverse of the rational number represented by :math:`R_1`.
+where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. If :math:`v = 1` then :math:`R_1 = [b;]` and :math:`[q; b]` is the simple continued fraction of :math:`\frac{a}{b}`. However, if :math:`v > 1` then :math:`R_1` is defined and :math:`\frac{1}{R_1}` is the inverted continued fraction of the rational number represented by :math:`R_1`.
 
 .. _creating-continued-fractions.basic-rules:
 
@@ -390,7 +402,7 @@ where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-o
 
    For integers :math:`0 < b < a`, if :math:`\frac{a}{b}` (:math:`> 1`) has the simple continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n`, then :math:`0 < \frac{b}{a} < 1` has the "inverted" simple continued fraction :math:`[0; a_0, a_1, \ldots, a_n]` of order :math:`n + 1`. Both are unique if :math:`a_n > 1`.
 
-   Also, if :math:`m` is any integer then :math:`m + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + m` is a symbolic expression for  :math:`[m;] + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + [m;] = [a_0 + m;a_1,\ldots, a_n]`, where :math:`[m;]` is the continued fraction of :math:`m`.
+   Also, if :math:`m` is any integer then :math:`m + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + m` denotes the continued fraction :math:`[m;] + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + [m;] = [a_0 + m;a_1,\ldots, a_n]`, where :math:`[m;]` is the continued fraction of :math:`m`.
 
 We can write :math:`-a = -(qb + v)` as:
 

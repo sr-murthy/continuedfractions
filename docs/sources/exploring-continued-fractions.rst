@@ -108,17 +108,35 @@ The same formula is also involved in the implementation of the :py:attr:`~contin
 
 .. code:: python
 
-   >>> tuple(ContinuedFraction(649, 200).convergents)
-   ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
-
-The result is an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, which can be converted into a more accessible data structure, such as a dict:
-
-.. code:: python
-
    >>> cf = ContinuedFraction(649, 200)
    >>> cf_convergents = dict(cf.convergents)
    >>> cf_convergents
    {0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)}
+
+The result is an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
+
+The difference between consecutive convergents is given by the formula:
+
+.. math::
+
+   \frac{p_k}{q_k} - \frac{p_{k - 1}}{q_{k - 1}} = \frac{(-1)^{k + 1}}{q_kq_{k - 1}}, \hskip{3em} k \geq 1
+
+and this can be illustrated with the convergents of the continued fraction :math:`[-5; 1, 1, 6, 7]` of :math:`-\frac{415}{93}`:
+
+.. code:: python
+
+   >>> cf = ContinuedFraction(-415, 93)
+   >>> cf_convergents = dict(cf.convergents)
+   >>> cf_convergents
+   {0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)}
+   >>> cf_convergents[1] - cf_convergents[0]
+   ContinuedFraction(1, 1)
+   >>> cf_convergents[2] - cf_convergents[1]
+   ContinuedFraction(-1, 2)
+   >>> cf_convergents[3] - cf_convergents[2]
+   ContinuedFraction(1, 26)
+   >>> cf_convergents[4] - cf_convergents[3]
+   ContinuedFraction(-1, 1209)
 
 .. _exploring-continued-fractions.rational-approximation:
 
@@ -209,7 +227,7 @@ If we use the 100th convergent (with :math:`101` elements consisting of the inte
    >>> sqrt2_100.as_decimal()
    Decimal('1.414213562373095048801688724')
 
-The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this construction is now accurate up to 27 digits in the fractional part, but the decimal representation stops there. Why 27? Because the :py:mod:`decimal` library uses a default `contextual precision <https://docs.python.org/3/library/decimal.html#decimal.DefaultContext>`_ of 28 digits, including the integer part. The :py:mod:`decimal` precision can be increased, and the accuracy of the "longer" approximation above can be compared, as follows:
+The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this construction is now accurate up to 27 digits in the fractional part, but the decimal representation stops there. This is because the :py:mod:`decimal` library uses a default `contextual precision <https://docs.python.org/3/library/decimal.html#decimal.DefaultContext>`_ of 28 digits, including the integer part. The :py:mod:`decimal` precision can be increased, and the accuracy of the "longer" approximation above can be compared, as follows:
 
 .. code:: python
 
@@ -232,24 +250,24 @@ Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is 
 Even- and Odd-Indexed Convergents
 ---------------------------------
 
-The even- and odd-indexed convergents behave differently: the even-indexed convergents :math:`C_0,C_2,C_4,\ldots` strictly increase from below :math:`x`, while the odd-indexed convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease from above :math:`x`, both at a decreasing rate. This is captured by the formula for the difference between consecutive convergents:
+The even- and odd-indexed convergents behave differently: the even-indexed convergents :math:`C_0,C_2,C_4,\ldots` strictly increase from below :math:`x`, while the odd-indexed convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease from above :math:`x`, both at a decreasing rate. This is captured by the formula:
 
 .. math::
 
-   \frac{p_k}{q_k} - \frac{p_{k - 1}}{q_{k - 1}} = \frac{(-1)^{k + 1}}{q_kq_{k - 1}}, \hskip{3em} k \geq 1
+   \frac{p_k}{q_k} - \frac{p_{k - 2}}{q_{k - 2}} = \frac{(-1)^ka_k}{q_kq_{k - 2}}, \hskip{3em} k \geq 2
 
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides properties for generating even-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_convergents`) and odd-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_convergents`), as illustrated below.
 
 .. code:: python
 
-   >>> tuple(ContinuedFraction(649, 200).even_convergents)
-   ((0, ContinuedFraction(3, 1)), 2: ContinuedFraction(159, 49)))
-   >>> tuple(ContinuedFraction(649, 200).odd_convergents)
-   ((1, ContinuedFraction(13, 4)), (3, ContinuedFraction(649, 200)))
+   >>> dict(ContinuedFraction(649, 200).even_convergents)
+   {0: ContinuedFraction(3, 1), 2: ContinuedFraction(159, 49)}
+   >>> dict(ContinuedFraction(649, 200).odd_convergents)
+   {1: ContinuedFraction(13, 4), 3: ContinuedFraction(649, 200)}
 
-As with :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` the results are generators of enumerated sequences of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, where the enumeration is by convergent index.
+As with the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property the result is a generator of enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, where the enumeration is by convergent index.
 
-The different behaviour of even- and odd-indexed convergents can be illustrated by a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail:
+The different behaviour of even- and odd-indexed convergents can be illustrated by a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail, using dictionaries to store the even- and odd-indexed convergents:
 
 .. code:: python
 
@@ -263,8 +281,8 @@ The different behaviour of even- and odd-indexed convergents can be illustrated 
    >>> cf.as_decimal()
    Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
    #
-   # Look at the differences between consecutive even-indexed convergents
-   >>> cf_even_convergents = tuple(cf.even_convergents)
+   # Differences between consecutive even-indexed convergents
+   >>> cf_even_convergents = dict(cf.even_convergents)
    >>> cf_even_convergents[2] - cf_even_convergents[0]
    >>> ContinuedFraction(2, 5)
    >>> cf_even_convergents[4] - cf_even_convergents[2]
@@ -276,8 +294,8 @@ The different behaviour of even- and odd-indexed convergents can be illustrated 
    >>> cf_even_convergents[10] - cf_even_convergents[8]
    >>> ContinuedFraction(2, 5654885)
    #
-   # Look at the differences between consecutive odd-indexed convergents
-   >>> cf_odd_convergents = tuple(cf.odd_convergents)
+   # Differences between consecutive odd-indexed convergents
+   >>> cf_odd_convergents = dict(cf.odd_convergents)
    >>> cf_odd_convergents[3] - cf_odd_convergents[1]
    >>> ContinuedFraction(-1, 12)
    >>> cf_odd_convergents[5] - cf_odd_convergents[3]
@@ -305,10 +323,6 @@ is called a **semiconvergent** of :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:
    \frac{p_{k - 1}}{q_{k - 1}} \leq \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \leq \frac{p_k}{q_k}
 
 If on the other hand :math:`\frac{p_{k - 1}}{q_{k - 1}} \geq \frac{p_k}{q_k}` the inequality above would be reversed. 
-
-.. note::
-
-   If the number represented by a continued fraction is an integer it has only one convergent - itself - and thus no semiconvergents. 
 
 Some definitions of semiconvergents are more restricted: one such definition is the same as above, except that :math:`m` is required to be an integer in the range :math:`0..a_{k + 1}`, i.e. :math:`0 \leq m \leq a_{k + 1}`, where the corner cases are :math:`m = 0` in which case the semiconvergent is equal to :math:`\frac{p_{k - 1}}{q_{k - 1}}`, and :math:`m = a_{n + 1}` (if this is defined) in which the case the semiconvergent is equal to :math:`\frac{p_{k + 1}}{q_{k + 1}}`. Another restrictive definition is also the same as the first definition above except that :math:`m` is required to be an integer in the range :math:`1..a_{k + 1} - 1`, i.e. :math:`0 < m < a_{k + 1}`. In this latter definition, the two corner cases listed above are excluded.
 
@@ -338,7 +352,17 @@ A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7
    >>> cf.semiconvergent(3, 7)
    ContinuedFraction(-415, 93)
 
-The :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` of the convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` is the semiconvergent of the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, bounded on one side by :math:`\frac{p_k}{q_k}` (the side depends on whether :math:`k` is odd or even), and has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
+.. note::
+
+   The continued fraction of an integer is of zero order, and thus has only one convergent - itself - and no semiconvergents. Attempting to call :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.semiconvergent` on any integer-valued :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance, for any value of :math:`k` and :math:`m`, produces a :py:class:`ValueError`.
+
+   .. code:: python
+
+   >>> ContinuedFraction(1).semiconvergent(0, 1)
+   ...
+   ValueError: `k` and `m` must be positive integers and `k` must be an integer in the range `1..n` where `n` is the order of the continued fraction
+
+In relation to consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` (of the ) is the mediant of their :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the :math:`k`-th convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, bounded on one side by :math:`\frac{p_k}{q_k}` (the side depends on whether :math:`k` is odd or even), and has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
 
 The semiconvergents have the same alternating behaviour in :math:`k` as the convergents: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
 
@@ -391,7 +415,7 @@ The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[
 
    R_k = a_k + \cfrac{1}{a_{k + 1} + \cfrac{1}{a_{k + 2} \ddots }}
 
-where :math:`R_0 = x`.
+where :math:`R_0 = x`. As with convergents, we can also use :math:`R_k` to denote the number represented by the associated continued fraction :math:`[a_k;a_{k + 1},\ldots]`, and this number is rational if and only if the continued fraction is of finite order.
 
 If :math:`[a_0; a_1,\ldots]` is of finite order :math:`n` then :math:`R_k` is of order :math:`(n - k)`. The remainders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances can be obtained via the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainder` method, which takes a non-negative integer not exceeding the order of the original.
 
@@ -401,13 +425,6 @@ If :math:`[a_0; a_1,\ldots]` is of finite order :math:`n` then :math:`R_k` is of
    (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
 
 It is also possible to get all of the remainders at once using the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property, which returns a generator of an enumerated sequence of the remainders in descending order of index:
-
-.. code:: python
-
-   >>> tuple(cf.remainders)
-   ((3, ContinuedFraction(4, 1)), (2, ContinuedFraction(49, 4)), (1, ContinuedFraction(200, 49)), (0, ContinuedFraction(649, 200)))
-
-As with convergents the result is a generator of an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, which can be converted into something more accessible, such as a dict:
 
 .. code:: python
 
@@ -432,13 +449,13 @@ Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` th
 
    R_{k - 1} = a_{k - 1} + \frac{1}{R_k}, \hskip{3em} k \geq 1
 
-where :math:`\frac{1}{R_k}` is a symbolic expression for the number represented by the inverted simple continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`. If the continued fraction :math:`[a_0; a_1, a_2,\ldots]` is finite of order :math:`n` and we let :math:`R_k = \frac{s_k}{t_k}` then the recurrence relation above can be written as:
+where :math:`\frac{1}{R_k}` denotes the inverted simple continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`.If the continued fraction :math:`[a_0; a_1, a_2,\ldots]` is finite of order :math:`n` and we let :math:`R_k = \frac{s_k}{t_k}` then the recurrence relation above can be written as:
 
 .. math::
 
    R_{k - 1} = \frac{s_{k - 1}}{t_{k - 1}} = \frac{a_{k - 1}s_k + t_k}{s_k}, \hskip{3em} k \geq 1
 
-This is used to implement the core remainders library function :py:func:`~continuedfractions.lib.remainders`, which is called by the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction` class method :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.remainders`.
+If the continued fraction :math:`[a_0; a_1, \ldots]` is finite of order :math:`n` we can use this formula to compute successive remainders starting from :math:`R_n = [a_n;]` and working backwards to :math:`R_0 = [a_0; a_1, \ldots, a_n]`. This has been implemented in the remainders library function :py:func:`~continuedfractions.lib.remainders`, which is then called by the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property.
 
 Khinchin Means & Khinchin's Constant
 ====================================

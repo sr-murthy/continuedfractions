@@ -135,7 +135,7 @@ pdm export -v -f requirements --dev -o docs/requirements.txt
 For more information on PDM lockfiles and installing requirements see
 the [PDM documentation](https://pdm-project.org/latest/).
 
-## Tests
+## Tests `microscope`
 
 Tests are defined in the `tests` folder, and should be run with
 [pytest](https://pytest-cov.readthedocs.io/en/latest/).
@@ -200,7 +200,7 @@ PRs targeting `main`, to avoid duplication on `main`.
 ## Versioning and Releases
 
 The [PyPI package](https://pypi.org/project/continuedfractions/) is
-currently at version `0.17.2` - the goal is to use [semantic
+currently at version `0.17.3` - the goal is to use [semantic
 versioning](https://semver.org/) consistently for all future releases,
 but some earlier releases do not comply with strict semantic versioning.
 

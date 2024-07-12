@@ -281,6 +281,12 @@ def convergent(k: int, *elements: int) -> Fraction:
     Fraction(159, 49)
     >>> convergent(3, 3, 4, 12, 4)
     Fraction(649, 200)
+    >>> convergent(3)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
     >>> convergent(-1, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
@@ -294,9 +300,11 @@ def convergent(k: int, *elements: int) -> Fraction:
     the continued fraction (number of tail elements), and the tail 
     elements must all be positive integers.
     """
+    # Define the order of the continued fraction - may be ``-1`` if no elements
+    # are given.
     n = len(elements) - 1
 
-    if not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
+    if n == -1 or not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
         raise ValueError(
             "`k` must be a non-negative integer not exceeding the order of \n"
             "the continued fraction (number of tail elements), and the tail \n"
@@ -517,6 +525,12 @@ def remainder(k: int, *elements: int) -> Fraction:
     Fraction(43, 7)
     >>> remainder(4, -5, 1, 1, 6, 7)
     Fraction(7, 1)
+    >>> remainder(1)
+    Traceback (most recent call last):
+    ...
+    ValueError: `k` must be a non-negative integer not exceeding the order of 
+    the continued fraction (number of tail elements), and the tail 
+    elements must all be positive integers.
     >>> remainder(-1, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
@@ -542,9 +556,11 @@ def remainder(k: int, *elements: int) -> Fraction:
     the continued fraction (number of tail elements), and the tail 
     elements must all be positive integers.
     """
+    # Define the order of the continued fraction - may be ``-1`` if no elements
+    # are given.
     n = len(elements) - 1
 
-    if not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
+    if n == -1 or not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
         raise ValueError(
             "`k` must be a non-negative integer not exceeding the order of \n"
             "the continued fraction (number of tail elements), and the tail \n"
@@ -745,8 +761,8 @@ if __name__ == "__main__":      # pragma: no cover
     #
     #     python -m doctest -v src/continuedfractions/lib.py
     #
-    # NOTE: the doctest examples using where `float` or ``decimal.Decimal``
-            # values assume a context precision of 28 digits
+    # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
+    #       assume a context precision of 28 digits
     decimal.getcontext().prec = 28
     import doctest
     doctest.testmod()

@@ -19,14 +19,14 @@ Contributors can open pull requests from a fork targeting the parent ``main`` `b
 
 A simple Git workflow, using a feature and/or fix branch created off the ``main`` branch of your fork, is recommended.
 
-.. _contributing.cloning:
+.. _contributing.repo:
 
 Repo :fas:`folder`
 ==================
 
 If you wish to contribute please first ensure you have `SSH access to GitHub <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>`_. This basically involves creating a project-specific SSH keypair - if you don't already have one - and adding it to GitHub. If you have done this successfully then this verification step should work:
 
-.. code:: bash
+.. code:: shell
 
    ssh -vT git@github.com
 
@@ -74,7 +74,7 @@ including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https:/
 
 There are no root-level ``requirements*.txt`` files - but only a single (default, version-controlled, cross-platform) `pdm.lock <https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock>`_ lockfile, which defines metadata for all TOML-defined development dependencies, including the currently empty set of production dependencies, and their sub-dependencies etc. This can be used to install all development dependencies, including the project itself, in editable mode where available:
 
-.. code:: bash
+.. code:: shell
 
    pdm install -v --dev
 
@@ -84,13 +84,13 @@ There are no root-level ``requirements*.txt`` files - but only a single (default
 
 If you don't wish to install any editable dependencies, including the project itself, you can use:
 
-.. code:: bash
+.. code:: shell
 
    pdm install -v --dev --no-editable --no-self
 
 The default lockfile can be updated with any and all upstream changes in the TOML-defined dependencies, but excluding any editable dependencies including the project itself, using:
 
-.. code:: bash
+.. code:: shell
 
    pdm update -v --dev --no-editable --no-self --update-all
 
@@ -98,7 +98,7 @@ This will usually modify :file:`pdm.lock`, in which case the file should be stag
 
 The lockfile can be exported in its entirety to another format, such as :file:`docs/requirements.txt` using:
 
-.. code:: bash
+.. code:: shell
 
    pdm export -v -f requirements --dev -o docs/requirements.txt
 
@@ -115,7 +115,7 @@ For convenience different types of test targets are defined in the `Makefile <ht
 `doctests <https://docs.python.org/3/library/doctest.html>`_ and ``unittests`` for running unittests and measuring coverage, using
 ``pytest`` and the ``pytest-cov`` plugin:
 
-.. code:: bash
+.. code:: shell
 
    make lint
    make unittests
@@ -130,21 +130,23 @@ Documentation :fas:`book`
 
 `Project documentation <https://continuedfractions.readthedocs.io/en/latest/>`_ is defined and built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_, and deployed to `Read The Docs <https://readthedocs.org>`_. Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
 
-The Sphinx documentation can be built locally on any branch from the **project root** using:
+The Sphinx documentation source pages and assets are contained in the :file:`docs/` subfolder. The HTML pages can be built locally on any branch (from the project root) using:
 
-.. code:: bash
+.. code:: shell
 
    make -C docs html
 
-First, ensure that you have installed the docs Python requirements, which include all development dependencies, either via :program:`pip`:
+The pages will be built inside :file:`docs/html`, with the index/home page being :file:`docs/html/index.html`.
 
-.. code:: bash
+In order for this to work first ensure that you have installed the documentation Python requirements listed in :file:`docs/requirements.txt`. This can be done either via :program:`pip`:
+
+.. code:: shell
 
    pip install -r docs/requirements.txt
 
 or via `PDM <https://pdm.fming.dev/latest/>`_:
 
-.. code:: bash
+.. code:: shell
 
    pdm install -v --dev --no-editable --no-self
 

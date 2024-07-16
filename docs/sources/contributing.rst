@@ -155,7 +155,7 @@ or via `PDM <https://pdm.fming.dev/latest/>`_:
 CI/CD :fas:`circle-play`
 ========================
 
-The CI/CD pipelines are defined in the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ and the `CodeQL Analysis YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml>`_, and pipelines for all branches include a tests stage, consisting of Ruff linting, Python doctests, and unit tests, in that order. This will be amended in the future to ensure that tests are only run on updates to PRs targeting ``main``, to avoid duplication on ``main``.
+The CI/CD pipelines are defined in the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ and the `CodeQL Analysis YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml>`_, and, currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests, Python doctests, and in that order.
 
 .. _contributing.versioning-and-releases:
 

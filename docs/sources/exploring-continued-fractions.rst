@@ -14,8 +14,8 @@ Python objects of the :py:class:`~continuedfractions.continuedfraction.Continued
 
 .. _exploring-continued-fractions.elements-and-orders:
 
-Elements and Orders
-===================
+Elements and Order
+==================
 
 The **elements** (or coefficients) of a (possibly infinite), simple continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the head :math:`a_0 = [x]`, which is the integer part of :math:`x`, and the tail elements :math:`a_1,a_2,\cdots` which occur in the denominators of the fractional terms. The :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.elements` property can be used to look at their elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
 
@@ -113,7 +113,7 @@ The same formula is also involved in the implementation of the :py:attr:`~contin
    >>> cf_convergents
    {0: ContinuedFraction(3, 1), 1: ContinuedFraction(13, 4), 2: ContinuedFraction(159, 49), 3: ContinuedFraction(649, 200)}
 
-The result is an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
+The result is an enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, where the enumeration is by convergent index.
 
 The difference between consecutive convergents is given by the formula:
 
@@ -358,11 +358,11 @@ A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7
 
    .. code:: python
 
-   >>> ContinuedFraction(1).semiconvergent(0, 1)
-   ...
-   ValueError: `k` and `m` must be positive integers and `k` must be an integer in the range `1..n` where `n` is the order of the continued fraction
+      >>> ContinuedFraction(1).semiconvergent(0, 1)
+      ...
+      ValueError: `k` and `m` must be positive integers and `k` must be an integer in the range `1..n` where `n` is the order of the continued fraction
 
-In relation to consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` (of the ) is the mediant of their :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the :math:`k`-th convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, bounded on one side by :math:`\frac{p_k}{q_k}` (the side depends on whether :math:`k` is odd or even), and has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
+In relation to consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` is the mediant of their :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the :math:`k`-th convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, bounded on one side by :math:`\frac{p_k}{q_k}` (the side depends on whether :math:`k` is odd or even), and has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
 
 The semiconvergents have the same alternating behaviour in :math:`k` as the convergents: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
 
@@ -449,15 +449,17 @@ Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` th
 
    R_{k - 1} = a_{k - 1} + \frac{1}{R_k}, \hskip{3em} k \geq 1
 
-where :math:`\frac{1}{R_k}` denotes the inverted simple continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`.If the continued fraction :math:`[a_0; a_1, a_2,\ldots]` is finite of order :math:`n` and we let :math:`R_k = \frac{s_k}{t_k}` then the recurrence relation above can be written as:
+where :math:`\frac{1}{R_k}` denotes the inverted continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`. If the continued fraction :math:`[a_0; a_1, a_2,\ldots]` is finite of order :math:`n` and we let :math:`R_k = \frac{s_k}{t_k}` then the recurrence relation above can be written as:
 
 .. math::
 
    R_{k - 1} = \frac{s_{k - 1}}{t_{k - 1}} = \frac{a_{k - 1}s_k + t_k}{s_k}, \hskip{3em} k \geq 1
 
-If the continued fraction :math:`[a_0; a_1, \ldots]` is finite of order :math:`n` we can use this formula to compute successive remainders starting from :math:`R_n = [a_n;]` and working backwards to :math:`R_0 = [a_0; a_1, \ldots, a_n]`. This has been implemented in the remainders library function :py:func:`~continuedfractions.lib.remainders`, which is then called by the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property.
+This allows successive remainders to computed starting from :math:`R_n = [a_n;]` and working backwards to :math:`R_0 = [a_0; a_1, \ldots, a_n]`, as implemented in the remainders library function :py:func:`~continuedfractions.lib.remainders`, which is then called by the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.remainders` property.
 
-Khinchin Means & Khinchin's Constant
+.. _exploring-continued-fractions.khinchin-mean-constant:
+
+Khinchin Mean & Khinchin's Constant
 ====================================
 
 For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and a positive integer :math:`n` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` elements starting from :math:`a_1` (excluding the leading element :math:`a_0`):

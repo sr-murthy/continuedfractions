@@ -210,7 +210,7 @@ Here is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continued
 
 The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` is division-free and uses a well known recurrence relation for convergents of simple continued fractions, which is described :ref:`here <exploring-continued-fractions.fast-algorithms>`.
 
-For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but with the benefit of allowing the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>` or experimental computations.
+For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but allows the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <exploring-continued-fractions.rational-approximation>` or experimental computations.
 
 .. _creating-continued-fractions.inplace-extension:
 
@@ -494,8 +494,6 @@ A few examples are given below.
    ContinuedFraction(-415, 93)
    >>> ContinuedFraction(-415, 93).elements
    (-5, 1, 1, 6, 7)
-   >>> ContinuedFraction(-415, 93).convergents 
-   mappingproxy({0: Fraction(-5, 1), 1: Fraction(-4, 1), 2: Fraction(-9, 2), 3: Fraction(-58, 13), 4: Fraction(-415, 93)})
    >>> ContinuedFraction(-415, 93).as_decimal()
    Decimal('-4.462365591397849462365591397849462365591397849462365591397849462365591397849462365591397849462365591')
    >>> ContinuedFraction(415, 93).as_decimal()

@@ -253,7 +253,7 @@ The result, for a given integer :math:`n \geq 1`, is always a tuple of positive 
 
    Both :py:func:`~continuedfractions.sequences.coprime_integers_generator` and :py:func:`~continuedfractions.sequences.coprime_integers` have the same argument structure, but :py:func:`~continuedfractions.sequences.coprime_integers` is cached while the generator version is not.
 
-The count of the coprimes sequence returned by :py:func:`~continuedfractions.sequences.coprime_integers` for a given :math:`n \geq 1` is consistent with `totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_ :math:`\phi(n)`, on which it is based, and this can be verified using the Sympy :py:class:`~sympy.ntheory.factor_.totient` callable.
+The count of the coprimes sequence returned by :py:func:`~continuedfractions.sequences.coprime_integers` for a given :math:`n \geq 1` is consistent with `totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_ :math:`\phi(n)`, on which it is based, and this can be verified using the Sympy :py:func:`~sympy.functions.combinatorial.numbers.totient` function.
 
 .. code:: python
 
@@ -376,8 +376,6 @@ We can check the counts using the `summatory totient function <https://en.wikipe
    >>> assert len(coprime_pairs(100)) == sum(map(sympy.totient, range(1, 101))) == 3044
    >>> assert len(coprime_pairs(1000)) == sum(map(sympy.totient, range(1, 1001))) == 304192
    >>> assert len(coprime_pairs(10000)) == sum(map(sympy.totient, range(1, 10001))) == 30397486
-
-A naive implementation of a coprime pairs generating function would involve a search for pairs of integers (in a bounded interval), and would therefore have quadratic worst-case time complexity. The :py:func:`~continuedfractions.sequences.coprime_pairs` function uses a different approach based on ternary trees, as described below.
 
 .. _sequences.ksrm-trees:
 

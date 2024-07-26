@@ -358,9 +358,9 @@ A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7
 
    .. code:: python
 
-   >>> ContinuedFraction(1).semiconvergent(0, 1)
-   ...
-   ValueError: `k` and `m` must be positive integers and `k` must be an integer in the range `1..n` where `n` is the order of the continued fraction
+      >>> ContinuedFraction(1).semiconvergent(0, 1)
+      ...
+      ValueError: `k` and `m` must be positive integers and `k` must be an integer in the range `1..n` where `n` is the order of the continued fraction
 
 In relation to consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` is the mediant of their :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the :math:`k`-th convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, bounded on one side by :math:`\frac{p_k}{q_k}` (the side depends on whether :math:`k` is odd or even), and has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
 

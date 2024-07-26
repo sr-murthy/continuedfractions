@@ -30,7 +30,7 @@ This basically involves creating a project-specific SSH keypair - if you
 don't already have one - and adding it to GitHub. If you have done this
 successfully then this verification step should work:
 
-``` bash
+``` shell
 ssh -vT git@github.com
 ```
 
@@ -96,7 +96,7 @@ dependencies, and their sub-dependencies etc. This can be used to
 install all development dependencies, including the project itself, in
 editable mode where available:
 
-``` bash
+``` shell
 pdm install -v --dev
 ```
 
@@ -110,7 +110,7 @@ pdm install -v --dev
 If you don't wish to install any editable dependencies, including the
 project itself, you can use:
 
-``` bash
+``` shell
 pdm install -v --dev --no-editable --no-self
 ```
 
@@ -118,7 +118,7 @@ The default lockfile can be updated with any and all upstream changes in
 the TOML-defined dependencies, but excluding any editable dependencies
 including the project itself, using:
 
-``` bash
+``` shell
 pdm update -v --dev --no-editable --no-self --update-all
 ```
 
@@ -128,7 +128,7 @@ staged and included in a commit.
 The lockfile can be exported in its entirety to another format, such as
 `docs/requirements.txt` using:
 
-``` bash
+``` shell
 pdm export -v -f requirements --dev -o docs/requirements.txt
 ```
 
@@ -147,14 +147,38 @@ For convenience different types of test targets are defined in the
 `unittests` for running unittests and measuring coverage, using `pytest`
 and the `pytest-cov` plugin:
 
-``` bash
+``` shell
 make lint
 make unittests
 make doctests
 ```
 
-Linting warnings should be addressed first. The doctests serve as
-acceptance tests, and are best run after the unit tests.
+Linting warnings should be addressed first, and any changes staged and
+committed.
+
+Unit tests can be run all at once using `make unittests` or individually
+using `pytest`, e.g. running the test class for the
+`~continuedfractions.lib.continued_fraction_rational` function:
+
+``` shell
+python -m pytest -sv tests/units/test_lib.py::TestContinuedFractionRational
+```
+
+> [!NOTE]
+> The `-s` option in the `pytest` command is to allow interactive
+> environments to be entered on errors, e.g. debugger breakpoints. The
+> default behaviour of [capturing console
+> input/output](https://docs.pytest.org/en/stable/how-to/capture-stdout-stderr.html#default-stdout-stderr-stdin-capturing-behaviour)
+> would otherwise prevent debuggers from being triggered.
+
+The doctests serve as acceptance tests, and are best run after the unit
+tests. They can be run all at once using `make doctests`, or
+individually by library using `python -m doctest`, e.g. running all the
+doctests in `~continuedfractions.sequences`:
+
+``` shell
+python -m doctest -v src/continuedfractions/sequences.py
+```
 
 ## Documentation
 
@@ -166,23 +190,28 @@ building and deployment steps for documentation are not automated in a
 CI pipeline, but are done manually - this will be addressed in future
 releases.
 
-The Sphinx documentation can be built locally on any branch from the
-**project root** using:
+The Sphinx documentation source pages and assets are contained in the
+`docs/` subfolder. The HTML pages can be built locally on any branch
+(from the project root) using:
 
-``` bash
+``` shell
 make -C docs html
 ```
 
-First, ensure that you have installed the docs Python requirements,
-which include all development dependencies, either via `pip`:
+The pages will be built inside `docs/html`, with the index/home page
+being `docs/html/index.html`.
 
-``` bash
+In order for this to work first ensure that you have installed the
+documentation Python requirements listed in `docs/requirements.txt`.
+This can be done either via `pip`:
+
+``` shell
 pip install -r docs/requirements.txt
 ```
 
 or via [PDM](https://pdm.fming.dev/latest/):
 
-``` bash
+``` shell
 pdm install -v --dev --no-editable --no-self
 ```
 
@@ -192,10 +221,8 @@ The CI/CD pipelines are defined in the [CI
 YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
 and the [CodeQL Analysis
 YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml),
-and pipelines for all branches include a tests stage, consisting of Ruff
-linting, Python doctests, and unit tests, in that order. This will be
-amended in the future to ensure that tests are only run on updates to
-PRs targeting `main`, to avoid duplication on `main`.
+and, currently, pipelines for all branches include a tests stage that
+includes Ruff linting, unit tests, Python doctests, and in that order.
 
 ## Versioning and Releases
 

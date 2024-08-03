@@ -156,8 +156,9 @@ def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -
     if n in (1, 2):
         yield 1
     else:
+        chunklen = 1000
         stop = stop or n
-        q, r = divmod((stop - start + 1), 10 ** 3)
+        q, r = divmod((stop - start + 1), chunklen)
 
         if q == 0:
             yield from filter(
@@ -165,7 +166,7 @@ def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -
                 range(stop, start - 1, -1)
             )
         else:
-            _start = ((10 ** 3) * q) + (1 if r > 0 else 0)
+            _start = ((chunklen) * q) + (1 if r > 0 else 0)
             
             while _start >= start:
                 yield from filter(
@@ -174,7 +175,7 @@ def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -
                 )
                 stop = _start - 1
                 q -= 1
-                _start = ((10 ** 3) * q) + 1
+                _start = ((chunklen) * q) + 1
 
 
 @functools.cache

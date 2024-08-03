@@ -16,8 +16,6 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  schedule:
-    - cron: '19 1 * * 1'
 
 jobs:
   analyze:
@@ -27,7 +25,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners
     # Consider using larger runners for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'python' && ('macos-13' || 'ubuntu-latest' || 'window-latest')) }}
+    runs-on: ${{ (matrix.language == 'python' && ('macos-13' || 'macos-latest' || 'ubuntu-latest' || 'window-latest')) }}
     timeout-minutes: ${{ (matrix.language == 'python' && 120) || 360 }}
     permissions:
       # required for all workflows

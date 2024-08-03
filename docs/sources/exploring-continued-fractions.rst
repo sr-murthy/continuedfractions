@@ -58,7 +58,7 @@ The elements and orders of :py:class:`~continuedfractions.continuedfraction.Cont
 Convergents and Rational Approximations
 =======================================
 
-For an integer :math:`k \geq 0` the :math:`k`-th **convergent** :math:`C_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the rational number :math:`\frac{p_k}{q_k}` with the simple continued fraction :math:`[a_0; a_1,\ldots,a_k]` formed from the first :math:`k + 1` elements of the original.
+For an integer :math:`k \geq 0` the :math:`k`-th **convergent** :math:`C_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the rational number :math:`\frac{p_k}{q_k}` with the simple continued fraction :math:`[a_0; a_1,\ldots,a_k]` formed from the first :math:`k + 1` elements of the original:
 
 .. math::
 
@@ -409,7 +409,7 @@ This can be illustrated again using the continued fraction for :math:`-\frac{415
 Remainders
 ==========
 
-The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the (simple) continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`.
+The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the (simple) continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`:
 
 .. math::
 

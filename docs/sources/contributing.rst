@@ -166,12 +166,12 @@ or via `PDM <https://pdm.fming.dev/latest/>`_:
 
    pdm install -v --dev --no-editable --no-self
 
-.. _contributing.ci-cd:
+.. _contributing.ci:
 
-CI/CD :fas:`circle-play`
-========================
+CI :fas:`circle-play`
+=====================
 
-The CI/CD pipelines are defined in the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ and the `CodeQL Analysis YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml>`_, and, currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests, Python doctests, and in that order.
+The CI pipelines are defined in the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ and the `CodeQL Analysis YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml>`_. Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests, Python doctests, and in that order.
 
 .. _contributing.versioning-and-releases:
 

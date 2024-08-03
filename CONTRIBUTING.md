@@ -215,13 +215,13 @@ or via [PDM](https://pdm.fming.dev/latest/):
 pdm install -v --dev --no-editable --no-self
 ```
 
-## CI/CD
+## CI
 
-The CI/CD pipelines are defined in the [CI
+The CI pipelines are defined in the [CI
 YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
 and the [CodeQL Analysis
-YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml),
-and, currently, pipelines for all branches include a tests stage that
+YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml).
+Currently, pipelines for all branches include a tests stage that
 includes Ruff linting, unit tests, Python doctests, and in that order.
 
 ## Versioning and Releases

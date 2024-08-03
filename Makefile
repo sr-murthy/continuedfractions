@@ -39,6 +39,11 @@ version_check:
 version_extract:
 	echo "$(PACKAGE_VERSION)"
 
+# Dependency management
+update_deps:
+	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Update all development dependencies, including documentation and production dependencies\n"
+	pdm update -v --dev --no-editable --no-self --update-all && pdm export -v -f requirements --dev -o docs/requirements.txt
+
 # Linting
 lint: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Linting source code with Ruff\n"

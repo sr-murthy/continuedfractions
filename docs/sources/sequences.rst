@@ -6,7 +6,7 @@
 Sequences
 =========
 
-The :doc:`sequences <sequences>` library contains functions and classes relating to ordered sequences and structures of integers and rational numbers, connected with continued fractions, such as `mediants <https://en.wikipedia.org/wiki/Mediant_(mathematics)>`_, sequences of `coprime integers <https://en.wikipedia.org/wiki/Coprime_integers>`_, and `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_.
+The :doc:`sequences <sequences>` library contains functions and classes relating to ordered sequences and structures of integers and rational numbers, connected with continued fractions, such as `mediants <https://en.wikipedia.org/wiki/Mediant_(mathematics)>`_, sequences of `coprime integers <https://en.wikipedia.org/wiki/Coprime_integers>`_ as well as trees for generating and representing them, and `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_.
 
 These are described below in some detail.
 
@@ -71,8 +71,8 @@ and also tree orderings such as the `Stern-Brocot tree <https://en.wikipedia.org
 
 .. _sequences.mediants.generalised:
 
-Generalised Mediants
---------------------
+Left- and Right-Mediants
+------------------------
 
 The concept of the simple mediant of two fractions of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` as given above can be generalised to :math:`k`-th **left-** and **right-mediants**: for a positive integer :math:`k` the :math:`k`-th left mediant of :math:`\frac{a}{b}` and :math:`\frac{c}{d}` can be defined as:
 
@@ -253,7 +253,7 @@ The result, for a given integer :math:`n \geq 1`, is always a tuple of positive 
 
    Both :py:func:`~continuedfractions.sequences.coprime_integers_generator` and :py:func:`~continuedfractions.sequences.coprime_integers` have the same argument structure, but :py:func:`~continuedfractions.sequences.coprime_integers` is cached while the generator version is not.
 
-The count of the coprimes sequence returned by :py:func:`~continuedfractions.sequences.coprime_integers` for a given :math:`n \geq 1` is consistent with `totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_ :math:`\phi(n)`, on which it is based, and this can be verified using the Sympy :py:func:`~sympy.functions.combinatorial.numbers.totient` function.
+The count of the coprimes sequence returned by :py:func:`~continuedfractions.sequences.coprime_integers` for a given :math:`n \geq 1` is consistent with `totient function <https://en.wikipedia.org/wiki/Euler%27s_totient_function>`_ :math:`\phi(n)`, on which it is based, and this can be verified using the Sympy :py:class:`~sympy.functions.combinatorial.numbers.totient` function.
 
 .. code:: python
 
@@ -432,11 +432,11 @@ The generation of coprime pairs via the trees can then be implemented with a gen
 
 .. math::
 
-   \begin{align}
-   (a, b) &\longmapsto (2a - b, a) \\
-   (a, b) &\longmapsto (2a + b, a) \\
-   (a, b) &\longmapsto (a + 2b, b)
-   \end{align}
+   (a, b) &\longmapsto \begin{cases}
+                       (2a - b, a), \hskip{3em} \text{ branch #} 1 \\
+                       (2a + b, a), \hskip{3em} \text{ branch #} 2 \\
+                       (a + 2b, b), \hskip{3em} \text{ branch #} 3
+                       \end{cases}
 
 producing the "1st generation" of :math:`3 + 3 = 6` pairs. This can be repeated ad infinitum as required.
 

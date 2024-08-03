@@ -43,6 +43,14 @@ The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) b
 
 We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail".
 
+In general, a simple continued fraction is denoted by a tuple of integers, enclosed in square brackets:
+
+.. math::
+
+   [a_0; a_1, a_2, \ldots, a_n, \ldots] = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 + \ddots \cfrac{1}{a_n + \ddots}}}
+
+where :math:`a_0` is the integer part, and :math:`a_1,a_2,\ldots` are (positive) integers defining the fractional part, in the representation.
+
 .. _creating-continued-fractions.from-numeric-types:
 
 Creating Continued Fractions from Numeric Types

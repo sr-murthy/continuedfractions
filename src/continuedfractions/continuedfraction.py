@@ -321,7 +321,7 @@ class ContinuedFraction(Fraction):
             )
 
         elements = self._elements + new_elements
-        fraction = convergent(len(elements) - 1, *elements)
+        fraction = fraction_from_elements(*elements)
         self._numerator, self._denominator = fraction.as_integer_ratio()
         self._elements = elements
 
@@ -414,7 +414,7 @@ class ContinuedFraction(Fraction):
         if len(elements) > 1 and elements[-1] == 1:
             elements = elements[:-2] + (elements[-2] + 1,)
 
-        fraction = convergent(len(elements) - 1, *elements)
+        fraction = fraction_from_elements(*elements)
         self._numerator, self._denominator = fraction.as_integer_ratio()
         self._elements = elements
 

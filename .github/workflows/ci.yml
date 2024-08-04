@@ -5,7 +5,7 @@ name: CI
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
     branches: 
@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   pr_test:
-    if: github.refs != 'refs/heads/main'
+    if: github.refs != 'refs/heads/main' && github.refs != 'refs/heads/master'
     env:
       PYTHONDEVMODE: 1
     runs-on: ${{ matrix.os }}
@@ -92,7 +92,7 @@ jobs:
         flags: unit
 
   main_update:
-    if: github.ref == 'refs/heads/main'
+    if: github.refs == 'refs/heads/main' || github.refs == 'refs/heads/master'
     env:
       PYTHONDEVMODE: 1
     runs-on: ${{ matrix.os }}

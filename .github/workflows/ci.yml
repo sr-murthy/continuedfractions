@@ -19,7 +19,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  pr_test:
+    if: github.refs != 'refs/heads/main'
     env:
       PYTHONDEVMODE: 1
     runs-on: ${{ matrix.os }}
@@ -29,15 +30,6 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
         os: [ubuntu-latest, macos-latest, windows-latest]
         install-via: [pip]
-        include:
-          - python-version: "3.11"
-            os: macos-latest
-            install-via: pip
-            arch: arm64
-          - python-version: "3.12"
-            os: macos-latest
-            install-via: pip
-            arch: arm64
 
     steps:
     - uses: actions/checkout@v4
@@ -98,3 +90,63 @@ jobs:
         slug: sr-murthy/continuedfractions
         file: ./coverage.xml
         flags: unit
+
+  main_update:
+    if: github.ref == 'refs/heads/main'
+    env:
+      PYTHONDEVMODE: 1
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        install-via: [pip]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: ${{ matrix.arch }}
+        allow-prereleases: false
+
+    - name: Set Variables
+      id: set_variables
+      shell: bash
+      run: |
+        echo "PY=$(python -c 'import hashlib, sys;print(hashlib.sha256(sys.version.encode()+sys.executable.encode()).hexdigest())')" >> $GITHUB_OUTPUT
+        echo "PIP_CACHE=$(pip cache dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.set_variables.outputs.PIP_CACHE }}
+        key: ${{ runner.os }}-pip-${{ steps.set_variables.outputs.PY }}
+
+    - name: Cache venv
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
+        restore-keys: |
+          venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-
+
+    - name: Install current PDM via pip
+      if: matrix.install-via == 'pip'
+      run: |
+        python -m pip install pdm
+        pdm info -v
+        pdm venv list -v
+        pdm use -f .venv
+        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "GITHUB_PATH=$GITHUB_PATH"
+        echo "GITHUB_ENV=$GITHUB_ENV"
+
+    - name: Run acceptance tests
+      run: |
+        pdm use -f .venv
+        pdm run -v doctests

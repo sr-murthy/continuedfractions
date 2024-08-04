@@ -26,23 +26,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
         os: [ubuntu-latest, macos-latest, windows-latest]
         install-via: [pip]
-        arch: [x64]
         include:
-          - python-version: "3.10"
-            os: ubuntu-latest
-            install-via: pip
-            arch: x64
-          - python-version: "3.10"
-            os: macos-13
-            install-via: pip
-            arch: x64
-          - python-version: "3.10"
-            os: windows-latest
-            install-via: pip
-            arch: x64
           - python-version: "3.11"
             os: macos-latest
             install-via: pip
@@ -87,20 +74,6 @@ jobs:
       if: matrix.install-via == 'pip'
       run: |
         python -m pip install pdm
-        pdm info -v
-        pdm venv list -v
-        pdm use -f .venv
-        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
-        echo "GITHUB_PATH=$GITHUB_PATH"
-        echo "GITHUB_ENV=$GITHUB_ENV"
-
-    - name: Install current PDM via install script
-      if: matrix.install-via == 'script'
-      run: |
-        curl -sSLO https://pdm-project.org/install-pdm.py
-        curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py.sha256 | shasum -a 256 -c -
-        python3 install-pdm.py
         pdm info -v
         pdm venv list -v
         pdm use -f .venv

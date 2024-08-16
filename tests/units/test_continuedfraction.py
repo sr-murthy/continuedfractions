@@ -20,9 +20,8 @@ from types import MappingProxyType
 import pytest
 
 # -- Internal libraries --
-from continuedfractions.continuedfraction import (
-    ContinuedFraction,
-)
+from continuedfractions.lib import convergent
+from continuedfractions.continuedfraction import ContinuedFraction
 
 
 class TestContinuedFraction:
@@ -743,15 +742,15 @@ class TestContinuedFraction:
         f3 = ContinuedFraction(3, 2)
         f4 = ContinuedFraction(5, 3)
 
-        assert -f0 == -(f0) == f0.__neg__()
+        assert -f0 == -(f0) == f0.__neg__() == ContinuedFraction(*convergent(0, -2).as_integer_ratio())
 
-        assert -f1 == f2 == f1.__neg__()
+        assert -f1 == f2 == f1.__neg__() == ContinuedFraction(*convergent(4, -4, 1, 3, 12, 4).as_integer_ratio())
 
         assert -f2 == f1 == f2.__neg__()
 
-        assert -f3 == -(f3) == f3.__neg__()
+        assert -f3 == -(f3) == f3.__neg__() == ContinuedFraction(*convergent(1, -2, 2).as_integer_ratio())
 
-        assert -f4 == -(f4) == f4.__neg__()
+        assert -f4 == -(f4) == f4.__neg__() == ContinuedFraction(*convergent(1, -2, 3).as_integer_ratio())
 
         assert f1 + f2 == ContinuedFraction(0, 1)
 

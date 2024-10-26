@@ -171,23 +171,23 @@ Convergents have a stronger version of this property: namely a rational number :
 
 The current implementation of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can only represent finite (simple) continued fractions, which means that the convergents in its instances will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. Support for infinite, generalised continued fractions will be added in future releases.
 
-We know, for example, that the square root :math:`\sqrt{n}` of any non-square (positive) integer :math:`n` is irrational. This can be seen by writing :math:`n = a^2 + r`, for integers :math:`a, r > 0`, from which we have:
+We can show, for example, that the square root :math:`\sqrt{n}` of any non-square (positive) integer :math:`n` is irrational by considering positive integers of the form :math:`n = (ka)^2 + r`, for integers :math:`k, a, r > 0` and :math:`(k, a) = 1`. From this we have:
 
 .. math::
    :nowrap:
 
    \begin{alignat*}{1}
-   & r &&= n - a^2 = \left(\sqrt{n} + a\right)\left(\sqrt{n} - a\right) \\
-   & \sqrt{n} &&= a + \frac{r}{a + \sqrt{n}}
+   & r &&= n - (ka)^2 = \left(\sqrt{n} + ka\right)\left(\sqrt{n} - ka\right) \\
+   & \sqrt{n} &&= ka + \frac{r}{2ka + \sqrt{n}}
    \end{alignat*}
 
 Expanding the expression for :math:`\sqrt{n}` recursively we have the following infinite periodic continued fraction for :math:`\sqrt{n}`:
 
 .. math::
 
-   \sqrt{n} = a + \cfrac{r}{2a + \cfrac{r}{2a + \cfrac{r}{2a + \ddots}}}
+   \sqrt{n} = ka + \cfrac{r}{2ka + \cfrac{r}{2ka + \cfrac{r}{2ka + \ddots}}}
 
-With :math:`a = r = 1` we can represent :math:`\sqrt{2}` as the continued fraction:
+With :math:`k = a = r = 1` we can represent :math:`\sqrt{2}` as the continued fraction:
 
 .. math::
 

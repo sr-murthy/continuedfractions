@@ -108,7 +108,7 @@ Here are some examples of constructing left-mediants:
    >>> cf1 = ContinuedFraction('1/2')
    >>> cf2 = ContinuedFraction(3, 5)
    # The default `k = 1` gives you the common, simple mediant of the two rationals
-   >>> cf1.left_mediant(c2)
+   >>> cf1.left_mediant(cf2)
    ContinuedFraction(4, 7)
    >>> cf1.left_mediant(cf2, k=2)
    ContinuedFraction(5, 9)
@@ -124,7 +124,7 @@ and right-mediants:
    >>> cf1 = ContinuedFraction('1/2')
    >>> cf2 = ContinuedFraction(3, 5)
    # The default `k = 1` gives you the common, simple mediant of the two rationals
-   >>> cf1.right_mediant(c2)
+   >>> cf1.right_mediant(cf2)
    ContinuedFraction(4, 7)
    >>> cf1.right_mediant(cf2, k=2)
    ContinuedFraction(7, 12)

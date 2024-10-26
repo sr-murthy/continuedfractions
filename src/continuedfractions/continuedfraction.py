@@ -321,7 +321,17 @@ class ContinuedFraction(Fraction):
             )
 
         elements = self._elements + new_elements
+
+        # A step to ensure uniqueness of the simple form of the continued
+        # fraction - if the last of the new elements is ``1`` it can be
+        # "absorbed" by adding it to the second last element, thereby
+        # shortening the sequence by one element. The resulting simple
+        # continued fraction becomes unique for the number that is represented.
+        if len(elements) > 1 and elements[-1] == 1:
+            elements = elements[:-2] + (elements[-2] + 1,)
+
         fraction = fraction_from_elements(*elements)
+
         self._numerator, self._denominator = fraction.as_integer_ratio()
         self._elements = elements
 

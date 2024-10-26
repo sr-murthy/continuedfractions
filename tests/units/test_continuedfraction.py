@@ -561,8 +561,13 @@ class TestContinuedFraction:
     @pytest.mark.parametrize(
         "instance, new_elements, expected_comparative_instance",
         [
+            (ContinuedFraction(0, 1), (1,), ContinuedFraction(1, 1)),
             (ContinuedFraction(0, 1), (2,), ContinuedFraction(1, 2)),
+            (ContinuedFraction(0, 1), (2, 1,), ContinuedFraction(1, 3)),
+            (ContinuedFraction(0, 1), (3,), ContinuedFraction(1, 3)),
             (ContinuedFraction(1, 1), (2,), ContinuedFraction(3, 2)),
+            (ContinuedFraction(1, 1), (2, 1), ContinuedFraction(4, 3)),
+            (ContinuedFraction(1, 1), (3,), ContinuedFraction(4, 3)),
             (ContinuedFraction(3, 2), (3,), ContinuedFraction(10, 7)),
             (ContinuedFraction(649, 200), (5, 2), ContinuedFraction(7457, 2298)),
             (ContinuedFraction(-415, 93), (2, 1, 5), ContinuedFraction(-7403, 1659))

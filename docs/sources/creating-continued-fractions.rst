@@ -24,10 +24,13 @@ This is derived by repeatedly applying `Euclid's division lemma <https://en.wiki
 .. math::
 
    \begin{align}
-   \frac{649}{200} &= 3 + \cfrac{49}{200} \\
+   \frac{649}{200} &= \cfrac{3 \times 200 + 49}{200} \\
+                   &= 3 + \cfrac{49}{200} \\
                    &= 3 + \cfrac{1}{\cfrac{200}{49}} \\
+                   &= 3 + \cfrac{1}{\cfrac{4 \times 49 + 4}{49}} \\
                    &= 3 + \cfrac{1}{4 + \cfrac{4}{49}} \\
                    &= 3 + \cfrac{1}{4 + \cfrac{1}{\cfrac{49}{4}}} \\
+                   &= 3 + \cfrac{1}{4 + \cfrac{1}{\cfrac{4 \times 12 + 1}{4}}} \\
                    &= 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}}
    \end{align}
 

@@ -34,25 +34,23 @@ This is derived by repeatedly applying `Euclid's division lemma <https://en.wiki
                    &= 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}}
    \end{align}
 
-The numbers :math:`3, 4, 12, 4` are called **elements** (or **coefficients**) of the continued fraction :math:`[3; 4, 12, 4]`, and the number of elements after the first - in this case :math:`3` - is defined to be its **order**.
+The numbers :math:`3, 4, 12, 4` are called **elements** (or **coefficients**) of the continued fraction :math:`[3; 4, 12, 4]`, and the number of elements after the first - in this case :math:`3` - is defined to be its **order**. The order can be finite or infinite depending on whether the number represented is rational or irrational, as will be discussed later.
 
 The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) because all of the numerators in the fractional terms are equal to :math:`1`, which makes the fractions irreducible (cannot be simplified further). Mathematically, the continued fraction is written as :math:`[3; 4, 12, 4]`. The representation is also unique - the only other representation is :math:`[3; 4, 12, 3, 1]`, which can be rewritten as :math:`[3; 4, 12, 4]`.
 
 .. note::
 
-   All references to continued fractions are to the simple forms where the last element :math:`> 1`.
-
-   Support for non-simple, generalised continued fractions is planned to be included in future releases.
+   All references to "continued fraction" are to the simple forms. Support for non-simple, generalised continued fractions is planned to be included in future releases.
 
 We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail".
 
-In general, a simple continued fraction is denoted by a tuple of integers, enclosed in square brackets:
+The generally used notation for a simple continued fraction is a tuple of integers :math:`[a_0; a_1, a_2, \ldots, a_n, \ldots]`, which stands for the fraction:
 
 .. math::
 
-   [a_0; a_1, a_2, \ldots, a_n, \ldots] = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 + \ddots \cfrac{1}{a_n + \ddots}}}
+   a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 + \ddots \cfrac{1}{a_n + \ddots}}}
 
-where :math:`a_0` is the integer part, and :math:`a_1,a_2,\ldots` are (positive) integers defining the fractional part, in the representation.
+where :math:`a_0` is the integer part, and :math:`a_1,a_2,\ldots` are (positive) integers defining the fractional part, in the representation. If the order is finite, i.e. :math:`n < \infty`, then we may assume the last element :math:`a_n > 1` because :math:`[a_0; a_1, a_2, \ldots a_{n - 1}, a_n = 1] = [a_0; a_1, a_2, \ldots a_{n - 1} + 1]`.
 
 .. _creating-continued-fractions.from-numeric-types:
 
@@ -262,6 +260,21 @@ A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.
    >>> cf.extend(1, -1)
    ...
    ValueError: The elements/coefficients to be added to the tail must be positive integers.
+
+.. note::
+
+   If the last of the new elements passed to :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` happens to be :math:`1` then it is added to the previous element to ensure uniqueness of the new sequence of elements of the resulting continued fraction, e.g.:
+
+   .. code:: python
+
+   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 3)
+   >>> cf
+   ContinuedFraction(490, 151)
+   >>> cf.extend(1)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> cf.elements
+   (3, 4, 12, 4)
 
 .. _creating-continued-fractions.inplace-truncation:
 

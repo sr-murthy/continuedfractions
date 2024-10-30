@@ -3008,11 +3008,15 @@ files = [
 
 [[package]]
 name = "sphinxtesters"
-version = "0.2.3"
+version = "0.2.4"
+requires_python = ">=3.8"
 summary = "Utilities for testing Sphinx extensions"
 groups = ["docs"]
+dependencies = [
+    "sphinx>=1.4",
+]
 files = [
-    {file = "sphinxtesters-0.2.3.tar.gz", hash = "sha256:0b3a22cb299c48728759e3138edc2c5188f74d8e7fdd3cd57b307060ccea9d4c"},
+    {file = "sphinxtesters-0.2.4.tar.gz", hash = "sha256:09c456e1cd61ec99b64851e2990d2152fdf05bb53d87f3b294f22d73f939d6ca"},
 ]
 
 [[package]]

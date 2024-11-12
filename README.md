@@ -19,12 +19,12 @@
 
 A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
 
-The [PyPI package](https://pypi.org/project/continuedfractions/) is updated as necessary with improvements, features and fixes. Only standard libraries are used, and the package is supported on **Python 3.10**, **3.11**, **3.12** and **3.13**.
+The [package](https://pypi.org/project/continuedfractions/) is updated as necessary with improvements, features and fixes. Only standard libraries are used, and the package is supported on **Python 3.10**, **3.11**, **3.12** and **3.13**.
 ```shell
 pip install -U continuedfractions
 ```
 
-See the [project docs](https://continuedfractions.readthedocs.io/en/latest/) for more details, which includes the [API reference](https://continuedfractions.readthedocs.io/en/latest/sources/api-reference.html).
+See the [project docs](https://continuedfractions.readthedocs.io) for more details, which includes the [API reference](https://continuedfractions.readthedocs.io/sources/api-reference.html).
 
 [Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
 

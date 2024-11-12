@@ -10,7 +10,7 @@ authors:
     family-names: Murthy
     email: s.murthy@tutanota.com
 repository-code: 'https://github.com/sr-murthy/continuedfractions'
-url: 'https://continuedfractions.readthedocs.io/en/stable/'
+url: 'https://continuedfractions.readthedocs.io'
 abstract: Object-oriented continued fractions with Python.
 keywords:
   - continued fractions

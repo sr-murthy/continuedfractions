@@ -129,10 +129,6 @@ Unit tests can be run all at once using :command:`make unittests` or individuall
    
    python -m pytest -sv tests/units/test_lib.py::TestContinuedFractionRational
 
-.. note::
-
-   The :command:`-s` option in the :command:`pytest` command is to allow interactive environments to be entered on errors, e.g. debugger breakpoints. The default behaviour of `capturing console input/output <https://docs.pytest.org/en/stable/how-to/capture-stdout-stderr.html#default-stdout-stderr-stdin-capturing-behaviour>`_ would otherwise prevent debuggers from being triggered.
-
 The doctests serve as acceptance tests, and are best run after the unit tests. They can be run all at once using :command:`make doctests`, or individually by library using :command:`python -m doctest`, e.g. running all the doctests in :py:mod:`~continuedfractions.sequences`:
 
 .. code:: shell

@@ -19,7 +19,7 @@
 
 A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
 
-The [package](https://pypi.org/project/continuedfractions/) is updated as necessary with improvements, features and fixes. Only standard libraries are used, and the package is supported on **Python 3.10**, **3.11**, **3.12** and **3.13**.
+This is a [PyPI package](https://pypi.org/project/continuedfractions/). It is updated as necessary with improvements, features and fixes. Only standard libraries are used, and the package is tested on **Python 3.10-3.13**, although it should be compatible with many earlier versions as well.
 ```shell
 pip install -U continuedfractions
 ```

@@ -19,4 +19,4 @@ A standard :program:`pip` install (with the :code:`-U` "upgrade" option to get t
 
    pip install -U continuedfractions
 
-If you are interested in contributing please start with the :doc:`contributions guide <contributing>`, otherwise you can start :doc:`here <creating-continued-fractions>` or jump to the `API reference <api-reference>`.
+If you are interested in contributing please start with the :doc:`contributions guide <contributing>`, otherwise you can start :doc:`here <creating-continued-fractions>` or jump to the :doc:`API reference <api-reference>`.

@@ -148,7 +148,7 @@ The Sphinx documentation source pages and assets are contained in the :file:`doc
 
    make -C docs html
 
-The pages will be built inside :file:`docs/html`, with the index/home page being :file:`docs/html/index.html`.
+The pages will be built inside :file:`docs/_build/html`, with the index/home page being :file:`docs/_build/html/index.html`.
 
 In order for this to work first ensure that you have installed the documentation Python requirements listed in :file:`docs/requirements.txt`. This can be done either via :program:`pip`:
 

@@ -148,7 +148,7 @@ The Sphinx documentation source pages and assets are contained in the :file:`doc
 
    make -C docs html
 
-The pages will be built inside :file:`docs/html`, with the index/home page being :file:`docs/html/index.html`.
+The pages will be built inside :file:`docs/_build/html`, with the index/home page being :file:`docs/_build/html/index.html`.
 
 In order for this to work first ensure that you have installed the documentation Python requirements listed in :file:`docs/requirements.txt`. This can be done either via :program:`pip`:
 
@@ -174,7 +174,7 @@ The CI pipelines are defined in the `CI YML <https://github.com/sr-murthy/contin
 Versioning and Releases :fas:`upload`
 =====================================
 
-The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.18.3`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.18.4`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 

@@ -57,8 +57,17 @@ You can create additional remotes for the parent project to enable easier syncin
 Dependencies & PDM :fas:`cubes`
 ===============================
 
-The package has no external (production) dependencies - some development dependencies are specified in the
-``[tool.pdm.dev-dependencies]`` section of the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_, but they are not mandatory. Of these, the most important are probably the ``'test'`` dependencies,
+The package uses only standard libraries + the `Numba <https://numba.pydata.org/>`_ JIT compiler, as indicated in the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_:
+
+.. code:: toml
+
+   ...
+   dependencies = [
+       "numba",
+   ]
+   ...
+
+Some development dependencies are specified in the ``[tool.pdm.dev-dependencies]`` section of TOML, but they are not mandatory. Of these, the most important are probably the ``'test'`` dependencies,
 including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_:
 
 .. code:: toml
@@ -174,7 +183,7 @@ The CI pipelines are defined in the `CI YML <https://github.com/sr-murthy/contin
 Versioning and Releases :fas:`upload`
 =====================================
 
-The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.18.4`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.19.0`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
 

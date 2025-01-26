@@ -6,7 +6,7 @@
 Getting Started
 ===============
 
-This is a `PyPI package <https://pypi.org/project/continuedfractions/>`_ which uses only Python standard libraries, and is tested and supported on Python 3.10, 3.11, 3.12 & 3.13 (on the latest **Ubuntu Linux**, **MacOS**, and **Windows** versions), although it should be compatible with earlier Python versions as well.
+This is a `PyPI package <https://pypi.org/project/continuedfractions/>`_ which uses only standard libraries + the `Numba <https://numba.pydata.org/>`_ JIT compiler. It is tested and supported on Python 3.10, 3.11, 3.12 & 3.13 (on the latest **Ubuntu Linux**, **MacOS**, and **Windows** versions), although it should be compatible with earlier Python versions as well.
 
 .. _getting-started.installation:
 

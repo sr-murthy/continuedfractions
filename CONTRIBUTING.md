@@ -5,7 +5,7 @@ google-site-verification
 
 Contributors and contributions are welcome. Please read these guidelines first.
 
-## Git
+## Git `github`
 
 The project homepage is on [GitHub](https://github.com/sr-murthy/continuedfractions).
 
@@ -13,7 +13,7 @@ Contributors can open pull requests from a fork targeting the parent `main` [bra
 
 A simple Git workflow, using a feature and/or fix branch created off the `main` branch of your fork, is recommended.
 
-## Repo
+## Repo `folder`
 
 If you wish to contribute please first ensure you have [SSH access to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh). This basically involves creating a project-specific SSH keypair - if you don't already have one - and adding it to GitHub. If you have done this successfully then this verification step should work:
 
@@ -21,8 +21,7 @@ If you wish to contribute please first ensure you have [SSH access to GitHub](ht
 ssh -vT git@github.com
 ```
 
-Some SSH configuration may be required: on MacOS or Linux your user-defined SSH configuration file (`~/.ssh/config`) should look
-something like this:
+Some SSH configuration may be required: on MacOS or Linux your user-defined SSH configuration file (`~/.ssh/config`) should look something like this:
 
 ``` shell
 Host github.com
@@ -44,9 +43,19 @@ git clone git+ssh://git@github.com/<fork user>/continuedfractions
 
 You can create additional remotes for the parent project to enable easier syncing, or you can simply create PRs directly against the parent project.
 
-## Dependencies & PDM
+## Dependencies & PDM `cubes`
 
-The package has no external (production) dependencies - some development dependencies are specified in the `[tool.pdm.dev-dependencies]` section of the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml), but they are not mandatory. Of these, the most important are probably the `'test'` dependencies, including [pytest](https://docs.pytest.org/en/8.0.x/) and [pytest-cov](https://pytest-cov.readthedocs.io/):
+The package uses only standard libraries + the [Numba](https://numba.pydata.org/) JIT compiler, as indicated in the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml):
+
+``` toml
+...
+dependencies = [
+    "numba",
+]
+...
+```
+
+Some development dependencies are specified in the `[tool.pdm.dev-dependencies]` section of TOML, but they are not mandatory. Of these, the most important are probably the `'test'` dependencies, including [pytest](https://docs.pytest.org/en/8.0.x/) and [pytest-cov](https://pytest-cov.readthedocs.io/):
 
 ``` toml
 test = [
@@ -59,8 +68,7 @@ test = [
 
 [PDM](https://pdm-project.org/latest) is used (by myself, currently, the sole maintainer) to manage all dependencies and publish packages to PyPI. It is also used to automate certain tasks, such as running tests, as described in the section.
 
-There are no root-level `requirements*.txt` files - but only a single (default, version-controlled, cross-platform)
-[pdm.lock](https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock) lockfile, which defines metadata for all TOML-defined development dependencies, including the currently empty set of production dependencies, and their sub-dependencies etc. This can be used to install all development dependencies, including the project itself, in editable mode where available:
+There are no root-level `requirements*.txt` files - but only a single (default, version-controlled, cross-platform) [pdm.lock](https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock) lockfile, which defines metadata for all TOML-defined development dependencies, including the currently empty set of production dependencies, and their sub-dependencies etc. This can be used to install all development dependencies, including the project itself, in editable mode where available:
 
 ``` shell
 pdm install -v --dev
@@ -95,8 +103,7 @@ For more information on PDM lockfiles and installing requirements see the [PDM d
 
 Tests are defined in the `tests` folder, and should be run with [pytest](https://pytest-cov.readthedocs.io/en/latest/).
 
-For convenience different types of test targets are defined in the [Makefile](https://github.com/sr-murthy/continuedfractions/blob/main/Makefile): `lint` for Ruff linting, `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and
-`unittests` for running unittests and measuring coverage, using `pytest` and the `pytest-cov` plugin:
+For convenience different types of test targets are defined in the [Makefile](https://github.com/sr-murthy/continuedfractions/blob/main/Makefile): `lint` for Ruff linting, `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and `unittests` for running unittests and measuring coverage, using `pytest` and the `pytest-cov` plugin:
 
 ``` shell
 make lint
@@ -106,8 +113,7 @@ make doctests
 
 Linting warnings should be addressed first, and any changes staged and committed.
 
-Unit tests can be run all at once using `make unittests` or individually using `pytest`, e.g. running the test class for the
-`~continuedfractions.lib.continued_fraction_rational` function:
+Unit tests can be run all at once using `make unittests` or individually using `pytest`, e.g. running the test class for the `~continuedfractions.lib.continued_fraction_rational` function:
 
 ``` shell
 python -m pytest -sv tests/units/test_lib.py::TestContinuedFractionRational
@@ -119,10 +125,9 @@ The doctests serve as acceptance tests, and are best run after the unit tests. T
 python -m doctest -v src/continuedfractions/sequences.py
 ```
 
-## Documentation
+## Documentation `book`
 
-[Project documentation](https://continuedfractions.readthedocs.io/en/latest/) is defined and built using [Sphinx](https://www.sphinx-doc.org/en/master/), and deployed to [Read The Docs](https://readthedocs.org). Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future
-releases.
+[Project documentation](https://continuedfractions.readthedocs.io/en/latest/) is defined and built using [Sphinx](https://www.sphinx-doc.org/en/master/), and deployed to [Read The Docs](https://readthedocs.org). Currently, the building and deployment steps for documentation are not automated in a CI pipeline, but are done manually - this will be addressed in future releases.
 
 The Sphinx documentation source pages and assets are contained in the `docs/` subfolder. The HTML pages can be built locally on any branch (from the project root) using:
 
@@ -144,16 +149,13 @@ or via [PDM](https://pdm.fming.dev/latest/):
 pdm install -v --dev --no-editable --no-self
 ```
 
-## CI
+## CI `circle-play`
 
-The CI pipelines are defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
-and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml).
-Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests, Python doctests, and in that order.
+The CI pipelines are defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml) and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml). Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests, Python doctests, and in that order.
 
-## Versioning and Releases
+## Versioning and Releases `upload`
 
-The [PyPI package](https://pypi.org/project/continuedfractions/) is currently at version `0.18.4` - the goal is to use [semantic
-versioning](https://semver.org/) consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The [PyPI package](https://pypi.org/project/continuedfractions/) is currently at version `0.19.0` - the goal is to use [semantic versioning](https://semver.org/) consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
 
 There is currently no dedicated pipeline for releases - both [GitHub releases](https://github.com/sr-murthy/continuedfractions/releases) and [PyPI packages](https://pypi.org/project/continuedfractions) are published manually, but both have the same version tag.
 

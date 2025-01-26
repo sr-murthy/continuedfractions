@@ -57,8 +57,17 @@ You can create additional remotes for the parent project to enable easier syncin
 Dependencies & PDM :fas:`cubes`
 ===============================
 
-The package has no external (production) dependencies - some development dependencies are specified in the
-``[tool.pdm.dev-dependencies]`` section of the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_, but they are not mandatory. Of these, the most important are probably the ``'test'`` dependencies,
+The package uses only standard libraries + the `Numba <https://numba.pydata.org/>`_ JIT compiler, as indicated in the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_:
+
+.. code:: toml
+
+   ...
+   dependencies = [
+       "numba",
+   ]
+   ...
+
+Some development dependencies are specified in the ``[tool.pdm.dev-dependencies]`` section of TOML, but they are not mandatory. Of these, the most important are probably the ``'test'`` dependencies,
 including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_:
 
 .. code:: toml

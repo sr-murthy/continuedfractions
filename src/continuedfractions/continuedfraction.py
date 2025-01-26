@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Generator
 
 # -- 3rd party libraries --
+import numba
 
 # -- Internal libraries --
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -37,6 +38,7 @@ from continuedfractions.lib import (
 )
 
 
+@numba.experimental.jitclass
 class ContinuedFraction(Fraction):
     """An object-oriented representation of a (finite) simple continued fraction.
 

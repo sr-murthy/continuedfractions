@@ -24,7 +24,6 @@ from fractions import Fraction
 from typing import Generator
 
 # -- 3rd party libraries --
-import numba
 
 # -- Internal libraries --
 
@@ -45,7 +44,6 @@ _RATIONAL_FORMAT = re.compile(r"""
 """, re.VERBOSE | re.IGNORECASE)
 
 
-@numba.jit
 def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
     """Generates a unique sequence of elements (coefficients) of a (finite, simple) continued fraction of a rational number.
 
@@ -125,7 +123,6 @@ def continued_fraction_rational(r: Fraction, /) -> Generator[int, None, None]:
         num, denom = denom, rem
 
 
-@numba.jit
 def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int, None, None]:
     """Generates a finite sequence of elements (coefficients) of a (simple) continued fraction of the given real number.
 
@@ -218,7 +215,6 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int,
         yield from continued_fraction_rational(Fraction(*(Decimal(x).as_integer_ratio())))
 
 
-@numba.jit
 def convergent(k: int, *elements: int) -> Fraction:
     """Returns the :math:`k`-th convergent of a (simple) continued fraction from a sequence of its elements.
 
@@ -333,7 +329,6 @@ def convergent(k: int, *elements: int) -> Fraction:
     return Fraction(p, q)
 
 
-@numba.jit
 def convergents(*elements: int) -> Generator[Fraction, None, None]:
     """Generates an (ordered) sequence of all convergents of a (simple) continued fraction from a sequence of its elements.
 
@@ -402,7 +397,6 @@ def convergents(*elements: int) -> Generator[Fraction, None, None]:
                 c, d = p, q
 
 
-@numba.jit
 def fraction_from_elements(*elements: int) -> Fraction:
     """Returns the rational number represented by a (simple) continued fraction from a sequence of its elements.
 
@@ -448,7 +442,6 @@ def fraction_from_elements(*elements: int) -> Fraction:
     return convergent(len(elements) - 1, *elements)
 
 
-@numba.jit
 def remainder(k: int, *elements: int) -> Fraction:
     """Returns the :math:`k`-th remainder of a (simple) continued fraction from a sequence of its elements.
 
@@ -580,7 +573,6 @@ def remainder(k: int, *elements: int) -> Fraction:
     return fraction_from_elements(*elements[k:])
 
 
-@numba.jit
 def remainders(*elements: int) -> Generator[Fraction, None, None]:
     """Generates an (ordered) sequence of all remainders of a (simple) continued fraction from a sequence of its elements in descending order of index.
 
@@ -665,7 +657,6 @@ def remainders(*elements: int) -> Generator[Fraction, None, None]:
             i -= 1
 
 
-@numba.jit
 def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> Fraction:
     """Returns the :math:`k`-th left- or right-mediant of two rational numbers.
 

@@ -24,7 +24,6 @@ from pathlib import Path
 from typing import Generator, Literal, TypeAlias
 
 # -- 3rd party libraries --
-import numba
 
 # -- Internal libraries --
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -36,7 +35,6 @@ KSRMNode: TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM cop
 KSRMBranch: NamedCallableProxy          #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
-@numba.jit
 def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -> Generator[int, None, None]:
     """Generates a sequence of (positive) integers :math:`1 \\leq m < n` coprime to a given positive integer :math:`n`.
 
@@ -290,7 +288,6 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
 [coprime_integers(10 ** k) for k in range(4, 8)]
 
 
-@numba.experimental.jitclass
 class KSRMTree:
     """An implicit/generative class implementation of the Kanga-Saunders-Randall-Mitchell (KSRM) ternary trees for representing and generating pairs of all (positive) coprime integers.
 
@@ -760,7 +757,6 @@ class KSRMTree:
             yield from tuple(product([n], coprime_integers(n)))
 
 
-@numba.jit
 def coprime_pairs_generator(n: int, /) -> Generator[KSRMNode, None, None]:
     """Generates a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
 
@@ -859,7 +855,6 @@ def coprime_pairs(n: int, /) -> tuple[KSRMNode]:
 [coprime_pairs(n) for n in range(1, 101)]
 
 
-@numba.jit
 def farey_sequence_generator(n: int, /) -> Generator[ContinuedFraction, None, None]:
     """Generates an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
 

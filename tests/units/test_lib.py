@@ -9,6 +9,7 @@ import pytest
 
 # -- Internal libraries --
 from continuedfractions.lib import (
+	_continued_fraction_rational,
 	continued_fraction_rational,
 	continued_fraction_real,
 	convergent,
@@ -18,6 +19,32 @@ from continuedfractions.lib import (
 	remainder,
 	remainders,
 )
+
+
+class Test_ContinuedFractionRational:
+
+	@pytest.mark.parametrize(
+	    "x, y, elements",
+	    [
+	        (3, 2, tuple([1, 2])),
+	        (-5000, 1, tuple([-5000])),
+	        (649, 200, tuple([3, 4, 12, 4])),
+	        (-649, 200, tuple([-4, 1, 3, 12, 4])),
+	        (-649, -200, tuple([3, 4, 12, 4])),
+	        (-1, 3, tuple([-1, 1, 2])),
+	        (1, 3, tuple([0, 3])),
+	        (415, 93, tuple([4, 2, 6, 7])),
+	        (415, -93, tuple([-5, 1, 1, 6, 7])),
+	        (10, 100, tuple([0, 10])),
+	        (-95, 82, tuple([-2, 1, 5, 3, 4])),
+	        (356, 103, tuple([3, 2, 5, 4, 2]))
+	    ],
+	)
+	def test__continued_fraction_rational__valid_integers__correct_elements_generated(self, x, y, elements):
+		
+		expected = elements
+
+		assert tuple(_continued_fraction_rational(x, y)) == expected
 
 
 class TestContinuedFractionRational:

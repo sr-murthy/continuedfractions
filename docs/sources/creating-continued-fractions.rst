@@ -40,7 +40,7 @@ The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) b
 
 .. note::
 
-   All references to "continued fraction" are to the simple forms. Support for non-simple, generalised continued fractions is planned to be included in future releases.
+   All references to "continued fraction" are to the simple forms.
 
 We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail".
 
@@ -230,7 +230,7 @@ The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` in
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{order }n + k}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k\text{ new elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{order }(n + k)}]
 
 Some examples are given below.
 
@@ -291,7 +291,7 @@ The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` 
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{order }n - k}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k\text{ tail elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{order }(n - k)}]
 
 Some examples are given below.
 

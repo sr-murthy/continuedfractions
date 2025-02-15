@@ -99,26 +99,11 @@ jobs:
         echo "GITHUB_PATH=$GITHUB_PATH"
         echo "GITHUB_ENV=$GITHUB_ENV"
 
-    - name: Install current PDM via install script
-      if: matrix.install-via == 'script'
-      run: |
-        curl -sSLO https://pdm-project.org/install-pdm.py
-        curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py.sha256 | shasum -a 256 -c -
-        python3 install-pdm.py
-        pdm info -v
-        pdm venv list -v
-        pdm use -f .venv
-        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
-        echo "GITHUB_PATH=$GITHUB_PATH"
-        echo "GITHUB_ENV=$GITHUB_ENV"
-
     - name: Lint + Run unit & acceptance tests + Measure code coverage
       run: |
         pdm use -f .venv
-        pdm install -v -dGlint --no-self --no-isolation
+        pdm install -v
         pdm run -v lint
-        pdm install -v -dGtest --no-self --no-isolation
         pdm run -v pytest
         pdm run -v doctests
 

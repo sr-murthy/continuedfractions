@@ -36,13 +36,6 @@ The `continuedfractions` package is designed for users interested in:
 * making approximations of and experimental computations for irrational numbers
 * exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
 
-Currently, it does **not** support the following features:
-
-* infinite and generalised continued fractions
-* symbolic representations of or operations with continued fractions
-
-Some - but not necessarily all - of these features may be considered for [future release](https://github.com/sr-murthy/continuedfractions/issues).
-
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
 
 

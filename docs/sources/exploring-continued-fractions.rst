@@ -10,7 +10,7 @@ Python objects of the :py:class:`~continuedfractions.continuedfraction.Continued
 
 .. note::
 
-   All references to continued fractions are to the simple forms. Support for non-simple, generalised continued fractions is planned to be included in future releases.
+   All references to continued fractions are to the simple forms.
 
 .. _exploring-continued-fractions.elements-and-orders:
 
@@ -168,8 +168,6 @@ Convergents have a stronger version of this property: namely a rational number :
 .. math::
 
    \lim_{k \to \infty} C_k = \lim_{k \to \infty} \frac{p_k}{q_k} = x, \hskip{3em} k \geq 1
-
-The current implementation of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can only represent finite (simple) continued fractions, which means that the convergents in its instances will always be finite in number, regardless of whether the real numbers they approximate are rational or irrational. Support for infinite, generalised continued fractions will be added in future releases.
 
 We can show, for example, that the square root :math:`\sqrt{n}` of any non-square (positive) integer :math:`n` is irrational by considering positive integers of the form :math:`n = (ka)^2 + r`, for integers :math:`k, a, r > 0` and :math:`(k, a) = 1`. From this we have:
 

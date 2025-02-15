@@ -5,7 +5,7 @@
 groups = ["default", "build", "deploy", "dev", "docs", "lint", "test", "user"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:502f10c42da93f76784361d496332bb29c261b82cbec0dd68f66f6fb3bc29624"
+content_hash = "sha256:c93a99a0c2a0b597d5809bbd79498060172fdbae68c88c6e8eff79c7d6ca434e"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
@@ -1631,7 +1631,7 @@ name = "llvmlite"
 version = "0.44.0"
 requires_python = ">=3.10"
 summary = "lightweight wrapper around basic LLVM functionality"
-groups = ["default", "test"]
+groups = ["default"]
 files = [
     {file = "llvmlite-0.44.0-cp310-cp310-macosx_10_14_x86_64.whl", hash = "sha256:9fbadbfba8422123bab5535b293da1cf72f9f478a65645ecd73e781f962ca614"},
     {file = "llvmlite-0.44.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:cccf8eb28f24840f2689fb1a45f9c0f7e582dd24e088dcf96e424834af11f791"},
@@ -2051,7 +2051,7 @@ name = "numba"
 version = "0.61.0"
 requires_python = ">=3.10"
 summary = "compiling Python code using LLVM"
-groups = ["default", "test"]
+groups = ["default"]
 dependencies = [
     "llvmlite<0.45,>=0.44.0dev0",
     "numpy<2.2,>=1.24",
@@ -2085,7 +2085,7 @@ name = "numpy"
 version = "2.1.3"
 requires_python = ">=3.10"
 summary = "Fundamental package for array computing in Python"
-groups = ["default", "docs", "test"]
+groups = ["default", "docs"]
 files = [
     {file = "numpy-2.1.3-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:c894b4305373b9c5576d7a12b473702afdf48ce5369c074ba304cc5ad8730dff"},
     {file = "numpy-2.1.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:b47fbb433d3260adcd51eb54f92a2ffbc90a4595f8970ee00e064c644ac788f5"},

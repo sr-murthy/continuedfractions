@@ -132,7 +132,6 @@ lint = [
 ]
 test = [
     "coverage[toml]",
-    "numba",
     "pytest",
     "pytest-cov",
     "pytest-xdist",

@@ -9,7 +9,8 @@ Contributors and contributions are welcome. Please read these guidelines first.
 
 The project homepage is on [GitHub](https://github.com/sr-murthy/continuedfractions).
 
-Contributors can open pull requests from a fork targeting the parent `main` [branch](https://github.com/sr-murthy/continuedfractions/tree/main). But it may be a good first step to create an [issue](https://github.com/sr-murthy/continuedfractions/issues) or open a [discussion topic](https://github.com/sr-murthy/continuedfractions/discussions).
+Contributors can open pull requests from a fork targeting the parent `main` [branch](https://github.com/sr-murthy/continuedfractions/tree/main). But it may be a good first step to create an [issue](https://github.com/sr-murthy/continuedfractions/issues) or open
+a [discussion topic](https://github.com/sr-murthy/continuedfractions/discussions).
 
 A simple Git workflow, using a feature and/or fix branch created off the `main` branch of your fork, is recommended.
 
@@ -45,37 +46,23 @@ You can create additional remotes for the parent project to enable easier syncin
 
 ## Dependencies & PDM `cubes`
 
-The package uses only standard libraries + the [Numba](https://numba.pydata.org/) JIT compiler, as indicated in the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml):
+The package uses only standard libraries, and no third party libraries are used. See the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml) for more information.
 
-``` toml
-...
-dependencies = [
-    "numba",
-]
-...
-```
+Some development dependencies are specified in the `[tool.pdm.dev-dependencies]` section of the TOML including some `'test'` dependencies, such as [pytest](https://docs.pytest.org/en/8.0.x/) and [pytest-cov](https://pytest-cov.readthedocs.io/).
 
-Some development dependencies are specified in the `[tool.pdm.dev-dependencies]` section of TOML, but they are not mandatory. Of these, the most important are probably the `'test'` dependencies, including [pytest](https://docs.pytest.org/en/8.0.x/) and [pytest-cov](https://pytest-cov.readthedocs.io/):
+[PDM](https://pdm-project.org/latest) is used to manage all dependencies and publish packages to PyPI. It is also used to automate certain tasks, such as running tests, as described in the section.
 
-``` toml
-test = [
-    "coverage[toml]",
-    "pytest",
-    "pytest-cov",
-    "pytest-xdist",
-]
-```
-
-[PDM](https://pdm-project.org/latest) is used (by myself, currently, the sole maintainer) to manage all dependencies and publish packages to PyPI. It is also used to automate certain tasks, such as running tests, as described in the section.
-
-There are no root-level `requirements*.txt` files - but only a single (default, version-controlled, cross-platform) [pdm.lock](https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock) lockfile, which defines metadata for all TOML-defined development dependencies, including the currently empty set of production dependencies, and their sub-dependencies etc. This can be used to install all development dependencies, including the project itself, in editable mode where available:
+There are no root-level `requirements*.txt` files - but only a single (default, version-controlled, cross-platform)
+[pdm.lock](https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock) lockfile, which defines metadata for all TOML-defined development dependencies, including the currently empty set of production dependencies, and their sub-dependencies etc. This can be used to install all development dependencies, including the project itself, in editable mode where available:
 
 ``` shell
 pdm install -v --dev
 ```
 
 > [!NOTE]
-> It is important to note that `pdm install` uses either the default lockfile (`pdm.lock`), or one specified with `-L <lockfile>`. Multiple lockfiles can be generated and maintained. Refer to the [PDM install documentation](https://pdm-project.org/latest/reference/cli/#install) for more information.
+> The `pdm install` command uses either the default lockfile (`pdm.lock`), or one specified with `-L <lockfile>`. Multiple lockfiles
+> can be generated and maintained. Refer to the [PDM install documentation](https://pdm-project.org/latest/reference/cli/#install)
+> for more information.
 
 If you don't wish to install any editable dependencies, including the project itself, you can use:
 
@@ -103,7 +90,8 @@ For more information on PDM lockfiles and installing requirements see the [PDM d
 
 Tests are defined in the `tests` folder, and should be run with [pytest](https://pytest-cov.readthedocs.io/en/latest/).
 
-For convenience different types of test targets are defined in the [Makefile](https://github.com/sr-murthy/continuedfractions/blob/main/Makefile): `lint` for Ruff linting, `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and `unittests` for running unittests and measuring coverage, using `pytest` and the `pytest-cov` plugin:
+For convenience different types of test targets are defined in the [Makefile](https://github.com/sr-murthy/continuedfractions/blob/main/Makefile): `lint` for Ruff linting, `doctests` for running [doctests](https://docs.python.org/3/library/doctest.html) and
+`unittests` for running unittests and measuring coverage, using `pytest` and the `pytest-cov` plugin:
 
 ``` shell
 make lint
@@ -113,7 +101,8 @@ make doctests
 
 Linting warnings should be addressed first, and any changes staged and committed.
 
-Unit tests can be run all at once using `make unittests` or individually using `pytest`, e.g. running the test class for the `~continuedfractions.lib.continued_fraction_rational` function:
+Unit tests can be run all at once using `make unittests` or individually using `pytest`, e.g. running the test class for the
+`~continuedfractions.lib.continued_fraction_rational` function:
 
 ``` shell
 python -m pytest -sv tests/units/test_lib.py::TestContinuedFractionRational
@@ -137,7 +126,8 @@ make -C docs html
 
 The pages will be built inside `docs/_build/html`, with the index/home page being `docs/_build/html/index.html`.
 
-In order for this to work first ensure that you have installed the documentation Python requirements listed in `docs/requirements.txt`. This can be done either via `pip`:
+In order for this to work first ensure that you have installed the documentation Python requirements listed in `docs/requirements.txt`.
+This can be done either via `pip`:
 
 ``` shell
 pip install -r docs/requirements.txt
@@ -151,12 +141,13 @@ pdm install -v --dev --no-editable --no-self
 
 ## CI `circle-play`
 
-The CI pipelines are defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml) and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml). Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests, Python doctests, and in that order.
+The CI pipelines are defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
+and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml).
+Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests, Python doctests, and in that order.
 
 ## Versioning and Releases `upload`
 
-The [PyPI package](https://pypi.org/project/continuedfractions/) is currently at version `0.19.1` - the goal is to use [semantic versioning](https://semver.org/) consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The [PyPI package](https://pypi.org/project/continuedfractions/) is currently at version `0.19.1` - the goal is to use [semantic
+versioning](https://semver.org/) consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
 
 There is currently no dedicated pipeline for releases - both [GitHub releases](https://github.com/sr-murthy/continuedfractions/releases) and [PyPI packages](https://pypi.org/project/continuedfractions) are published manually, but both have the same version tag.
-
-Pipelines for releases will be added as part of a future release.

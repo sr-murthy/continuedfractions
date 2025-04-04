@@ -400,26 +400,26 @@ For any other numeric type, such as :py:class:`complex`, if the operation is def
    >>> complex(1, 2) + ContinuedFraction(3, 2)
    (2.5+2j)
 
-The full set of rational operations can be viewed directly in the `class source <https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/continuedfraction.py>`_ - the class source also can be viewed from links in the :doc:`class API reference <continuedfractions/continuedfraction>`.
+The full set of rational operations can be viewed directly in the `class source <https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/continuedfraction.py>`_ or the :doc:`API reference <continuedfractions/continuedfraction>`.
 
 .. _creating-continued-fractions.negative-continued-fractions:
 
 “Negative” Continued Fractions
 ==============================
 
-Continued fractions for negative numbers can be derived, provided we use `Euclidean integer division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_ to calculate the elements of the representation, by starting with the integer part of the number, and then calculating the remaining elements for the fractional part with the successive quotients and remainders obtained in each division step. For example, :math:`\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}` has the (unique) simple continued fraction :math:`[-5; 1, 1, 6, 7]`:
+A brief explanation is given here of how continued fractions for negative fractions are implemented in this package. To illustrate the discussion we can consider the fraction :math:`\frac{-415}{93} = \frac{-5 \times 93 + 50}{93}`, which has the continued fraction :math:`[-5; 1, 1, 6, 7]`:
 
 .. math::
 
    -\frac{415}{93} = -5 + \cfrac{1}{1 + \cfrac{1}{1 + \cfrac{1}{6 + \cfrac{1}{7}}}}
 
-Compare this with :math:`[4; 2, 6, 7]`, which is the simple continued fraction of :math:`\frac{415}{93} = \frac{4 \times 93 + 43}{93}`:
+in comparison with :math:`\frac{415}{93} = \frac{4 \times 93 + 43}{93}`, which has the continued fraction :math:`[4; 2, 6, 7]`:
 
 .. math::
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-To understand the difference in the sequence of elements between a "positive" and "negative" continued fraction, more generally, we can start by applying `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_ to a positive rational number :math:`\frac{a}{b}`, with :math:`b < a` and :math:`a, b` coprime (no common divisors except :math:`1`). Let :math:`[a_0;a_1,\ldots,a_n]` be the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}`, where we can assume :math:`a_n > 1`. The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
+The implementation is again based on `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_. Let :math:`\frac{a}{b}` be a positive rational with :math:`b > a` and :math:`a, b` coprime, and :math:`[a_0;a_1,\ldots,a_n]` the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}`, where we can assume :math:`a_n > 1`. The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
 
 .. math::
 
@@ -430,30 +430,21 @@ To understand the difference in the sequence of elements between a "positive" an
                &= [a_0 = q; a_1, \ldots, a_n]
    \end{align}
 
-where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. If :math:`v = 1` then :math:`R_1 = [b;]` and :math:`[q; b]` is the simple continued fraction of :math:`\frac{a}{b}`. However, if :math:`v > 1` then :math:`R_1` is defined and :math:`\frac{1}{R_1}` is the inverted continued fraction of the rational number represented by :math:`R_1`.
+where :math:`R_1 = [a_1; a_2, \ldots, a_n]` is the "residual", :math:`(n - 1)`-order simple continued fraction of :math:`\frac{b}{v}`, also called the :ref:`1st remainder <exploring-continued-fractions.remainders>` of the continued fraction :math:`[a_0;a_1,\ldots,a_n]` of :math:`\frac{a}{b}`. If :math:`v = 1` then :math:`R_1 = [b;]` and :math:`[q; b]` is the simple continued fraction of :math:`\frac{a}{b}`. However, if :math:`v > 1` then :math:`R_1` is defined and and has the inversion :math:`\frac{1}{R_1} = [0; a_1, \ldots, a_n]`.
 
-.. _creating-continued-fractions.basic-rules:
-
-.. note::
-
-   For integers :math:`0 < b < a`, if :math:`\frac{a}{b}` (:math:`> 1`) has the simple continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n`, then :math:`0 < \frac{b}{a} < 1` has the "inverted" simple continued fraction :math:`[0; a_0, a_1, \ldots, a_n]` of order :math:`n + 1`. Both are unique if :math:`a_n > 1`.
-
-   Also, if :math:`m` is any integer then :math:`m + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + m` denotes the continued fraction :math:`[m;] + [a_0;a_1,\ldots, a_n] = [a_0;a_1,\ldots, a_n] + [m;] = [a_0 + m;a_1,\ldots, a_n]`, where :math:`[m;]` is the continued fraction of :math:`m`.
-
-We can write :math:`-a = -(qb + v)` as:
+Wriring :math:`-a = -(qb + v)` as:
 
 .. math::
 
    -a = -qb - v = -qb - b + b - v = -(q + 1)b + (b - v)
 
-so that:
+we have:
 
 .. math::
 
    \begin{align}
    -\frac{a}{b} &= -(q + 1) + \frac{b - v}{b} \\
                 &= -(q + 1) + \frac{1}{\frac{b}{b - v}} \\
-                &= -(q + 1) + \frac{1}{1 + \frac{v}{b - v}} \\
                 &= -(q + 1) + \frac{1}{1 + \frac{1}{\frac{b}{v} - 1}} \\
                 &= -(q + 1) + \frac{1}{1 + \frac{1}{R_1 - 1}} \\
                 &= [-(q + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n]
@@ -478,13 +469,9 @@ Thus, we can say that if :math:`[a_0; a_1,\ldots, a_n]` is the :math:`n`-order s
    [-(a_0 + 1); 1, a_1 - 1, a_2, \ldots,a_n]   \hskip{3em} & n \geq 2 \text{ and } a_1 \geq 2
    \end{cases}
 
-This represents a **division-free** algorithm for computing the simple continued fraction of the negative of a positive rational number, and is faithfully implemented in the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__neg__` method.
+This provides a direct way to compute the continued fraction of the negative of a positive rational number, without going through usual division algorithm, and is faithfully implemented in the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__neg__` method.
 
-.. note::
-
-   This algorithm can be combined with the :ref:`basic rule <creating-continued-fractions.basic-rules>` for the simple continued fraction of the multiplicative inverse of a given positive rational number to yield division-free algorithms for computing simple continued fractions for multiplying and dividing pairs of rational numbers, and also for taking exponents of rational numbers with integers.
-
-We can illustrate the negation relations above with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances for small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
+The negation relations above can be illustrated with :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances for small fractions :math:`\frac{a}{b}` where :math:`|a| < |b|`:
 
 .. code:: python
 

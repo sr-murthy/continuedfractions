@@ -57,29 +57,11 @@ You can create additional remotes for the parent project to enable easier syncin
 Dependencies & PDM :fas:`cubes`
 ===============================
 
-The package uses only standard libraries + the `Numba <https://numba.pydata.org/>`_ JIT compiler, as indicated in the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_:
+The package uses only standard libraries, and no third party libraries are used. See the `project TOML <https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml>`_ for more information.
 
-.. code:: toml
+Some development dependencies are specified in the ``[tool.pdm.dev-dependencies]`` section of the TOML including some ``'test'`` dependencies, such as `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_.
 
-   ...
-   dependencies = [
-       "numba",
-   ]
-   ...
-
-Some development dependencies are specified in the ``[tool.pdm.dev-dependencies]`` section of TOML, but they are not mandatory. Of these, the most important are probably the ``'test'`` dependencies,
-including `pytest <https://docs.pytest.org/en/8.0.x/>`_ and `pytest-cov <https://pytest-cov.readthedocs.io/>`_:
-
-.. code:: toml
-
-   test = [
-       "coverage[toml]",
-       "pytest",
-       "pytest-cov",
-       "pytest-xdist",
-   ]
-
-`PDM <https://pdm-project.org/latest>`_ is used (by myself, currently, the sole maintainer) to manage all dependencies and publish packages to PyPI. It is also used to automate certain tasks, such as running tests, as described in the section.
+`PDM <https://pdm-project.org/latest>`_ is used to manage all dependencies and publish packages to PyPI. It is also used to automate certain tasks, such as running tests, as described in the section.
 
 There are no root-level ``requirements*.txt`` files - but only a single (default, version-controlled, cross-platform) `pdm.lock <https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock>`_ lockfile, which defines metadata for all TOML-defined development dependencies, including the currently empty set of production dependencies, and their sub-dependencies etc. This can be used to install all development dependencies, including the project itself, in editable mode where available:
 
@@ -89,7 +71,7 @@ There are no root-level ``requirements*.txt`` files - but only a single (default
 
 .. note::
 
-   It is important to note that :command:`pdm install` uses either the default lockfile (:file:`pdm.lock`), or one specified with :command:`-L <lockfile>`. Multiple lockfiles can be generated and maintained. Refer to the `PDM install documentation <https://pdm-project.org/latest/reference/cli/#install>`_ for more information.
+   The :command:`pdm install` command uses either the default lockfile (:file:`pdm.lock`), or one specified with :command:`-L <lockfile>`. Multiple lockfiles can be generated and maintained. Refer to the `PDM install documentation <https://pdm-project.org/latest/reference/cli/#install>`_ for more information.
 
 If you don't wish to install any editable dependencies, including the project itself, you can use:
 
@@ -183,8 +165,6 @@ The CI pipelines are defined in the `CI YML <https://github.com/sr-murthy/contin
 Versioning and Releases :fas:`upload`
 =====================================
 
-The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.19.0`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.19.1`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.
-
-Pipelines for releases will be added as part of a future release.

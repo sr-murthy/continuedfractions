@@ -19,9 +19,13 @@
 
 A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
 
-This is a [PyPI package](https://pypi.org/project/continuedfractions/). It is updated as necessary with improvements, features and fixes. Only standard libraries are used, and the package is tested on **Python 3.10-3.13**, although it should be compatible with many earlier versions as well.
+Install from [PyPI](https://pypi.org/project/continuedfractions/):
 ```shell
 pip install -U continuedfractions
+```
+or the `main` branch of this repo:
+```shell
+pip install -U git+https://github.com/sr-murthy/continuedfractions
 ```
 
 See the [project docs](https://continuedfractions.readthedocs.io) for more details, which includes the [API reference](https://continuedfractions.readthedocs.io/sources/api-reference.html).
@@ -37,5 +41,3 @@ The `continuedfractions` package is designed for users interested in:
 * exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
 
 The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
-
-

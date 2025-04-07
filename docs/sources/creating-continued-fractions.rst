@@ -230,7 +230,7 @@ The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` in
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k\text{ new elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{order }(n + k)}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k\text{ new elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{cf of order }(n + k)}]
 
 Some examples are given below.
 
@@ -291,7 +291,7 @@ The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` 
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k\text{ tail elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{order }(n - k)}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k\text{ tail elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{cf of order }(n - k)}]
 
 Some examples are given below.
 

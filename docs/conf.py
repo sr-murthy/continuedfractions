@@ -130,7 +130,7 @@ intersphinx_mapping = {
     'networkx': ('https://networkx.org/documentation/stable/', None),
     'numpy':  ('https://numpy.org/doc/stable/', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
-    'pdm': ('https://pdm.fming.dev/latest/', None),
+    'pdm': ('https://pdm-project.org/latest/', None),
     'pygraphviz': ('https://pygraphviz.github.io/documentation/stable/', None),
     'pytest': ('https://docs.pytest.org/en/7.4.x/', None),
     'python': ('https://docs.python.org/3', None),

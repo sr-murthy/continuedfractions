@@ -16,8 +16,6 @@ The package is designed for users interested in:
 - making approximations of and experimental computations for irrational numbers
 - exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
 
-.. note::
-
 Interested users can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`. If you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
 
 .. toctree::

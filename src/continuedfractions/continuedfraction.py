@@ -9,6 +9,7 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
+import collections
 import decimal
 import functools
 import statistics
@@ -68,6 +69,11 @@ class ContinuedFraction(Fraction):
     (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))
     >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
     (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
+
+    Inspect the element counts.
+
+    >>> cf.counter
+    Counter({4: 2, 3: 1, 12: 1})
 
     Check some properties of the convergents and remainders.
 
@@ -380,6 +386,8 @@ class ContinuedFraction(Fraction):
         (3, 4, 12, 4)
         >>> cf.order
         3
+        >>> cf.counter
+        Counter({4: 2, 3: 1, 12: 1})
         >>> tuple(cf.convergents)
         ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
         >>> tuple(cf.remainders)
@@ -646,6 +654,18 @@ class ContinuedFraction(Fraction):
         7
         """
         return len(self._elements[1:])
+
+    @property
+    def counter(self) -> collections.Counter:
+        """:py:class:`collections.Counter` : A counter for the elements.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction(928374923, 8249234)
+        >>> cf.counter
+        Counter({1: 6, 2: 3, 24: 2, 112: 1, 5: 1, 3: 1})
+        """
+        return collections.Counter(self.elements)
 
     @property
     def khinchin_mean(self) -> Decimal | None:

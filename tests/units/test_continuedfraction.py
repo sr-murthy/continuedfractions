@@ -12,6 +12,7 @@ context = decimal.Context(prec=28, Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN)
 context.traps[decimal.Inexact] = True
 decimal.setcontext(context)
 
+from collections import Counter
 from decimal import Decimal
 from fractions import Fraction
 from types import MappingProxyType
@@ -31,6 +32,7 @@ class TestContinuedFraction:
            expected_fraction_obj,
            expected_elements,
            expected_order,
+           expected_counter,
            expected_khinchin_mean,
            expected_convergents,
            expected_ref_right_order2_mediant,
@@ -45,6 +47,7 @@ class TestContinuedFraction:
                 Fraction(3, 2),
                 (1, 2,),
                 1,
+                Counter({1: 1, 2: 1}),
                 Decimal('2'),
                 (
                     (0, ContinuedFraction(1, 1)),
@@ -62,6 +65,7 @@ class TestContinuedFraction:
                 Fraction(3, 2),
                 (1, 2,),
                 1,
+                Counter({1: 1, 2: 1}),
                 Decimal('2'),
                 (
                     (0, ContinuedFraction(1, 1)),
@@ -79,6 +83,7 @@ class TestContinuedFraction:
                 Fraction(-5000),
                 (-5000,),
                 0,
+                Counter({-5000: 1}),
                 None,
                 (
                     (0, ContinuedFraction(-5000, 1)),
@@ -95,6 +100,7 @@ class TestContinuedFraction:
                 Fraction(649, 200),
                 (3, 4, 12, 4),
                 3,
+                Counter({4: 2, 3: 1, 12: 1}),
                 Decimal('5.76899828122963409526846589869819581508636474609375'),
                 (
                     (0, ContinuedFraction(3, 1)),
@@ -115,6 +121,7 @@ class TestContinuedFraction:
                 Fraction(-649, 200),
                 (-4, 1, 3, 12, 4),
                 4,
+                Counter({-4: 1, 1: 1, 3: 1, 12: 1, 4: 1}),
                 Decimal('3.464101615137754830442418096936307847499847412109375'),
                 (
                     (0, ContinuedFraction(-4, 1)),
@@ -135,6 +142,7 @@ class TestContinuedFraction:
                 Fraction(649, 200),
                 (3, 4, 12, 4),
                 3,
+                Counter({4: 2, 3: 1, 12: 1}),
                 Decimal('5.76899828122963409526846589869819581508636474609375'),
                 (
                     (0, ContinuedFraction(3, 1)),
@@ -154,6 +162,7 @@ class TestContinuedFraction:
                 Fraction(3333, 10000),
                 (0, 3, 3333),
                 2,
+                Counter({0: 1, 3: 1, 3333: 1}),
                 Decimal('99.9949998749937520869934814982116222381591796875'),
                 (
                     (0, ContinuedFraction(0, 1)),
@@ -172,6 +181,7 @@ class TestContinuedFraction:
                 Fraction(-3333, 10000),
                 (-1, 1, 2, 3333),
                 3,
+                Counter({-1: 1, 1: 1, 2: 1, 3333: 1}),
                 Decimal('18.820093199354911206455653882585465908050537109375'),
                 (
                     (0, ContinuedFraction(-1, 1)),
@@ -191,6 +201,7 @@ class TestContinuedFraction:
                 Fraction(-21, 4),
                 (-6, 1, 3),
                 2,
+                Counter({-6: 1, 1: 1, 3: 1}),
                 Decimal('1.7320508075688774152212090484681539237499237060546875'),
                 (
                     (0, ContinuedFraction(-6, 1)),
@@ -209,6 +220,7 @@ class TestContinuedFraction:
                 Fraction(123456789, 1),
                 (123456789,),
                 0,
+                Counter({123456789: 1}),
                 None,
                 (
                     (0, ContinuedFraction(123456789, 1)),
@@ -225,6 +237,7 @@ class TestContinuedFraction:
                 Fraction(3, 10),
                 (0, 3, 3),
                 2,
+                Counter({3: 2, 0: 1}),
                 Decimal('3.000000000000000444089209850062616169452667236328125'),
                 (
                     (0, ContinuedFraction(0, 1)),
@@ -243,6 +256,7 @@ class TestContinuedFraction:
                 Fraction(1, 10),
                 (0, 10),
                 1,
+                Counter({0: 1, 10: 1}),
                 Decimal('10'),
                 (
                     (0, ContinuedFraction(0, 1)),
@@ -260,6 +274,7 @@ class TestContinuedFraction:
                 Fraction(-649, 200),
                 (-4, 1, 3, 12, 4),
                 4,
+                Counter({-4: 1, 1: 1, 3: 1, 12: 1, 4: 1}),
                 Decimal('3.464101615137754830442418096936307847499847412109375'),
                 (
                     (0, ContinuedFraction(-4, 1)),
@@ -280,6 +295,7 @@ class TestContinuedFraction:
                 Fraction(123456789, 1),
                 (123456789,),
                 0,
+                Counter({123456789: 1}),
                 None,
                 (
                     (0, ContinuedFraction(123456789, 1)),
@@ -296,6 +312,7 @@ class TestContinuedFraction:
                 Fraction(3, 2),
                 (1, 2,),
                 1,
+                Counter({1: 1, 2: 1}),
                 Decimal('2'),
                 (
                     (0, ContinuedFraction(1, 1)),
@@ -313,6 +330,7 @@ class TestContinuedFraction:
                 Fraction(-15, 4),
                 (-4, 4),
                 1,
+                Counter({-4: 1, 4: 1}),
                 Decimal('4'),
                 (
                     (0, ContinuedFraction(-4, 1)),
@@ -330,6 +348,7 @@ class TestContinuedFraction:
                 Fraction(649, 200),
                 (3, 4, 12, 4),
                 3,
+                Counter({4: 2, 3: 1, 12: 1}),
                 Decimal('5.76899828122963409526846589869819581508636474609375'),
                 (
                     (0, ContinuedFraction(3, 1)),
@@ -349,6 +368,7 @@ class TestContinuedFraction:
                 Fraction(1, 10),
                 (0, 10),
                 1,
+                Counter({0: 1, 10: 1}),
                 Decimal('10'),
                 (
                     (0, ContinuedFraction(0, 1)),
@@ -366,6 +386,7 @@ class TestContinuedFraction:
                 Fraction(1, 20),
                 (0, 20),
                 1,
+                Counter({0: 1, 20: 1}),
                 Decimal('20'),
                 (
                     (0, ContinuedFraction(0, 1)),
@@ -383,6 +404,7 @@ class TestContinuedFraction:
                 Fraction(1, 4),
                 (0, 4),
                 1,
+                Counter({0: 1, 4: 1}),
                 Decimal('4'),
                 (
                     (0, ContinuedFraction(0, 1)),
@@ -400,6 +422,7 @@ class TestContinuedFraction:
                 Fraction(60357, 83000),
                 (0, 1, 2, 1, 1, 1, 102, 1, 2, 1, 1, 1, 6),
                 12,
+                Counter({1: 8, 2: 2, 0: 1, 102: 1, 6: 1}),
                 Decimal('1.9160240282353602214726606689509935677051544189453125'),
                 (
                     (0, ContinuedFraction(0, 1)),
@@ -430,6 +453,7 @@ class TestContinuedFraction:
         expected_fraction_obj,
         expected_elements,
         expected_order,
+        expected_counter,
         expected_khinchin_mean,
         expected_convergents,
         expected_ref_right_order2_mediant,
@@ -461,6 +485,9 @@ class TestContinuedFraction:
 
         # Compare the orders
         assert received.order == expected_order
+
+        # Compare the element counters
+        assert received.counter == expected_counter
 
         # Compare the Khinchin means
         assert received.khinchin_mean == expected_khinchin_mean
@@ -584,6 +611,7 @@ class TestContinuedFraction:
         assert hash(instance) == hash(expected_comparative_instance)
         assert instance == ContinuedFraction.from_elements(*original_elements, *new_elements)
         assert instance.order == expected_comparative_instance.order
+        assert instance.counter == expected_comparative_instance.counter
         assert tuple(instance.convergents) == tuple(expected_comparative_instance.convergents)
         assert tuple(instance.remainders) == tuple(expected_comparative_instance.remainders)
         assert instance.khinchin_mean == expected_comparative_instance.khinchin_mean
@@ -629,6 +657,7 @@ class TestContinuedFraction:
         assert hash(instance) == hash(expected_comparative_instance)
         assert instance == ContinuedFraction.from_elements(*original_elements[:order + 1 - truncation_length])
         assert instance.order == expected_comparative_instance.order
+        assert instance.counter == expected_comparative_instance.counter
         assert tuple(instance.convergents) == tuple(expected_comparative_instance.convergents)
         assert tuple(instance.remainders) == tuple(expected_comparative_instance.remainders)
         assert instance.khinchin_mean == expected_comparative_instance.khinchin_mean

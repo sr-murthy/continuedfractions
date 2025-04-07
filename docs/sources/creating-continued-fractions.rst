@@ -223,14 +223,14 @@ For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFr
 
 .. _creating-continued-fractions.inplace-extension:
 
-In-place Extension by New/Additional Elements
----------------------------------------------
+In-place Extension by New Elements
+----------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance from new elements - the new elements are added to the tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and an array of :math:`k \geq 1` non-negative integers :math:`(b_1, \ldots, b_k)` the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension from new elements - the new elements are added to the existing instance tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and an array of :math:`k \geq 1` non-negative integers :math:`(b_1, \ldots, b_k)` the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k\text{ new elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{order }(n + k)}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k\text{ new elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{cf of order }(n + k)}]
 
 Some examples are given below.
 
@@ -287,11 +287,11 @@ A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.
 In-place Truncation of Tail Elements
 ------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method can be used to perform an in-place truncation of the sequence of elements of a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance instances by truncating a given sequence of tail elements - the tail elements to be truncated are removed from the existing tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and a :math:`k`-length segment (or contiguous section) :math:`(a_{n - k + 1}, \ldots, a_n)` of its tail, where :math:`1 \leq k \leq n`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method can be used to perform an in-place truncation of a trailing segment of the existing tail - the tail elements to be truncated are removed from the existing tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and a :math:`k`-length segment (or contiguous section) :math:`(a_{n - k + 1}, \ldots, a_n)` of its tail, where :math:`1 \leq k \leq n`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k\text{ tail elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{order }(n - k)}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k\text{ tail elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{cf of order }(n - k)}]
 
 Some examples are given below.
 
@@ -314,7 +314,7 @@ Some examples are given below.
 
 The result is an in-place modification of the existing instance, with the same object ID as before. All other attributes or properties will reflect the new values as determined by the complete sequence of elements formed by the truncation of the tail elements provided with :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate`.
 
-A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.g. not positive integers, or do not form a valid segment of the existing tail.
+A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.g. not positive integers, or do not form a trailing segment of the existing tail.
 
 .. code:: python
 
@@ -323,10 +323,24 @@ A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.
    ContinuedFraction(649, 200)
    >>> cf.truncate(0, 4)
    ...
-   ValueError: The elements/coefficients to be truncated from the tail must form a valid segment of the existing tail.
+   ValueError: The elements/coefficients to be truncated from the tail must form a trailing segment of the existing tail.
    >>> cf.truncate(3, 4, 12, 4)
    ...
-   ValueError: The elements/coefficients to be truncated from the tail must form a valid segment of the existing tail.
+   ValueError: The elements/coefficients to be truncated from the tail must form a trailing segment of the existing tail.
+
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` and :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` methods will cancel each other out, if done correctly:
+
+.. code:: python
+
+   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> cf.extend(5, 2)
+   >>> cf
+   ContinuedFraction(7457, 2298)
+   >>> cf.truncate(5, 2)
+   >>> cf
+   ContinuedFraction(649, 200)
 
 .. _creating-continued-fractions.rational-operations:
 

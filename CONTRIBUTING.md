@@ -147,7 +147,6 @@ Currently, pipelines for all branches include a tests stage that includes Ruff l
 
 ## Versioning and Releases `upload`
 
-The [PyPI package](https://pypi.org/project/continuedfractions/) is currently at version `0.19.1` - the goal is to use [semantic
-versioning](https://semver.org/) consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The latest release is `0.20.0`.
 
 There is currently no dedicated pipeline for releases - both [GitHub releases](https://github.com/sr-murthy/continuedfractions/releases) and [PyPI packages](https://pypi.org/project/continuedfractions) are published manually, but both have the same version tag.

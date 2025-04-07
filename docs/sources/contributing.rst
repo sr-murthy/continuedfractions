@@ -165,6 +165,6 @@ The CI pipelines are defined in the `CI YML <https://github.com/sr-murthy/contin
 Versioning and Releases :fas:`upload`
 =====================================
 
-The `PyPI package <https://pypi.org/project/continuedfractions/>`_ is currently at version ``0.20.0`` - the goal is to use `semantic versioning <https://semver.org/>`_ consistently for all future releases, but some earlier releases do not comply with strict semantic versioning.
+The latest release is ``0.20.0``.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.

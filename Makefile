@@ -53,7 +53,7 @@ lint: clean
 doctests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running doctests in all core libraries\n"
 	cd "$(PROJECT_ROOT)" && \
-	python3 -m pip install numba && python3 -m doctest --verbose src/continuedfractions/*.py
+	python3 -m doctest --verbose src/continuedfractions/*.py
 
 unittests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running package unit tests + measuring coverage\n"

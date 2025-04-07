@@ -32,7 +32,7 @@ The **order** of a continued fraction is defined to be number of its tail elemen
    >>> cf.order
    3
 
-All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances will have a finite sequence of elements and thus a finite order, even if mathematically the numbers they represent may be irrational. The integers represent the special case of zero-order continued fractions.
+All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances will have a finite sequence of elements and thus a finite order. The integers represent the special case of zero-order continued fractions.
 
 .. code:: python
 
@@ -52,6 +52,47 @@ The elements and orders of :py:class:`~continuedfractions.continuedfraction.Cont
    (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
    >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).order
    10
+
+.. _exploring-continued-fractions.counting-elements:
+
+Counting Elements
+=================
+
+A :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.counter` property is available to keep counts of elements:
+
+.. code:: python
+
+   >>> cf = ContinuedFraction(649, 200)
+   >>> cf.counter
+   Counter({4: 2, 3: 1, 12: 1})
+
+The result is a :py:class:`collections.Counter` object, where the counts are displayed from the most common elements to the least (via :py:meth:`collections.Counter.most_common`).
+
+The counter is effectively refreshed on each access, so that the effects of any operations that modify the underlying instance will be immediately reflected.
+
+.. code:: python
+
+   >>> cf.extend(1, 2, 3)
+   >>> cf
+   ContinuedFraction(7603, 2343)
+   Counter({3: 2, 4: 2, 12: 1, 1: 1, 2: 1})
+   >>> cf.truncate(1, 2, 3)
+   >>> cf
+   ContinuedFraction(649, 200)
+   >>> cf.counter
+   Counter({4: 2, 3: 1, 12: 1})
+
+The :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.counter` property makes it possible to explore the arithmetic behaviour of elements in a convenient way:
+
+.. code:: python
+
+   >>> cf2 = ContinuedFraction(415, 93)
+   >>> cf2.counter
+   Counter({4: 1, 2: 1, 6: 1, 7: 1})
+   >>> (cf + cf2).counter
+   Counter({1: 4, 2: 4, 7: 1, 11: 1, 12: 1})
+   >>>  (cf - cf2).counter
+   Counter({1: 6, -2: 1, 3: 1, 72: 1, 10: 1})
 
 .. _exploring-continued-fractions.convergents-and-rational-approximations:
 

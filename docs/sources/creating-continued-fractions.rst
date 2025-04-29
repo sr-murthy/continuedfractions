@@ -433,7 +433,7 @@ in comparison with :math:`\frac{415}{93} = \frac{4 \times 93 + 43}{93}`, which h
 
    \frac{415}{93} = 4 + \cfrac{1}{2 + \cfrac{1}{6 + \cfrac{1}{7}}}
 
-The implementation is again based on `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_. Let :math:`\frac{a}{b}` be a positive rational with :math:`b > a` and :math:`a, b` coprime, and :math:`[a_0;a_1,\ldots,a_n]` the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}`, where we can assume :math:`a_n > 1`. The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
+The implementation is again based on `Euclid's division lemma <https://en.wikipedia.org/wiki/Euclidean_division#Division_theorem>`_. Let :math:`\frac{a}{b}` be a positive rational with :math:`a > b` and :math:`a, b` coprime, and :math:`[a_0;a_1,\ldots,a_n]` the simple continued fraction of order :math:`n \geq 1` of :math:`\frac{a}{b}`, where we can assume :math:`a_n > 1`. The lemma implies that there are unique, positive integers :math:`q, v`, with :math:`0 < v < b`, such that :math:`a = qb + v`. Then:
 
 .. math::
 

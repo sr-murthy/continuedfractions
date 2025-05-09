@@ -214,49 +214,75 @@ Convergents have a stronger version of this property: namely a rational number :
 
    \lim_{k \to \infty} C_k = \lim_{k \to \infty} \frac{p_k}{q_k} = x, \hskip{3em} k \geq 1
 
-We can show, for example, that the square root :math:`\sqrt{n}` of any non-square (positive) integer :math:`n` is irrational by considering positive integers of the form :math:`n = (ka)^2 + r`, for integers :math:`k, a, r > 0` and :math:`(k, a) = 1`. From this we have:
+For examples of convergent approximations of real numbers, we can look at approximations of irrationals which are square roots :math:`\sqrt{n}` of non-square (positive) integers :math:`n`. Start by considering positive integers of the form :math:`n = (ma)^2 + r`, for integers :math:`m, a, r > 0` and :math:`1 < r < \frac{n}{(ma)^2}`. From this we have:
 
 .. math::
    :nowrap:
 
    \begin{alignat*}{1}
-   & r &&= n - (ka)^2 = \left(\sqrt{n} + ka\right)\left(\sqrt{n} - ka\right) \\
-   & \sqrt{n} &&= ka + \frac{r}{2ka + \sqrt{n}}
+   & r &&= n - (ma)^2 = \left(\sqrt{n} + ma\right)\left(\sqrt{n} - ma\right) \\
+   & \sqrt{n} &&= ma + \frac{r}{ma + \sqrt{n}}
    \end{alignat*}
 
-Expanding the expression for :math:`\sqrt{n}` recursively we have the following infinite periodic continued fraction for :math:`\sqrt{n}`:
+Expanding the expression for :math:`\sqrt{n}` on the right hand side, recursively, we have the following infinite, periodic and generalised continued fraction for :math:`\sqrt{n}`:
 
 .. math::
 
-   \sqrt{n} = ka + \cfrac{r}{2ka + \cfrac{r}{2ka + \cfrac{r}{2ka + \ddots}}}
+   \sqrt{n} = ma + \cfrac{r}{2ma + \cfrac{r}{2ma + \cfrac{r}{2ma + \ddots}}}
 
-With :math:`k = a = r = 1` we can represent :math:`\sqrt{2}` as the continued fraction:
+As the package only deals with simple continued fractions, we must let :math:`r = 1`, in which case we are dealing with the class of continued fractions:
+
+.. math::
+
+   \sqrt{n} = ma + \cfrac{1}{2ma + \cfrac{1}{2ma + \cfrac{1}{2ma + \ddots}}}
+
+more concisely written :math:`[ma; 2ma, 2ma, 2ma, \ldots]`. These has convergents given by:
+
+.. math::
+
+   C_k = \frac{p_k}{q_k} = \begin{cases}
+                             \frac{ma}{1}, \hskip{4em} k = 0 \\
+                             \frac{2(ma)^2 + 1}{2ma}, \hskip{2em} k = 1 \\
+                             \frac{2ma \cdot p_{k - 1} + p_{k - 2}}{2ma \cdot q_{k - 1} + q_{k - 2}}, \hskip{0.5em} k \geq 2
+                           \end{cases}
+
+For :math:`m = a = r = 1` we have the continued fraction:
 
 .. math::
 
    \sqrt{2} = 1 + \cfrac{1}{2 + \cfrac{1}{2 + \cfrac{1}{2 + \ddots}}}
 
-written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents the infinite (periodic) sequence :math:`2, 2, 2, \ldots`.
-
-We can illustrate rational approximation with the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method by continuing the :ref:`earlier example <creating-continued-fractions.irrational-numbers>` for :math:`\sqrt{2}` but instead using by iteratively constructing more accurate continued fraction representations with higher convergents:
+written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents the infinite (periodic) sequence :math:`2, 2, 2, \ldots`. The convergents of :math:`\sqrt{2}` can be constructed using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method:
 
 .. code:: python
 
+   # 1st convergent of sqrt(2)
+   >>> ContinuedFraction.from_elements(1, 2)
+   ContinuedFraction(3, 2)
    >>> ContinuedFraction.from_elements(1, 2).as_decimal()
    >>> Decimal('1.5')
 
+   # 2nd convergent of sqrt(2)
+   >>> ContinuedFraction.from_elements(1, 2, 2)
+   ContinuedFraction(7, 2)
    >>> ContinuedFraction.from_elements(1, 2, 2).as_decimal()
    >>> Decimal('1.4')
 
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2).as_decimal()
-   >>> Decimal('1.413793103448275862068965517')
+   # 3rd convergent of sqrt(2)
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2)
+   ContinuedFraction(17, 12)
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2).as_decimal()
+   >>> Decimal('1.416666666666666666666666667')
 
    ...
 
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_decimal()
-   >>> Decimal('1.414213624894869638351555929')
+   # 10th convergent of sqrt(2)
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+   ContinuedFraction(8119, 5741)
+   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_decimal()
+   >>> Decimal('1.414213551646054694304128201')
 
-With the 10th convergent of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <exploring-continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
+With the 10th convergent :math:`\frac{8119}{5741}` of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <exploring-continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
 
 If we use the 100th convergent (with :math:`101` elements consisting of the integer part  :math:`1`, plus a tail of one hundred 2s), we get more accurate results:
 

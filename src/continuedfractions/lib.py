@@ -17,7 +17,6 @@ __all__ = [
 # -- Standard libraries --
 import decimal
 import functools
-import re
 
 from decimal import Decimal
 from fractions import Fraction

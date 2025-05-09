@@ -213,7 +213,7 @@ Coprimality has a number of important and interesting `properties <https://en.wi
 KSRM Trees
 ----------
 
-The :py:class:`~continuedfractions.sequences.KSRMTree` class is an implicit/generative class implementation of two ternary trees for representing (and generating) all pairs of (positive) coprime integers, as presented in separate papers by A. R. Kanga, and `R. Saunders and T. Randall <https://doi.org/10.2307/3618576>`_, and `D. W. Mitchell <https://doi.org/10.2307/3622017>`_.
+The :py:class:`~continuedfractions.sequences.KSRMTree` class is a class implementation of two ternary trees for representing (and generating) all pairs of (positive) coprime integers, as presented in separate papers by A. R. Kanga, and `R. Saunders and T. Randall <https://doi.org/10.2307/3618576>`_, and `D. W. Mitchell <https://doi.org/10.2307/3622017>`_.
 
 .. note::
 

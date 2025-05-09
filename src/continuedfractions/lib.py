@@ -28,22 +28,6 @@ from typing import Generator
 # -- Internal libraries --
 
 
-# A private copy of ``fractions._RATIONAL_FORMAT`` to support debugging
-_RATIONAL_FORMAT = re.compile(r"""
-    \A\s*                                  # optional whitespace at the start,
-    (?P<sign>[-+]?)                        # an optional sign, then
-    (?=\d|\.\d)                            # lookahead for digit or .digit
-    (?P<num>\d*|\d+(_\d+)*)                # numerator (possibly empty)
-    (?:                                    # followed by
-       (?:\s*/\s*(?P<denom>\d+(_\d+)*))?   # an optional denominator
-    |                                      # or
-       (?:\.(?P<decimal>\d*|\d+(_\d+)*))?  # an optional fractional part
-       (?:E(?P<exp>[-+]?\d+(_\d+)*))?      # and optional exponent
-    )
-    \s*\Z                                  # and optional whitespace to finish
-""", re.VERBOSE | re.IGNORECASE)
-
-
 def continued_fraction_rational(frac: Fraction, /) -> Generator[int, None, None]:     # pragma: no cover
     """Core continued fraction algorithm implementation which generates the ordered sequence of elements of the (finite) simple continued fraction of the given rational number.
 

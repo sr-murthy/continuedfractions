@@ -289,7 +289,7 @@ def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[in
 
 
 class KSRMTree:
-    """An implicit/generative class implementation of the Kanga-Saunders-Randall-Mitchell (KSRM) ternary trees for representing and generating pairs of all (positive) coprime integers.
+    """A class implementation of the Kanga-Saunders-Randall-Mitchell (KSRM) ternary trees for representing and generating pairs of all (positive) coprime integers.
 
     The term "KSRM trees" is the author's, and refers to the trees presented in the following papers:
 

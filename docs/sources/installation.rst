@@ -2,9 +2,9 @@
 
    :google-site-verification: 3F2Jbz15v4TUv5j0vDJAA-mSyHmYIJq0okBoro3-WMY
 
-===============
-Getting Started
-===============
+============
+Installation
+============
 
 A standard :program:`pip` install (with the :code:`-U` "upgrade" option to get the latest version) is sufficient:
 

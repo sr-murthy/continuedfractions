@@ -194,7 +194,7 @@ And then the right-mediants:
    >>> cf1.right_mediant(cf2, k=10 ** 6).as_decimal()
    Decimal('0.5999999600000159999936000026')
 
-A particular class of right-mediants are known as `semiconvergents <https://en.wikipedia.org/wiki/Continued_fraction#Semiconvergents>`_, and are described in more detail :ref:`here <exploring-continued-fractions.semiconvergents>`.
+A particular class of right-mediants are known as `semiconvergents <https://en.wikipedia.org/wiki/Continued_fraction#Semiconvergents>`_, and are described in more detail :ref:`here <continued-fractions.semiconvergents>`.
 
 .. _sequences.coprime-integers:
 
@@ -479,20 +479,12 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 References
 ==========
 
-[1] Branch and bound. (2024, May 4). In Wikipedia. https://en.wikipedia.org/wiki/Branch_and_bound
+[1] Farey sequence. (2024, May 11). In Wikipedia. https://en.wikipedia.org/wiki/Farey_sequence
 
-[2] Coprime integers. (2024, May 7). In Wikipedia. https://en.wikipedia.org/wiki/Coprime_integers
+[2] Mediant (mathematics). (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Mediant_(mathematics)
 
-[3] Depth-first search. (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Depth-first_search
+[3] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
 
-[4] Farey sequence. (2024, May 11). In Wikipedia. https://en.wikipedia.org/wiki/Farey_sequence
+[4] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
 
-[5] Khinchin, A. Y. (1997). Continued Fractions. Dover Publications.
-
-[6] Mediant (mathematics). (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Mediant_(mathematics)
-
-[7] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
-
-[8] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
-
-[9] Stern-Brocot tree. (2023, December 28). In Wikipedia. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
+[5] Stern-Brocot tree. (2023, December 28). In Wikipedia. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree

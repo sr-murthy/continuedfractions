@@ -23,8 +23,7 @@ Installation is simple as described :doc:`here <sources/installation>`. For the 
    :caption: Contents:
 
    sources/installation
-   sources/creating-continued-fractions
-   sources/exploring-continued-fractions
+   sources/continued-fractions
    sources/sequences
    sources/contributing
    sources/api-reference

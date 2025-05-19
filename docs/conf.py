@@ -194,9 +194,8 @@ html_context = {
 html_baseurl = 'https://continuedfractions.readthedocs.io/en/latest/'
 
 html_sidebars = {
-    "sources/getting-started": [],
-    "sources/creating-continued-fractions": [],
-    "sources/exploring-continued-fractions": [],
+    "sources/installation": [],
+    "sources/continued-fractions": [],
     "sources/sequences": [],
     "sources/contributing": [],
     "sources/continuedfractions/*": ["sidebar-nav-bs"],

@@ -16,15 +16,14 @@ The package is designed for users interested in:
 - making approximations of and experimental computations for irrational numbers
 - exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
 
-Interested users can :doc:`start here <sources/getting-started>`, or go straight to the :doc:`API reference <sources/api-reference>`. If you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
+Installation is simple as described :doc:`here <sources/installation>`. For the source use the :doc:`API reference <sources/api-reference>`. Or if you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
 
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
-   sources/getting-started
-   sources/creating-continued-fractions
-   sources/exploring-continued-fractions
+   sources/installation
+   sources/continued-fractions
    sources/sequences
    sources/contributing
    sources/api-reference

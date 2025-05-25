@@ -91,9 +91,7 @@ For :math:`k = 1` the left- and right-mediants are identical to the simple media
 .. math::
 
    \begin{align}
-   \frac{a + kc}{b + kd} - \left(\frac{ka + c}{kb + d}\right) &= \frac{(a + kc)(kb + d) - (b + kd)(ka + c)}{(b + kd)(kb + d)} \\
-                                                              &= \frac{k^2(bc - ad) - (bc - ad)}{(b + kd)(kb + d)} \\
-                                                              &= \frac{(bc - ad)(k^2 - 1)}{(b + kd)(kb + d)} \\
+   \frac{a + kc}{b + kd} - \left(\frac{ka + c}{kb + d}\right) &= \frac{(bc - ad)(k^2 - 1)}{(b + kd)(kb + d)} \\
                                                               &\geq 0
    \end{align}
 
@@ -233,8 +231,7 @@ Firstly, we describe some background material on the KSRM trees, which are prese
                           (a + 2b, b), \hskip{3em} \text{ branch #} 3                   
                           \end{cases}
 
-all of which are coprime. The children of these nodes by the same branch relations are also coprime, and so on. For the original proofs please refer to the papers. However it is easy to see the reasoning: if :math:`a, b` are coprime integers, with :math:`1 \leq b < a`, then :math:`2a \pm b \equiv \pm b \left(\text{mod }a \right)` and hence :math:`(2a \pm b, a) = 1`, while :math:`a + 2b \equiv a \left(\text{mod }b \right)` and hence :math:`(a + 2b, b) = 1`. Conversely, if :math:`(a^\prime, b^\prime)` is any coprime pair, with :math:`1 \leq b^\prime < a^\prime`, then either 
-:math:`b < a^\prime < 2b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of the smaller coprime pair :math:`(b^\prime, 2b^\prime - a^\prime)` along the 1st branch, or :math:`2b < a^\prime < 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of the smaller coprime pair :math:`(b^\prime, a^\prime - 2b^\prime)` along the 2nd branch, or :math:`a^\prime > 3b^\prime`, in which case :math:`(a^\prime, b^\prime)` is the child of the smaller coprime pair :math:`(a^\prime - 2b^\prime, b^\prime)` along the 3rd branch. The smallest coprime pair that can be obtained in this process of getting the parent node is either :math:`(2, 1)` or :math:`(3, 1)`.
+all of which are coprime. The children of these nodes by the same branch relations are also coprime, and so on. For the original proofs please refer to the papers.
 
 We can inspect the roots and branches by constructing a :py:class:`~continuedfractions.sequences.KSRMTree` instance, and looking at the :py:attr:`~continuedfractions.sequences.KSRMTree.roots` and :py:attr:`~continuedfractions.sequences.KSRMTree.branches` properties.
 

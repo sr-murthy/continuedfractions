@@ -755,39 +755,7 @@ Convergents have a stronger version of this property: namely a rational number :
 
    \lim_{k \to \infty} C_k = \lim_{k \to \infty} \frac{p_k}{q_k} = x, \hskip{3em} k \geq 1
 
-For examples of convergent approximations of real numbers, we can look at approximations of irrationals which are square roots :math:`\sqrt{n}` of non-square (positive) integers :math:`n`. Start by considering positive integers of the form :math:`n = (ma)^2 + r`, for integers :math:`m, a, r > 0` and :math:`1 < r < \frac{n}{(ma)^2}`. From this we have:
-
-.. math::
-   :nowrap:
-
-   \begin{alignat*}{1}
-   & r &&= n - (ma)^2 = \left(\sqrt{n} + ma\right)\left(\sqrt{n} - ma\right) \\
-   & \sqrt{n} &&= ma + \frac{r}{ma + \sqrt{n}}
-   \end{alignat*}
-
-Expanding the expression for :math:`\sqrt{n}` on the right hand side, recursively, we have the following infinite, periodic and generalised continued fraction for :math:`\sqrt{n}`:
-
-.. math::
-
-   \sqrt{n} = ma + \cfrac{r}{2ma + \cfrac{r}{2ma + \cfrac{r}{2ma + \ddots}}}
-
-As the package only deals with simple continued fractions, we must let :math:`r = 1`, in which case we are dealing with the class of continued fractions:
-
-.. math::
-
-   \sqrt{n} = ma + \cfrac{1}{2ma + \cfrac{1}{2ma + \cfrac{1}{2ma + \ddots}}}
-
-more concisely written :math:`[ma; 2ma, 2ma, 2ma, \ldots]`. These have convergents given by:
-
-.. math::
-
-   C_k = \frac{p_k}{q_k} = \begin{cases}
-                             \frac{ma}{1}, \hskip{4em} k = 0 \\
-                             \frac{2(ma)^2 + 1}{2ma}, \hskip{2em} k = 1 \\
-                             \frac{2ma \cdot p_{k - 1} + p_{k - 2}}{2ma \cdot q_{k - 1} + q_{k - 2}}, \hskip{0.5em} k \geq 2
-                           \end{cases}
-
-For :math:`m = a = r = 1` we have the continued fraction:
+A simple example of convergent approximations of real numbers is :math:`\sqrt{2}`, which has the the continued fraction:
 
 .. math::
 
@@ -1053,13 +1021,13 @@ Using the simple continued fraction of :math:`\frac{649}{200}` we can verify tha
    & R_3 &&= [4;] = 4 = \frac{4}{1}
    \end{alignat*}
 
-Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_0,R_1,\ldots` satisfy the recurrence relation:
+Given a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` the remainders :math:`R_0,R_1,\ldots` have the property that:
 
 .. math::
 
    R_{k - 1} = a_{k - 1} + \frac{1}{R_k}, \hskip{3em} k \geq 1
 
-where :math:`\frac{1}{R_k}` denotes the inverted continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`. If the continued fraction :math:`[a_0; a_1, a_2,\ldots]` is finite of order :math:`n` and we let :math:`R_k = \frac{s_k}{t_k}` then the recurrence relation above can be written as:
+where :math:`\frac{1}{R_k}` denotes the inverted continued fraction :math:`[0; a_k, a_{k + 1},\ldots]`. If the continued fraction :math:`[a_0; a_1, a_2,\ldots]` is finite of order :math:`n` and we let :math:`R_k = \frac{s_k}{t_k}` then:
 
 .. math::
 

@@ -646,8 +646,8 @@ def coprime_pairs(n: int, /) -> Generator[KSRMNode, None, None]:
     """Generates a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
 
     Calls the KSRM tree :py:meth:`~continuedfractions.sequences.KSRMTree.search`
-    to perform the search up to :math:`n - 1` and then uses
-    :py:func:`~continuedfractions.sequences.coprime_integers` for the search
+    to perform the search up to :math:`n - 1` and then uses the private function
+    :py:func:`~continuedfractions.sequences._coprime_integers` for the search
     for pairs involving :math:`n`.
 
     A :py:class:`ValueError` is raised if ``n`` is not an :py:class:`int`

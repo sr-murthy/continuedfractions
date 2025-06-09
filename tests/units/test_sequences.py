@@ -10,14 +10,14 @@ import sympy
 from continuedfractions.continuedfraction import ContinuedFraction
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.sequences import (
-    coprime_integers,
+    _coprime_integers,
     coprime_pairs,
     farey_sequence,
     KSRMTree,
 )
 
 
-class TestCoprimeIntegers:
+class Test_CoprimeIntegers:
 
     @pytest.mark.parametrize(
         "n, start, stop",
@@ -30,9 +30,9 @@ class TestCoprimeIntegers:
             (3, 3, 2),
         ]
     )
-    def test_coprime_integers__invalid_args__raises_value_error(self, n, start, stop):
+    def test__coprime_integers__invalid_args__raises_value_error(self, n, start, stop):
         with pytest.raises(ValueError):
-            coprime_integers(n, start=start, stop=stop)
+            list(_coprime_integers(n, start=start, stop=stop))
 
     @pytest.mark.parametrize(
         "n, expected_coprime_integers",
@@ -49,10 +49,10 @@ class TestCoprimeIntegers:
             (10, (9, 7, 3, 1)),
         ]
     )
-    def test_coprime_integers__default_start_and_stop_values(self, n, expected_coprime_integers):
+    def test__coprime_integers__default_start_and_stop_values(self, n, expected_coprime_integers):
         expected = expected_coprime_integers
 
-        received = coprime_integers(n)
+        received = tuple(_coprime_integers(n))
 
         assert received == expected
 
@@ -150,10 +150,10 @@ class TestCoprimeIntegers:
             (10, 2, 3, (3,)),
         ]
     )
-    def test_coprime_integers__custom_start_and_stop_values(self, n, start, stop, expected_coprime_integers):
+    def test__coprime_integers__custom_start_and_stop_values(self, n, start, stop, expected_coprime_integers):
         expected = expected_coprime_integers
 
-        received = coprime_integers(n, start=start, stop=stop)
+        received = tuple(_coprime_integers(n, start=start, stop=stop))
 
         assert received == expected
 
@@ -191,10 +191,10 @@ class TestCoprimeIntegers:
             (10000001, sympy.totient(10000001)),
         ]
     )
-    def test_coprime_integers__verify_against_totient_value(self, n, expected_totient_value):
+    def test__coprime_integers__verify_against_totient_value(self, n, expected_totient_value):
         expected = expected_totient_value
 
-        received = coprime_integers(n)
+        received = tuple(_coprime_integers(n))
 
         assert len(received) == expected
 
@@ -472,7 +472,7 @@ class TestCoprimePairs:
     )
     def test_coprime_pairs__invalid_args__raises_value_error(self, n):
         with pytest.raises(ValueError):
-            coprime_pairs(n)
+            tuple(coprime_pairs(n))
 
     @pytest.mark.parametrize(
         """n,
@@ -531,7 +531,7 @@ class TestCoprimePairs:
     def test_coprime_pairs(self, n, expected_pairs):
         expected = tuple(expected_pairs)
 
-        received = coprime_pairs(n)
+        received = tuple(coprime_pairs(n))
 
         assert received == expected
 
@@ -558,7 +558,7 @@ class TestCoprimePairs:
         ]
     )
     def test_coprime_pairs__verify_against_summatory_totient_value(self, n):
-        assert len(coprime_pairs(n)) == sum(map(sympy.totient, range(1, n + 1)))
+        assert len(tuple(coprime_pairs(n))) == sum(map(sympy.totient, range(1, n + 1)))
 
 
 class TestFareySequence:
@@ -574,7 +574,7 @@ class TestFareySequence:
     )
     def test_farey_sequence__invalid_args__raises_value_error(self, n):
         with pytest.raises(ValueError):
-            farey_sequence(n)
+            tuple(farey_sequence(n))
 
     @pytest.mark.parametrize(
         """n,
@@ -654,6 +654,6 @@ class TestFareySequence:
     def test_farey_sequence(self, n, expected_sequence):
         expected = tuple(expected_sequence)
 
-        received = farey_sequence(n)
+        received = tuple(farey_sequence(n))
 
         assert received == expected

@@ -2,12 +2,8 @@ from __future__ import annotations
 
 
 __all__ = [
-    'coprime_integers',
-    'coprime_integers_generator',
     'coprime_pairs',
-    'coprime_pairs_generator',
     'farey_sequence',
-    'farey_sequence_generator',
     'KSRMTree',
 ]
 
@@ -15,7 +11,6 @@ __all__ = [
 # -- IMPORTS --
 
 # -- Standard libraries --
-import functools
 import math
 import sys
 
@@ -35,7 +30,7 @@ KSRMNode: TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM cop
 KSRMBranch: NamedCallableProxy          #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
-def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -> Generator[int, None, None]:
+def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> Generator[int, None, None]:
     """Generates a sequence of (positive) integers :math:`1 \\leq m < n` coprime to a given positive integer :math:`n`.
 
     The tuple is sorted in descending order of magnitude.
@@ -89,60 +84,60 @@ def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -
     --------
     Examples using the default ``start`` and ``stop`` values:
 
-    >>> tuple(coprime_integers_generator(1))
+    >>> tuple(_coprime_integers(1))
     (1,)
-    >>> tuple(coprime_integers_generator(2))
+    >>> tuple(_coprime_integers(2))
     (1,)
-    >>> tuple(coprime_integers_generator(3))
+    >>> tuple(_coprime_integers(3))
     (2, 1)
-    >>> tuple(coprime_integers_generator(4))
+    >>> tuple(_coprime_integers(4))
     (3, 1)
-    >>> tuple(coprime_integers_generator(5))
+    >>> tuple(_coprime_integers(5))
     (4, 3, 2, 1)
-    >>> tuple(coprime_integers_generator(6))
+    >>> tuple(_coprime_integers(6))
     (5, 1)
-    >>> tuple(coprime_integers_generator(7))
+    >>> tuple(_coprime_integers(7))
     (6, 5, 4, 3, 2, 1)
-    >>> tuple(coprime_integers_generator(8))
+    >>> tuple(_coprime_integers(8))
     (7, 5, 3, 1)
-    >>> tuple(coprime_integers_generator(9))
+    >>> tuple(_coprime_integers(9))
     (8, 7, 5, 4, 2, 1)
-    >>> tuple(coprime_integers_generator(10))
+    >>> tuple(_coprime_integers(10))
     (9, 7, 3, 1)
-    >>> tuple(coprime_integers_generator(11))
+    >>> tuple(_coprime_integers(11))
     (10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
 
     Examples using custom ``start`` and ``stop`` values:
 
-    >>> tuple(coprime_integers_generator(3, start=0))
+    >>> tuple(_coprime_integers(3, start=0))
     Traceback (most recent call last):
     ...
     ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
-    >>> tuple(coprime_integers_generator(3, start=2))
+    >>> tuple(_coprime_integers(3, start=2))
     (2,)
-    >>> tuple(coprime_integers_generator(3, start=3))
+    >>> tuple(_coprime_integers(3, start=3))
     Traceback (most recent call last):
     ...
     ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
-    >>> tuple(coprime_integers_generator(23, start=5, stop=21))
+    >>> tuple(_coprime_integers(23, start=5, stop=21))
     (21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5)
-    >>> tuple(coprime_integers_generator(5, start=2))
+    >>> tuple(_coprime_integers(5, start=2))
     (4, 3, 2)
-    >>> tuple(coprime_integers_generator(5, start=3))
+    >>> tuple(_coprime_integers(5, start=3))
     (4, 3)
-    >>> tuple(coprime_integers_generator(6, start=2))
+    >>> tuple(_coprime_integers(6, start=2))
     (5,)
-    >>> tuple(coprime_integers_generator(6, start=3))
+    >>> tuple(_coprime_integers(6, start=3))
     (5,)
-    >>> tuple(coprime_integers_generator(6, start=4))
+    >>> tuple(_coprime_integers(6, start=4))
     (5,)
-    >>> tuple(coprime_integers_generator(7, start=2))
+    >>> tuple(_coprime_integers(7, start=2))
     (6, 5, 4, 3, 2)
-    >>> tuple(coprime_integers_generator(7, start=3))
+    >>> tuple(_coprime_integers(7, start=3))
     (6, 5, 4, 3)
-    >>> tuple(coprime_integers_generator(7, start=4))
+    >>> tuple(_coprime_integers(7, start=4))
     (6, 5, 4)
-    >>> tuple(coprime_integers_generator(7, start=5))
+    >>> tuple(_coprime_integers(7, start=5))
     (6, 5)
     """
     if not isinstance(n, int) or n < 1 or (n > 1 and start not in range(1, n)) or (n > 1 and stop and stop not in range(start + 1, n + 1)):
@@ -176,116 +171,6 @@ def coprime_integers_generator(n: int, /, *, start: int = 1, stop: int = None) -
                 stop = _start - 1
                 q -= 1
                 _start = ((chunklen) * q) + 1
-
-
-@functools.cache
-def coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> tuple[int]:
-    """Returns a sequence of (positive) integers :math:`1 \\leq m < n` coprime to a given positive integer :math:`n`.
-
-    Wrapper of :py:class:`~continuedfractions.sequences.coprime_integers_generator`.
-
-    The tuple is sorted in descending order of magnitude.
-
-    The optional ``start`` and ``stop`` parameters can be used to bound the
-    the range of (positive) integers in which integers coprime to the given
-    :math:`n` are sought.
-
-    For :math:`n = 1, 2` the ``start`` value is effectively ignored, but
-    if :math:`n > 1` then the ``start`` value must be an integer in the range
-    :math:`1..n - 1`.
-
-    The ``stop`` value defaults to ``None``, which is then internally
-    initialised to :math:`n`; if :math:`n > 1` and ``stop`` is given then it
-    must be an integer in the range :math:`\\text{start} + 1..n`.
-
-    Parameters
-    ----------
-    n : int
-        The positive integer for which (positive) coprime integers
-        :math:`m < n` are sought.
-
-    start : int, default=1
-        The lower bound of the range of (positive) integers in which integers
-        coprime to the given :math:`n` are sought. For :math:`n = 1, 2` the
-        ``start`` value is effectively ignored, but if :math:`n > 1` then the
-        ``start`` value must be in the range :math:`1..n - 1`.
-
-    stop : int, default=None
-        The upper bound of the range of (positive) integers in which integers
-        coprime to the given :math:`n` are sought. The ``stop`` value defaults
-        to ``None``, which is then internally initialised to :math:`n`; if
-        :math:`n > 1` and ``stop`` is given then it must be an integer in the
-        range :math:`\\text{start} + 1..n`.
-
-    Returns
-    -------
-    tuple
-        A sequence of (positive) integers :math:`1 \\leq m < n` coprime to a
-        given positive integer :math:`n`.
-
-    Examples
-    --------
-    Examples using the default ``start`` and ``stop`` values:
-
-    >>> coprime_integers(1)
-    (1,)
-    >>> coprime_integers(2)
-    (1,)
-    >>> coprime_integers(3)
-    (2, 1)
-    >>> coprime_integers(4)
-    (3, 1)
-    >>> coprime_integers(5)
-    (4, 3, 2, 1)
-    >>> coprime_integers(6)
-    (5, 1)
-    >>> coprime_integers(7)
-    (6, 5, 4, 3, 2, 1)
-    >>> coprime_integers(8)
-    (7, 5, 3, 1)
-    >>> coprime_integers(9)
-    (8, 7, 5, 4, 2, 1)
-    >>> coprime_integers(10)
-    (9, 7, 3, 1)
-    >>> coprime_integers(11)
-    (10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
-
-    Examples using custom ``start`` and ``stop`` values:
-
-    >>> coprime_integers(3, start=2)
-    (2,)
-    >>> coprime_integers(3, start=3)
-    Traceback (most recent call last):
-    ...    
-    ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
-    >>> coprime_integers(23, start=5, stop=21)
-    (21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5)
-    >>> coprime_integers(5, start=2)
-    (4, 3, 2)
-    >>> coprime_integers(5, start=3)
-    (4, 3)
-    >>> coprime_integers(6, start=2)
-    (5,)
-    >>> coprime_integers(6, start=3)
-    (5,)
-    >>> coprime_integers(6, start=4)
-    (5,)
-    >>> coprime_integers(7, start=2)
-    (6, 5, 4, 3, 2)
-    >>> coprime_integers(7, start=3)
-    (6, 5, 4, 3)
-    >>> coprime_integers(7, start=4)
-    (6, 5, 4)
-    >>> coprime_integers(7, start=5)
-    (6, 5)
-    """
-    return tuple(coprime_integers_generator(n, start=start, stop=stop))
-
-# These lists will be initialised every time the module is (re-)loaded, and
-# has the effect of caching the function for the values of ``n`` which are
-# are used below: 1 to 1000, and then 10 ^^ 4, 10 ^^ 5, 10 ^^ 6, 10 ^^ 7.
-[coprime_integers(n) for n in range(1, 1001)]
-[coprime_integers(10 ** k) for k in range(4, 8)]
 
 
 class KSRMTree:
@@ -754,10 +639,10 @@ class KSRMTree:
 
         if n > 2:
             yield from self.search_root(n - 1, self.roots[1])
-            yield from tuple(product([n], coprime_integers(n)))
+            yield from tuple(product([n], _coprime_integers(n)))
 
 
-def coprime_pairs_generator(n: int, /) -> Generator[KSRMNode, None, None]:
+def coprime_pairs(n: int, /) -> Generator[KSRMNode, None, None]:
     """Generates a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
 
     Calls the KSRM tree :py:meth:`~continuedfractions.sequences.KSRMTree.search`
@@ -790,15 +675,15 @@ def coprime_pairs_generator(n: int, /) -> Generator[KSRMNode, None, None]:
     --------
     A few examples of coprime pairs generation:
 
-    >>> tuple(coprime_pairs_generator(1))
+    >>> tuple(coprime_pairs(1))
     ((1, 1),)
-    >>> tuple(coprime_pairs_generator(2))
+    >>> tuple(coprime_pairs(2))
     ((1, 1), (2, 1))
-    >>> tuple(coprime_pairs_generator(3))
+    >>> tuple(coprime_pairs(3))
     ((1, 1), (2, 1), (3, 2), (3, 1))
-    >>> tuple(coprime_pairs_generator(5))
+    >>> tuple(coprime_pairs(5))
     ((1, 1), (2, 1), (3, 2), (3, 1), (4, 3), (4, 1), (5, 4), (5, 3), (5, 2), (5, 1))
-    >>> tuple(coprime_pairs_generator(10))
+    >>> tuple(coprime_pairs(10))
     ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5), (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7), (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1))
     """
     if not isinstance(n, int) or n < 1:
@@ -809,53 +694,11 @@ def coprime_pairs_generator(n: int, /) -> Generator[KSRMNode, None, None]:
     else:
         yield from chain(
             KSRMTree().search(n - 1),
-            product([n], coprime_integers(n))
+            product([n], _coprime_integers(n))
         )
 
 
-@functools.cache
-def coprime_pairs(n: int, /) -> tuple[KSRMNode]:
-    """Returns a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
-
-    Wrapper of :py:func:`~continuedfractions.sequences.coprime_pairs_generator`.
-
-    Parameters
-    ----------
-    n : int
-        The positive integer for which coprime pairs :math:`(a, b)`, with
-        :math:`1 \\leq b < a \\leq n`, are sought.
-
-    Returns
-    -------
-    tuple
-        A :py:class:`tuple` of pairs of coprime integers :math:`(a, b)`, with
-        :math:`1 \\leq b < a \\leq n`.
-
-    Examples
-    --------
-    A few examples of computing coprime pairs:
-
-    >>> coprime_pairs(1)
-    ((1, 1),)
-    >>> coprime_pairs(2)
-    ((1, 1), (2, 1))
-    >>> coprime_pairs(3)
-    ((1, 1), (2, 1), (3, 2), (3, 1))
-    >>> coprime_pairs(5)
-    ((1, 1), (2, 1), (3, 2), (3, 1), (4, 3), (4, 1), (5, 4), (5, 3), (5, 2), (5, 1))
-    >>> coprime_pairs(10)
-    ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5), (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7), (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1))
-    """
-    return tuple(coprime_pairs_generator(n))
-
-
-# These lists will be initialised every time the module is (re-)loaded, and
-# has the effect of caching the function for the values of ``n`` which are
-# are used below: 1 to 101.
-[coprime_pairs(n) for n in range(1, 101)]
-
-
-def farey_sequence_generator(n: int, /) -> Generator[ContinuedFraction, None, None]:
+def farey_sequence(n: int, /) -> Generator[ContinuedFraction, None, None]:
     """Generates an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
 
     The elements of the sequence are yielded as
@@ -885,15 +728,15 @@ def farey_sequence_generator(n: int, /) -> Generator[ContinuedFraction, None, No
 
     Examples
     --------
-    >>> tuple(farey_sequence_generator(1))
+    >>> tuple(farey_sequence(1))
     (ContinuedFraction(0, 1), ContinuedFraction(1, 1))
-    >>> tuple(farey_sequence_generator(2))
+    >>> tuple(farey_sequence(2))
     (ContinuedFraction(0, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 1))
-    >>> tuple(farey_sequence_generator(3))
+    >>> tuple(farey_sequence(3))
     (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
-    >>> tuple(farey_sequence_generator(4))
+    >>> tuple(farey_sequence(4))
     (ContinuedFraction(0, 1), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(1, 1))
-    >>> tuple(farey_sequence_generator(5))
+    >>> tuple(farey_sequence(5))
     (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
     """
     if not isinstance(n, int) or n < 1:
@@ -911,47 +754,6 @@ def farey_sequence_generator(n: int, /) -> Generator[ContinuedFraction, None, No
                 )
             )
         )
-
-
-@functools.cache
-def farey_sequence(n: int, /) -> tuple[ContinuedFraction]:
-    """Returns an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
-
-    Wrapper of :py:func:`~continuedfractions.sequences.farey_sequence_generator`.
-
-    The elements of the sequence are returned as
-    :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
-    instances, in ascending order of magnitude.
-
-    See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/sequences.html#sequences-farey-sequences>`_
-    for more details.
-
-    Parameters
-    ----------
-    n : int:
-        The order of the Farey sequence.
-
-    Returns
-    -------
-    tuple
-        A :py:class:`tuple` of ``ContinuedFraction`` instances representing the
-        elements of the Farey sequence of order :math:`n`, generated in
-        ascending order of magnitude.
-
-    Examples
-    --------
-    >>> farey_sequence(1)
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 1))
-    >>> farey_sequence(2)
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 1))
-    >>> farey_sequence(3)
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
-    >>> farey_sequence(4)
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(1, 1))
-    >>> farey_sequence(5)
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
-    """
-    return tuple(farey_sequence_generator(n))
 
 
 if __name__ == "__main__":      # pragma: no cover

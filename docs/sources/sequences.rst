@@ -333,44 +333,15 @@ As the KSRM trees are infinite ternary trees the worst-case time and space compl
 Farey Sequences
 ===============
 
-The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used to compute `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_:
+The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used to generate `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_:
 
 .. code:: python
 
    >>> from continuedfractions.sequences import farey_sequence
-   >>> farey_sequence(10)
+   >>> tuple(farey_sequence(10))
    (ContinuedFraction(0, 1), ContinuedFraction(1, 10), ContinuedFraction(1, 9), ContinuedFraction(1, 8), ContinuedFraction(1, 7), ContinuedFraction(1, 6), ContinuedFraction(1, 5), ContinuedFraction(2, 9), ContinuedFraction(1, 4), ContinuedFraction(2, 7), ContinuedFraction(3, 10), ContinuedFraction(1, 3), ContinuedFraction(3, 8), ContinuedFraction(2, 5), ContinuedFraction(3, 7), ContinuedFraction(4, 9), ContinuedFraction(1, 2), ContinuedFraction(5, 9), ContinuedFraction(4, 7), ContinuedFraction(3, 5), ContinuedFraction(5, 8), ContinuedFraction(2, 3), ContinuedFraction(7, 10), ContinuedFraction(5, 7), ContinuedFraction(3, 4), ContinuedFraction(7, 9), ContinuedFraction(4, 5), ContinuedFraction(5, 6), ContinuedFraction(6, 7), ContinuedFraction(7, 8), ContinuedFraction(8, 9), ContinuedFraction(9, 10), ContinuedFraction(1, 1))
 
 The result is a tuple of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances in ascending order of magnitude, starting with ``ContinuedFraction(0, 1)`` and ending with ``ContinuedFraction(1, 1)``.
-
-.. note::
-
-   There is also a generator version :py:func:`~continuedfractions.sequences.farey_sequence_generator`, which is actually used by :py:func:`~continuedfractions.sequences.farey_sequence`. Below is an example of using the generator version:
-
-   .. code:: python
-
-      >>> tuple(farey_sequence_generator(5))
-      (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
-      >>> gen = farey_sequence_generator(5)
-      >>> while True:
-      ...     try:
-      ...         print(next(gen))
-      ...     except StopIteration:
-      ...         break
-      ...
-      0
-      1/5
-      1/4
-      1/3
-      2/5
-      1/2
-      3/5
-      2/3
-      3/4
-      4/5
-      1
-
-   Both :py:func:`~continuedfractions.sequences.farey_sequence_generator` and :py:func:`~continuedfractions.sequences.farey_sequence` have the same argument structure, but :py:func:`~continuedfractions.sequences.farey_sequence` is cached while the generator version is not.
 
 The Farey sequence :math:`F_n` of order :math:`n` is an (ordered) sequence of (irreducible) rational numbers, called **Farey fractions**, in the closed unit interval :math:`[0, 1]`, which can be defined as follows:
 
@@ -406,15 +377,15 @@ and this can be checked with the :py:func:`~continuedfractions.sequences.farey_s
 
 .. code:: python
 
-   >>> farey_sequence(1)
+   >>> tuple(farey_sequence(1))
    (ContinuedFraction(0, 1), ContinuedFraction(1, 1))
-   >>> farey_sequence(2)
+   >>> tuple(farey_sequence(2))
    (ContinuedFraction(0, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 1))
-   >>> farey_sequence(3)
+   >>> tuple(farey_sequence(3))
    (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
-   >>> farey_sequence(4)
+   >>> tuple(farey_sequence(4))
    (ContinuedFraction(0, 1), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(1, 1))
-   >>> farey_sequence(5)
+   >>> tuple(farey_sequence(5))
    (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
 
 For :math:`n > 1` we can write the fractions in :math:`F_n` as :math:`\frac{b}{a}` where :math:`a > b`: the coprimality condition :math:`(a, b) = 1`, combined with :math:`a \leq n`, means that :math:`F_n` contains, for each :math:`a \leq n`, exactly :math:`\phi(a)` fractions of the form :math:`\frac{b}{a}` where :math:`a > b` and :math:`(a, b) = 1`, and :math:`\phi(k)` is the totient function.
@@ -439,15 +410,14 @@ As with :py:func:`~continuedfractions.sequences.coprime_pairs` the counts for :p
 
 .. code:: python
 
-   >>> assert len(farey_sequence(1)) == 1 + sum(map(sympy.totient, range(1, 2))) == 2
-   >>> assert len(farey_sequence(2)) == 1 + sum(map(sympy.totient, range(1, 3))) == 3
-   >>> assert len(farey_sequence(3)) == 1 + sum(map(sympy.totient, range(1, 4))) == 5
-   >>> assert len(farey_sequence(4)) == 1 + sum(map(sympy.totient, range(1, 5))) == 7
-   >>> assert len(farey_sequence(5)) == 1 + sum(map(sympy.totient, range(1, 6))) == 11
-   >>> assert len(farey_sequence(10)) == 1 + sum(map(sympy.totient, range(1, 11))) == 33
-   >>> assert len(farey_sequence(100)) == 1 + sum(map(sympy.totient, range(1, 101))) == 3045
-   >>> assert len(farey_sequence(1000)) == 1 + sum(map(sympy.totient, range(1, 1001))) == 304193
-   >>> assert len(farey_sequence(10000)) == 1 + sum(map(sympy.totient, range(1, 10001))) == 30397487
+   >>> assert len(tuple(farey_sequence(1))) == 1 + sum(map(sympy.totient, range(1, 2))) == 2
+   >>> assert len(tuple(farey_sequence(2))) == 1 + sum(map(sympy.totient, range(1, 3))) == 3
+   >>> assert len(tuple(farey_sequence(3))) == 1 + sum(map(sympy.totient, range(1, 4))) == 5
+   >>> assert len(tuple(farey_sequence(4))) == 1 + sum(map(sympy.totient, range(1, 5))) == 7
+   >>> assert len(tuple(farey_sequence(5))) == 1 + sum(map(sympy.totient, range(1, 6))) == 11
+   >>> assert len(tuple(farey_sequence(10))) == 1 + sum(map(sympy.totient, range(1, 11))) == 33
+   >>> assert len(tuple(farey_sequence(100))) == 1 + sum(map(sympy.totient, range(1, 101))) == 3045
+   >>> assert len(tuple(farey_sequence(1000))) == 1 + sum(map(sympy.totient, range(1, 1001))) == 304193
 
 Farey sequences have some interesting properties and connections with mediants and continued fractions, as described `here <https://en.wikipedia.org/wiki/Farey_sequence>`_. In relation to :ref:`mediants <sequences.mediants>` there is the notion of `Farey neighbours <https://en.wikipedia.org/wiki/Farey_sequence#Farey_neighbours>`_, which are simply adjacent or consecutive Farey fractions in a Farey sequence :math:`F_n`. Specifically, if fractions :math:`\frac{a}{b}` and :math:`\frac{c}{d}`, with :math:`\frac{a}{b} < \frac{c}{d}`, are Farey neighbours in a Farey sequence :math:`F_n`, where we may assume that :math:`n` is the smallest such index, then:
 

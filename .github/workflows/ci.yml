@@ -76,12 +76,6 @@ jobs:
       run: |
         python -m pip install pdm
         pdm info -v
-        pdm venv list -v
-        pdm use -f .venv
-        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
-        echo "GITHUB_PATH=$GITHUB_PATH"
-        echo "GITHUB_ENV=$GITHUB_ENV"
 
     - name: Lint + Run unit & acceptance tests + Measure code coverage
       run: |

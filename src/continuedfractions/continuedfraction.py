@@ -1003,6 +1003,9 @@ class ContinuedFraction(Fraction):
 
         return neg_self
 
+    def __abs__(self) -> ContinuedFraction:
+        return self.__class__(super().__abs__())
+
 
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using

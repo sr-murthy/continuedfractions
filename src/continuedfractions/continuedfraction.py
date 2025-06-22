@@ -14,11 +14,11 @@ import decimal
 import functools
 import statistics
 import sys
+import typing
 
 from decimal import Decimal
 from fractions import Fraction
 from pathlib import Path
-from typing import Any, Generator
 
 # -- 3rd party libraries --
 
@@ -49,6 +49,25 @@ class ContinuedFraction(Fraction):
     The term "simple continued fraction" denotes a specific type of continued
     fraction where the fractional terms only have numerators of :math:`1`.
 
+    Arguments can be any which are valid for creating objects of the
+    :py:class:`fractions.Fraction` superclass.
+
+    For clarification, valid arguments can be one of the following:
+
+    * a single instance of :py:class:`numbers.Rational`, including
+      :py:class:`int`, :py:class:`fractions.Fraction` or
+      :py:class:`ContinuedFraction`, named or unnamed
+    * a pair of  :py:class:`numbers.Rational` instances, including
+      :py:class:`int`, :py:class:`fractions.Fraction` and
+      :py:class:`ContinuedFraction`, named or unnamed
+    * a single :py:class:`float` or :py:class:`decimal.Decimal` value
+      that is not a special value such as :py:data:`math.nan`,
+      ``float('inf')``, or ``Decimal('infinity')``
+    * a single numeric valid string (:py:class:`str`) - validity is
+      determined in the superclass by the
+      :py:data:`fractions._RATIONAL_FORMAT` test
+
+
     Examples
     --------
     Construct the continued fraction for the rational `649/200`.
@@ -56,12 +75,12 @@ class ContinuedFraction(Fraction):
     >>> cf = ContinuedFraction(649, 200)
     >>> cf
     ContinuedFraction(649, 200)
-    >>> cf.as_float()
-    3.245
+    >>> cf.as_decimal()
+    Decimal('3.245')
 
     Inspect the elements, order, convergents, and remainders.
 
-    >>> cf.elements
+    >>> tuple(cf.elements)
     (3, 4, 12, 4)
     >>> cf.order
     3
@@ -93,85 +112,93 @@ class ContinuedFraction(Fraction):
     >>> assert cf * cf_negative_inverse == -1
     """
 
-    # Slots - ATM only ``_elements`` to store the continued fraction elements sequence
-    __slots__ = ['_elements',]
-
-    # Declare all instances to have an ``_elements`` attribute, which must be
-    # a ``tuple`` of ``int``s.
-    _elements: tuple[int]
-
-    def __new__(cls, *args: Any, **kwargs: Any) -> ContinuedFraction:
-        """Creates, initialises and returns instances of this class.
-
-        Arguments can be any which are valid for creating objects of the
-        :py:class:`fractions.Fraction` superclass.
-
-        For clarification, valid arguments can be one of the following:
-
-        * a single instance of :py:class:`numbers.Rational`, including
-          :py:class:`int`, :py:class:`fractions.Fraction` or
-          :py:class:`ContinuedFraction`, named or unnamed
-        * a pair of  :py:class:`numbers.Rational` instances, including
-          :py:class:`int`, :py:class:`fractions.Fraction` and
-          :py:class:`ContinuedFraction`, named or unnamed
-        * a single :py:class:`float` or :py:class:`decimal.Decimal` value
-          that is not a special value such as :py:data:`math.nan`,
-          ``float('inf')``, or ``Decimal('infinity')``
-        * a single numeric valid string (:py:class:`str`) - validity is
-          determined in the superclass by the
-          :py:data:`fractions._RATIONAL_FORMAT` test
-
-        Returns
-        -------
-        ContinuedFraction
-            A :py:class:`ContinuedFraction` instance.
+    @property
+    def elements(self) -> typing.Generator[int, None, None]:
+        """:py:class:`typing.Generator`: A generator of the (ordered) sequence of elements/coefficients of the continued fraction.
 
         Examples
         --------
-        Several example are given below of constructing the simple continued
-        fraction for the number :math:`\\frac{-649}{200}` in different ways.
-
-        >>> ContinuedFraction(-649, 200)
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction('-3.245')
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction(Decimal('-3.245'))
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction('-649/200')
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction(Fraction(-649, 200))
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction(ContinuedFraction(649, -200))
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction(Fraction(-649), 200)
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction(649, Fraction(-200))
-        ContinuedFraction(-649, 200)
-        >>> ContinuedFraction(Fraction(-649), ContinuedFraction(200))
-        ContinuedFraction(-649, 200)
-
-        In each of the examples above, the minus sign can be removed from
-        the arguments to the :py:class:`numbers.Rational` instance and
-        instead attached to the outer class, e.g.:
-
-        >>> -ContinuedFraction(649, 200)
-        ContinuedFraction(-649, 200)
-        >>> -ContinuedFraction('3.245')
-        ContinuedFraction(-649, 200)
-        >>> -ContinuedFraction('649/200')
-        ContinuedFraction(-649, 200)
-
-        Invalid arguments will raise errors in the
-        :py:class:`fractions.Fraction` superclass.
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> tuple(cf.elements)
+        (0, 8, 9, 1, 21, 1, 1, 5)
         """
-        # Get the ``fractions.Fraction`` instance from the superclass constructor
-        self = super().__new__(cls, *args, **kwargs)
+        yield from continued_fraction_rational(self)
 
-        # Call ``lib.continued_fraction_rational`` with the fraction to get
-        # get the elements, and assign back to the instance
-        self._elements = tuple(continued_fraction_rational(self))
+    @property
+    def order(self) -> int:
+        """:py:class:`int`: The order of the continued fraction, which is the number of its elements minus :math:`1`.
 
-        return self
+        Examples
+        --------
+        >>> cf = ContinuedFraction('.12345')
+        >>> cf
+        ContinuedFraction(2469, 20000)
+        >>> len(cf.elements)
+        8
+        >>> cf.order
+        7
+        """
+        return sum(1 for e in self.elements) - 1
+
+
+    @property
+    def counter(self) -> collections.Counter:
+        """:py:class:`collections.Counter` : A counter for the elements.
+
+        Examples
+        --------
+        >>> cf = ContinuedFraction(928374923, 8249234)
+        >>> cf.counter
+        Counter({1: 6, 2: 3, 24: 2, 112: 1, 5: 1, 3: 1})
+        """
+        return collections.Counter(self.elements)
+
+    @property
+    def khinchin_mean(self) -> Decimal | None:
+        """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
+
+        We define the Khinchin mean :math:`K_n` of a (simple) continued
+        fraction :math:`[a_0; a_1, a_2, \\ldots, a_n]` as:
+
+        .. math::
+
+           K_n := \\sqrt[n]{a_1a_2 \\cdots a_n} = \\left( a_1a_2 \\cdots a_n \\right)^{\\frac{1}{n}}, \\hskip{3em} n \\geq 1
+
+        This property is intended to make it easier to study the limit of
+        :math:`K_n` as :math:`n \\to \\infty`.  See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#khinchin-means-khinchin-s-constant>`_
+        for more details.
+
+        In the special case of integers or fractions representing integers,
+        whose continued fraction representations consist of only a single
+        element, a null value is returned.
+
+        Examples
+        --------
+        Note that the default :py:mod:`decimal` context precision of :math:`28`
+        is used in these examples.
+
+        >>> ContinuedFraction(649, 200).elements
+        (3, 4, 12, 4)
+        >>> ContinuedFraction(649, 200).khinchin_mean
+        Decimal('5.76899828122963409526846589869819581508636474609375')
+        >>> ContinuedFraction(415, 93).elements
+        (4, 2, 6, 7)
+        >>> ContinuedFraction(415, 93).khinchin_mean
+        Decimal('4.37951913988788898990378584130667150020599365234375')
+        >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements
+        (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
+        >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).khinchin_mean
+        Decimal('2.15015313349074244086978069390170276165008544921875')
+        >>> ContinuedFraction(5000).khinchin_mean
+        """
+        elements = tuple(self.elements)
+
+        if self.order == 1:
+            return Decimal(elements[-1])
+        elif self.order > 1:
+            return Decimal(statistics.geometric_mean(elements[1:]))
 
     @classmethod
     def from_elements(cls, *elements: int) -> ContinuedFraction:
@@ -236,7 +263,7 @@ class ContinuedFraction(Fraction):
         # Create a new ``ContinuedFraction`` instance from the given elements
         # and initialise with elements only - no need to initialise via
         # ``__init__``
-        if any(not isinstance(elem, int) or (elem <= 0 and i > 0) for i, elem in enumerate(elements)):
+        if any(not isinstance(e, int) or (e <= 0 and i > 0) for i, e in enumerate(elements)):
             raise ValueError(
                 "Continued fraction elements must be integers, and all "
                 "elements after the 1st must be positive"
@@ -254,13 +281,8 @@ class ContinuedFraction(Fraction):
         # instance returned by ``lib.fraction_from_elements`` - this will
         # be the highest-order convergent of the simple continued
         # fraction represented by the given sequence of elements
-        self = super().__new__(cls, fraction_from_elements(*elements))
+        self = cls(fraction_from_elements(*elements))
 
-        # Assign the given elements back to the instance - note that we
-        # have avoided going through the division algorithm in
-        # ``lib.continued_fraction_rational``
-        self._elements = elements
-    
         return self
 
     def extend(self, *new_elements: int) -> None:
@@ -276,7 +298,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        elements
+        new_elements : int
             An (ordered) sequence of new (integer) elements by which the tail
             of the existing sequence of elements is extended.
 
@@ -320,13 +342,13 @@ class ContinuedFraction(Fraction):
         ...
         ValueError: The elements/coefficients to be added to the tail must be positive integers.
         """
-        if not new_elements or any(not isinstance(x, int) or x < 1 for x in new_elements):
+        if not new_elements or any(not isinstance(e, int) or e < 1 for e in new_elements):
             raise ValueError(
                 "The elements/coefficients to be added to the tail must be "
                 "positive integers."
             )
 
-        elements = self._elements + new_elements
+        elements = tuple(self.elements) + new_elements
 
         # A step to ensure uniqueness of the simple form of the continued
         # fraction - if the last of the new elements is ``1`` it can be
@@ -337,9 +359,7 @@ class ContinuedFraction(Fraction):
             elements = elements[:-2] + (elements[-2] + 1,)
 
         fraction = fraction_from_elements(*elements)
-
         self._numerator, self._denominator = fraction.as_integer_ratio()
-        self._elements = elements
 
     def truncate(self, *tail_elements: int) -> None:
         """Performs an in-place truncation of the tail of the existing sequence of elements.
@@ -367,7 +387,7 @@ class ContinuedFraction(Fraction):
 
         Parameters
         ----------
-        tail_elements
+        tail_elements : int
             An (ordered) sequence of (integer) elements to truncate from the
             tail of the existing sequence of elements.
 
@@ -413,17 +433,18 @@ class ContinuedFraction(Fraction):
         ...
         ValueError: The elements/coefficients to be truncated from the tail must form a valid segment of the existing tail.
         """
-        order = self.order
+        elements = tuple(self.elements)
+        order = len(elements[1:])
         truncation_length = len(tail_elements)
 
-        if not tail_elements or truncation_length > order or self._elements[order + 1 - truncation_length:] != tail_elements:
+        if not tail_elements or truncation_length > order or elements[order + 1 - truncation_length:] != tail_elements:
             raise ValueError(
                 "The elements/coefficients to be truncated from the tail must "
                 "form a valid segment of the existing tail."
             )
 
-        elements = self._elements[:order + 1 - truncation_length]
-
+        elements = elements[:order + 1 - truncation_length]
+        
         # A step to ensure uniqueness of the simple form of the continued
         # fraction - if the last element is ``1`` it can be "removed" by
         # adding it to the second last element, thereby shortening the
@@ -434,168 +455,6 @@ class ContinuedFraction(Fraction):
 
         fraction = fraction_from_elements(*elements)
         self._numerator, self._denominator = fraction.as_integer_ratio()
-        self._elements = elements
-
-    def __eq__(self, other, /) -> bool:
-        """Custom equality check.
-
-        Compares the sequence of elements/coefficients of ``self`` with
-        that of ``other`` if ``other`` is also a
-        :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
-        instance, otherwise calls the superclass :py:class:`~fractions.Fraction`
-        equality check.
-
-        Returns
-        -------
-        bool
-            The boolean result of the equality check.
-        """
-        if isinstance(other, self.__class__):
-            return self._elements == other._elements
-
-        return super().__eq__(other)
-
-    def __hash__(self) -> int:
-        """Custom hash.
-
-        Custom hash which hashes the sequence of elements/coefficients - as
-        this is always defined as a finite, non-empty tuple the hash is
-        always defined.
-
-        Returns
-        -------
-        int
-            The hash of the
-            :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
-            instance.
-        """
-        return hash(self._elements)
-
-    def __add__(self, other, /):
-        return self.__class__(super().__add__(other))
-
-    def __radd__(self, other, /):
-        return self.__class__(super().__radd__(other))
-
-    def __sub__(self, other, /):
-        return self.__class__(super().__sub__(other))
-
-    def __rsub__(self, other, /):
-        return self.__class__(super().__rsub__(other))
-
-    def __mul__(self, other, /):
-        return self.__class__(super().__mul__(other))
-
-    def __rmul__(self, other, /):
-        return self.__class__(super().__rmul__(other))
-
-    def __truediv__(self, other, /):
-        return self.__class__(super().__truediv__(other))
-
-    def __rtruediv__(self, other, /):
-        return self.__class__(super().__rtruediv__(other))
-
-    def __floordiv__(self, other, /):
-        return self.__class__(super().__floordiv__(other))
-
-    def __rfloordiv__(self, other, /):
-        return self.__class__(super().__rfloordiv__(other))
-
-    def __divmod__(self, other, /):
-        quo, rem = super().__divmod__(other)
-
-        return self.__class__(quo), self.__class__(rem)
-
-    def __rdivmod__(self, other, /):
-        quo, rem = super().__rdivmod__(other)
-        
-        return self.__class__(quo), self.__class__(rem)
-
-    def __pow__(self, other, /) -> ContinuedFraction:
-        return self.__class__(super().__pow__(other))
-
-    def __rpow__(self, other, /):
-        return self.__class__(Fraction(other).__rpow__(self))
-
-    def __pos__(self) -> ContinuedFraction:
-        return self.__class__(super().__pos__())
-
-    def __neg__(self) -> ContinuedFraction:
-        """
-        Division-free negation for a finite simple continued fraction, as
-        described `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/creating-continued-fractions.html#negative-continued-fractions>`_.
-
-        The basic algorithm can be described as follows: if
-        :math:`[a_0; a_1,\\ldots, a_n]` is the simple continued fraction of a
-        **positive** rational number :math:`\\frac{a}{b}` of finite order
-        :math:`n` then  :math:`-\\frac{a}{b}` has the simple continued
-        fraction:
-
-        .. math::
-
-           \\begin{cases}
-           [-a_0;]                                      \\hskip{3em} & n = 0 \\\\
-           [-(a_0 + 1); 2]                              \\hskip{3em} & n = 1 \\text{ and } a_1 = 2 \\\\
-           [-(a_0 + 1); a_2 + 1, a_3,\\ldots, a_n]      \\hskip{3em} & n \\geq 2 \\text{ and } a_1 = 1 \\\\
-           [-(a_0 + 1); 1, a_1 - 1, a_2, \\ldots,a_n]   \\hskip{3em} & n \\geq 2 \\text{ and } a_1 \\geq 2
-           \\end{cases}
-
-        In applying this algorithm there is an assumption that the last element
-        :math:`a_n > 1`, as any simple continued fraction of type
-        :math:`[a_0; a_1,\\ldots, a_{n} = 1]` can be reduced to the simple
-        continued fraction :math:`[a_0; a_1,\\ldots, a_{n - 1} + 1]`.
-        """
-        cls_ = self.__class__
-        elms = self._elements
-
-        if len(elms) == 1:
-            # Case (1) of the algorithm
-            neg_elms = (-elms[0],)
-        elif len(elms) == 2 and elms[1] == 2:
-            # Case (2) of the algorithm
-            neg_elms = (-(elms[0] + 1), 2)
-        elif len(elms) > 1 and elms[1] == 1:
-            # Case (3) of the algorithm
-            neg_elms = (-(elms[0] + 1), elms[2] + 1, *elms[3:])
-        else:
-            # Case (4) of the algorithm
-            neg_elms = (-(elms[0] + 1), 1, elms[1] - 1, *elms[2:])
-
-        neg_self = cls_.__new__(cls_, *convergent(len(neg_elms) - 1, *neg_elms).as_integer_ratio())
-        neg_self._elements = neg_elms
-
-        return neg_self
-
-    def __abs__(self) -> ContinuedFraction:
-        return self.__class__(super().__abs__())
-
-    def as_float(self) -> float:
-        """Returns the :py:class:`float` value of the continued fraction.
-
-        Returns
-        -------
-        float
-            The :py:class:`float` value of the continued fraction.
-
-        Examples
-        --------
-        Note that the default :py:mod:`decimal` context precision of :math:`28`
-        is used in these examples.
-
-        >>> import math
-        >>> math.pi
-        3.141592653589793
-
-        Now construct a :py:class:`ContinuedFraction` instance from it, and check the 
-        :py:class:`float` value.
-
-        >>> cf = ContinuedFraction(math.pi)
-        >>> cf
-        ContinuedFraction(884279719003555, 281474976710656)
-        >>> cf.as_float()
-        3.141592653589793
-        """
-        return self.numerator / self.denominator
 
     def as_decimal(self) -> Decimal:
         """Returns the :py:class:`decimal.Decimal` value of the continued fraction.
@@ -624,95 +483,6 @@ class ContinuedFraction(Fraction):
         Decimal('3.141592653589793115997963469')
         """
         return Decimal(self.numerator) / Decimal(self.denominator)
-
-    @property
-    def elements(self) -> tuple[int]:
-        """:py:class:`tuple`: The (ordered) sequence of elements of the continued fraction.
-
-        Examples
-        --------
-        >>> cf = ContinuedFraction('.12345')
-        >>> cf
-        ContinuedFraction(2469, 20000)
-        >>> cf.elements
-        (0, 8, 9, 1, 21, 1, 1, 5)
-        """
-        return self._elements
-
-    @property
-    def order(self) -> int:
-        """:py:class:`int`: The order of the continued fraction, which is the number of its elements minus :math:`1`.
-
-        Examples
-        --------
-        >>> cf = ContinuedFraction('.12345')
-        >>> cf
-        ContinuedFraction(2469, 20000)
-        >>> len(cf.elements)
-        8
-        >>> cf.order
-        7
-        """
-        return len(self._elements[1:])
-
-    @property
-    def counter(self) -> collections.Counter:
-        """:py:class:`collections.Counter` : A counter for the elements.
-
-        Examples
-        --------
-        >>> cf = ContinuedFraction(928374923, 8249234)
-        >>> cf.counter
-        Counter({1: 6, 2: 3, 24: 2, 112: 1, 5: 1, 3: 1})
-        """
-        return collections.Counter(self.elements)
-
-    @property
-    def khinchin_mean(self) -> Decimal | None:
-        """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
-
-        We define the Khinchin mean :math:`K_n` of a (simple) continued
-        fraction :math:`[a_0; a_1, a_2, \\ldots, a_n]` as:
-
-        .. math::
-
-           K_n := \\sqrt[n]{a_1a_2 \\cdots a_n} = \\left( a_1a_2 \\cdots a_n \\right)^{\\frac{1}{n}}, \\hskip{3em} n \\geq 1
-
-        This property is intended to make it easier to study the limit of
-        :math:`K_n` as :math:`n \\to \\infty`.  See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#khinchin-means-khinchin-s-constant>`_
-        for more details.
-
-        In the special case of integers or fractions representing integers,
-        whose continued fraction representations consist of only a single
-        element, a null value is returned.
-
-        Examples
-        --------
-        Note that the default :py:mod:`decimal` context precision of :math:`28`
-        is used in these examples.
-
-        >>> ContinuedFraction(649, 200).elements
-        (3, 4, 12, 4)
-        >>> ContinuedFraction(649, 200).khinchin_mean
-        Decimal('5.76899828122963409526846589869819581508636474609375')
-        >>> ContinuedFraction(415, 93).elements
-        (4, 2, 6, 7)
-        >>> ContinuedFraction(415, 93).khinchin_mean
-        Decimal('4.37951913988788898990378584130667150020599365234375')
-        >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements
-        (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
-        >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).khinchin_mean
-        Decimal('2.15015313349074244086978069390170276165008544921875')
-        >>> ContinuedFraction(5000).khinchin_mean
-
-        """
-        match self.order:
-            case 0:
-                return None
-            case 1:
-                return Decimal(self.elements[-1])
-            case _:
-                return Decimal(statistics.geometric_mean(self.elements[1:]))
 
     @functools.cache
     def convergent(self, k: int, /) -> ContinuedFraction:
@@ -768,10 +538,10 @@ class ContinuedFraction(Fraction):
         >>> cf.convergent(7)
         ContinuedFraction(2469, 20000)
         """
-        return self.__class__(convergent(k, *self._elements))
+        return self.__class__(convergent(k, *self.elements))
 
     @property
-    def convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+    def convergents(self) -> typing.Generator[tuple[int, ContinuedFraction], None, None]:
         """Generates an enumerated sequence of all convergents of the continued fraction.
 
         The convergents are generated as tuples of :py:class:`int` and
@@ -794,10 +564,10 @@ class ContinuedFraction(Fraction):
         >>> tuple(cf.convergents)
         ((0, ContinuedFraction(3, 1)), (1, ContinuedFraction(13, 4)), (2, ContinuedFraction(159, 49)), (3, ContinuedFraction(649, 200)))
         """
-        yield from enumerate(map(self.__class__, convergents(*self._elements)))
+        yield from enumerate(map(self.__class__, convergents(*self.elements)))
 
     @property
-    def even_convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+    def even_order_convergents(self) -> typing.Generator[tuple[int, ContinuedFraction], None, None]:
         """Generates an enumerated sequence of all even-order convergents of the continued fraction.
 
         The convergents are generated as tuples of :py:class:`int` and
@@ -816,13 +586,13 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-        >>> tuple(ContinuedFraction('3.245').even_convergents)
+        >>> tuple(ContinuedFraction('3.245').even_order_convergents)
         ((0, ContinuedFraction(3, 1)), (2, ContinuedFraction(159, 49)))
         """
         yield from filter(lambda t: t[0] % 2 == 0, self.convergents)
 
     @property
-    def odd_convergents(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+    def odd_order_convergents(self) -> typing.Generator[tuple[int, ContinuedFraction], None, None]:
         """Generates an enumerated sequence of all odd-order convergents of the continued fraction.
 
         The convergents are generated as tuples of :py:class:`int` and
@@ -841,7 +611,7 @@ class ContinuedFraction(Fraction):
 
         Examples
         --------
-        >>> tuple(ContinuedFraction('3.245').odd_convergents)
+        >>> tuple(ContinuedFraction('3.245').odd_order_convergents)
         ((1, ContinuedFraction(13, 4)), (3, ContinuedFraction(649, 200)))
         """
         yield from filter(lambda t: t[0] % 2 == 1, self.convergents)
@@ -931,22 +701,6 @@ class ContinuedFraction(Fraction):
 
         The result is a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
 
-        The remainders satisfy the recurrence relation:
-
-        .. math::
-
-           R_{k - 1} = a_{k - 1} + \\frac{1}{R_k}, \\hskip{3em} k \\geq 1
-
-        If the original continued fraction is finite then its remainders are all
-        finite and rational.
-
-        As this class implements finite simple continued fractions, this method
-        always produces rational numbers.
-
-        The integer :math:`k` must be non-negative and cannot exceed the order
-        of the continued fraction, i.e. the number of its tail elements, and 
-        the tail elements must define a valid finite simple continued fraction.
-
         Parameters
         ----------
         k : int
@@ -972,17 +726,17 @@ class ContinuedFraction(Fraction):
         >>> cf.remainder(7)
         ContinuedFraction(5, 1)
         """
-        return self.__class__(remainder(k, *self._elements))
+        return self.__class__(remainder(k, *self.elements))
 
     @property
-    def remainders(self) -> Generator[tuple[int, ContinuedFraction], None, None]:
+    def remainders(self) -> typing.Generator[tuple[int, ContinuedFraction], None, None]:
         """Generates an enumerated sequence of all remainders of the continued fraction in descending order of index.
 
         If :math:`n` is the order of the continued fraction then there are
         :math:`n + 1` remainders :math:`R_0, R_1, \\ldots, R_n`, and the method
         generates these in reverse order :math:`R_0, R_1, \\ldots, R_n`.
 
-        See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#remainders>`_
+        See the `documentation <https://continuedfractions.readthedocs.io/sources/continued-fractions.html#remainders>`_
         for more details on remainders.
 
         The remainders are generated as tuples of :py:class:`int`
@@ -1003,9 +757,12 @@ class ContinuedFraction(Fraction):
         >>> tuple(ContinuedFraction(-415, 93).remainders)
         ((4, ContinuedFraction(7, 1)), (3, ContinuedFraction(43, 7)), (2, ContinuedFraction(50, 43)), (1, ContinuedFraction(93, 50)), (0, ContinuedFraction(-415, 93)))
         """
+        elements = tuple(self.elements)
+        order = len(elements[1:])
+
         yield from zip(
-            reversed(range(self.order + 1)),
-            map(self.__class__, remainders(*self._elements))
+            reversed(range(order + 1)),
+            map(self.__class__, remainders(*elements))
         )
 
     @functools.cache
@@ -1020,34 +777,8 @@ class ContinuedFraction(Fraction):
 
            \\frac{ka + c}{kb + d}, \\hskip{3em}    k \\geq 1
 
-        while the :math:`k`-th right mediant is defined as:
-        
-        .. math::
-
-           \\frac{a + kc}{b + kd}, \\hskip{3em}    k \\geq 1
-
-        If we assume that :math:`r < s` and :math:`bd > 0` then these mediants
-        have the property that:
-       
-        .. math::
-
-           \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \\hskip{3em} k \\geq 1
-
-        where equality holds for :math:`k = 1`. If we let :math:`k \\to \\infty`
-        then the mediants converge to opposite limits:
-
-        .. math::
-
-          \\begin{align}
-          \\lim_{k \\to \\infty} \\frac{ka + c}{kb + d} &= \\frac{a}{b} \\\\
-          \\lim_{k \\to \\infty} \\frac{a + kc}{b + kd} &= \\frac{c}{d}
-          \\end{align}
-
         For more information consult the
-        `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
-
-        The method is cached (with :py:func:`functools.cache`), which makes calls
-        after the initial call much faster.
+        `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#sequences-mediants>`_.
 
         Parameters
         ----------
@@ -1096,31 +827,8 @@ class ContinuedFraction(Fraction):
 
            \\frac{a + kc}{b + kd}, \\hskip{3em}    k \\geq 1
 
-        while the :math:`k`-th left-mediant is defined as:
-        
-        .. math::
-
-           \\frac{ka + c}{kb + d}, \\hskip{3em}    k \\geq 1
-
-        If we assume that :math:`r < s` and :math:`bd > 0` then these mediants
-        have the property that:
-       
-        .. math::
-
-           \\frac{a}{b} < \\frac{ka + c}{kb + d} \\leq \\frac{a + kc}{b + kd} < \\frac{c}{d},   \\hskip{3em} k \\geq 1
-
-        where equality holds for :math:`k = 1`. If we let :math:`k \\to \\infty`
-        then the mediants converge to opposite limits:
-
-        .. math::
-
-          \\begin{align}
-          \\lim_{k \\to \\infty} \\frac{ka + c}{kb + d} &= \\frac{a}{b} \\\\
-          \\lim_{k \\to \\infty} \\frac{a + kc}{b + kd} &= \\frac{c}{d}
-          \\end{align}
-
         For more information consult the
-        `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
+        `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#sequences-mediants>`_.
 
         Parameters
         ----------
@@ -1177,7 +885,7 @@ class ContinuedFraction(Fraction):
         methods where the order :math:`k` is set to :math:`1`.
 
         For more information consult the
-        `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
+        `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#sequences-mediants>`_.
 
         Parameters
         ----------
@@ -1198,6 +906,102 @@ class ContinuedFraction(Fraction):
         >>> assert ContinuedFraction(1, 2).mediant(ContinuedFraction(3, 5)) == ContinuedFraction(1, 2).right_mediant(ContinuedFraction(3, 5), k=1)
         """
         return self.__class__(mediant(self, other))
+
+    def __add__(self, other, /):
+        return self.__class__(super().__add__(other))
+
+    def __radd__(self, other, /):
+        return self.__class__(super().__radd__(other))
+
+    def __sub__(self, other, /):
+        return self.__class__(super().__sub__(other))
+
+    def __rsub__(self, other, /):
+        return self.__class__(super().__rsub__(other))
+
+    def __mul__(self, other, /):
+        return self.__class__(super().__mul__(other))
+
+    def __rmul__(self, other, /):
+        return self.__class__(super().__rmul__(other))
+
+    def __truediv__(self, other, /):
+        return self.__class__(super().__truediv__(other))
+
+    def __rtruediv__(self, other, /):
+        return self.__class__(super().__rtruediv__(other))
+
+    def __floordiv__(self, other, /):
+        return self.__class__(super().__floordiv__(other))
+
+    def __rfloordiv__(self, other, /):
+        return self.__class__(super().__rfloordiv__(other))
+
+    def __divmod__(self, other, /):
+        quo, rem = super().__divmod__(other)
+
+        return self.__class__(quo), self.__class__(rem)
+
+    def __rdivmod__(self, other, /):
+        quo, rem = super().__rdivmod__(other)
+        
+        return self.__class__(quo), self.__class__(rem)
+
+    def __pow__(self, other, /) -> ContinuedFraction:
+        return self.__class__(super().__pow__(other))
+
+    def __rpow__(self, other, /):
+        return self.__class__(Fraction(other).__rpow__(self))
+
+    def __pos__(self) -> ContinuedFraction:
+        return self.__class__(super().__pos__())
+
+    def __neg__(self) -> ContinuedFraction:
+        """
+        The negation algorithm for a finite simple continued fraction, as
+        described `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/continued-fractions.html#negative-continued-fractions>`_.
+
+        The basic algorithm can be described as follows: if
+        :math:`[a_0; a_1,\\ldots, a_n]` is the simple continued fraction of a
+        **positive** rational number :math:`\\frac{a}{b}` of finite order
+        :math:`n` then  :math:`-\\frac{a}{b}` has the simple continued
+        fraction:
+
+        .. math::
+
+           \\begin{cases}
+           [-a_0;]                                      \\hskip{3em} & n = 0 \\\\
+           [-(a_0 + 1); 2]                              \\hskip{3em} & n = 1 \\text{ and } a_1 = 2 \\\\
+           [-(a_0 + 1); a_2 + 1, a_3,\\ldots, a_n]      \\hskip{3em} & n \\geq 2 \\text{ and } a_1 = 1 \\\\
+           [-(a_0 + 1); 1, a_1 - 1, a_2, \\ldots,a_n]   \\hskip{3em} & n \\geq 2 \\text{ and } a_1 \\geq 2
+           \\end{cases}
+
+        In applying this algorithm there is an assumption that the last element
+        :math:`a_n > 1`, as any simple continued fraction of type
+        :math:`[a_0; a_1,\\ldots, a_{n} = 1]` can be reduced to the simple
+        continued fraction :math:`[a_0; a_1,\\ldots, a_{n - 1} + 1]`.
+        """
+        elements = tuple(self.elements)
+        n = len(elements)
+
+        if n == 1:
+            # Case (1) of the algorithm
+            neg_elements = (-elements[0],)
+        elif n == 2 and elements[1] == 2:
+            # Case (2) of the algorithm
+            neg_elements = (-(elements[0] + 1), 2)
+        elif n > 1 and elements[1] == 1:
+            # Case (3) of the algorithm
+            neg_elements = (-(elements[0] + 1), elements[2] + 1, *elements[3:])
+        else:
+            # Case (4) of the algorithm
+            neg_elements = (-(elements[0] + 1), 1, elements[1] - 1, *elements[2:])
+
+        neg_fraction = convergent(len(neg_elements) - 1, *neg_elements)
+        neg_self = self.__class__(1)
+        neg_self._numerator, neg_self._denominator = neg_fraction.as_integer_ratio()
+
+        return neg_self
 
 
 if __name__ == "__main__":      # pragma: no cover

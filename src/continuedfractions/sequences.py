@@ -13,10 +13,10 @@ __all__ = [
 # -- Standard libraries --
 import math
 import sys
+import typing
 
 from itertools import chain, product, starmap
 from pathlib import Path
-from typing import Generator, Literal, TypeAlias
 
 # -- 3rd party libraries --
 
@@ -26,11 +26,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.continuedfraction import ContinuedFraction
 
-KSRMNode: TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM coprime pairs tree
+KSRMNode: typing.TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM coprime pairs tree
 KSRMBranch: NamedCallableProxy          #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
-def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> Generator[int, None, None]:
+def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.Generator[int, None, None]:
     """Generates a sequence of (positive) integers :math:`1 \\leq m < n` coprime to a given positive integer :math:`n`.
 
     The tuple is sorted in descending order of magnitude.
@@ -223,7 +223,7 @@ class KSRMTree:
         return self
 
     @property
-    def roots(self) -> Literal[tuple([(2, 1), (3, 1)])]:
+    def roots(self) -> typing.Literal[tuple([(2, 1), (3, 1)])]:
         """:py:class:`tuple`: The tuple of roots of the KSRM trees, which are :math:`(2, 1)` and :math:`(3, 1)`.
 
         For more details see the following papers:
@@ -420,7 +420,7 @@ class KSRMTree:
         # branch of the last visited node before the current node.
         return cur_node, cur_branch, cur_index, last_branch
 
-    def search_root(self, n: int, root: KSRMNode, /) -> Generator[KSRMNode, None, None]:
+    def search_root(self, n: int, root: KSRMNode, /) -> typing.Generator[KSRMNode, None, None]:
         """Depth-first branch-and-bound generative search function (in pre-order, NLMR), with backtracking and pruning, on the KSRM coprime pairs trees, starting from the given root node.
 
         The given root node need not be the canonical roots, :math:`(2, 1)`,
@@ -580,7 +580,7 @@ class KSRMTree:
         # debugging easier.
         return
 
-    def search(self, n: int, /) -> Generator[KSRMNode, None, None]:
+    def search(self, n: int, /) -> typing.Generator[KSRMNode, None, None]:
         """Depth-first branch-and-bound generative search function (in pre-order, NLMR) on the KSRM coprime pairs trees to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
     
         See the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`
@@ -642,7 +642,7 @@ class KSRMTree:
             yield from tuple(product([n], _coprime_integers(n)))
 
 
-def coprime_pairs(n: int, /) -> Generator[KSRMNode, None, None]:
+def coprime_pairs(n: int, /) -> typing.Generator[KSRMNode, None, None]:
     """Generates a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
 
     Calls the KSRM tree :py:meth:`~continuedfractions.sequences.KSRMTree.search`
@@ -698,7 +698,7 @@ def coprime_pairs(n: int, /) -> Generator[KSRMNode, None, None]:
         )
 
 
-def farey_sequence(n: int, /) -> Generator[ContinuedFraction, None, None]:
+def farey_sequence(n: int, /) -> typing.Generator[ContinuedFraction, None, None]:
     """Generates an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
 
     The elements of the sequence are yielded as

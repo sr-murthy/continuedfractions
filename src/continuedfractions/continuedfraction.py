@@ -135,8 +135,8 @@ class ContinuedFraction(Fraction):
         >>> cf = ContinuedFraction('.12345')
         >>> cf
         ContinuedFraction(2469, 20000)
-        >>> len(cf.elements)
-        8
+        >>> tuple(cf.elements)
+        (0, 8, 9, 1, 21, 1, 1, 5)
         >>> cf.order
         7
         """
@@ -179,15 +179,15 @@ class ContinuedFraction(Fraction):
         Note that the default :py:mod:`decimal` context precision of :math:`28`
         is used in these examples.
 
-        >>> ContinuedFraction(649, 200).elements
+        >>> tuple(ContinuedFraction(649, 200).elements)
         (3, 4, 12, 4)
         >>> ContinuedFraction(649, 200).khinchin_mean
         Decimal('5.76899828122963409526846589869819581508636474609375')
-        >>> ContinuedFraction(415, 93).elements
+        >>> tuple(ContinuedFraction(415, 93).elements)
         (4, 2, 6, 7)
         >>> ContinuedFraction(415, 93).khinchin_mean
         Decimal('4.37951913988788898990378584130667150020599365234375')
-        >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements
+        >>> tuple((ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements)
         (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
         >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).khinchin_mean
         Decimal('2.15015313349074244086978069390170276165008544921875')
@@ -313,7 +313,7 @@ class ContinuedFraction(Fraction):
         >>> cf = ContinuedFraction('3.245')
         >>> cf
         ContinuedFraction(649, 200)
-        >>> cf.elements
+        >>> tuple(cf.elements)
         (3, 4, 12, 4)
         >>> cf.order
         3
@@ -324,7 +324,7 @@ class ContinuedFraction(Fraction):
         >>> cf.extend(5, 2)
         >>> cf
         ContinuedFraction(7457, 2298)
-        >>> cf.elements
+        >>> tuple(cf.elements)
         (3, 4, 12, 4, 5, 2)
         >>> cf.order
         5
@@ -402,7 +402,7 @@ class ContinuedFraction(Fraction):
         >>> cf = ContinuedFraction('3.245')
         >>> cf
         ContinuedFraction(649, 200)
-        >>> cf.elements
+        >>> tuple(cf.elements)
         (3, 4, 12, 4)
         >>> cf.order
         3
@@ -415,7 +415,7 @@ class ContinuedFraction(Fraction):
         >>> cf.truncate(12, 4)
         >>> cf
         ContinuedFraction(13, 4)
-        >>> cf.elements
+        >>> tuple(cf.elements)
         (3, 4)
         >>> cf.order
         1
@@ -656,7 +656,7 @@ class ContinuedFraction(Fraction):
         Examples
         --------
         >>> cf = ContinuedFraction(-415, 93)
-        >>> cf.elements
+        >>> tuple(cf.elements)
         (-5, 1, 1, 6, 7)
         >>> tuple(cf.convergents)
         ((0, ContinuedFraction(-5, 1)), (1, ContinuedFraction(-4, 1)), (2, ContinuedFraction(-9, 2)), (3, ContinuedFraction(-58, 13)), (4, ContinuedFraction(-415, 93)))

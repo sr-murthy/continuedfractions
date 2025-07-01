@@ -472,7 +472,7 @@ class TestContinuedFraction:
         assert received == expected
 
         # Compare the float values
-        assert received.as_float() == expected_float_value
+        assert float(received) == expected_float_value
 
         # Compare the decimal values
         try:
@@ -481,7 +481,7 @@ class TestContinuedFraction:
             pass
 
         # Compare the element sequences
-        assert received.elements == expected_elements
+        assert tuple(received.elements) == expected_elements
 
         # Compare the orders
         assert received.order == expected_order
@@ -502,10 +502,10 @@ class TestContinuedFraction:
         assert tuple(received.convergents) == expected_convergents
 
         # Compare the even-order convergents using the ``.even_order_convergents` property
-        assert tuple(received.even_convergents) == tuple((k, expected_convergents[k][1]) for k in range(0, received.order + 1, 2))
+        assert tuple(received.even_order_convergents) == tuple((k, expected_convergents[k][1]) for k in range(0, received.order + 1, 2))
 
         # Compare the order-order convergents using the ``.odd_order_convergents` property
-        assert tuple(received.odd_convergents) == tuple((k, expected_convergents[k][1]) for k in range(1, received.order + 1, 2))
+        assert tuple(received.odd_order_convergents) == tuple((k, expected_convergents[k][1]) for k in range(1, received.order + 1, 2))
 
         # Compare the 2nd order right- and left-mediants, and also the simple
         # mediant, using a reference continued fraction of ``1/1``
@@ -570,7 +570,7 @@ class TestContinuedFraction:
             received = ContinuedFraction.from_elements(*elements)
 
             assert received == expected
-            assert received.elements == expected.elements
+            assert tuple(received.elements) == tuple(expected.elements)
 
     @pytest.mark.parametrize(
         "instance, invalid_elements",
@@ -602,7 +602,7 @@ class TestContinuedFraction:
     )
     def test_ContinuedFraction__extend__valid_elements__correctly_extended(self, instance, new_elements, expected_comparative_instance):
         original_id = id(instance)
-        original_elements = instance.elements
+        original_elements = tuple(instance.elements)
 
         instance.extend(*new_elements)
 
@@ -646,7 +646,7 @@ class TestContinuedFraction:
     )
     def test_ContinuedFraction__truncate__valid_elements__correctly_truncated(self, instance, tail_elements, expected_comparative_instance):
         original_id = id(instance)
-        original_elements = instance.elements
+        original_elements = tuple(instance.elements)
         order = instance.order
         truncation_length = len(tail_elements)
 
@@ -871,4 +871,4 @@ class TestContinuedFraction:
         received = -operand
 
         assert expected == received
-        assert received.elements == expected_elements
+        assert tuple(received.elements) == expected_elements

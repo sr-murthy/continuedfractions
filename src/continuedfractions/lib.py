@@ -17,17 +17,17 @@ __all__ = [
 # -- Standard libraries --
 import decimal
 import functools
+import typing
 
 from decimal import Decimal
 from fractions import Fraction
-from typing import Generator
 
 # -- 3rd party libraries --
 
 # -- Internal libraries --
 
 
-def continued_fraction_rational(frac: Fraction, /) -> Generator[int, None, None]:     # pragma: no cover
+def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None, None]:     # pragma: no cover
     """Implementation of the core continued fraction algorithm which generates the (ordered) sequence of elements of the (finite) simple continued fraction of the given rational number.
 
     The resulting sequence of elements, :math:`a_0,a_1,\\ldots a_n`, defines
@@ -104,7 +104,7 @@ def continued_fraction_rational(frac: Fraction, /) -> Generator[int, None, None]
         x, y = y, rem
 
 
-def continued_fraction_real(x: int | float | str | Decimal, /) -> Generator[int, None, None]:
+def continued_fraction_real(x: int | float | str | Decimal, /) -> typing.Generator[int, None, None]:
     """Generates a (finite) sequence of elements of a (simple) continued fraction of the given real number.
 
     The result may not always be exact, but an approximation depending on
@@ -311,7 +311,7 @@ def convergent(k: int, *elements: int) -> Fraction:
     return Fraction(p, q)
 
 
-def convergents(*elements: int) -> Generator[Fraction, None, None]:
+def convergents(*elements: int) -> typing.Generator[Fraction, None, None]:
     """Generates an (ordered) sequence of all convergents of a (simple) continued fraction from a sequence of its elements.
 
     If :math:`n` is the order of the continued fraction represented by the
@@ -555,7 +555,7 @@ def remainder(k: int, *elements: int) -> Fraction:
     return fraction_from_elements(*elements[k:])
 
 
-def remainders(*elements: int) -> Generator[Fraction, None, None]:
+def remainders(*elements: int) -> typing.Generator[Fraction, None, None]:
     """Generates an (ordered) sequence of all remainders of a (simple) continued fraction from a sequence of its elements in descending order of index.
 
     If :math:`n` is the order of the continued fraction represented by the

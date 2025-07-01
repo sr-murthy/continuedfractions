@@ -14,8 +14,6 @@
 [![PyPI version](https://img.shields.io/pypi/v/continuedfractions?logo=python&color=41bb13)](https://pypi.org/project/continuedfractions)
 [![Downloads](https://static.pepy.tech/badge/continuedfractions)](https://pepy.tech/project/continuedfractions)
 
-</div>
-https://camo.githubusercontent.com/bb88127790fb054cba2caf3f3be2569c1b97bb45a44b47b52d738f8781a8ede4/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f636861726c6965726d617273682f727566662f6d61696e2f6173736574732f62616467652f76312e6a736f6e
 # continuedfractions
 
 A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.

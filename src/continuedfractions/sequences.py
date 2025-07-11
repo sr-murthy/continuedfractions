@@ -615,7 +615,7 @@ class KSRMTree:
         >>> list(tree.search("not an integer"))
         Traceback (most recent call last):
         ...
-        ValueError: `n` must be a positive integer >= 1
+        ValueError: `n` must be a positive integer
         >>> list(tree.search(1))
         [(1, 1)]
         >>> list(tree.search(2))
@@ -628,7 +628,7 @@ class KSRMTree:
         [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (9, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1)]
         """
         if not isinstance(n, int) or n < 1:
-            raise ValueError("`n` must be a positive integer >= 1")
+            raise ValueError("`n` must be a positive integer")
 
         yield 1, 1
 
@@ -687,7 +687,7 @@ def coprime_pairs(n: int, /) -> typing.Generator[KSRMNode, None, None]:
     ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5), (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7), (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1))
     """
     if not isinstance(n, int) or n < 1:
-        raise ValueError("`n` must be a positive integer >= 1")
+        raise ValueError("`n` must be a positive integer")
 
     if n == 1:
         yield (1, 1)
@@ -740,7 +740,7 @@ def farey_sequence(n: int, /) -> typing.Generator[ContinuedFraction, None, None]
     (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
     """
     if not isinstance(n, int) or n < 1:
-        raise ValueError("`n` must be a positive integer >= 1")
+        raise ValueError("`n` must be a positive integer")
 
     if n == 1:
         yield from (ContinuedFraction(0, 1), ContinuedFraction(1, 1))

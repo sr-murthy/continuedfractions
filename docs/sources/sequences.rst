@@ -339,9 +339,9 @@ The :py:func:`~continuedfractions.sequences.farey_sequence` function can be used
 
    >>> from continuedfractions.sequences import farey_sequence
    >>> tuple(farey_sequence(10))
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 10), ContinuedFraction(1, 9), ContinuedFraction(1, 8), ContinuedFraction(1, 7), ContinuedFraction(1, 6), ContinuedFraction(1, 5), ContinuedFraction(2, 9), ContinuedFraction(1, 4), ContinuedFraction(2, 7), ContinuedFraction(3, 10), ContinuedFraction(1, 3), ContinuedFraction(3, 8), ContinuedFraction(2, 5), ContinuedFraction(3, 7), ContinuedFraction(4, 9), ContinuedFraction(1, 2), ContinuedFraction(5, 9), ContinuedFraction(4, 7), ContinuedFraction(3, 5), ContinuedFraction(5, 8), ContinuedFraction(2, 3), ContinuedFraction(7, 10), ContinuedFraction(5, 7), ContinuedFraction(3, 4), ContinuedFraction(7, 9), ContinuedFraction(4, 5), ContinuedFraction(5, 6), ContinuedFraction(6, 7), ContinuedFraction(7, 8), ContinuedFraction(8, 9), ContinuedFraction(9, 10), ContinuedFraction(1, 1))
+   (FareyFraction(0, 1), FareyFraction(1, 10), FareyFraction(1, 9), FareyFraction(1, 8), FareyFraction(1, 7), FareyFraction(1, 6), FareyFraction(1, 5), FareyFraction(2, 9), FareyFraction(1, 4), FareyFraction(2, 7), FareyFraction(3, 10), FareyFraction(1, 3), FareyFraction(3, 8), FareyFraction(2, 5), FareyFraction(3, 7), FareyFraction(4, 9), FareyFraction(1, 2), FareyFraction(5, 9), FareyFraction(4, 7), FareyFraction(3, 5), FareyFraction(5, 8), FareyFraction(2, 3), FareyFraction(7, 10), FareyFraction(5, 7), FareyFraction(3, 4), FareyFraction(7, 9), FareyFraction(4, 5), FareyFraction(5, 6), FareyFraction(6, 7), FareyFraction(7, 8), FareyFraction(8, 9), FareyFraction(9, 10), FareyFraction(1, 1))
 
-The result is a tuple of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances in ascending order of magnitude, starting with ``ContinuedFraction(0, 1)`` and ending with ``ContinuedFraction(1, 1)``.
+The result is a tuple of :py:class:`~continuedfractions.sequences.FareyFraction` instances (just a plain subclass of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`) in ascending order of magnitude, starting with ``FareyFraction(0, 1)`` and ending with ``FareyFraction(1, 1)``.
 
 The Farey sequence :math:`F_n` of order :math:`n` is an (ordered) sequence of (irreducible) rational numbers, called **Farey fractions**, in the closed unit interval :math:`[0, 1]`, which can be defined as follows:
 
@@ -378,15 +378,15 @@ and this can be checked with the :py:func:`~continuedfractions.sequences.farey_s
 .. code:: python
 
    >>> tuple(farey_sequence(1))
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 1))
+   (FareyFraction(0, 1), FareyFraction(1, 1))
    >>> tuple(farey_sequence(2))
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 1))
+   (FareyFraction(0, 1), FareyFraction(1, 2), FareyFraction(1, 1))
    >>> tuple(farey_sequence(3))
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
+   (FareyFraction(0, 1), FareyFraction(1, 3), FareyFraction(1, 2), FareyFraction(2, 3), FareyFraction(1, 1))
    >>> tuple(farey_sequence(4))
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(1, 1))
+   (FareyFraction(0, 1), FareyFraction(1, 4), FareyFraction(1, 3), FareyFraction(1, 2), FareyFraction(2, 3), FareyFraction(3, 4), FareyFraction(1, 1))
    >>> tuple(farey_sequence(5))
-   (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
+   (FareyFraction(0, 1), FareyFraction(1, 5), FareyFraction(1, 4), FareyFraction(1, 3), FareyFraction(2, 5), FareyFraction(1, 2), FareyFraction(3, 5), FareyFraction(2, 3), FareyFraction(3, 4), FareyFraction(4, 5), FareyFraction(1, 1))
 
 For :math:`n > 1` we can write the fractions in :math:`F_n` as :math:`\frac{b}{a}` where :math:`a > b`: the coprimality condition :math:`(a, b) = 1`, combined with :math:`a \leq n`, means that :math:`F_n` contains, for each :math:`a \leq n`, exactly :math:`\phi(a)` fractions of the form :math:`\frac{b}{a}` where :math:`a > b` and :math:`(a, b) = 1`, and :math:`\phi(k)` is the totient function.
 
@@ -428,18 +428,18 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 
 .. code:: python
 
-   >>> print(', '.join([str(frac) for frac in farey_sequence(4)]))
+   >>> print(', '.join(map(str, farey_sequence(4))))
    0, 1/4, 1/3, 1/2, 2/3, 3/4, 1
-   >>> print(', '.join([str(frac) for frac in farey_sequence(7)]))
+   >>> print(', '.join(map(str, farey_sequence(7))))
    0, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 2/5, 3/7, 1/2, 4/7, 3/5, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 1
-   >>> ContinuedFraction(2, 3).mediant(ContinuedFraction(3, 4))
-   ContinuedFraction(5, 7)
-   >>> assert ContinuedFraction(2, 3).mediant(ContinuedFraction(3, 4)) in farey_sequence(7)
-   >>> ContinuedFraction(3, 4) - ContinuedFraction(2, 3)
-   ContinuedFraction(1, 12)
-   >>> print(', '.join([str(frac) for frac in farey_sequence(12)]))
+   >>> FareyFraction(2, 3).mediant(FareyFraction(3, 4))
+   FareyFraction(5, 7)
+   >>> assert FareyFraction(2, 3).mediant(FareyFraction(3, 4)) in farey_sequence(7)
+   >>> FareyFraction(3, 4) - FareyFraction(2, 3)
+   FareyFraction(1, 12)
+   >>> print(', '.join(map(str, farey_sequence(12))))
    0, 1/12, 1/11, 1/10, 1/9, 1/8, 1/7, 1/6, 2/11, 1/5, 2/9, 1/4, 3/11, 2/7, 3/10, 1/3, 4/11, 3/8, 2/5, 5/12, 3/7, 4/9, 5/11, 1/2, 6/11, 5/9, 4/7, 7/12, 3/5, 5/8, 7/11, 2/3, 7/10, 5/7, 8/11, 3/4, 7/9, 4/5, 9/11, 5/6, 6/7, 7/8, 8/9, 9/10, 10/11, 11/12, 1
-   >>> assert ContinuedFraction(3, 4) - ContinuedFraction(2, 3) in farey_sequence(12)
+   >>> assert FareyFraction(3, 4) - FareyFraction(2, 3) in farey_sequence(12)
 
 .. _sequences.references:
 

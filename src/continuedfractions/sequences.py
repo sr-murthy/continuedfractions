@@ -3,6 +3,7 @@ from __future__ import annotations
 
 __all__ = [
     'coprime_pairs',
+    'FareyFraction',
     'farey_sequence',
     'KSRMTree',
 ]
@@ -698,7 +699,12 @@ def coprime_pairs(n: int, /) -> typing.Generator[KSRMNode, None, None]:
         )
 
 
-def farey_sequence(n: int, /) -> typing.Generator[ContinuedFraction, None, None]:
+class FareyFraction(ContinuedFraction):
+    """A simple wrapper class for Farey fractions, subclassing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`.
+    """
+
+
+def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
     """Generates an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
 
     The elements of the sequence are yielded as
@@ -720,36 +726,36 @@ def farey_sequence(n: int, /) -> typing.Generator[ContinuedFraction, None, None]
 
     Yields
     ------
-    ContinuedFraction
+    FareyFraction
         A sequence of
-        :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
+        :py:class:`~continuedfractions.sequences.FareyFraction`
         instances representing the elements of the Farey sequence of order
         :math:`n`, in ascending order of magnitude.
 
     Examples
     --------
     >>> tuple(farey_sequence(1))
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 1))
+    (FareyFraction(0, 1), FareyFraction(1, 1))
     >>> tuple(farey_sequence(2))
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 1))
+    (FareyFraction(0, 1), FareyFraction(1, 2), FareyFraction(1, 1))
     >>> tuple(farey_sequence(3))
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 1))
+    (FareyFraction(0, 1), FareyFraction(1, 3), FareyFraction(1, 2), FareyFraction(2, 3), FareyFraction(1, 1))
     >>> tuple(farey_sequence(4))
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(1, 2), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(1, 1))
+    (FareyFraction(0, 1), FareyFraction(1, 4), FareyFraction(1, 3), FareyFraction(1, 2), FareyFraction(2, 3), FareyFraction(3, 4), FareyFraction(1, 1))
     >>> tuple(farey_sequence(5))
-    (ContinuedFraction(0, 1), ContinuedFraction(1, 5), ContinuedFraction(1, 4), ContinuedFraction(1, 3), ContinuedFraction(2, 5), ContinuedFraction(1, 2), ContinuedFraction(3, 5), ContinuedFraction(2, 3), ContinuedFraction(3, 4), ContinuedFraction(4, 5), ContinuedFraction(1, 1))
+    (FareyFraction(0, 1), FareyFraction(1, 5), FareyFraction(1, 4), FareyFraction(1, 3), FareyFraction(2, 5), FareyFraction(1, 2), FareyFraction(3, 5), FareyFraction(2, 3), FareyFraction(3, 4), FareyFraction(4, 5), FareyFraction(1, 1))
     """
     if not isinstance(n, int) or n < 1:
         raise ValueError("`n` must be a positive integer")
 
     if n == 1:
-        yield from (ContinuedFraction(0, 1), ContinuedFraction(1, 1))
+        yield from (FareyFraction(0, 1), FareyFraction(1, 1))
     else:
         yield from chain(
-            (ContinuedFraction(0, 1),),
+            (FareyFraction(0, 1),),
             sorted(
                 starmap(
-                    ContinuedFraction,
+                    FareyFraction,
                     starmap(lambda *x: tuple(reversed(x)), coprime_pairs(n))
                 )
             )

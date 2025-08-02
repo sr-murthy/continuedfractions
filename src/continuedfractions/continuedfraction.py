@@ -1008,7 +1008,7 @@ class ContinuedFraction(Fraction):
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python3 -m pytest --verbosity=3 --doctest-modules src/continuedfractions/continuedfraction.py
+    #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/continuedfraction.py
     #
     # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
     #       assume a context precision of 28 digits.

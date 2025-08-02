@@ -747,7 +747,7 @@ def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python3 -m pytest --verbosity=3 --doctest-modules src/continuedfractions/sequences.py
+    #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/sequences.py
     #
     import doctest
     doctest.testmod()

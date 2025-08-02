@@ -13,11 +13,9 @@ __all__ = [
 
 # -- Standard libraries --
 import math
-import sys
 import typing
 
 from itertools import chain, product, starmap
-from pathlib import Path
 
 # -- 3rd party libraries --
 

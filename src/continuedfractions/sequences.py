@@ -688,7 +688,7 @@ def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
     """Generates an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
 
     The elements of the sequence are yielded as
-    :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
+    :py:class:`~continuedfractions.sequences.FareyFraction`
     instances, in ascending order of magnitude.
 
     See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/sequences.html#sequences-farey-sequences>`_

@@ -23,8 +23,6 @@ from pathlib import Path
 # -- 3rd party libraries --
 
 # -- Internal libraries --
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from continuedfractions.lib import (
     continued_fraction_rational,
     convergent,
@@ -1010,7 +1008,7 @@ class ContinuedFraction(Fraction):
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/continuedfraction.py
+    #     python3 -m pytest --verbosity=3 --doctest-modules src/continuedfractions/continuedfraction.py
     #
     # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
     #       assume a context precision of 28 digits.

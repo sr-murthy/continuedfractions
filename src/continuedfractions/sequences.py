@@ -22,8 +22,6 @@ from pathlib import Path
 # -- 3rd party libraries --
 
 # -- Internal libraries --
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.continuedfraction import ContinuedFraction
 
@@ -765,7 +763,7 @@ def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/sequences.py
+    #     python3 -m pytest --verbosity=3 --doctest-modules src/continuedfractions/sequences.py
     #
     import doctest
     doctest.testmod()

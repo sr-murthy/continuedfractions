@@ -741,7 +741,7 @@ right_mediant = functools.partial(mediant, dir="right")
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/lib.py
+    #     python3 -m pytest --verbosity=3 --doctest-modules src/continuedfractions/lib.py
     #
     # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
     #       assume a context precision of 28 digits

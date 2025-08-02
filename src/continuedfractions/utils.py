@@ -75,7 +75,7 @@ class NamedCallableProxy:
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/utils.py
+    #     python3 -m pytest --verbosity=3 --doctest-modules src/continuedfractions/utils.py
     #
     import doctest
     doctest.testmod()

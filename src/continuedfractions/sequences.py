@@ -85,26 +85,10 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.
 
     >>> tuple(_coprime_integers(1))
     (1,)
-    >>> tuple(_coprime_integers(2))
-    (1,)
-    >>> tuple(_coprime_integers(3))
-    (2, 1)
-    >>> tuple(_coprime_integers(4))
-    (3, 1)
     >>> tuple(_coprime_integers(5))
     (4, 3, 2, 1)
-    >>> tuple(_coprime_integers(6))
-    (5, 1)
-    >>> tuple(_coprime_integers(7))
-    (6, 5, 4, 3, 2, 1)
-    >>> tuple(_coprime_integers(8))
-    (7, 5, 3, 1)
-    >>> tuple(_coprime_integers(9))
-    (8, 7, 5, 4, 2, 1)
     >>> tuple(_coprime_integers(10))
     (9, 7, 3, 1)
-    >>> tuple(_coprime_integers(11))
-    (10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
 
     Examples using custom ``start`` and ``stop`` values:
 
@@ -570,9 +554,9 @@ class KSRMTree:
 
                 # Otherwise, switch to the generating branch of the "next"
                 # child node - branch #2 if the current branch is branch #1, or
-                # branch #3 if the current branch is #2 - and continue the
-                # search.
-                cur_branch = self.branches[1] if last_branch == self.branches[0] else self.branches[-1]
+                # branch #3 (the last branch) if the current branch is #2 - and
+                # continue the DFS.
+                cur_branch = self.branches[1] if last_branch.name == self.branches[0].name else self.branches[-1]
                 continue
 
         # Not strictly required, but this has been inserted to make

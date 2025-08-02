@@ -23,8 +23,8 @@ from itertools import chain, product, starmap
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.continuedfraction import ContinuedFraction
 
-KSRMNode: typing.TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM coprime pairs tree
-KSRMBranch: NamedCallableProxy          #: Custom type for generating branches of the KSRM coprime pairs tree
+KSRMNode: typing.TypeAlias = tuple[int, int]        #: Custom type for nodes of the KSRM coprime pairs tree
+KSRMBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
 def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.Generator[int, None, None]:
@@ -204,7 +204,7 @@ class KSRMTree:
         return self
 
     @property
-    def roots(self) -> typing.Literal[tuple([(2, 1), (3, 1)])]:
+    def roots(self) -> typing.Literal[((2, 1), (3, 1))]:
         """:py:class:`tuple`: The tuple of roots of the KSRM trees, which are :math:`(2, 1)` and :math:`(3, 1)`.
 
         For more details see the following papers:

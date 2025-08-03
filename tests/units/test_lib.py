@@ -52,6 +52,7 @@ class TestContinuedFractionReal:
 	    "x, expected",
 	    [
 	        (5000, (5000,)),
+	        (Fraction(7, 4), (1, 1, 3,)),
 	        ('-5000', (-5000,)),
 	        (float(5000), (5000,)),
 	        (Decimal('-5000'), (-5000,)),

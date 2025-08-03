@@ -104,7 +104,7 @@ def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None
         x, y = y, rem
 
 
-def continued_fraction_real(x: int | float | str | Decimal, /) -> typing.Generator[int, None, None]:
+def continued_fraction_real(x: int | Fraction | float | str | Decimal, /) -> typing.Generator[int, None, None]:
     """Generates a (finite) sequence of elements of a (simple) continued fraction of the given real number.
 
     The result may not always be exact, but an approximation depending on
@@ -146,7 +146,7 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> typing.Generat
 
     Parameters
     ----------
-    x : int, float, str, decimal.Decimal
+    x : int, fractions.Fraction, float, str, decimal.Decimal
         The real number to represent as a simple continued fraction.
 
     Yields
@@ -160,6 +160,8 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> typing.Generat
 
     >>> list(continued_fraction_real(5000))
     [5000]
+    >>> list(continued_fraction_real(Fraction(7, 4)))
+    [1, 1, 3]
     >>> list(continued_fraction_real(-5000.0))
     [-5000]
     >>> list(continued_fraction_real(2/5))
@@ -189,10 +191,12 @@ def continued_fraction_real(x: int | float | str | Decimal, /) -> typing.Generat
     """
     if isinstance(x, int):
         yield x
-    elif isinstance(x, str) and '/' in x:
-        yield from continued_fraction_rational(Fraction(x))
+    elif isinstance(x, Fraction):
+        yield from continued_fraction_rational(x)
     elif isinstance(x, float):
         yield from continued_fraction_rational(Fraction(*Decimal.from_float(x).as_integer_ratio()))
+    elif isinstance(x, str) and '/' in x:
+        yield from continued_fraction_rational(Fraction(x))
     else:
         yield from continued_fraction_rational(Fraction(*(Decimal(x).as_integer_ratio())))
 

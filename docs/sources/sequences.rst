@@ -446,12 +446,8 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 References
 ==========
 
-[1] Farey sequence. (2024, May 11). In Wikipedia. https://en.wikipedia.org/wiki/Farey_sequence
+[1] Hatcher, A. (2024, September). Topology of Numbers. American Mathematical Society. https://pi.math.cornell.edu/~hatcher/TN/TNbook.pdf
 
-[2] Mediant (mathematics). (2024, January 27). In Wikipedia. https://en.wikipedia.org/wiki/Mediant_(mathematics)
+[2] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
 
-[3] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
-
-[4] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
-
-[5] Stern-Brocot tree. (2023, December 28). In Wikipedia. https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
+[3] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576

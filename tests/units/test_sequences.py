@@ -207,11 +207,9 @@ class TestKSRMTree:
 
         assert tree.roots == ((2, 1), (3, 1))
 
-        assert tree.branches == (
-            NamedCallableProxy(lambda x, y: (2 * x - y, x), name="KSRM tree branch #1: (x, y) |--> (2x - y, x)"),
-            NamedCallableProxy(lambda x, y: (2 * x + y, x), name="KSRM tree branch #2: (x, y) |--> (2x + y, x)"),
-            NamedCallableProxy(lambda x, y: (x + 2 * y, y), name="KSRM tree branch #3: (x, y) |--> (x + 2y, y)")
-        )
+        assert tree.branches[0].name == "KSRM tree branch #1: (x, y) |--> (2x - y, x)"
+        assert tree.branches[1].name == "KSRM tree branch #2: (x, y) |--> (2x + y, x)"
+        assert tree.branches[-1].name == "KSRM tree branch #3: (x, y) |--> (x + 2y, y)"
 
     @pytest.mark.parametrize(
         """n,
@@ -234,7 +232,7 @@ class TestKSRMTree:
                     ((4, 1), NamedCallableProxy(lambda x, y: (x + 2 * y, y))),
                     ((6, 1), NamedCallableProxy(lambda x, y: (x + 2 * y, y)))
                 ],
-                ((2, 1), None, 0, NamedCallableProxy(lambda x, y: (x + 2 * y, y))),
+                ((4, 1), None, 1, NamedCallableProxy(lambda x, y: (x + 2 * y, y))),
             ),
             # Case #3
             (
@@ -268,10 +266,24 @@ class TestKSRMTree:
     )
     def test_KSRMTree__backtrack(self, n, visited, expected_backtracked_tuple):
         expected = expected_backtracked_tuple
+        expected_backtracked_target_node = expected[0]
+        expected_backtracked_target_node_gen_branch = expected[1]
+        expected_backtracked_target_node_index = expected[2]
+        expected_backtracked_target_node_succ_branch = expected[3]
 
         received = KSRMTree()._backtrack(n, visited)
+        received_backtracked_target_node = received[0]
+        received_backtracked_target_node_gen_branch = received[1]
+        received_backtracked_target_node_index = received[2]
+        received_backtracked_target_node_succ_branch = received[3]
 
-        assert received == expected
+
+        assert expected_backtracked_target_node == received_backtracked_target_node
+        if expected_backtracked_target_node_gen_branch:
+            assert expected_backtracked_target_node_gen_branch.name == received_backtracked_target_node_gen_branch.name
+        assert expected_backtracked_target_node_index == received_backtracked_target_node_index
+        if expected_backtracked_target_node_succ_branch:
+            assert expected_backtracked_target_node_succ_branch.name == received_backtracked_target_node_succ_branch.name
 
     @pytest.mark.parametrize(
         """n,

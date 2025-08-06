@@ -13,18 +13,14 @@ import collections
 import decimal
 import functools
 import statistics
-import sys
 import typing
 
 from decimal import Decimal
 from fractions import Fraction
-from pathlib import Path
 
 # -- 3rd party libraries --
 
 # -- Internal libraries --
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from continuedfractions.lib import (
     continued_fraction_rational,
     convergent,
@@ -589,7 +585,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(ContinuedFraction('3.245').even_order_convergents)
         ((0, ContinuedFraction(3, 1)), (2, ContinuedFraction(159, 49)))
         """
-        yield from filter(lambda t: t[0] % 2 == 0, self.convergents)
+        yield from (t for t in self.convergents if not t[0] % 2)
 
     @property
     def odd_order_convergents(self) -> typing.Generator[tuple[int, ContinuedFraction], None, None]:
@@ -614,7 +610,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(ContinuedFraction('3.245').odd_order_convergents)
         ((1, ContinuedFraction(13, 4)), (3, ContinuedFraction(649, 200)))
         """
-        yield from filter(lambda t: t[0] % 2 == 1, self.convergents)
+        yield from (t for t in self.convergents if t[0] % 2)
 
     @functools.cache
     def semiconvergent(self, k: int, m: int, /) -> ContinuedFraction:
@@ -1010,7 +1006,7 @@ class ContinuedFraction(Fraction):
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/continuedfraction.py
+    #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/continuedfraction.py
     #
     # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
     #       assume a context precision of 28 digits.

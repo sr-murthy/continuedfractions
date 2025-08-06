@@ -137,17 +137,17 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.
         q, r = divmod((stop - start + 1), chunklen)
 
         if q == 0:
-            yield from filter(
-                lambda m: math.gcd(m, n) == 1,
-                range(stop, start - 1, -1)
+            yield from (
+                m for m in range(stop, start - 1, -1)
+                if math.gcd(m, n) == 1
             )
         else:
             _start = ((chunklen) * q) + (1 if r > 0 else 0)
             
             while _start >= start:
-                yield from filter(
-                    lambda m: math.gcd(m, n) == 1,
-                    range(stop, _start - 1, -1)
+                yield from (
+                    m for m in range(stop, _start - 1, -1)
+                    if math.gcd(m, n) == 1
                 )
                 stop = _start - 1
                 q -= 1

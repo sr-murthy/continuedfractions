@@ -585,7 +585,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(ContinuedFraction('3.245').even_order_convergents)
         ((0, ContinuedFraction(3, 1)), (2, ContinuedFraction(159, 49)))
         """
-        yield from filter(lambda t: t[0] % 2 == 0, self.convergents)
+        yield from (t for t in self.convergents if not t[0] % 2)
 
     @property
     def odd_order_convergents(self) -> typing.Generator[tuple[int, ContinuedFraction], None, None]:
@@ -610,7 +610,7 @@ class ContinuedFraction(Fraction):
         >>> tuple(ContinuedFraction('3.245').odd_order_convergents)
         ((1, ContinuedFraction(13, 4)), (3, ContinuedFraction(649, 200)))
         """
-        yield from filter(lambda t: t[0] % 2 == 1, self.convergents)
+        yield from (t for t in self.convergents if t[0] % 2)
 
     @functools.cache
     def semiconvergent(self, k: int, m: int, /) -> ContinuedFraction:

@@ -43,11 +43,8 @@ class TestNamedCallableProxy:
 		# The received ``NamedCallableProxy`` object
 		received = NamedCallableProxy(callable_, name=name)
 
-		# Compare the received and expected objects
-		assert received == expected
-
-		# Compare the names
-		assert received._name == expected._name
+		# Compare the names of the received and expected callables.
+		assert received.name == expected.name
 
 		# Assert the ``__repr__`` value - comparison with ``expected`` will
 		# not work as it is a different object in memory compared to

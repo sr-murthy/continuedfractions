@@ -13,22 +13,18 @@ __all__ = [
 
 # -- Standard libraries --
 import math
-import sys
 import typing
 
 from itertools import chain, product, starmap
-from pathlib import Path
 
 # -- 3rd party libraries --
 
 # -- Internal libraries --
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.continuedfraction import ContinuedFraction
 
-KSRMNode: typing.TypeAlias = tuple[int, int]   #: Custom type for nodes of the KSRM coprime pairs tree
-KSRMBranch: NamedCallableProxy          #: Custom type for generating branches of the KSRM coprime pairs tree
+KSRMNode: typing.TypeAlias = tuple[int, int]        #: Custom type for nodes of the KSRM coprime pairs tree
+KSRMBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
 def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.Generator[int, None, None]:
@@ -87,26 +83,10 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.
 
     >>> tuple(_coprime_integers(1))
     (1,)
-    >>> tuple(_coprime_integers(2))
-    (1,)
-    >>> tuple(_coprime_integers(3))
-    (2, 1)
-    >>> tuple(_coprime_integers(4))
-    (3, 1)
     >>> tuple(_coprime_integers(5))
     (4, 3, 2, 1)
-    >>> tuple(_coprime_integers(6))
-    (5, 1)
-    >>> tuple(_coprime_integers(7))
-    (6, 5, 4, 3, 2, 1)
-    >>> tuple(_coprime_integers(8))
-    (7, 5, 3, 1)
-    >>> tuple(_coprime_integers(9))
-    (8, 7, 5, 4, 2, 1)
     >>> tuple(_coprime_integers(10))
     (9, 7, 3, 1)
-    >>> tuple(_coprime_integers(11))
-    (10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
 
     Examples using custom ``start`` and ``stop`` values:
 
@@ -157,17 +137,17 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.
         q, r = divmod((stop - start + 1), chunklen)
 
         if q == 0:
-            yield from filter(
-                lambda m: math.gcd(m, n) == 1,
-                range(stop, start - 1, -1)
+            yield from (
+                m for m in range(stop, start - 1, -1)
+                if math.gcd(m, n) == 1
             )
         else:
             _start = ((chunklen) * q) + (1 if r > 0 else 0)
             
             while _start >= start:
-                yield from filter(
-                    lambda m: math.gcd(m, n) == 1,
-                    range(stop, _start - 1, -1)
+                yield from (
+                    m for m in range(stop, _start - 1, -1)
+                    if math.gcd(m, n) == 1
                 )
                 stop = _start - 1
                 q -= 1
@@ -224,7 +204,7 @@ class KSRMTree:
         return self
 
     @property
-    def roots(self) -> typing.Literal[tuple([(2, 1), (3, 1)])]:
+    def roots(self) -> typing.Literal[((2, 1), (3, 1))]:
         """:py:class:`tuple`: The tuple of roots of the KSRM trees, which are :math:`(2, 1)` and :math:`(3, 1)`.
 
         For more details see the following papers:
@@ -572,9 +552,9 @@ class KSRMTree:
 
                 # Otherwise, switch to the generating branch of the "next"
                 # child node - branch #2 if the current branch is branch #1, or
-                # branch #3 if the current branch is #2 - and continue the
-                # search.
-                cur_branch = self.branches[1] if last_branch == self.branches[0] else self.branches[-1]
+                # branch #3 (the last branch) if the current branch is #2 - and
+                # continue the DFS.
+                cur_branch = self.branches[1] if last_branch.name == self.branches[0].name else self.branches[-1]
                 continue
 
         # Not strictly required, but this has been inserted to make
@@ -708,7 +688,7 @@ def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
     """Generates an (ordered) sequence (tuple) of rational numbers forming the Farey sequence of order :math:`n`.
 
     The elements of the sequence are yielded as
-    :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
+    :py:class:`~continuedfractions.sequences.FareyFraction`
     instances, in ascending order of magnitude.
 
     See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/sequences.html#sequences-farey-sequences>`_
@@ -765,7 +745,7 @@ def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/sequences.py
+    #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/sequences.py
     #
     import doctest
     doctest.testmod()

@@ -59,14 +59,15 @@ class NamedCallableProxy:
 
         return self
 
+    @property
+    def name(self) -> str:
+        return self._name
+
     def __repr__(self) -> str:
         if self._name:
             return f'{self.__class__.__name__}("{self._name}")'
 
         return str(self._callable)
-
-    def __eq__(self, other: NamedCallableProxy) -> bool:
-        return self._callable.__code__.co_code == other._callable.__code__.co_code
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self._callable(*args, **kwargs)
@@ -75,7 +76,7 @@ class NamedCallableProxy:
 if __name__ == "__main__":      # pragma: no cover
     # Doctest the module from the project root using
     #
-    #     python -m doctest -v src/continuedfractions/utils.py
+    #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/utils.py
     #
     import doctest
     doctest.testmod()

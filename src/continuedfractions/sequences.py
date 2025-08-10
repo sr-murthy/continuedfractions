@@ -15,7 +15,7 @@ __all__ = [
 import math
 import typing
 
-from itertools import chain, product, starmap
+from itertools import chain, product
 
 # -- 3rd party libraries --
 
@@ -27,41 +27,16 @@ KSRMNode: typing.TypeAlias = tuple[int, int]        #: Custom type for nodes of 
 KSRMBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
-def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.Generator[int, None, None]:
+def _coprime_integers(n: int, /) -> typing.Generator[int, None, None]:
     """Generates a sequence of (positive) integers :math:`1 \\leq m < n` coprime to a given positive integer :math:`n`.
 
     The tuple is sorted in descending order of magnitude.
-
-    The optional ``start`` and ``stop`` parameters can be used to bound the
-    the range of (positive) integers in which integers coprime to the given
-    :math:`n` are sought.
-
-    For :math:`n = 1, 2` the ``start`` value is effectively ignored, but
-    if :math:`n > 1` then the ``start`` value must be an integer in the range
-    :math:`1..n - 1`.
-
-    The ``stop`` value defaults to ``None``, which is then internally
-    initialised to :math:`n`; if :math:`n > 1` and ``stop`` is given then it
-    must be an integer in the range :math:`\\text{start} + 1..n`.
 
     Parameters
     ----------
     n : int
         The positive integer for which (positive) coprime integers
         :math:`m < n` are sought.
-
-    start : int, default=1
-        The lower bound of the range of (positive) integers in which integers
-        coprime to the given :math:`n` are sought. For :math:`n = 1, 2` the
-        ``start`` value is effectively ignored, but if :math:`n > 1` then the
-        ``start`` value must be in the range :math:`1..n - 1`.
-
-    stop : int, default=None
-        The upper bound of the range of (positive) integers in which integers
-        coprime to the given :math:`n` are sought. The ``stop`` value defaults
-        to ``None``, which is then internally initialised to :math:`n`; if
-        :math:`n > 1` and ``stop`` is given then it must be an integer in the
-        range :math:`\\text{start} + 1..n`.
 
     Raises
     ------
@@ -88,40 +63,8 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.
     >>> tuple(_coprime_integers(10))
     (9, 7, 3, 1)
 
-    Examples using custom ``start`` and ``stop`` values:
-
-    >>> tuple(_coprime_integers(3, start=0))
-    Traceback (most recent call last):
-    ...
-    ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
-    >>> tuple(_coprime_integers(3, start=2))
-    (2,)
-    >>> tuple(_coprime_integers(3, start=3))
-    Traceback (most recent call last):
-    ...
-    ValueError: `n` must be a positive integer; if `n` > 1 then the `start` value must be a positive integer in the range 1..n - 1; and if given the `stop` value must be a positive integer in the range `start` + 1..n
-    >>> tuple(_coprime_integers(23, start=5, stop=21))
-    (21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5)
-    >>> tuple(_coprime_integers(5, start=2))
-    (4, 3, 2)
-    >>> tuple(_coprime_integers(5, start=3))
-    (4, 3)
-    >>> tuple(_coprime_integers(6, start=2))
-    (5,)
-    >>> tuple(_coprime_integers(6, start=3))
-    (5,)
-    >>> tuple(_coprime_integers(6, start=4))
-    (5,)
-    >>> tuple(_coprime_integers(7, start=2))
-    (6, 5, 4, 3, 2)
-    >>> tuple(_coprime_integers(7, start=3))
-    (6, 5, 4, 3)
-    >>> tuple(_coprime_integers(7, start=4))
-    (6, 5, 4)
-    >>> tuple(_coprime_integers(7, start=5))
-    (6, 5)
     """
-    if not isinstance(n, int) or n < 1 or (n > 1 and start not in range(1, n)) or (n > 1 and stop and stop not in range(start + 1, n + 1)):
+    if not isinstance(n, int) or n < 1:
         raise ValueError(
             "`n` must be a positive integer; if `n` > 1 then the "
             "`start` value must be a positive integer in the range 1..n - 1; "
@@ -129,29 +72,7 @@ def _coprime_integers(n: int, /, *, start: int = 1, stop: int = None) -> typing.
             "range `start` + 1..n"
         )
 
-    if n in (1, 2):
-        yield 1
-    else:
-        chunklen = 1000
-        stop = stop or n
-        q, r = divmod((stop - start + 1), chunklen)
-
-        if q == 0:
-            yield from (
-                m for m in range(stop, start - 1, -1)
-                if math.gcd(m, n) == 1
-            )
-        else:
-            _start = ((chunklen) * q) + (1 if r > 0 else 0)
-            
-            while _start >= start:
-                yield from (
-                    m for m in range(stop, _start - 1, -1)
-                    if math.gcd(m, n) == 1
-                )
-                stop = _start - 1
-                q -= 1
-                _start = ((chunklen) * q) + 1
+    yield from (m for m in range(n, 0, -1) if math.gcd(m, n) == 1)
 
 
 class KSRMTree:
@@ -731,15 +652,8 @@ def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
     if n == 1:
         yield from (FareyFraction(0, 1), FareyFraction(1, 1))
     else:
-        yield from chain(
-            (FareyFraction(0, 1),),
-            sorted(
-                starmap(
-                    FareyFraction,
-                    starmap(lambda *x: tuple(reversed(x)), coprime_pairs(n))
-                )
-            )
-        )
+        yield FareyFraction(0, 1)
+        yield from sorted(FareyFraction(q, p) for (p, q) in coprime_pairs(n))
 
 
 if __name__ == "__main__":      # pragma: no cover

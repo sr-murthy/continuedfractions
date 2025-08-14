@@ -15,7 +15,84 @@ from continuedfractions.sequences import (
     FareyFraction,
     farey_sequence,
     KSRMTree,
+    rationals,
 )
+
+
+class TestRationals:
+
+    @pytest.mark.parametrize(
+        "unknown_enumeration",
+        [
+            "some unknown enumeration",
+        ]
+    )
+    def test_rationals__unknown_enumeration__raises_value_error(self, unknown_enumeration):
+        with pytest.raises(ValueError):
+            rats = rationals(enumeration=unknown_enumeration)
+            next(rats)
+
+    @pytest.mark.parametrize(
+        "enumeration, expected_first_20_rationals",
+        [
+            (
+                "cantor diagonal",
+                [ContinuedFraction(1, 1), ContinuedFraction(2, 1),
+                 ContinuedFraction(1, 2), ContinuedFraction(1, 3),
+                 ContinuedFraction(3, 1), ContinuedFraction(4, 1),
+                 ContinuedFraction(3, 2), ContinuedFraction(2, 3),
+                 ContinuedFraction(1, 4), ContinuedFraction(1, 5),
+                 ContinuedFraction(5, 1), ContinuedFraction(6, 1),
+                 ContinuedFraction(5, 2), ContinuedFraction(4, 3),
+                 ContinuedFraction(3, 4), ContinuedFraction(2, 5),
+                 ContinuedFraction(1, 6), ContinuedFraction(1, 7),
+                 ContinuedFraction(3, 5), ContinuedFraction(5, 3)]
+            ),
+            (
+                "cantor diagonal transposed",
+                [ContinuedFraction(1, 1), ContinuedFraction(1, 2),
+                 ContinuedFraction(2, 1), ContinuedFraction(3, 1),
+                 ContinuedFraction(1, 3), ContinuedFraction(1, 4),
+                 ContinuedFraction(2, 3), ContinuedFraction(3, 2),
+                 ContinuedFraction(4, 1), ContinuedFraction(5, 1),
+                 ContinuedFraction(1, 5), ContinuedFraction(1, 6),
+                 ContinuedFraction(2, 5), ContinuedFraction(3, 4),
+                 ContinuedFraction(4, 3), ContinuedFraction(5, 2),
+                 ContinuedFraction(6, 1), ContinuedFraction(7, 1),
+                 ContinuedFraction(5, 3), ContinuedFraction(3, 5)]
+            ),
+            (
+                "reverse l",
+                [ContinuedFraction(1, 1), ContinuedFraction(2, 1),
+                 ContinuedFraction(1, 2), ContinuedFraction(1, 3),
+                 ContinuedFraction(2, 3), ContinuedFraction(3, 2),
+                 ContinuedFraction(3, 1), ContinuedFraction(4, 1),
+                 ContinuedFraction(4, 3), ContinuedFraction(3, 4),
+                 ContinuedFraction(1, 4), ContinuedFraction(1, 5),
+                 ContinuedFraction(2, 5), ContinuedFraction(3, 5),
+                 ContinuedFraction(4, 5), ContinuedFraction(5, 4),
+                 ContinuedFraction(5, 3), ContinuedFraction(5, 2),
+                 ContinuedFraction(5, 1), ContinuedFraction(6, 1)]
+            ),
+            (
+                "reverse l transposed",
+                [ContinuedFraction(1, 1), ContinuedFraction(1, 2),
+                 ContinuedFraction(2, 1), ContinuedFraction(3, 1),
+                 ContinuedFraction(3, 2), ContinuedFraction(2, 3),
+                 ContinuedFraction(1, 3), ContinuedFraction(1, 4),
+                 ContinuedFraction(3, 4), ContinuedFraction(4, 3),
+                 ContinuedFraction(4, 1), ContinuedFraction(5, 1),
+                 ContinuedFraction(5, 2), ContinuedFraction(5, 3),
+                 ContinuedFraction(5, 4), ContinuedFraction(4, 5),
+                 ContinuedFraction(3, 5), ContinuedFraction(2, 5),
+                ContinuedFraction(1, 5), ContinuedFraction(1, 6)]
+            )
+        ]
+    )
+    def test_rationals__check_all_supported_enumerations__first_20_rationals_in_order(self, enumeration, expected_first_20_rationals):
+        rats = rationals(enumeration=enumeration)
+        received_first_20_rationals = [next(rats) for _ in range(20)]
+        assert received_first_20_rationals == expected_first_20_rationals
 
 
 class Test_CoprimeIntegers:

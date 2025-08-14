@@ -14,15 +14,35 @@ The package is designed for users interested in:
 - exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
 - operating on them as rationals and instances of the standard library :py:class:`fractions.Fraction` class
 - making approximations of and experimental computations for irrational numbers
-- exploring other related objects, such as mediants, and special sequences of rational numbers such as Farey sequences
+- exploring other related objects such as enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences
 
-Installation is simple as described :doc:`here <sources/installation>`. For the source use the :doc:`API reference <sources/api-reference>`. Or if you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
+Installation
+------------
+
+Install from `PyPI <https://pypi.org/project/continuedfractions/>`__:
+
+.. code:: shell
+
+   pip install -U continuedfractions
+
+or the ``main`` branch of the repo:
+
+.. code:: shell
+
+   pip install -U git+https://github.com/sr-murthy/continuedfractions
+
+Only standard libraries used, so there are no dependencies.
+
+For the source use the :doc:`API reference <sources/api-reference>`. Or if you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
+
+.. note::
+
+   All graphs in the documentation are generated using `Graphviz <https://graphviz.org/>`_ (`DOT language <https://graphviz.org/doc/info/lang.html>`_) and the `edotor <https://edotor.net/>`_ graphical editor. The graph source files (:program:`.dot`) can be viewed `here <https://github.com/sr-murthy/continuedfractions/tree/main/docs/_static>`_.
 
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
-   sources/installation
    sources/continued-fractions
    sources/sequences
    sources/contributing

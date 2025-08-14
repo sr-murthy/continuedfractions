@@ -216,19 +216,19 @@ The enumeration can be performed with the :py:func:`~continuedfractions.sequence
 Generalisations
 ~~~~~~~~~~~~~~~
 
-Although not currently supported by the :py:meth:`~continuedfractions.sequences.rationals` function, the reverse L enumeration can be generalised by varying the length of the "initial path" of the enumeration starting from :math:`(1, 1)`. If we denote the length of this initial path by :math:`\lambda`, then :math:`(1, 1)` was followed by either :math:`(2, 1)` in the standard reverse L enumeration, or by :math:`(1, 2)` in the reverse L transposed enumeration, so that :math:`\lambda = 1`. For :math:`\lambda > 1` we can define the initial path as either:
+Although not currently supported by the :py:meth:`~continuedfractions.sequences.rationals` function, the reverse L enumeration can be generalised by varying the length of the "initial path" of the enumeration starting from :math:`\frac{1}{1}`. If we denote the length of this initial path by :math:`\lambda`, then :math:`\frac{1}{1}` was followed by either :math:`\frac{2}{1}` in the standard reverse L enumeration, or by :math:`\frac{1}{2}` in the reverse L transposed enumeration, so that :math:`\lambda = 1`. For :math:`\lambda > 1` we can define the initial path as either:
 
 .. math::
 
-   (1, 1) \rightarrow (2, 1) \rightarrow \cdots \rightarrow (\lambda + 1, 1)
+   \frac{1}{1} \rightarrow \frac{2}{1} \rightarrow \cdots \rightarrow \frac{\lambda + 1}{1}
 
 for a downward path, or as:
 
 .. math::
 
-   (1, 1) \rightarrow (1, 2) \rightarrow \cdots \rightarrow (1, \lambda + 1)
+   \frac{1}{1} \rightarrow \frac{1}{2} \rightarrow \cdots \rightarrow \frac{1}{\lambda + 1}
 
-for a right-ward path. If we choose :math:`\lambda = 2` and opt for a downward initial path then this initial path is :math:`(1, 1) \rightarrow (2, 1) \rightarrow (3, 1)`, and we can enumerate using the reverse L approach as follows:
+for a right-ward path. If we choose :math:`\lambda = 2` and opt for a downward initial path then this initial path is :math:`\frac{1}{1} \rightarrow \frac{2}{1} \rightarrow \frac{3}{1}`, and we can enumerate using the reverse L approach as follows:
 
 .. figure:: ../_static/rationals-reverse-l2-enumeration.png
    :align: left

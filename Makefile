@@ -22,8 +22,9 @@ all:
 # Git
 git_stage:
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Staging new, modified, deleted and/or renamed files in Git\n"
-	git status -uno | grep modified | tr -s ' ' | cut -d ' ' -f 2 | xargs git add && \
-	git status -uno | grep deleted | tr -s ' ' | cut -d ' ' -f 2 | xargs git add -A && \
+	git status -uno | grep "new file" | tr -s ' ' | cut -d ' ' -f 3 | xargs git add && \
+	git status -uno | grep "modified" | tr -s ' ' | cut -d ' ' -f 2 | xargs git add && \
+	git status -uno | grep "deleted" | tr -s ' ' | cut -d ' ' -f 2 | xargs git add -A && \
 	git status -uno
 
 # Housekeeping

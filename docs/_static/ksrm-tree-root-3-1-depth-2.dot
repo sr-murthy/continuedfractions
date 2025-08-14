@@ -1,0 +1,30 @@
+digraph
+{
+    graph [
+        bgcolor=lightcyan
+        fontsize=12
+        labelloc="t"
+        label="KSRM coprime integer pairs tree for the root (3, 1), depth 2"
+        layout=dot
+        rankdir = "LR"
+    ]
+    node [shape=plaintext, fontsize=10]
+    edge [style=dashedsolid, color=firebrick3, fontsize=10]
+
+    "(3, 1)" -> "(5, 3)" [label="(2𝑎 − 𝑏, 𝑎)"]
+    "(3, 1)" -> "(7, 3)" [label="(2𝑎 + 𝑏, 𝑎)"]
+    "(3, 1)" -> "(5, 1)" [label="(𝑎 + 2𝑏, 𝑏)"]
+
+    "(5, 3)" -> "(7, 5)" [label="(2𝑎 − 𝑏, 𝑎)"]
+    "(5, 3)" -> "(13, 5)" [label="(2𝑎 + 𝑏, 𝑎)"]
+    "(5, 3)" -> "(11, 3)" [label="(𝑎 + 2𝑏, 𝑏)"]
+
+    "(7, 3)" -> "(11, 7)" [label="(2𝑎 − 𝑏, 𝑎)"]
+    "(7, 3)" -> "(17, 7)" [label="(2𝑎 + 𝑏, 𝑎)"]
+    "(7, 3)" -> "(13, 3)" [label="(𝑎 + 2𝑏, 𝑏)"]
+
+    "(5, 1)" -> "(9, 5)" [label="(2𝑎 − 𝑏, 𝑎)"]
+    "(5, 1)" -> "(11, 5)" [label="(2𝑎 + 𝑏, 𝑎)"]
+    "(5, 1)" -> "(7, 1)" [label="(𝑎 + 2𝑏, 𝑏)"]
+
+}

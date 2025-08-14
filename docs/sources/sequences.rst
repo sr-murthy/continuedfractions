@@ -6,9 +6,223 @@
 Sequences
 =========
 
-The :doc:`sequences <sequences>` library contains functions and classes relating to ordered sequences and structures of integers and rational numbers, connected with continued fractions, such as `mediants <https://en.wikipedia.org/wiki/Mediant_(mathematics)>`_, sequences of `coprime integers <https://en.wikipedia.org/wiki/Coprime_integers>`_ as well as trees for generating and representing them, and `Farey sequences <https://en.wikipedia.org/wiki/Farey_sequence>`_.
+The :doc:`sequences <continuedfractions/sequences>` library contains functions and classes relating to sequences and ordered structures of rational numbers, coprime integer pairs, and Farey sequences.
 
 These are described below in some detail.
+
+.. _sequences.rationals:
+
+Counting Rational Numbers
+=========================
+
+The set of rational numbers, denoted by :math:`\mathbb{Q}`, is the set of all reduced integer fractions :math:`\pm\frac{a}{b}` (fractions with the greatest common divisors divided out), including :math:`0 = \frac{0}{1}`, and is infinite but countable (enumerable). The :doc:`sequences <continuedfractions/sequences>` library contains the :py:meth:`~continuedfractions.sequences.rationals` function for counting the rationals in different ways, as described in more detail below.
+
+First, we note that to count the elements of any set involves putting all the elements in some order so that they occur without repetition, and the larger the set the larger is the number of possible orderings (enumerations). As :math:`\mathbb{Q}` is countably infinite - its size or cardinality is denoted by :math:`\aleph_0` (pronounced "Aleph 0"), which is the same as that of the integers :math:`\mathbb{Z}` and the natural (counting) numbers :math:`\mathbb{N}` - there are infinitely many enumerations. A few of these, including some which are well-known and others perhaps less well-known, are described in some detail below. Also, note that the negative rationals are ignored as they mirror the positve rationals, and all references to "rationals" are to the positive rationals (positive reduced integer fractions). 
+
+.. _sequences.rationals.cantor-diagonalisation:
+
+Cantor Diagonalisation
+----------------------
+
+A well known way of counting the rationals is **Cantor diagonalisation** (or Cantor's diagonal method), which is graphically depicted below, with the red arrows indicating the counting direction:
+
+.. figure:: ../_static/rationals-cantor-diagonalisation.png
+   :align: left
+   :alt: Cantor diagonalisation: A method of counting the Rational Numbers
+
+This method is based on first representing all (positive) integer fractions on a two-dimensional grid, which we may call the **Cantor grid**. On this grid all fractions in the :math:`i`-th row have the numerator :math:`i`, while all the fractions in :math:`j`-th column have the denominator :math:`j`. All integer pairs :math:`(a, b)` can thus be represented as fractions on the grid, although not all the fractions need to be counted: the rationals correspond to the irreducible fractions, while the composite fractions, which appear in grey in the diagram, are omitted as they are reducible to the rationals.
+
+The :py:func:`~continuedfractions.sequences.rationals` function can be used to perform this enumeration by specifying the ``enumeration="cantor diagonal"`` argument. Here is an example for the first 20 rationals in this enumeration:
+
+.. code:: python
+
+   >>> from continuedfractions.sequences import rationals
+   >>> rats = rationals(enumeration="cantor diagonal")
+   >>> for _, r in enumerate(rats, start=1):
+   ...     print(r, end=', ')
+   ...     if i == 19:
+   ...         print(next(rats))
+   ...         break
+   ... 
+   1, 2, 1/2, 1/3, 3, 4, 3/2, 2/3, 1/4, 1/5, 5, 6, 5/2, 4/3, 3/4, 2/5, 1/6, 1/7, 3/5, 5/3
+
+The :py:func:`~continuedfractions.sequences.rationals` function generates only positive rational numbers, and does so in the form of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, e.g.:
+
+.. code:: python
+
+   >>> rats = rationals(enumeration="cantor diagonal")
+   >>> first_twenty = [next(rats) for _ in range(20)]
+   >>> first_twenty
+   [ContinuedFraction(1, 1), ContinuedFraction(2, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 3), ContinuedFraction(3, 1), ContinuedFraction(4, 1), ContinuedFraction(3, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 4), ContinuedFraction(1, 5), ContinuedFraction(5, 1), ContinuedFraction(6, 1), ContinuedFraction(5, 2), ContinuedFraction(4, 3), ContinuedFraction(3, 4), ContinuedFraction(2, 5), ContinuedFraction(1, 6), ContinuedFraction(1, 7), ContinuedFraction(3, 5), ContinuedFraction(5, 3)]
+
+.. note::
+
+   The function generates infinitely, so please use it carefully and appropriately: to limit the generation conditions may be applied in the form of integer or float-valued upper bounds, or in terms of bounds on the number of terms that are generated. User-defined options for these may be added as future enhancements.
+
+   Also, printing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects to the console `produces <https://github.com/python/cpython/blob/3.13/Lib/fractions.py#L427>`_ strings of the form ``x`` or ``x/y`` where ``x`` and ``y`` are integers, because :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` is a subclass of :py:class:`~fractions.Fraction`.
+
+The Cantor diagonal enumeration can be understood in terms of the **diagonals** :math:`D_n` on the grid: the :math:`n`-th diagonal :math:`D_n` is the subsequence of length :math:`n` given by:
+
+.. math::
+
+   D_n := \left( \frac{n}{1},\frac{n - 1}{2},\frac{n - 2}{3},\ldots,\frac{1}{n} \right), \hskip{1em}n \geq 1
+
+Note that in this sequence the numerators form a decreasing arithmetic sequence :math:`(n. n - 1, n - 2, \ldots, 1)` with common difference :math:`1`, and the denominators form an increasing arithmetic sequence :math:`(1, 2, 3, \ldots, n)` with common difference :math:`1`. Also, these diagonals include composite fractions, and we don't consider counting order until the enumeration starts. So we have the diagonals:
+
+.. math::
+
+   \begin{align}
+   D_1 &= \left( \frac{1}{1} \right) \\
+   D_2 &= \left( \frac{2}{1} \frac{1}{2} \right) \\
+   D_3 &= \left( \frac{3}{1} \frac{2}{2} \frac{3}{1} \right) \\
+   D_4 &= \left( \frac{4}{1} \frac{3}{2} \frac{2}{3} \frac{1}{4} \right) \\
+   D_5 &= \left( \frac{5}{1} \frac{4}{2} \frac{3}{3} \frac{2}{4} \frac{1}{5} \right) \\
+   \ldots
+   \end{align}
+
+The Cantor diagonal enumeration of the rationals is simply the enumeration on the diagonals given by the following rules:
+
+* Count :math:`D_1` first.
+* For :math:`n = 2,3,4,\ldots` in that order, count :math:`D_n` from left to right if :math:`n` is even, or from right to left if :math:`n` is odd.
+* Omit composite fractions.
+
+Another way to think of this enumeration is in terms of the **weight** :math:`w` of a fraction :math:`\frac{a}{b}` (not necessarily in reduced form) which can be defined as the positive integer:
+
+.. math::
+
+   w\left(\frac{a}{b}\right) = |a| +| b|
+
+By definition the :math:`n`-th diagonal :math:`D_n` contains all fractions of weight :math:`n + 1`, and as :math:`\lim_{n \to \infty}` all fractions of all weights, and thus all rational numbers, are included in the enumeration.
+
+There is a "transposed" version of this enumeration in which, after starting with :math:`D_1` as before, we reverse the rules described above: 
+
+* Count :math:`D_1` first.
+* For :math:`n = 1,2,3,\ldots` in that order, count :math:`D_n` from right to left if :math:`n` is even, or from left to right if :math:`n` is odd.
+* Omit composite fractions.
+
+This enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function and the ``enumeration="cantor diagonal transposed"`` argument:
+
+.. code:: python
+
+   >>> rats = rationals(enumeration="cantor diagonal transposed")
+   >>> for i, r in enumerate(rats, start=1):
+   ...     print(r, end=', ')
+   ...     if i == 19:
+   ...         print(next(rats))
+   ...         break
+   ... 
+   1, 1/2, 2, 3, 1/3, 1/4, 2/3, 3/2, 4, 5, 1/5, 1/6, 2/5, 3/4, 4/3, 5/2, 6, 7, 5/3, 3/5
+
+The enumeration is graphically depicted below:
+
+.. figure:: ../_static/rationals-cantor-diagonalisation-transposed.png
+   :align: left
+   :alt: Another version of Cantor diagonalisation
+
+The resulting sequence can be obtained from the numbers in the first sequence by transposing the numerators and denominators.
+
+.. _sequences.rationals.reverse-l:
+
+Reverse L Enumeration
+---------------------
+
+There are some other interesting enumeration methods of rationals on the Cantor grid, one of which we call "reverse L". One version of this is graphically depicted below:
+
+.. figure:: ../_static/rationals-reverse-l-enumeration.png
+   :align: left
+   :alt: Reverse L enumeration: A method of counting the Rational Numbers
+
+(As with Cantor diagonalisation, the composite fractions appear in grey, and are not counted.) This enumeration can be understood more clearly in terms of (finite) subsequences :math:`⅃_n` that appear as reverse-L shapes in the diagram: so :math:`⅃_n` is the subsequence given by:
+
+.. math::
+
+   ⅃_n := \left( \frac{n}{1},\frac{n}{2},\frac{n}{3},\ldots,\frac{n}{n},\frac{n - 1}{n},\frac{n - 2}{n},\frac{n - 3}{n},\ldots,\frac{1}{n}\right), \hskip{1em} n \geq 1
+
+In the :math:`⅃_n`, as with the Cantor diagonals :math:`D_n` described above, we don't consider counting order until we actually start the enumeration. Here are the first five :math:`⅃_n`:
+
+.. math::
+
+   \begin{align}
+   ⅃_1 &= \left( \frac{1}{1} \right) \\
+   ⅃_2 &= \left( \frac{2}{1} \frac{2}{2} \frac{1}{2} \right) \\
+   ⅃_3 &= \left( \frac{3}{1} \frac{3}{2} \frac{3}{3} \frac{2}{3} \frac{1}{3} \right) \\
+   ⅃_4 &= \left( \frac{4}{1} \frac{4}{2} \frac{4}{3} \frac{4}{4} \frac{3}{4} \frac{2}{4} \frac{1}{4} \right) \\
+   ⅃_5 &= \left( \frac{5}{1} \frac{5}{2} \frac{5}{3} \frac{5}{4} \frac{5}{5} \frac{4}{5} \frac{3}{5} \frac{2}{5} \frac{1}{5} \right) \\
+   \ldots
+   \end{align}
+
+Each :math:`⅃_n` is a subsequence of length :math:`2n - 1`, and we can decompose it into two smaller subsequences :math:`⅃_{n,1}` and :math:`⅃_{n,2}` given by:
+
+.. math::
+
+   \begin{align}
+   ⅃_{n,1} &:= \left( \frac{n}{1},\frac{n}{2},\ldots,\frac{n}{n} \right) \\
+   ⅃_{n,2} &:= \left( \frac{n - 1}{n},\frac{n - 2}{n},\ldots,\frac{1}{n} \right)
+   \end{align}
+
+These are the horizontal and vertical segments that make up :math:`⅃_n`, and have lengths :math:`n` and :math:`n - 1` respectively. The reverse L enumeration of the rationals is simply an enumeration on the :math:`⅃_n` given by the following rules:
+
+* Count :math:`⅃_1` first.
+* For :math:`n = 2,3,4,\ldots` in that order, first count :math:`⅃_{n,1}` from left to right and then :math:`⅃_{n,2}` from bottom to top if :math:`n` is even, or, if :math:`n` is odd first count :math:`⅃_{n,2}` from top to bottom and then :math:`⅃_{n,1}` from right to left.
+* Omit composite fractions.
+
+This enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function and the ``enumeration="reverse l"`` argument:
+
+.. code:: python
+
+   >>> rats = rationals(enumeration="reverse l")
+   >>> for i, r in enumerate(rats, start=1):
+   ...     print(r, end=', ')
+   ...     if i == 19:
+   ...         print(next(rats))
+   ...         break
+   ... 
+   1, 2, 1/2, 1/3, 2/3, 3/2, 3, 4, 4/3, 3/4, 1/4, 1/5, 2/5, 3/5, 4/5, 5/4, 5/3, 5/2, 5, 6
+
+An interesting property of the :math:`⅃_n` is that, for each :math:`n`, the sequence of weights :math:`w\left(⅃_n\right)` forms a **palindromic sequence** of length :math:`2n - 1` starting and finishing with the number :math:`n + 1`:
+
+.. math::
+
+   w \left(⅃_n\right) = \left(\overbrace{n + 1, n + 2, n + 3, \ldots,}^{\text{+ve arithmetic sequence}} 2n \underbrace{,2n - 1, 2n - 2, 2n - 3, \ldots, n + 1}_{\text{-ve arithmetic sequence}}\right)
+
+As with the Cantor diagonal method, there is a transposed version of the reverse L enumeration, where the same subsequences :math:`⅃_n` are involved but counted in reverse order and depending on whether :math:`n` is even or odd. This enumeration is graphically depicted below:
+
+.. figure:: ../_static/rationals-reverse-l-transposed-enumeration.png
+   :align: left
+   :alt: Reverse L Enumeration (transposed): A method of counting the Rational Numbers
+
+This enumeration is described by the following rules:
+
+* Count :math:`⅃_1` first.
+* For :math:`n = 2,3,4,\ldots` in that order, first count :math:`⅃_{n,2}` from top to bottom and then :math:`⅃_{n,1}` from right to left if :math:`n` is even, or, if :math:`n` is odd first count :math:`⅃_{n,1}` from left to right and then :math:`⅃_{n,2}` from left to right.
+* Omit composite fractions.
+
+The enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function using the ``enumeration="reverse l transposed"`` argument:
+
+.. code:: python
+
+   >>> rats = rationals(enumeration="reverse l transposed")
+   >>> for i, r in enumerate(rats, start=1):
+   ...     print(r, end=', ')
+   ...     if i == 20:
+   ...         print(next(rats))
+   ...         break
+   ... 
+   1, 1/2, 2, 3, 3/2, 2/3, 1/3, 1/4, 3/4, 4/3, 4, 5, 5/2, 5/3, 5/4, 4/5, 3/5, 2/5, 1/5, 1/6
+
+
+.. _sequences.rationals.generalised-reverse-l:
+
+Generalisations
+~~~~~~~~~~~~~~~
+
+Although not currently supported by the :py:meth:`~continuedfractions.sequences.rationals` function, the reverse L enumeration can be generalised by varying the length of the "initial steps" taken from :math:`(1, 1)`. If we denote the length of this initial step by :math:`\lambda`, then :math:`(1, 1)` was followed by either :math:`(2, 1)` in the standard reverse L enumeration, or by :math:`(1, 2)` in the reverse L transposed enumeration, so that :math:`\lambda = 1`. For :math:`\lambda > 1` we can choose either :math:`(\lambda + 1, 1)` or :math:`(1, \lambda + 1)` as the second rational in the enumeration: if we choose :math:`\lambda = 2` and let our initial steps be :math:`(1, 1) \rightarrow (2, 1) \rightarrow (3, 1)`, then we can enumerate using the reverse L approach as follows:
+
+.. figure:: ../_static/rationals-reverse-l2-enumeration.png
+   :align: left
+   :alt: Reverse L enumeration where the initial L is of length 2: A method of counting the Rational Numbers
+
+For each :math:`\lambda = 1,2,3,\ldots` we get a slightly different, more "elongated" reverse L enumeration, which also shows that there are at least countably infinite (:math:`\aleph_0`) enumerations of the rationals. There is also a natural transpose of thse enumerations which is similar to what has been described for reverse L with :math:`\lambda = 1`.
 
 .. _sequences.mediants:
 
@@ -274,11 +488,17 @@ producing the "1st generation" of :math:`3 + 3 = 6` pairs. This can be repeated 
 
 If we let :math:`k = 0` denote the :math:`0`-th generation consisting only of the two roots :math:`(2, 1)` and :math:`(3, 1)`, then for :math:`k \geq 1` the :math:`k`-th generation, for either tree, will have a total of :math:`3^k` children, the total number of all members up to and including the :math:`k`-th generation will be :math:`1 + 3 + 3^2 + \ldots + 3^k = \frac{3^{k + 1} - 1}{2}`, and the total number of all members in both trees up to and including the :math:`k`-th generation will be :math:`3^{k + 1} - 1`.
 
-For :math:`k = 2` (two generations) we have the following graphical representation:
+For :math:`k = 2` (two generations) here are the trees, starting with the root :math:`(2, 1)`:
 
-.. figure:: ../_static/ksrm-tree-depth2.png
+.. figure:: ../_static/ksrm-tree-root-2-1-depth-2.png
    :align: left
-   :alt: The KSRM Coprime Pairs Trees for two generations
+   :alt: The KSRM coprime pairs tree for the root `(2, 1)`, depth 2
+
+and then the root :math:`(3, 1)`:
+
+.. figure:: ../_static/ksrm-tree-root-3-1-depth-2.png
+   :align: left
+   :alt: The KSRM coprime pairs tree for the root `(3, 1)`, depth 2
 
 The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main search method :py:meth:`~continuedfractions.sequences.KSRMTree.search`, which is a wrapper and generator that implements the procedure described above.
 
@@ -446,8 +666,10 @@ This can be checked using :py:func:`~continuedfractions.sequences.farey_sequence
 References
 ==========
 
-[1] Hatcher, A. (2024, September). Topology of Numbers. American Mathematical Society. https://pi.math.cornell.edu/~hatcher/TN/TNbook.pdf
+[1] Courant, R., Robbins, H., & Stewart, I. (1996). What is mathematics?: An elementary approach to ideas and methods (2nd ed.). Oxford University Press
 
-[2] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+[2] Hatcher, A. (2024, September). Topology of Numbers. American Mathematical Society. https://pi.math.cornell.edu/~hatcher/TN/TNbook.pdf
 
-[3] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
+[3] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+
+[4] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576

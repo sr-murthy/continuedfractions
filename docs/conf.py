@@ -110,7 +110,7 @@ autodoc_default_options = {
     'exclude-members': '__call__,__weakref__,__slots__,__match_args__',
     'member-order': 'bysource',
     'private-members': True,
-    'special-members': '__eq__, __init__, __new__'
+    'special-members': ''
 }
 
 # Sphinx autodoc autosummary settings
@@ -194,7 +194,6 @@ html_context = {
 html_baseurl = 'https://continuedfractions.readthedocs.io/en/latest/'
 
 html_sidebars = {
-    "sources/installation": [],
     "sources/continued-fractions": [],
     "sources/sequences": [],
     "sources/contributing": [],

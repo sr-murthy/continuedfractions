@@ -194,7 +194,7 @@ As with the Cantor diagonal method, there is a transposed version of the reverse
 This enumeration is described by the following rules:
 
 * Count :math:`⅃_1` first.
-* For :math:`n = 2,3,4,\ldots` in that order, first count :math:`⅃_{n,2}` from top to bottom and then :math:`⅃_{n,1}` from right to left if :math:`n` is even, or, if :math:`n` is odd first count :math:`⅃_{n,1}` from left to right and then :math:`⅃_{n,2}` from left to right.
+* For :math:`n = 2,3,4,\ldots` in that order, first count :math:`⅃_{n,2}` from top to bottom and then :math:`⅃_{n,1}` from right to left if :math:`n` is even, or, if :math:`n` is odd first count :math:`⅃_{n,1}` from left to right and then :math:`⅃_{n,2}` from bottom to top.
 * Omit composite fractions.
 
 The enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function using the ``enumeration="reverse l transposed"`` argument:
@@ -216,13 +216,25 @@ The enumeration can be performed with the :py:func:`~continuedfractions.sequence
 Generalisations
 ~~~~~~~~~~~~~~~
 
-Although not currently supported by the :py:meth:`~continuedfractions.sequences.rationals` function, the reverse L enumeration can be generalised by varying the length of the "initial steps" taken from :math:`(1, 1)`. If we denote the length of this initial step by :math:`\lambda`, then :math:`(1, 1)` was followed by either :math:`(2, 1)` in the standard reverse L enumeration, or by :math:`(1, 2)` in the reverse L transposed enumeration, so that :math:`\lambda = 1`. For :math:`\lambda > 1` we can choose either :math:`(\lambda + 1, 1)` or :math:`(1, \lambda + 1)` as the second rational in the enumeration: if we choose :math:`\lambda = 2` and let our initial steps be :math:`(1, 1) \rightarrow (2, 1) \rightarrow (3, 1)`, then we can enumerate using the reverse L approach as follows:
+Although not currently supported by the :py:meth:`~continuedfractions.sequences.rationals` function, the reverse L enumeration can be generalised by varying the length of the "initial path" of the enumeration starting from :math:`(1, 1)`. If we denote the length of this initial path by :math:`\lambda`, then :math:`(1, 1)` was followed by either :math:`(2, 1)` in the standard reverse L enumeration, or by :math:`(1, 2)` in the reverse L transposed enumeration, so that :math:`\lambda = 1`. For :math:`\lambda > 1` we can define the initial path as either:
+
+.. math::
+
+   (1, 1) \rightarrow (2, 1) \rightarrow \cdots \rightarrow (\lambda + 1, 1)
+
+for a downward path, or as:
+
+.. math::
+
+   (1, 1) \rightarrow (1, 2) \rightarrow \cdots \rightarrow (1, \lambda + 1)
+
+for a right-ward path. If we choose :math:`\lambda = 2` and opt for a downward initial path then this initial path is :math:`(1, 1) \rightarrow (2, 1) \rightarrow (3, 1)`, and we can enumerate using the reverse L approach as follows:
 
 .. figure:: ../_static/rationals-reverse-l2-enumeration.png
    :align: left
    :alt: Reverse L enumeration where the initial L is of length 2: A method of counting the Rational Numbers
 
-For each :math:`\lambda = 1,2,3,\ldots` we get a slightly different, more "elongated" reverse L enumeration, which also shows that there are at least countably infinite (:math:`\aleph_0`) enumerations of the rationals. There is also a natural transpose of thse enumerations which is similar to what has been described for reverse L with :math:`\lambda = 1`.
+For each :math:`\lambda = 1,2,3,\ldots` we get a slightly different, more "elongated" reverse L enumeration, which also shows that these form a countably infinite (:math:`\aleph_0`) subset of the set of all enumerations of the rationals. There are also natural transposes of these enumerations,  similar to what has been described above for reverse L with :math:`\lambda = 1`.
 
 .. _sequences.mediants:
 

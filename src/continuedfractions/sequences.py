@@ -41,7 +41,7 @@ def rationals(
     `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#rationals>`_.
 
     To include negative rationals and :math:`0` set ``positive_only`` to
-    ``True``, as described in the documentation and the docstring examples
+    ``False``, as described in the documentation and the docstring examples
     below.
 
     The enumeration type should be given by the ``enumeration`` argument, which
@@ -119,7 +119,7 @@ def rationals(
         These enumerations are described above in the docstring, and also in
         the `Sphinx documentation <https://continuedfractions.readthedocs.io/sources/pythagorean-triples.html#primitive-pythagorean-triples>`_
 
-    range_positive : bool, default=True
+    positive_only : bool, default=True
         Whether to generate only the positive rationals, which is true by
         default.
 
@@ -212,7 +212,7 @@ def rationals(
             # Same process as for ``"cantor diagonal"``, except that for each
             # coprime pair ``(u, v)`` on the ``n``-th diagonal we generate the
             # negative continued fraction ``-u/v`` immediately after the
-            # positive continued fraction ``-u/v``.
+            # positive continued fraction ``u/v``.
             n += 1
             us = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
             vs = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
@@ -247,7 +247,7 @@ def rationals(
             # Same process as for ``"cantor diagonal transposed"``, except that
             # for each coprime pair ``(u, v)`` on the ``n``-th diagonal we
             # generate the negative continued fraction ``-u/v`` immediately
-            # after the positive continued fraction ``-u/v``.
+            # after the positive continued fraction ``u/v``.
             n += 1
             us = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
             vs = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
@@ -296,7 +296,7 @@ def rationals(
             # Same process as for ``"rectilinear"``, except that for each
             # coprime pair ``(u, v)`` on the ``n``-th reverse L ``⅃_n`` we
             # generate the negative continued fraction ``-u/v`` immediately
-            # after the positive continued fraction ``-u/v``.
+            # after the positive continued fraction ``u/v``.
             n += 1
             us = (
                 chain((n for _ in range(n)), range(n - 1, 0, -1))
@@ -352,7 +352,7 @@ def rationals(
             # Same process as for ``"rectilinear transposed"``, except that
             # for each coprime pair ``(u, v)`` on the ``n``-th reverse L
             # ``⅃_n`` we generate the negative continued fraction ``-u/v``
-            # immediately after the positive continued fraction ``-u/v``. 
+            # immediately after the positive continued fraction ``u/v``. 
             n += 1
             us = (
                 chain(range(1, n), (n for _ in range(n)))

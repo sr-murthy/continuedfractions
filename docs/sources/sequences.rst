@@ -17,7 +17,7 @@ Counting Rational Numbers
 
 The set of rational numbers, denoted by :math:`\mathbb{Q}`, is the set of all reduced integer fractions :math:`\pm\frac{a}{b}` (fractions with the greatest common divisors divided out), including :math:`0 = \frac{0}{1}`, and is infinite but countable (enumerable). The :doc:`sequences <continuedfractions/sequences>` library contains the :py:meth:`~continuedfractions.sequences.rationals` function for counting the rationals in different ways, as described in more detail below.
 
-First, we note that to count the elements of any set involves putting all the elements in some order so that they occur without repetition, and the larger the set the larger is the number of possible orderings (enumerations). As :math:`\mathbb{Q}` is countably infinite - its size or cardinality is denoted by :math:`\aleph_0` (pronounced "Aleph 0"), which is the same as that of the integers :math:`\mathbb{Z}` and the natural (counting) numbers :math:`\mathbb{N}` - there are infinitely many enumerations. A few of these, including some which are well-known and others perhaps less well-known, are described in some detail below. Also, note that the negative rationals are ignored as they mirror the positve rationals, and all references to "rationals" are to the positive rationals (positive reduced integer fractions). 
+First, we note that to count the elements of any set involves putting all the elements in some order so that they occur without repetition, and the larger the set the larger is the number of possible orderings (enumerations). As :math:`\mathbb{Q}` is countably infinite - its size or cardinality is denoted by :math:`\aleph_0` (pronounced "Aleph 0"), which is the same as that of the integers :math:`\mathbb{Z}` and the natural (counting) numbers :math:`\mathbb{N}` - there are infinitely many enumerations. A few of these, including some which are well-known and others perhaps less well-known, are described in some detail below. Also, note that, generally, in relation to enumeration, the negative rationals are ignored as they mirror the positve rationals, and all references to "rationals" are to the positive rationals (positive reduced integer fractions), unless otherwise stated. 
 
 .. _sequences.rationals.cantor-diagonalisation:
 
@@ -46,7 +46,7 @@ The :py:func:`~continuedfractions.sequences.rationals` function can be used to p
    ... 
    1, 2, 1/2, 1/3, 3, 4, 3/2, 2/3, 1/4, 1/5, 5, 6, 5/2, 4/3, 3/4, 2/5, 1/6, 1/7, 3/5, 5/3
 
-The :py:func:`~continuedfractions.sequences.rationals` function generates only positive rational numbers, and does so in the form of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, e.g.:
+By default the :py:func:`~continuedfractions.sequences.rationals` function generates only positive rational numbers (``positive_only=True``), and does so in the form of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, e.g.:
 
 .. code:: python
 
@@ -55,9 +55,20 @@ The :py:func:`~continuedfractions.sequences.rationals` function generates only p
    >>> first_twenty
    [ContinuedFraction(1, 1), ContinuedFraction(2, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 3), ContinuedFraction(3, 1), ContinuedFraction(4, 1), ContinuedFraction(3, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 4), ContinuedFraction(1, 5), ContinuedFraction(5, 1), ContinuedFraction(6, 1), ContinuedFraction(5, 2), ContinuedFraction(4, 3), ContinuedFraction(3, 4), ContinuedFraction(2, 5), ContinuedFraction(1, 6), ContinuedFraction(1, 7), ContinuedFraction(3, 5), ContinuedFraction(5, 3)]
 
+To include negative rational numbers, as well as :math:`0`, the function should be called with the ``positive_only=False`` optional argument. For example:
+
+.. code:: python
+
+   >>> rats = rationals(enumeration="cantor diagonal", positive_only=False)
+   >>> first_twenty_plus_one = [next(rats) for _ in range(20)]
+   >>> first_twenty_plus_one
+   [ContinuedFraction(0, 1), ContinuedFraction(1, 1), ContinuedFraction(-1, 1), ContinuedFraction(2, 1), ContinuedFraction(-2, 1), ContinuedFraction(1, 2), ContinuedFraction(-1, 2), ContinuedFraction(1, 3), ContinuedFraction(-1, 3), ContinuedFraction(3, 1), ContinuedFraction(-3, 1), ContinuedFraction(4, 1), ContinuedFraction(-4, 1), ContinuedFraction(3, 2), ContinuedFraction(-3, 2),
+   ContinuedFraction(2, 3), ContinuedFraction(-2, 3), ContinuedFraction(1, 4), ContinuedFraction(-1, 4), ContinuedFraction(1, 5),
+   ContinuedFraction(-1, 5)]
+
 .. note::
 
-   The function generates infinitely, so please use it carefully and appropriately: to limit the generation conditions may be applied in the form of integer or float-valued upper bounds, or in terms of bounds on the number of terms that are generated. User-defined options for these may be added as future enhancements.
+   The function generates infinitely, so should be used carefully: to limit the generation conditions may be applied in the form of integer or float-valued upper bounds, or in terms of bounds on the number of terms that are generated. User-defined options for limiting or configuring the generation may be added as future enhancements.
 
    Also, printing :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects to the console `produces <https://github.com/python/cpython/blob/3.13/Lib/fractions.py#L427>`_ strings of the form ``x`` or ``x/y`` where ``x`` and ``y`` are integers, because :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` is a subclass of :py:class:`~fractions.Fraction`.
 
@@ -73,10 +84,10 @@ Note that in this sequence the numerators form a decreasing arithmetic sequence 
 
    \begin{align}
    D_1 &= \left( \frac{1}{1} \right) \\
-   D_2 &= \left( \frac{2}{1} \frac{1}{2} \right) \\
-   D_3 &= \left( \frac{3}{1} \frac{2}{2} \frac{3}{1} \right) \\
-   D_4 &= \left( \frac{4}{1} \frac{3}{2} \frac{2}{3} \frac{1}{4} \right) \\
-   D_5 &= \left( \frac{5}{1} \frac{4}{2} \frac{3}{3} \frac{2}{4} \frac{1}{5} \right) \\
+   D_2 &= \left( \frac{2}{1}, \frac{1}{2}, \right) \\
+   D_3 &= \left( \frac{3}{1}, \frac{2}{2}, \frac{3}{1}, \right) \\
+   D_4 &= \left( \frac{4}{1}, \frac{3}{2}, \frac{2}{3}, \frac{1}{4} \right) \\
+   D_5 &= \left( \frac{5}{1}, \frac{4}{2}, \frac{3}{3}, \frac{2}{4}, \frac{1}{5} \right) \\
    \ldots
    \end{align}
 
@@ -121,16 +132,16 @@ The enumeration is graphically depicted below:
 
 The resulting sequence can be obtained from the numbers in the first sequence by transposing the numerators and denominators.
 
-.. _sequences.rationals.reverse-l:
+.. _sequences.rationals.rectilinear:
 
-Reverse L Enumeration
----------------------
+Rectilinear Enumeration
+-----------------------
 
-There are some other interesting enumeration methods of rationals on the Cantor grid, one of which we call "reverse L". One version of this is graphically depicted below:
+There are some other interesting enumeration methods of rationals on the Cantor grid, including one, described here, which may be called **"rectilinear"**. This is graphically depicted below:
 
-.. figure:: ../_static/rationals-reverse-l-enumeration.png
+.. figure:: ../_static/rationals-rectilinear-enumeration.png
    :align: left
-   :alt: Reverse L enumeration: A method of counting the Rational Numbers
+   :alt: Rectilinear enumeration: A method of counting the Rational Numbers
 
 (As with Cantor diagonalisation, the composite fractions appear in grey, and are not counted.) This enumeration can be understood more clearly in terms of (finite) subsequences :math:`⅃_n` that appear as reverse-L shapes in the diagram: so :math:`⅃_n` is the subsequence given by:
 
@@ -144,10 +155,10 @@ In the :math:`⅃_n`, as with the Cantor diagonals :math:`D_n` described above, 
 
    \begin{align}
    ⅃_1 &= \left( \frac{1}{1} \right) \\
-   ⅃_2 &= \left( \frac{2}{1} \frac{2}{2} \frac{1}{2} \right) \\
-   ⅃_3 &= \left( \frac{3}{1} \frac{3}{2} \frac{3}{3} \frac{2}{3} \frac{1}{3} \right) \\
-   ⅃_4 &= \left( \frac{4}{1} \frac{4}{2} \frac{4}{3} \frac{4}{4} \frac{3}{4} \frac{2}{4} \frac{1}{4} \right) \\
-   ⅃_5 &= \left( \frac{5}{1} \frac{5}{2} \frac{5}{3} \frac{5}{4} \frac{5}{5} \frac{4}{5} \frac{3}{5} \frac{2}{5} \frac{1}{5} \right) \\
+   ⅃_2 &= \left( \frac{2}{1}, \frac{2}{2}, \frac{1}{2}, \right) \\
+   ⅃_3 &= \left( \frac{3}{1}, \frac{3}{2}, \frac{3}{3}, \frac{2}{3}, \frac{1}{3} \right) \\
+   ⅃_4 &= \left( \frac{4}{1}, \frac{4}{2}, \frac{4}{3}, \frac{4}{4}, \frac{3}{4}, \frac{2}{4}, \frac{1}{4} \right) \\
+   ⅃_5 &= \left( \frac{5}{1}, \frac{5}{2}, \frac{5}{3}, \frac{5}{4}, \frac{5}{5}, \frac{4}{5}, \frac{3}{5}, \frac{2}{5}, \frac{1}{5} \right) \\
    \ldots
    \end{align}
 
@@ -160,17 +171,17 @@ Each :math:`⅃_n` is a subsequence of length :math:`2n - 1`, and we can decompo
    ⅃_{n,2} &:= \left( \frac{n - 1}{n},\frac{n - 2}{n},\ldots,\frac{1}{n} \right)
    \end{align}
 
-These are the horizontal and vertical segments that make up :math:`⅃_n`, and have lengths :math:`n` and :math:`n - 1` respectively. The reverse L enumeration of the rationals is simply an enumeration on the :math:`⅃_n` given by the following rules:
+These are the horizontal and vertical segments that make up :math:`⅃_n`, and have lengths :math:`n` and :math:`n - 1` respectively. The rectilinear enumeration of the rationals is simply an enumeration on the :math:`⅃_n` given by the following rules:
 
 * Count :math:`⅃_1` first.
 * For :math:`n = 2,3,4,\ldots` in that order, first count :math:`⅃_{n,1}` from left to right and then :math:`⅃_{n,2}` from bottom to top if :math:`n` is even, or, if :math:`n` is odd first count :math:`⅃_{n,2}` from top to bottom and then :math:`⅃_{n,1}` from right to left.
 * Omit composite fractions.
 
-This enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function and the ``enumeration="reverse l"`` argument:
+This enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function and the ``enumeration="rectilinear"`` argument:
 
 .. code:: python
 
-   >>> rats = rationals(enumeration="reverse l")
+   >>> rats = rationals(enumeration="rectilinear")
    >>> for i, r in enumerate(rats, start=1):
    ...     print(r, end=', ')
    ...     if i == 19:
@@ -185,11 +196,11 @@ An interesting property of the :math:`⅃_n` is that, for each :math:`n`, the se
 
    w \left(⅃_n\right) = \left(\overbrace{n + 1, n + 2, n + 3, \ldots,}^{\text{+ve arithmetic sequence}} 2n \underbrace{,2n - 1, 2n - 2, 2n - 3, \ldots, n + 1}_{\text{-ve arithmetic sequence}}\right)
 
-As with the Cantor diagonal method, there is a transposed version of the reverse L enumeration, where the same subsequences :math:`⅃_n` are involved but counted in reverse order and depending on whether :math:`n` is even or odd. This enumeration is graphically depicted below:
+As with the Cantor diagonal method, there is a transposed version of the rectilinear enumeration, where the same subsequences :math:`⅃_n` are involved but counted in reverse order and depending on whether :math:`n` is even or odd. This enumeration is graphically depicted below:
 
-.. figure:: ../_static/rationals-reverse-l-transposed-enumeration.png
+.. figure:: ../_static/rationals-rectilinear-transposed-enumeration.png
    :align: left
-   :alt: Reverse L Enumeration (transposed): A method of counting the Rational Numbers
+   :alt: Rectilinear enumeration (transposed): A method of counting the Rational Numbers
 
 This enumeration is described by the following rules:
 
@@ -197,11 +208,11 @@ This enumeration is described by the following rules:
 * For :math:`n = 2,3,4,\ldots` in that order, first count :math:`⅃_{n,2}` from top to bottom and then :math:`⅃_{n,1}` from right to left if :math:`n` is even, or, if :math:`n` is odd first count :math:`⅃_{n,1}` from left to right and then :math:`⅃_{n,2}` from bottom to top.
 * Omit composite fractions.
 
-The enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function using the ``enumeration="reverse l transposed"`` argument:
+The enumeration can be performed with the :py:func:`~continuedfractions.sequences.rationals` method function using the ``enumeration="rectilinear transposed"`` argument:
 
 .. code:: python
 
-   >>> rats = rationals(enumeration="reverse l transposed")
+   >>> rats = rationals(enumeration="rectilinear transposed")
    >>> for i, r in enumerate(rats, start=1):
    ...     print(r, end=', ')
    ...     if i == 20:
@@ -211,12 +222,12 @@ The enumeration can be performed with the :py:func:`~continuedfractions.sequence
    1, 1/2, 2, 3, 3/2, 2/3, 1/3, 1/4, 3/4, 4/3, 4, 5, 5/2, 5/3, 5/4, 4/5, 3/5, 2/5, 1/5, 1/6
 
 
-.. _sequences.rationals.generalised-reverse-l:
+.. _sequences.rationals.generalised-rectilinear:
 
 Generalisations
 ~~~~~~~~~~~~~~~
 
-Although not currently supported by the :py:meth:`~continuedfractions.sequences.rationals` function, the reverse L enumeration can be generalised by varying the length of the "initial path" of the enumeration starting from :math:`\frac{1}{1}`. If we denote the length of this initial path by :math:`\lambda`, then :math:`\frac{1}{1}` was followed by either :math:`\frac{2}{1}` in the standard reverse L enumeration, or by :math:`\frac{1}{2}` in the reverse L transposed enumeration, so that :math:`\lambda = 1`. For :math:`\lambda > 1` we can define the initial path as either:
+Although not currently supported by the :py:meth:`~continuedfractions.sequences.rationals` function, the rectilinear enumeration can be generalised by varying the length of the "initial path" of the enumeration starting from :math:`\frac{1}{1}`. If we denote the length of this initial path by :math:`\lambda`, then :math:`\frac{1}{1}` was followed by either :math:`\frac{2}{1}` in the first kind of rectilinear enumeration that was described, or by :math:`\frac{1}{2}` in the rectilinear transposed enumeration, so that :math:`\lambda = 1`. For :math:`\lambda > 1` we can define the initial path as either:
 
 .. math::
 
@@ -228,13 +239,13 @@ for a downward path, or as:
 
    \frac{1}{1} \rightarrow \frac{1}{2} \rightarrow \cdots \rightarrow \frac{1}{\lambda + 1}
 
-for a right-ward path. If we choose :math:`\lambda = 2` and opt for a downward initial path then this initial path is :math:`\frac{1}{1} \rightarrow \frac{2}{1} \rightarrow \frac{3}{1}`, and we can enumerate using the reverse L approach as follows:
+for a right-ward path. If we choose :math:`\lambda = 2` and opt for a downward initial path then this initial path is :math:`\frac{1}{1} \rightarrow \frac{2}{1} \rightarrow \frac{3}{1}`, and we can enumerate using the rectilinear approach as follows:
 
-.. figure:: ../_static/rationals-reverse-l2-enumeration.png
+.. figure:: ../_static/rationals-rectilinear-l2-enumeration.png
    :align: left
-   :alt: Reverse L enumeration where the initial L is of length 2: A method of counting the Rational Numbers
+   :alt: Rectilinear enumeration with an initial down path of length 2: A method of counting the Rational Numbers
 
-For each :math:`\lambda = 1,2,3,\ldots` we get a slightly different, more "elongated" reverse L enumeration, which also shows that these form a countably infinite (:math:`\aleph_0`) subset of the set of all enumerations of the rationals. There are also natural transposes of these enumerations,  similar to what has been described above for reverse L with :math:`\lambda = 1`.
+For each :math:`\lambda = 1,2,3,\ldots` we get a slightly different, more "elongated" rectilinear enumeration, which also shows that these form a countably infinite (:math:`\aleph_0`) subset of the set of all enumerations of the rationals. There are also natural transposes of these enumerations,  similar to what has been described above for the rectilinear enumeration with :math:`\lambda = 1`.
 
 .. _sequences.mediants:
 

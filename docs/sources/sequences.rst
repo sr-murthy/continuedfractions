@@ -17,7 +17,7 @@ Counting Rational Numbers
 
 The set of rational numbers, denoted by :math:`\mathbb{Q}`, is the set of all reduced integer fractions :math:`\pm\frac{a}{b}` (fractions with the greatest common divisors divided out), including :math:`0 = \frac{0}{1}`, and is infinite but countable (enumerable). The :doc:`sequences <continuedfractions/sequences>` library contains the :py:meth:`~continuedfractions.sequences.rationals` function for counting the rationals in different ways, as described in more detail below.
 
-First, we note that to count the elements of any set involves putting all the elements in some order so that they occur without repetition, and the larger the set the larger is the number of possible orderings (enumerations). As :math:`\mathbb{Q}` is countably infinite - its size or cardinality is denoted by :math:`\aleph_0` (pronounced "Aleph 0"), which is the same as that of the integers :math:`\mathbb{Z}` and the natural (counting) numbers :math:`\mathbb{N}` - there are infinitely many enumerations. A few of these, including some which are well-known and others perhaps less well-known, are described in some detail below. Also, note that, generally, in relation to enumeration, the negative rationals are ignored as they mirror the positve rationals, and all references to "rationals" are to the positive rationals (positive reduced integer fractions), unless otherwise stated. 
+First, we note that to count the elements of any set involves putting all the elements in some order so that they occur without repetition, and the larger the set the larger is the number of possible orderings (enumerations). As :math:`\mathbb{Q}` is countably infinite - its size or cardinality is denoted by :math:`\aleph_0` (pronounced "Aleph 0"), which is the same as that of the integers :math:`\mathbb{Z}` and the natural (counting) numbers :math:`\mathbb{N}` - there are infinitely many enumerations. A few of these, including some which are well-known and others perhaps less well-known, are described in some detail below. Also, note that, generally, in relation to enumeration, the negative rationals are ignored as they mirror the positive rationals, and all references to "rationals" are to the positive rationals (positive reduced integer fractions), unless otherwise stated. 
 
 .. _sequences.rationals.cantor-diagonalisation:
 
@@ -38,7 +38,7 @@ The :py:func:`~continuedfractions.sequences.rationals` function can be used to p
 
    >>> from continuedfractions.sequences import rationals
    >>> rats = rationals(enumeration="cantor diagonal")
-   >>> for _, r in enumerate(rats, start=1):
+   >>> for i, r in enumerate(rats, start=1):
    ...     print(r, end=', ')
    ...     if i == 19:
    ...         print(next(rats))
@@ -60,8 +60,8 @@ To include negative rational numbers, as well as :math:`0`, the function should 
 .. code:: python
 
    >>> rats = rationals(enumeration="cantor diagonal", positive_only=False)
-   >>> first_twenty_plus_one = [next(rats) for _ in range(20)]
-   >>> first_twenty_plus_one
+   >>> first_twenty_plus_zero = [next(rats) for _ in range(21)]
+   >>> first_twenty_plus_zero
    [ContinuedFraction(0, 1), ContinuedFraction(1, 1), ContinuedFraction(-1, 1), ContinuedFraction(2, 1), ContinuedFraction(-2, 1), ContinuedFraction(1, 2), ContinuedFraction(-1, 2), ContinuedFraction(1, 3), ContinuedFraction(-1, 3), ContinuedFraction(3, 1), ContinuedFraction(-3, 1), ContinuedFraction(4, 1), ContinuedFraction(-4, 1), ContinuedFraction(3, 2), ContinuedFraction(-3, 2),
    ContinuedFraction(2, 3), ContinuedFraction(-2, 3), ContinuedFraction(1, 4), ContinuedFraction(-1, 4), ContinuedFraction(1, 5),
    ContinuedFraction(-1, 5)]

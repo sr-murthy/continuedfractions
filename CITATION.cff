@@ -16,6 +16,7 @@ keywords:
   - continued fractions
   - computational number theory
   - coprime integers
+  - enumeration
   - farey sequences
   - fractions
   - irrational numbers
@@ -23,7 +24,8 @@ keywords:
   - rational approximation
   - rational numbers
   - real numbers
+  - sequences
   
 license: MPL-2.0
 version: 1.3.0
-date-released: 2025-08-17
+date-released: 2025-08-16

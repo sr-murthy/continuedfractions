@@ -29,26 +29,32 @@ KSRMBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generatin
 
 
 def rationals(
-    enumeration: typing.Literal["cantor diagonal", "cantor diagonal transposed", "reverse l", "reverse l transposed"]
+    enumeration: typing.Literal["cantor diagonal", "cantor diagonal transposed", "rectilinear", "rectilinear transposed"],
+    positive_only: bool = True
 ) -> typing.Generator[ContinuedFraction, None, None]:
-    """:py:class:`typing.Generator` : Generator of all rational numbers :math:`\\mathbb{Q}` using an enumeration on Cantor's 2D representation of the rationals.
+    """:py:class:`typing.Generator` : An enumerator of rational numbers :math:`\\mathbb{Q}` using an enumeration on Cantor's 2D representation of the rationals.
 
-    Generates a sequence of all rational numbers as
+    By default it generates sequences of all positive rational numbers as
     :py:class:`~continuedfractions.continuedfractions.ContinuedFraction`
-    objects using an enumeration on Cantor's 2D representation of the rationals
-    as described in the `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#rationals>`_.
+    objects with the user-specified enumeration on Cantor's 2D
+    representation of the rationals as described in the
+    `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#rationals>`_.
+
+    To include negative rationals and :math:`0` set ``positive_only`` to
+    ``True``, as described in the documentation and the docstring examples
+    below.
 
     The enumeration type should be given by the ``enumeration`` argument, which
     should be one of the following:
 
     * ``"cantor diagonal"``: for the standard way of enumerating rational
-    numbers using Cantor diagonalisation:
+    numbers using Cantor diagonalisation (``positive_only=False``):
     ::
 
         (1, 1), (2, 1), (1, 2), (1, 3), (2, 2), (3, 1), (4, 1) ...
 
     * ``"cantor diagonal transposed"``: similar to the standard Cantor
-    diagonalisation, except the enumeration proceeds:
+    diagonalisation, except the enumeration proceeds (``positive_only=False``):
     ::
 
         right 1 step ->
@@ -61,8 +67,8 @@ def rationals(
 
         (1, 1), (1, 2), (2, 1), (3, 1), (2, 2), (1, 3), (1, 4) ...
 
-    * ``"reverse l"``: an enumeration which proceeds in a reverse L-shaped
-    way:
+    * ``"rectilinear"``: an enumeration which proceeds in a reverse L-shaped
+    way (``positive_only=False``):
     ::
 
         down 1 step  ->
@@ -77,8 +83,8 @@ def rationals(
 
         (1, 1), (2, 1), (2, 2), (1, 2), (1, 3), (2, 3), (3, 3), (3, 2), (3, 1), ...
 
-    * ``"reverse l transposed"``: enumeration similar to ``"reverse l"``
-    except the enumeration proceeds:
+    * ``"rectilinear transposed"``: enumeration similar to ``"rectilinear"``
+    except the enumeration proceeds (``positive_only=False``):
     ::
 
         right 1 step  ->
@@ -107,11 +113,15 @@ def rationals(
 
         * ``"cantor diagonal"``
         * ``"cantor diagonal transposed"``
-        * ``"reverse l"``
-        * ``"reverse l transposed"``
+        * ``"rectilinear"``
+        * ``"rectilinear transposed"``
 
         These enumerations are described above in the docstring, and also in
         the `Sphinx documentation <https://continuedfractions.readthedocs.io/sources/pythagorean-triples.html#primitive-pythagorean-triples>`_
+
+    range_positive : bool, default=True
+        Whether to generate only the positive rationals, which is true by
+        default.
 
     Yields
     ------
@@ -131,41 +141,53 @@ def rationals(
     >>> first_ten = [next(rats) for _ in range(10)]
     >>> first_ten
     [ContinuedFraction(1, 1), ContinuedFraction(2, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 3), ContinuedFraction(3, 1), ContinuedFraction(4, 1), ContinuedFraction(3, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 4), ContinuedFraction(1, 5)]
+    >>> rats = rationals(enumeration="cantor diagonal", positive_only=False)
+    >>> first_ten_plus_zero = [next(rats) for _ in range(11)]
+    >>> first_ten_plus_zero
+    [ContinuedFraction(0, 1), ContinuedFraction(1, 1), ContinuedFraction(-1, 1), ContinuedFraction(2, 1), ContinuedFraction(-2, 1), ContinuedFraction(1, 2), ContinuedFraction(-1, 2), ContinuedFraction(1, 3), ContinuedFraction(-1, 3), ContinuedFraction(3, 1), ContinuedFraction(-3, 1)]
     >>> rats = rationals(enumeration="cantor diagonal transposed")
     >>> first_ten = [next(rats) for _ in range(10)]
     >>> first_ten
     [ContinuedFraction(1, 1), ContinuedFraction(1, 2), ContinuedFraction(2, 1), ContinuedFraction(3, 1), ContinuedFraction(1, 3), ContinuedFraction(1, 4), ContinuedFraction(2, 3), ContinuedFraction(3, 2), ContinuedFraction(4, 1), ContinuedFraction(5, 1)]
-    >>> rats = rationals(enumeration="reverse l")
+    >>> rats = rationals(enumeration="cantor diagonal transposed", positive_only=False)
+    >>> first_ten_plus_zero = [next(rats) for _ in range(11)]
+    >>> first_ten_plus_zero
+    [ContinuedFraction(0, 1), ContinuedFraction(1, 1), ContinuedFraction(-1, 1), ContinuedFraction(1, 2), ContinuedFraction(-1, 2), ContinuedFraction(2, 1), ContinuedFraction(-2, 1), ContinuedFraction(3, 1), ContinuedFraction(-3, 1), ContinuedFraction(1, 3), ContinuedFraction(-1, 3)]
+    >>> rats = rationals(enumeration="rectilinear")
     >>> first_ten = [next(rats) for _ in range(10)]
     >>> first_ten
     [ContinuedFraction(1, 1), ContinuedFraction(2, 1), ContinuedFraction(1, 2), ContinuedFraction(1, 3), ContinuedFraction(2, 3), ContinuedFraction(3, 2), ContinuedFraction(3, 1), ContinuedFraction(4, 1), ContinuedFraction(4, 3), ContinuedFraction(3, 4)]
-    >>> rats = rationals(enumeration="reverse l transposed")
-    >>> first_ten = [next(rats) for _ in range(10)]
-    >>> first_ten
-    [ContinuedFraction(1, 1), ContinuedFraction(1, 2), ContinuedFraction(2, 1), ContinuedFraction(3, 1), ContinuedFraction(3, 2), ContinuedFraction(2, 3), ContinuedFraction(1, 3), ContinuedFraction(1, 4), ContinuedFraction(3, 4), ContinuedFraction(4, 3)]
+    >>> rats = rationals(enumeration="rectilinear", positive_only=False)
+    >>> first_ten_plus_zero = [next(rats) for _ in range(11)]
+    >>> first_ten_plus_zero
+    [ContinuedFraction(0, 1), ContinuedFraction(1, 1), ContinuedFraction(-1, 1), ContinuedFraction(2, 1), ContinuedFraction(-2, 1), ContinuedFraction(1, 2), ContinuedFraction(-1, 2), ContinuedFraction(1, 3), ContinuedFraction(-1, 3), ContinuedFraction(2, 3), ContinuedFraction(-2, 3)]
+    >>> rats = rationals(enumeration="rectilinear transposed", positive_only=False)
+    >>> first_ten_plus_zero = [next(rats) for _ in range(11)]
+    >>> first_ten_plus_zero
+    [ContinuedFraction(0, 1), ContinuedFraction(1, 1), ContinuedFraction(-1, 1), ContinuedFraction(1, 2), ContinuedFraction(-1, 2), ContinuedFraction(2, 1), ContinuedFraction(-2, 1), ContinuedFraction(3, 1), ContinuedFraction(-3, 1), ContinuedFraction(3, 2), ContinuedFraction(-3, 2)]
     >>> rats = rationals(enumeration="some unknown enumeration")
     >>> next(rats)
     Traceback (most recent call last):
     ...
-    ValueError: The value of `enumeration` should be one of the following: "cantor diagonal", "cantor diagonal transposed", "reverse l" or "reverse l transposed".
+    ValueError: The value of `enumeration` should be one of the following: "cantor diagonal", "cantor diagonal transposed", "rectilinear" or "rectilinear transposed".
     """
     # Validation of the ``enumeration`` argument.
     enumeration_ = enumeration.strip().lower()
     if enumeration_ not in [
-        "cantor diagonal", "cantor diagonal transposed", "reverse l", "reverse l transposed"
+        "cantor diagonal", "cantor diagonal transposed", "rectilinear", "rectilinear transposed"
     ]:
         raise ValueError(
             'The value of `enumeration` should be one of the following: '
-            '"cantor diagonal", "cantor diagonal transposed", "reverse l" '
-            'or "reverse l transposed".'
+            '"cantor diagonal", "cantor diagonal transposed", "rectilinear" '
+            'or "rectilinear transposed".'
         )
 
-    # The diagonal index, starting at ``n = 1``: the first diagonal `D1`
-    # which is just ``1/1``.
-    n = 1
-    yield ContinuedFraction(1, 1)
+    if enumeration_ == "cantor diagonal" and positive_only:
+        # The diagonal index, starting at ``n = 1``: the first diagonal `D1`
+        # which is just ``1/1``.
+        n = 1
+        yield ContinuedFraction(1, 1)
 
-    if enumeration_ == "cantor diagonal":
         while True:
             # Increment the diagonal index, and generate the new diagonal:
             # the diagonal ``D_n`` is given by:
@@ -180,7 +202,28 @@ def rationals(
             us = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
             vs = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
             yield from (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
-    elif enumeration_ == "cantor diagonal transposed":
+    elif enumeration_ == "cantor diagonal" and not positive_only:
+        # When ``positive_only`` is ``False`` we start by generating the
+        # ``ContinuedFraction`` object for ``0``.
+        yield ContinuedFraction(0, 1)
+        n = 0
+
+        while True:
+            # Same process as for ``"cantor diagonal"``, except that for each
+            # coprime pair ``(u, v)`` on the ``n``-th diagonal we generate the
+            # negative continued fraction ``-u/v`` immediately after the
+            # positive continued fraction ``-u/v``.
+            n += 1
+            us = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
+            vs = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
+            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
+    elif enumeration_ == "cantor diagonal transposed" and positive_only:
+        # The diagonal index, starting at ``n = 1``: the first diagonal `D1`
+        # which is just ``1/1``.
+        n = 1
+        yield ContinuedFraction(1, 1)
+
         while True:
             # Increment the diagonal index, and generate the new diagonal:
             # the diagonal ``D_n`` is given by:
@@ -194,7 +237,28 @@ def rationals(
             us = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
             vs = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
             yield from (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
-    elif enumeration_ == "reverse l":
+    elif enumeration_ == "cantor diagonal transposed" and not positive_only:
+        # When ``positive_only`` is ``False`` we start by generating the
+        # ``ContinuedFraction`` object for ``0``.
+        yield ContinuedFraction(0, 1)
+        n = 0
+
+        while True:
+            # Same process as for ``"cantor diagonal transposed"``, except that
+            # for each coprime pair ``(u, v)`` on the ``n``-th diagonal we
+            # generate the negative continued fraction ``-u/v`` immediately
+            # after the positive continued fraction ``-u/v``.
+            n += 1
+            us = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
+            vs = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
+            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
+    elif enumeration_ == "rectilinear" and positive_only:
+        # The initial reverse-L index, starting at ``n = 1``: this will
+        # generate ``1/1``.
+        n = 1
+        yield ContinuedFraction(1, 1)
+
         while True:
             # Increment the reverse-L index, and enumerate the rationals (as
             # described in the documentation) from the  reverse Ls ``⅃_n`` first
@@ -222,7 +286,36 @@ def rationals(
                 chain((n for _ in range(n)), range(n - 1, 0, -1))
             )
             yield from (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
-    elif enumeration_ == "reverse l transposed":
+    elif enumeration_ == "rectilinear" and not positive_only:
+        # When ``positive_only`` is ``False`` we start by generating the
+        # ``ContinuedFraction`` object for ``0``.
+        yield ContinuedFraction(0, 1)
+        n = 0
+
+        while True:
+            # Same process as for ``"rectilinear"``, except that for each
+            # coprime pair ``(u, v)`` on the ``n``-th reverse L ``⅃_n`` we
+            # generate the negative continued fraction ``-u/v`` immediately
+            # after the positive continued fraction ``-u/v``.
+            n += 1
+            us = (
+                chain((n for _ in range(n)), range(n - 1, 0, -1))
+                if n % 2 == 0 else 
+                chain(range(1, n + 1), (n for _ in range(n - 1)))
+            )
+            vs = (
+                chain(range(1, n + 1), (n for _ in range(n - 1)))
+                if n % 2 == 0 else
+                chain((n for _ in range(n)), range(n - 1, 0, -1))
+            )
+            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
+    elif enumeration_ == "rectilinear transposed" and positive_only:
+        # The initial reverse-L index, starting at ``n = 1``: this will
+        # generate ``1/1``.
+        n = 1
+        yield ContinuedFraction(1, 1)
+
         while True:
             # Increment the reverse-L index, and enumerate the rationals (as
             # described in the documentation) from the  reverse Ls ``⅃_n`` first
@@ -236,7 +329,7 @@ def rationals(
             #     n/1, n/2, n/3, ... , n/n, (n - 1)/n, (n - 2)/n, (n - 3)/n, ... , 1/n
             #
             # and then filtering out composite fractions ``u/v`` in the chained
-            # subsequence, i.e. applying ``math.gcd(u, v) == 1``. 
+            # subsequence, i.e. applying ``math.gcd(u, v) == 1``.
             n += 1
             us = (
                 chain(range(1, n), (n for _ in range(n)))
@@ -249,6 +342,30 @@ def rationals(
                 chain(range(1, n + 1), (n for _ in range(n - 1)))
             )
             yield from (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+    elif enumeration_ == "rectilinear transposed" and not positive_only:
+        # When ``positive_only`` is ``False`` we start by generating the
+        # ``ContinuedFraction`` object for ``0``.
+        yield ContinuedFraction(0, 1)
+        n = 0
+
+        while True:
+            # Same process as for ``"rectilinear transposed"``, except that
+            # for each coprime pair ``(u, v)`` on the ``n``-th reverse L
+            # ``⅃_n`` we generate the negative continued fraction ``-u/v``
+            # immediately after the positive continued fraction ``-u/v``. 
+            n += 1
+            us = (
+                chain(range(1, n), (n for _ in range(n)))
+                if n % 2 == 0 else
+                chain((n for _ in range(n)), range(n - 1, 0, -1))
+            )
+            vs = (
+                chain((n for _ in range(n - 1)), range(n, 0, -1))
+                if n % 2 == 0 else
+                chain(range(1, n + 1), (n for _ in range(n - 1)))
+            )
+            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
 
     return  # pragma: no cover
 

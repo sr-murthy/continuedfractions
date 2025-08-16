@@ -33,10 +33,12 @@ class TestRationals:
             next(rats)
 
     @pytest.mark.parametrize(
-        "enumeration, expected_first_20_rationals",
+        "enumeration, positive_only, num_rationals, expected_rationals",
         [
             (
                 "cantor diagonal",
+                True,
+                20,
                 [ContinuedFraction(1, 1), ContinuedFraction(2, 1),
                  ContinuedFraction(1, 2), ContinuedFraction(1, 3),
                  ContinuedFraction(3, 1), ContinuedFraction(4, 1),
@@ -49,7 +51,20 @@ class TestRationals:
                  ContinuedFraction(3, 5), ContinuedFraction(5, 3)]
             ),
             (
+                "cantor diagonal",
+                False,
+                11,
+                [ContinuedFraction(0, 1), ContinuedFraction(1, 1),
+                 ContinuedFraction(-1, 1), ContinuedFraction(2, 1),
+                 ContinuedFraction(-2, 1),
+                 ContinuedFraction(1, 2), ContinuedFraction(-1, 2),
+                 ContinuedFraction(1, 3), ContinuedFraction(-1, 3),
+                 ContinuedFraction(3, 1), ContinuedFraction(-3, 1)]
+            ),
+            (
                 "cantor diagonal transposed",
+                True,
+                20,
                 [ContinuedFraction(1, 1), ContinuedFraction(1, 2),
                  ContinuedFraction(2, 1), ContinuedFraction(3, 1),
                  ContinuedFraction(1, 3), ContinuedFraction(1, 4),
@@ -62,7 +77,20 @@ class TestRationals:
                  ContinuedFraction(5, 3), ContinuedFraction(3, 5)]
             ),
             (
-                "reverse l",
+                "cantor diagonal transposed",
+                False,
+                11,
+                [ContinuedFraction(0, 1), ContinuedFraction(1, 1),
+                 ContinuedFraction(-1, 1), ContinuedFraction(1, 2),
+                 ContinuedFraction(-1, 2),  ContinuedFraction(2, 1),
+                 ContinuedFraction(-2, 1), ContinuedFraction(3, 1),
+                 ContinuedFraction(-3, 1), ContinuedFraction(1, 3),
+                 ContinuedFraction(-1, 3)]
+            ),
+            (
+                "rectilinear",
+                True,
+                20,
                 [ContinuedFraction(1, 1), ContinuedFraction(2, 1),
                  ContinuedFraction(1, 2), ContinuedFraction(1, 3),
                  ContinuedFraction(2, 3), ContinuedFraction(3, 2),
@@ -75,7 +103,20 @@ class TestRationals:
                  ContinuedFraction(5, 1), ContinuedFraction(6, 1)]
             ),
             (
-                "reverse l transposed",
+                "rectilinear",
+                False,
+                11,
+                [ContinuedFraction(0, 1), ContinuedFraction(1, 1),
+                 ContinuedFraction(-1, 1), ContinuedFraction(2, 1),
+                 ContinuedFraction(-2, 1), ContinuedFraction(1, 2),
+                 ContinuedFraction(-1, 2), ContinuedFraction(1, 3),
+                 ContinuedFraction(-1, 3), ContinuedFraction(2, 3),
+                 ContinuedFraction(-2, 3)]
+            ),
+            (
+                "rectilinear transposed",
+                True,
+                20,
                 [ContinuedFraction(1, 1), ContinuedFraction(1, 2),
                  ContinuedFraction(2, 1), ContinuedFraction(3, 1),
                  ContinuedFraction(3, 2), ContinuedFraction(2, 3),
@@ -85,14 +126,25 @@ class TestRationals:
                  ContinuedFraction(5, 2), ContinuedFraction(5, 3),
                  ContinuedFraction(5, 4), ContinuedFraction(4, 5),
                  ContinuedFraction(3, 5), ContinuedFraction(2, 5),
-                ContinuedFraction(1, 5), ContinuedFraction(1, 6)]
+                 ContinuedFraction(1, 5), ContinuedFraction(1, 6)]
+            ),
+            (
+                "rectilinear transposed",
+                False,
+                11,
+                [ContinuedFraction(0, 1), ContinuedFraction(1, 1),
+                 ContinuedFraction(-1, 1), ContinuedFraction(1, 2),
+                 ContinuedFraction(-1, 2), ContinuedFraction(2, 1),
+                 ContinuedFraction(-2, 1), ContinuedFraction(3, 1),
+                 ContinuedFraction(-3, 1), ContinuedFraction(3, 2),
+                 ContinuedFraction(-3, 2)]
             )
         ]
     )
-    def test_rationals__check_all_supported_enumerations__first_20_rationals_in_order(self, enumeration, expected_first_20_rationals):
-        rats = rationals(enumeration=enumeration)
-        received_first_20_rationals = [next(rats) for _ in range(20)]
-        assert received_first_20_rationals == expected_first_20_rationals
+    def test_rationals__check_all_supported_enumerations__first_20_rationals_in_order(self, enumeration, positive_only, num_rationals, expected_rationals):
+        rats = rationals(enumeration=enumeration, positive_only=positive_only)
+        received_rationals = [next(rats) for _ in range(num_rationals)]
+        assert received_rationals == expected_rationals
 
 
 class Test_CoprimeIntegers:

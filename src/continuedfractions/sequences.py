@@ -48,13 +48,15 @@ def rationals(
     should be one of the following:
 
     * ``"cantor diagonal"``: for the standard way of enumerating rational
-    numbers using Cantor diagonalisation (``positive_only=False``):
-    ::
+    numbers using Cantor diagonalisation (with ``positive_only=False``):
+    
+    .. math::
 
-        (1, 1), (2, 1), (1, 2), (1, 3), (2, 2), (3, 1), (4, 1) ...
+        \\frac{1}{1}, \\frac{2}{1}, \\frac{1}{2}, \\frac{1}{3}, \\frac{3}{1}, \\frac{4}{1}, \\frac{3}{2}, \\frac{2}{3}, \\frac{1}{4}, \\ldots
 
     * ``"cantor diagonal transposed"``: similar to the standard Cantor
-    diagonalisation, except the enumeration proceeds (``positive_only=False``):
+    diagonalisation (with ``positive_only=False``), except the enumeration
+    proceeds:
     ::
 
         right 1 step ->
@@ -63,12 +65,14 @@ def rationals(
         diagonal up 2 steps ->
         ...
     
-    which produces the sequence::
+    and produces the sequence:
 
-        (1, 1), (1, 2), (2, 1), (3, 1), (2, 2), (1, 3), (1, 4) ...
+    .. math::
+
+        \\frac{1}{1}, \\frac{1}{2}, \\frac{2}{1}, \\frac{3}{1}, \\frac{1}{3}, \\frac{1}{4}, \\frac{2}{3}, \\frac{3}{2}, \\frac{4}{1}, \\ldots
 
     * ``"rectilinear"``: an enumeration which proceeds in a reverse L-shaped
-    way (``positive_only=False``):
+    way (with ``positive_only=False``):
     ::
 
         down 1 step  ->
@@ -78,13 +82,14 @@ def rationals(
         down 4 steps  -> left 4 steps -> down 1 step ->
         ...
 
-    which produces the sequence: 
-    ::
+    and produces the sequence: 
+    
+    .. math::
 
-        (1, 1), (2, 1), (2, 2), (1, 2), (1, 3), (2, 3), (3, 3), (3, 2), (3, 1), ...
+       \\frac{1}{1}, \\frac{2}{1}, \\frac{1}{2}, \\frac{1}{3}, \\frac{2}{3}, \\frac{3}{2}, \\frac{3}{1}, \\frac{4}{1}, \\ldots
 
-    * ``"rectilinear transposed"``: enumeration similar to ``"rectilinear"``
-    except the enumeration proceeds (``positive_only=False``):
+    * ``"rectilinear transposed"``: an enumeration similar to ``"rectilinear"``
+    (with ``positive_only=False``) except the enumeration proceeds:
     ::
 
         right 1 step  ->
@@ -94,16 +99,11 @@ def rationals(
         right 4 steps  -> up 4 steps -> right 1 step ->
         ...
     
-    which produces the sequence:
-    ::
+    and produces the sequence:
+    
+    .. math::
 
-        (1, 1), (1, 2), (2, 2), (2, 1), (3, 1), (3, 2), (3, 3), (2, 3), (1, 3), ...
-
-    Note that to avoid repetition pairs :math:`(n, n)` where :math:`n > 1` are
-    omitted, as are non-coprime pairs :math:`(da, db)` where
-    :math:`\\text{gcd}(a, b) = 1` and :math:`d > 1` is a positive integer. The
-    condition :math:`\\text{gcd}(a, b) = 1` is necessary and sufficient to
-    ensure this.
+       \\frac{1}{1}, \\frac{1}{2}, \\frac{2}{1}, \\frac{3}{1}, \\frac{3}{2}, \\frac{2}{3}, \\frac{1}{3}, \\frac{1}{4}, \\ldots
 
     Parameters
     ----------
@@ -216,8 +216,8 @@ def rationals(
             n += 1
             us = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
             vs = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
-            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
-            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
+            pos_rationals = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals))
     elif enumeration_ == "cantor diagonal transposed" and positive_only:
         # The diagonal index, starting at ``n = 1``: the first diagonal `D1`
         # which is just ``1/1``.
@@ -251,8 +251,8 @@ def rationals(
             n += 1
             us = range(1, n + 1) if n % 2 == 0 else range(n, 0, -1)
             vs = range(n, 0, -1) if n % 2 == 0 else range(1, n + 1)
-            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
-            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
+            pos_rationals = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals))
     elif enumeration_ == "rectilinear" and positive_only:
         # The initial reverse-L index, starting at ``n = 1``: this will
         # generate ``1/1``.
@@ -308,8 +308,8 @@ def rationals(
                 if n % 2 == 0 else
                 chain((n for _ in range(n)), range(n - 1, 0, -1))
             )
-            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
-            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
+            pos_rationals = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals))
     elif enumeration_ == "rectilinear transposed" and positive_only:
         # The initial reverse-L index, starting at ``n = 1``: this will
         # generate ``1/1``.
@@ -364,8 +364,8 @@ def rationals(
                 if n % 2 == 0 else
                 chain(range(1, n + 1), (n for _ in range(n - 1)))
             )
-            pos_rationals_ = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
-            yield from chain.from_iterable(((r, -r) for r in pos_rationals_))
+            pos_rationals = (ContinuedFraction(u, v) for u, v in zip(us, vs) if math.gcd(u, v) == 1)
+            yield from chain.from_iterable(((r, -r) for r in pos_rationals))
 
     return  # pragma: no cover
 

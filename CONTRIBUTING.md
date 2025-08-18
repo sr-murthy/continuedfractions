@@ -147,6 +147,6 @@ Currently, pipelines for all branches include a tests stage that includes Ruff l
 
 ## Versioning and Releases `upload`
 
-The latest release is `1.3.1`.
+The latest release is `1.3.2`.
 
 There is currently no dedicated pipeline for releases - both [GitHub releases](https://github.com/sr-murthy/continuedfractions/releases) and [PyPI packages](https://pypi.org/project/continuedfractions) are published manually, but both have the same version tag.

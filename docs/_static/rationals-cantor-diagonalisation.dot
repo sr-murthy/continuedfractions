@@ -72,7 +72,7 @@ digraph
 
     composite_10_2 [label="10/2", fontcolor="gray60"]
     composite_10_4 [label="10/4", fontcolor="gray60"]
-    composite_10_5 [label="10/", fontcolor="gray60"]
+    composite_10_5 [label="10/5", fontcolor="gray60"]
     composite_10_6 [label="10/6", fontcolor="gray60"]
     composite_10_8 [label="10/8", fontcolor="gray60"]
     composite_10_10 [label="10/10", fontcolor="gray60"]

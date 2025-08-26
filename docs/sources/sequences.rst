@@ -440,23 +440,49 @@ Two integers :math:`a, b` are said to be **coprime** (or **relatively prime**) i
 
 The notion of coprimality can be extended to finite sets of integers: a finite set of integers :math:`S = \{a, b, c, \ldots\}` can be called coprime if the GCD of all the integers in :math:`S` is :math:`1`. A stronger condition is met by :math:`S` if it is **pairwise coprime**, which means the GCD of any two integers in :math:`S` is :math:`1`. The latter implies the former, but the converse does not necessarily hold.
 
-Coprimality has a number of important and interesting `properties <https://en.wikipedia.org/wiki/Coprime_integers#Properties>`_ that are beyond the scope of the package documentation, but of relevance here is a particular way of computing sequences of all pairs of (positive) coprime integers not exceeding a given positive integer :math:`n`, using ternary trees, as described below.
+Coprimality is important in several basic ways for the sequences that can be generated with the :doc:`sequences <continuedfractions/sequences>` library, and in this section, some effective methods for generating coprime integer pairs are described, with code examples.
 
+.. _sequences.simple-approach:
+
+A Simple Approach
+-----------------
+
+The :py:func:`~continuedfractions.sequences.coprime_pairs` function is a simple but relatively fast generator of pairs of coprime integers bounded by a given integer :math:`n \geq 1`. Here's an example for :math:`n = 5`:
+
+.. code:: python
+
+   >>> tuple(coprime_integers(5))
+   (1, 1), (2, 1), (3, 1), (3, 2), (4, 1), (4, 3), (5, 1), (5, 2), (5, 3), (5, 4)
+
+It can be verified that the number of coprime pairs returned by the function here, namely, :math:`10`, is indeed equal to :math:`\phi(1) + \phi(2) + \phi(3) + \phi(4) + \phi(5) = 10`, where :math:`\phi(n)` is Euler's totient function that counts the number of (positive) integers coprime to a given integer :math:`n \geq 1`, and :math:`\phi(1) = 1`. The function that counts the value of :math:`\sum_{k=1}^n \phi(k)` for a given :math:`n` is the summatory totient function :math:`\Phi(n)`, and the number of coprime pairs returned by :py:func:`~continuedfractions.sequences.coprime_pairs` is equal to :math:`\Phi(n)`. Here are a few examples for :math:`n = 1,\ldots,5`:
+
+.. code:: python
+
+   >>> sum(1 for _ in coprime_integers(1))
+   1
+   >>> sum(1 for _ in coprime_integers(2))
+   2
+   >>> sum(1 for _ in coprime_integers(3))
+   4
+   >>> sum(1 for _ in coprime_integers(4))
+   6
+   >>> sum(1 for _ in coprime_integers(5))
+   10
+   >>> sum(1 for _ in coprime_integers(10))
+   32
 
 .. _sequences.ksrm-trees:
 
 KSRM Trees
 ----------
 
+Coprime integer pairs can also be generated from trees, and a particularly interesting tree-based generative approach is described below.
+
 The :py:class:`~continuedfractions.sequences.KSRMTree` class is a class implementation of two ternary trees for representing (and generating) all pairs of (positive) coprime integers, as presented in separate papers by A. R. Kanga, and `R. Saunders and T. Randall <https://doi.org/10.2307/3618576>`_, and `D. W. Mitchell <https://doi.org/10.2307/3622017>`_.
 
 .. note::
 
    The class is named ``KSRMTree`` purely for convenience, but it is actually a representation of two (ternary) trees.
-
-.. note::
-
-   The author could not access the Kanga paper online, but the core result is described in the papers of Saunders and Randall, and of Mitchell.
 
 Firstly, we describe some background material on the KSRM trees, which are presented in the papers mentioned above. These are concerned with primitive Pythagorean triples, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node, starting with the parent nodes, has three children given by the relations:
 

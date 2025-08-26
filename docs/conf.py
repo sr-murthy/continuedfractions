@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath('.')), 'src'))
 
 import continuedfractions
 
-from continuedfractions.version import __version__
+from continuedfractions.__version__ import __version__
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information

@@ -294,7 +294,7 @@ Mediants can give good rational approximations to real numbers. We can illustrat
 
    >>> ContinuedFraction('0.5').right_mediant(Fraction(2, 3))
    ContinuedFraction(3, 5)
-   >>> ContinuedFraction('0.6').elements
+   >>> tuple(ContinuedFraction('0.6').coefficients)
    (0, 1, 1, 2)
    >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
    ContinuedFraction(3, 5)
@@ -565,13 +565,7 @@ The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main s
    >>> list(tree.search(10))
    [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (9, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1)]
 
-The number of coprime pairs generated for a given :math:`n \geq 1` is given by:
-
-.. math::
-
-   \phi(1) + \phi(2) + \cdots + \phi(n) = \sum_{k = 1}^n \phi(k)
-
-where :math:`\phi(k)` is the totient function.
+The number of coprime pairs generated for a given :math:`n \geq 1` is given by :math:`\Phi(n) = \sum_{k = 1}^n \phi(k)`.
 
 The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a branch and bound, depth first search (DFS) of the KSRM trees, with pre-ordered traversal of nodes (current node -> left branch -> mid branch -> right branch), and backtracking and pruning on visited nodes. The backtracking function is implemented as the private method :py:meth:`~continuedfractions.sequences.KSRMTree._backtrack`.
 
@@ -663,7 +657,7 @@ As :math:`F_n` also contains the special fraction :math:`\frac{0}{1}` as its ini
 
 .. math::
 
-   |F_n| = 1 + \phi(1) + \phi(2) + \cdots + \phi(n) = 1 + \sum_{k = 1}^n \phi(k)
+   |F_n| = 1 + \phi(1) + \phi(2) + \cdots + \phi(n) = 1 + \Phi(n)
 
 For :math:`n > 1` the sequence :math:`F_n` contains all elements of :math:`F_{n - 1}`. Thus, the length :math:`|F_n|` can also be written as:
 

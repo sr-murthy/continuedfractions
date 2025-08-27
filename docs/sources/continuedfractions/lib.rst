@@ -8,3 +8,4 @@
 
 .. automodule:: continuedfractions.lib
     :members:
+    :exclude-members: fraction_from_elements

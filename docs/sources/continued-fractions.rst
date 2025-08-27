@@ -34,7 +34,7 @@ This is derived by repeatedly applying `Euclid's division lemma <https://en.wiki
                    &= 3 + \cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}}
    \end{align}
 
-The numbers :math:`3, 4, 12, 4` are called **elements** (or **coefficients**) of the continued fraction :math:`[3; 4, 12, 4]`, and the number of elements after the first - in this case :math:`3` - is defined to be its **order**. The order can be finite or infinite depending on whether the number represented is rational or irrational, as will be discussed later.
+The numbers :math:`3, 4, 12, 4` are called **coefficients** of the continued fraction :math:`[3; 4, 12, 4]`, and the number of coefficients after the first - in this case :math:`3` - is defined to be its **order**. The order can be finite or infinite depending on whether the number represented is rational or irrational, as will be discussed later.
 
 The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) because all of the numerators in the fractional terms are equal to :math:`1`, which makes the fractions irreducible (cannot be simplified further). Mathematically, the continued fraction is written as :math:`[3; 4, 12, 4]`. The representation is also unique - the only other representation is :math:`[3; 4, 12, 3, 1]`, which can be rewritten as :math:`[3; 4, 12, 4]`.
 
@@ -81,17 +81,17 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance
 
    All Python shell excerpts below (and elsewhere) were run in a Python 3.11.11 environment.
 
-The elements of ``ContinuedFraction(649, 200)`` can be obtained via the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.elements` property, which returns a **generator** of the elements. The order :math:`3` can be obtained via the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.order` property:
+The coefficients of ``ContinuedFraction(649, 200)`` can be obtained via the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.coefficients` property, which returns a **generator** of the coefficients. The order :math:`3` can be obtained via the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.order` property:
 
 .. code:: python
 
    >>> cf = ContinuedFraction(649, 200)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (3, 4, 12, 4)
    >>> cf.order
    3
 
-For more details on the elements and order properties see :ref:`this <continued-fractions.elements-and-order>`.
+For more details on the coefficients and order properties see :ref:`this <continued-fractions.coefficients-and-order>`.
 
 As a shortcut, the :py:class:`decimal.Decimal` value of ``ContinuedFraction(649, 200)`` can be obtained the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.as_decimal()` method.
 
@@ -136,7 +136,7 @@ Every finite continued fraction represents a rational number, as a finite contin
 
 There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, also, cannot be represented exactly as Python :py:class:`float` instances. To deal with this, the package processes rational numbers using the :py:class:`fractions.Fraction` class, which allows for exact continued fractions for any rational number, limited only by the available memory and/or capacity of the running environment.
 
-Continued fractions for irrational numbers given directly as :py:class:`float` instances end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` value to a :py:class:`fractions.Fraction` instance. However, as described in the :ref:`next section <continued-fractions.from-elements>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances with arbitrary sequences of elements, which can give much more accurate results.
+Continued fractions for irrational numbers given directly as :py:class:`float` instances end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` value to a :py:class:`fractions.Fraction` instance. However, as described in the :ref:`next section <continued-fractions.from-coefficients>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances with arbitrary sequences of coefficients, which can give much more accurate results.
 
 An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`, where the :py:class:`decimal.Decimal` precision has been set to `100`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` value:
 
@@ -145,7 +145,7 @@ An example is given below for the irrational :math:`\sqrt{2}`, which is given by
    >>> sqrt2 = ContinuedFraction(math.sqrt(2))
    >>> sqrt2
    ContinuedFraction(6369051672525773, 4503599627370496)
-   >>> tuple(sqrt2.elements)
+   >>> tuple(sqrt2.coefficients)
    # -> (1, 2, 2, 2, 2, ... ,1, 1, 10, 2, ... ,1, 3, 1, 17, 12, 3, 2, 6, 1, 11, 2, 2)
    >>> float(sqrt2)
    1.4142135623730951
@@ -155,85 +155,85 @@ An example is given below for the irrational :math:`\sqrt{2}`, which is given by
    Fraction(6369051672525773, 4503599627370496)
 
 
-Here, ``ContinuedFraction(6369051672525773, 4503599627370496)`` is a fractional approximation of :math:`\sqrt{2}`, for the reasons described above, and not exact, as reflected in the tail elements of the sequence deviating from the mathematically correct value of :math:`2`. Also, note that the decimal value of ``ContinuedFraction(math.sqrt(2))`` above for :math:`\sqrt{2}` is only accurate up to :math:`15` digits in the fractional part, compared to the `first one million digit representation <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_.
+Here, ``ContinuedFraction(6369051672525773, 4503599627370496)`` is a fractional approximation of :math:`\sqrt{2}`, for the reasons described above, and not exact, as reflected in the tail coefficients of the sequence deviating from the mathematically correct value of :math:`2`. Also, note that the decimal value of ``ContinuedFraction(math.sqrt(2))`` above for :math:`\sqrt{2}` is only accurate up to :math:`15` digits in the fractional part, compared to the `first one million digit representation <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_.
 
-However, in the :ref:`next section <continued-fractions.from-elements>`, we describe a way to construct continued fractions with arbitary sequences of elements, which can produce results of any given desired level of accuracy for irrational numbers.
+However, in the :ref:`next section <continued-fractions.from-coefficients>`, we describe a way to construct continued fractions with arbitary sequences of coefficients, which can produce results of any given desired level of accuracy for irrational numbers.
 
-.. _continued-fractions.from-elements:
+.. _continued-fractions.from-coefficients:
 
-Creating Continued Fractions From Elements/Coefficients
-=======================================================
+Creating Continued Fractions From Coefficients
+==============================================
 
-Continued fractions can also be constructed from sequences of elements, using either the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method, or the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance methods. Each is described below.
+Continued fractions can also be constructed from sequences of coefficients, using either the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` class method, or the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance methods. Each is described below.
 
-.. _continued-fractions.creation-from-complete-element-sequence:
+.. _continued-fractions.creation-from-coefficients:
 
-New Instances From a Complete Sequence of Elements
---------------------------------------------------
+New Instances From a Complete Sequence of Coefficients
+------------------------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` class method allows new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances to be created from a complete (ordered) sequence of elements. Some examples are given below.
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` class method allows new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances to be created from a complete (ordered) sequence of coefficients. Some examples are given below.
 
 .. code:: python
 
-   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf = ContinuedFraction.from_coefficients(3, 4, 12, 4)
    >>> cf
    ContinuedFraction(649, 200)
-   >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
+   >>> cf_inverse = ContinuedFraction.from_coefficients(0, 3, 4, 12, 4)
    >>> cf_inverse
    ContinuedFraction(200, 649)
-   >>> cf_negative_inverse = ContinuedFraction.from_elements(-1, 1, 2, 4, 12, 4)
+   >>> cf_negative_inverse = ContinuedFraction.from_coefficients(-1, 1, 2, 4, 12, 4)
    >>> cf_negative_inverse
    ContinuedFraction(-200, 649)
-   >>> tuple(cf_negative_inverse.elements)
+   >>> tuple(cf_negative_inverse.coefficients)
    (-1, 1, 2, 4, 12, 4)
 
-The given sequence of elements can be arbitrarily long, subject to the limitations of the environment, system etc.
+The given sequence of coefficients can be arbitrarily long, subject to the limitations of the environment, system etc.
 
-A :py:class:`ValueError` is raised if the given elements are not integers, or if any tail elements are not positive integers.
+A :py:class:`ValueError` is raised if the given coefficients are not integers, or if any tail coefficients are not positive integers.
 
 .. code:: python
 
-   >>> ContinuedFraction.from_elements('0', 1)
+   >>> ContinuedFraction.from_coefficients('0', 1)
    ...
-   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
-   >>> ContinuedFraction.from_elements(0, 1, 2.5)
+   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
+   >>> ContinuedFraction.from_coefficients(0, 1, 2.5)
    ...
-   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
-   >>> ContinuedFraction.from_elements(1, 0)
+   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
+   >>> ContinuedFraction.from_coefficients(1, 0)
    ...
-   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
-   >>> ContinuedFraction.from_elements(1, -1)
+   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
+   >>> ContinuedFraction.from_coefficients(1, -1)
    ...
-   ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
+   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
 
-Here is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
+Here is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
 
 .. code:: python
 
    >>> decimal.getcontext().prec = 1000
-   >>> ContinuedFraction.from_elements(1, *[2] * 1000).as_decimal()
+   >>> ContinuedFraction.from_coefficients(1, *[2] * 1000).as_decimal()
    >>> Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462107038850387534327641572735013846230912297024924836055850737212644121497099935831413222665927505592755799950501152782060571470109559971605970274534596862014728517418640889198609552329230484308714321450839762603627995251407989687253396546331808829640620615258352395054745750287759961729835575220337531857011354374603408498847160386899970699004815030544027790316454247823068492936918621580578463111596668713013015618568987237235288509264861249497715421833420428568606014682472077143585487415565706967765372022648544701585880162075847492265722600208558446652145839889394437092659180031138824646815708263010059485870400318648034219489727829064104507263688131373985525611732204024509122770022693976417470272013752399982976782217338826145327739130951193355408762382855063050397471264684204993755563270525522588635793369056816493299408349652485293806821732869748392205646382061385126800425762739265218823406558704964782626829881122')
 
-The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` is division-free and uses a well known recurrence relation for convergents of simple continued fractions, which is described :ref:`here <continued-fractions.fast-algorithms>`.
+The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` is division-free and uses a well known recurrence relation for convergents of simple continued fractions, which is described :ref:`here <continued-fractions.fast-algorithms>`.
 
-For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but allows the user to specify an exact sequence of elements, if it is known, or an arbitrary sequence of elements for :ref:`approximations <continued-fractions.rational-approximation>` or experimental computations.
+For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but allows the user to specify an exact sequence of coefficients, if it is known, or an arbitrary sequence of coefficients for :ref:`approximations <continued-fractions.rational-approximation>` or experimental computations.
 
 .. _continued-fractions.inplace-extension:
 
-In-place Extension by New Elements
-----------------------------------
+In-place Extension by New Coefficients
+--------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension from new elements - the new elements are added to the existing instance tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and an array of :math:`k \geq 1` non-negative integers :math:`(b_1, \ldots, b_k)` the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension from new coefficients - the new coefficients are added to the existing instance tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and an array of :math:`k \geq 1` non-negative integers :math:`(b_1, \ldots, b_k)` the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k\text{ new elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{cf of order }(n + k)}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{b_1, \ldots, b_k}^{\text{#}k\text{ new coefficients}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_n, b_1, \ldots, b_k}^{\text{cf of order }(n + k)}]
 
 Some examples are given below.
 
 .. code:: python
 
-   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf = ContinuedFraction.from_coefficients(3, 4, 12, 4)
    >>> cf
    ContinuedFraction(649, 200)
    >>> id(cf)
@@ -241,60 +241,60 @@ Some examples are given below.
    >>> cf.extend(5, 2)
    >>> cf
    ContinuedFraction(7457, 2298)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (3, 4, 12, 4, 5, 2)
-   >>> assert cf == ContinuedFraction.from_elements(3, 4, 12, 4, 5, 2)
+   >>> assert cf == ContinuedFraction.from_coefficients(3, 4, 12, 4, 5, 2)
    # True
    >>> id(cf)
    4762928384
 
-The result is an in-place modification of the existing instance, with the same object ID as before. All other attributes or properties will reflect the new values as determined by the complete sequence of elements formed by the original elements and the new elements provided with :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend`.
+The result is an in-place modification of the existing instance, with the same object ID as before. All other attributes or properties will reflect the new values as determined by the complete sequence of coefficients formed by the original coefficients and the new coefficients provided with :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend`.
 
-A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.g. not positive integers.
+A :py:class:`ValueError` is raised if the tail coefficients provided are invalid, e.g. not positive integers.
 
 .. code:: python
 
-   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf = ContinuedFraction.from_coefficients(3, 4, 12, 4)
    >>> cf
    ContinuedFraction(649, 200)
    >>> cf.extend(0, 4)
    ...
-   ValueError: The elements/coefficients to be added to the tail must be positive integers.
+   ValueError: The coefficients to be added to the tail must be positive integers.
    >>> cf.extend(1, -1)
    ...
-   ValueError: The elements/coefficients to be added to the tail must be positive integers.
+   ValueError: The coefficients to be added to the tail must be positive integers.
 
 .. note::
 
-   If the last of the new elements passed to :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` happens to be :math:`1` then it is added to the previous element to ensure uniqueness of the new sequence of elements of the resulting continued fraction, e.g.:
+   If the last of the new coefficients passed to :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` happens to be :math:`1` then it is added to the previous element to ensure uniqueness of the new sequence of coefficients of the resulting continued fraction, e.g.:
 
    .. code:: python
 
-      >>> cf = ContinuedFraction.from_elements(3, 4, 12, 3)
+      >>> cf = ContinuedFraction.from_coefficients(3, 4, 12, 3)
       >>> cf
       ContinuedFraction(490, 151)
       >>> cf.extend(1)
       >>> cf
       ContinuedFraction(649, 200)
-      >>> tuple(cf.elements)
+      >>> tuple(cf.coefficients)
       (3, 4, 12, 4)
 
 .. _continued-fractions.inplace-truncation:
 
-In-place Truncation of Tail Elements
-------------------------------------
+In-place Truncation of Tail Coefficients
+----------------------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method can be used to perform an in-place truncation of a trailing segment of the existing tail - the tail elements to be truncated are removed from the existing tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and a :math:`k`-length segment (or contiguous section) :math:`(a_{n - k + 1}, \ldots, a_n)` of its tail, where :math:`1 \leq k \leq n`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method can be used to perform an in-place truncation of a contiguous trailing segment of the existing tail - the tail coefficients to be truncated are removed from the existing tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and a :math:`k`-length segment (or contiguous section) :math:`(a_{n - k + 1}, \ldots, a_n)` of its tail, where :math:`1 \leq k \leq n`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
 
 .. math::
 
-   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k\text{ tail elements}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{cf of order }(n - k)}]
+   [a_0; \overbrace{a_1, \ldots, a_n}^{\text{cf of order }n}], (\overbrace{a_{n - k + 1}, \ldots, a_n}^{\text{#}k\text{ tail coefficients}}) \longmapsto [a_0; \overbrace{a_1, \ldots, a_{n - k}}^{\text{cf of order }(n - k)}]
 
 Some examples are given below.
 
 .. code:: python
 
-   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf = ContinuedFraction.from_coefficients(3, 4, 12, 4)
    >>> cf
    ContinuedFraction(649, 200)
    >>> id(cf)
@@ -302,28 +302,28 @@ Some examples are given below.
    >>> cf.truncate(12, 4)
    >>> cf
    ContinuedFraction(13, 4)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (3, 4)
-   >>> assert cf == ContinuedFraction.from_elements(3, 4)
+   >>> assert cf == ContinuedFraction.from_coefficients(3, 4)
    # True
    >>> id(cf)
    4921448896
 
-The result is an in-place modification of the existing instance, with the same object ID as before. All other attributes or properties will reflect the new values as determined by the complete sequence of elements formed by the truncation of the tail elements provided with :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate`.
+The result is an in-place modification of the existing instance, with the same object ID as before. All other attributes or properties will reflect the new values as determined by the complete sequence of coefficients formed by the truncation of the tail coefficients provided with :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate`.
 
-A :py:class:`ValueError` is raised if the tail elements provided are invalid, e.g. not positive integers, or do not form a trailing segment of the existing tail.
+A :py:class:`ValueError` is raised if the tail coefficients provided are invalid, e.g. not positive integers, or do not form a contiguous trailing segment of the existing tail.
 
 .. code:: python
 
-   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf = ContinuedFraction.from_coefficients(3, 4, 12, 4)
    >>> cf
    ContinuedFraction(649, 200)
    >>> cf.truncate(0, 4)
    ...
-   ValueError: The elements/coefficients to be truncated from the tail must form a trailing segment of the existing tail.
+   ValueError: The coefficients to be truncated from the tail must consist of positive integers and form a contiguous trailing segment of the tail.
    >>> cf.truncate(3, 4, 12, 4)
    ...
-   ValueError: The elements/coefficients to be truncated from the tail must form a trailing segment of the existing tail.
+   ValueError: The coefficients to be truncated from the tail must consist of positive integers and form a contiguous trailing segment of the tail.
 
 .. _continued-fractions.rational-operations:
 
@@ -340,24 +340,24 @@ A few examples are given below of some key rational operations for the rational 
 
 .. code:: python
 
-   >>> cf = ContinuedFraction.from_elements(3, 4, 12, 4)
+   >>> cf = ContinuedFraction.from_coefficients(3, 4, 12, 4)
    >>> cf
    ContinuedFraction(649, 200)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (3, 4, 12, 4)
-   >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
+   >>> cf_inverse = ContinuedFraction.from_coefficients(0, 3, 4, 12, 4)
    >>> cf_inverse
    ContinuedFraction(200, 649)
-   >>> tuple(cf_inverse.elements)
+   >>> tuple(cf_inverse.coefficients)
    (0, 3, 4, 12, 4)
    >>> assert cf_inverse == 1/cf
    # True
    >>> assert cf * cf_inverse == 1
    # True
-   >>> cf_negative_inverse = ContinuedFraction.from_elements(-1, 1, 2, 4, 12, 4)
+   >>> cf_negative_inverse = ContinuedFraction.from_coefficients(-1, 1, 2, 4, 12, 4)
    >>> cf_negative_inverse
    ContinuedFraction(-200, 649)
-   >>> tuple(cf_negative_inverse.elements)
+   >>> tuple(cf_negative_inverse.coefficients)
    (-1, 1, 2, 4, 12, 4)
    >>> assert cf_negative_inverse == -1/cf
    # True
@@ -366,9 +366,9 @@ A few examples are given below of some key rational operations for the rational 
    # True
    >>> cf ** 2
    ContinuedFraction(421201, 40000)
-   >>> tuple((cf ** 2).elements)
+   >>> tuple((cf ** 2).coefficients)
    (10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2)
-   >>> assert ContinuedFraction.from_elements(10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2) == cf ** 2
+   >>> assert ContinuedFraction.from_coefficients(10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2) == cf ** 2
    # True
 
 As these examples illustrate, the continued fraction properties of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are fully respected by the rational operations.
@@ -467,34 +467,34 @@ The negation relations above can be illustrated with :py:class:`~continuedfracti
 
 .. code:: python
 
-   >>> tuple(ContinuedFraction(2, 3).elements)
+   >>> tuple(ContinuedFraction(2, 3).coefficients)
    (0, 1, 2)
-   >>> tuple(ContinuedFraction(-2, 3).elements)
+   >>> tuple(ContinuedFraction(-2, 3).coefficients)
    (-1, 3)
-   >>> assert ContinuedFraction.from_elements(-1, 3) == ContinuedFraction(-2, 3)
+   >>> assert ContinuedFraction.from_coefficients(-1, 3) == ContinuedFraction(-2, 3)
    # True
-   >>> tuple(ContinuedFraction(1, 2).elements)
+   >>> tuple(ContinuedFraction(1, 2).coefficients)
    (0, 2)
-   >>> tuple(ContinuedFraction(-1, 2).elements)
+   >>> tuple(ContinuedFraction(-1, 2).coefficients)
    (-1, 2)
-   >>> assert ContinuedFraction.from_elements(-1, 2) == ContinuedFraction.from_elements(-1, 1, 1) == ContinuedFraction(-1, 2)
+   >>> assert ContinuedFraction.from_coefficients(-1, 2) == ContinuedFraction.from_coefficients(-1, 1, 1) == ContinuedFraction(-1, 2)
    # True
 
 and also fractions :math:`\frac{a}{b}` where :math:`|a| > |b|`:
 
 .. code:: python
 
-   >>> tuple(ContinuedFraction(17, 10).elements)
+   >>> tuple(ContinuedFraction(17, 10).coefficients)
    (1, 1, 2, 3)
-   >>> tuple(ContinuedFraction(-17, 10).elements)
+   >>> tuple(ContinuedFraction(-17, 10).coefficients)
    (-2, 3, 3)
-   >>> assert ContinuedFraction.from_elements(-2, 3, 3) == ContinuedFraction(-17, 10)
+   >>> assert ContinuedFraction.from_coefficients(-2, 3, 3) == ContinuedFraction(-17, 10)
    # True
-   >>> tuple(ContinuedFraction(10, 7).elements)
+   >>> tuple(ContinuedFraction(10, 7).coefficients)
    (1, 2, 3)
-   >>> tuple(ContinuedFraction(-10, 7).elements)
+   >>> tuple(ContinuedFraction(-10, 7).coefficients)
    (-2, 1, 1, 3)
-   >>> assert ContinuedFraction.from_elements(-2, 1, 1, 3) == ContinuedFraction(-10, 7)
+   >>> assert ContinuedFraction.from_coefficients(-2, 1, 1, 3) == ContinuedFraction(-10, 7)
    # True
 
 The construction (creation + initialisation) of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances occurs mostly in the :py:class:`fractions.Fraction` class, but there are no sign-related differences either in the construction steps in :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__new__`.
@@ -507,7 +507,7 @@ A few examples are given below (those involving :py:class:`decimal.Decimal` have
    ContinuedFraction(-415, 93)
    >>> -ContinuedFraction(415, 93)
    ContinuedFraction(-415, 93)
-   >>> tuple(ContinuedFraction(-415, 93).elements)
+   >>> tuple(ContinuedFraction(-415, 93).coefficients)
    (-5, 1, 1, 6, 7)
    >>> ContinuedFraction(-415, 93).as_decimal()
    Decimal('-4.462365591397849462365591397849462365591397849462365591397849462365591397849462365591397849462365591')
@@ -520,74 +520,74 @@ A few examples are given below (those involving :py:class:`decimal.Decimal` have
 
 .. code:: python
 
-   >>> -tuple(ContinuedFraction(415, 93).elements)
+   >>> -tuple(ContinuedFraction(415, 93).coefficients)
    ...
    TypeError: bad operand type for unary -: 'tuple'
-   >>> -(ContinuedFraction(415, 93)).elements
+   >>> -(ContinuedFraction(415, 93)).coefficients
    ...
    TypeError: bad operand type for unary -: 'tuple'
-   >>> tuple((-ContinuedFraction(415, 93)).elements)
+   >>> tuple((-ContinuedFraction(415, 93)).coefficients)
    (-5, 1, 1, 6, 7)
    >>> assert ContinuedFraction(415, 93) + (-ContinuedFraction(415, 93)) == 0
    # True
 
-.. _continued-fractions.elements-and-order:
+.. _continued-fractions.coefficients-and-order:
 
-Elements and Order
-==================
+Coefficients and Order
+======================
 
-The **elements** (or coefficients) of a (possibly infinite), simple continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the head :math:`a_0 = [x]`, which is the integer part of :math:`x`, and the tail elements :math:`a_1,a_2,\cdots` which occur in the denominators of the fractional terms. The :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.elements` property returns a generator of the elements, e.g. for ``ContinuedFraction(649, 200)`` we have:
+The **coefficients** (or coefficients) of a (possibly infinite), simple continued fraction :math:`[a_0;a_1,a_2\cdots]` of a real number :math:`x` include the head :math:`a_0 = [x]`, which is the integer part of :math:`x`, and the tail coefficients :math:`a_1,a_2,\cdots` which occur in the denominators of the fractional terms. The :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.coefficients` property returns a generator of the coefficients, e.g. for ``ContinuedFraction(649, 200)`` we have:
 
 .. code:: python
 
    >>> cf = ContinuedFraction(649, 200)
-   >>> cf.elements
-   <generator object ContinuedFraction.elements at 0x108c4b100>
-   >>> tuple(cf.elements)
+   >>> cf.coefficients
+   <generator object ContinuedFraction.coefficients at 0x108c4b100>
+   >>> tuple(cf.coefficients)
    (3, 4, 12, 4)
 
-This means that to inspect the elements one must go through the core continued fraction division algorithm for rational numbers, as implemented in :py:func:`continuedfractions.lib.continued_fraction_rational`. Although this can end up being expensive in computations, depending on how you are using the elements array, the advantage is that manual changes to the numerator and/or denominator, which is supported by the :py:class:`fractions.Fraction` class, will be immediately reflected in the elements that are generated.
+This means that to inspect the coefficients one must go through the core continued fraction division algorithm for rational numbers, as implemented in :py:func:`continuedfractions.lib.continued_fraction_rational`. Although this can end up being expensive in computations, depending on how you are using the coefficients array, the advantage is that manual changes to the numerator and/or denominator, which is supported by the :py:class:`fractions.Fraction` class, will be immediately reflected in the coefficients that are generated.
 
 .. code:: python
 
    >>> cf = ContinuedFraction(3, 2)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (1, 2)
    >>> cf._numerator, cf._denominator = 5, 2
    >>> cf
    ContinuedFraction(5, 2)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (2, 2)
 
-The **order** of a continued fraction is defined to be number of its tail elements, i.e. the elements defining the fractional part of the number represented by the continued fraction. Thus, for ``ContinuedFraction(649, 200)`` the order is ``3``:
+The **order** of a continued fraction is defined to be number of its tail coefficients, i.e. the coefficients defining the fractional part of the number represented by the continued fraction. Thus, for ``ContinuedFraction(649, 200)`` the order is ``3``:
 
 .. code:: python
 
    >>> cf.order
    3
 
-All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances will have a finite sequence of elements and thus a finite order. The integers represent the special case of zero-order continued fractions.
+All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances will have a finite sequence of coefficients and thus a finite order. The integers represent the special case of zero-order continued fractions.
 
 .. code:: python
 
    >>> ContinuedFraction(3).order
    0
 
-The elements and orders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are well behaved with respect to all rational operations supported by
+The coefficients and orders of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are well behaved with respect to all rational operations supported by
 :py:class:`fractions.Fraction`:
 
 .. code:: python
 
-   >>> tuple(ContinuedFraction(415, 93).elements)
+   >>> tuple(ContinuedFraction(415, 93).coefficients)
    (4, 2, 6, 7)
    >>> ContinuedFraction(649, 200) + ContinuedFraction(415, 93)
    ContinuedFraction(143357, 18600)
-   >>> tuple((ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements)
+   >>> tuple((ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).coefficients)
    (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
    >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).order
    10
 
-For convenience a :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.counter` property is also available to keep counts of elements:
+For convenience a :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.counter` property is also available to keep counts of coefficients:
 
 .. code:: python
 
@@ -595,7 +595,7 @@ For convenience a :py:attr:`~continuedfractions.continuedfraction.ContinuedFract
    >>> cf.counter
    Counter({4: 2, 3: 1, 12: 1})
 
-The result is a :py:class:`collections.Counter` object, where the counts are displayed in order of the most common elements to the least (via :py:meth:`collections.Counter.most_common`).
+The result is a :py:class:`collections.Counter` object, where the counts are displayed in order of the most common coefficients to the least (via :py:meth:`collections.Counter.most_common`).
 
 The counter is effectively refreshed on each access, so that the effects of any operations that modify the underlying instance are immediately reflected.
 
@@ -617,7 +617,7 @@ The counter is effectively refreshed on each access, so that the effects of any 
 Convergents and Rational Approximations
 =======================================
 
-For an integer :math:`k \geq 0` the :math:`k`-th **convergent** :math:`C_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the rational number :math:`\frac{p_k}{q_k}` with the simple continued fraction :math:`[a_0; a_1,\ldots,a_k]` formed from the first :math:`k + 1` elements of the original:
+For an integer :math:`k \geq 0` the :math:`k`-th **convergent** :math:`C_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the rational number :math:`\frac{p_k}{q_k}` with the simple continued fraction :math:`[a_0; a_1,\ldots,a_k]` formed from the first :math:`k + 1` coefficients of the original:
 
 .. math::
 
@@ -735,51 +735,51 @@ A simple example of convergent approximations of real numbers is :math:`\sqrt{2}
 
    \sqrt{2} = 1 + \cfrac{1}{2 + \cfrac{1}{2 + \cfrac{1}{2 + \ddots}}}
 
-written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents the infinite (periodic) sequence :math:`2, 2, 2, \ldots`. The convergents of :math:`\sqrt{2}` can be constructed using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_elements` method:
+written more compactly as :math:`[1; \bar{2}]`, where :math:`\bar{2}` represents the infinite (periodic) sequence :math:`2, 2, 2, \ldots`. The convergents of :math:`\sqrt{2}` can be constructed using the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` method:
 
 .. code:: python
 
    # 1st convergent of sqrt(2)
-   >>> ContinuedFraction.from_elements(1, 2)
+   >>> ContinuedFraction.from_coefficients(1, 2)
    ContinuedFraction(3, 2)
-   >>> ContinuedFraction.from_elements(1, 2).as_decimal()
+   >>> ContinuedFraction.from_coefficients(1, 2).as_decimal()
    >>> Decimal('1.5')
 
    # 2nd convergent of sqrt(2)
-   >>> ContinuedFraction.from_elements(1, 2, 2)
+   >>> ContinuedFraction.from_coefficients(1, 2, 2)
    ContinuedFraction(7, 5)
-   >>> ContinuedFraction.from_elements(1, 2, 2).as_decimal()
+   >>> ContinuedFraction.from_coefficients(1, 2, 2).as_decimal()
    >>> Decimal('1.4')
 
    # 3rd convergent of sqrt(2)
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2)
+   >>> ContinuedFraction.from_coefficients(1, 2, 2, 2)
    ContinuedFraction(17, 12)
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2).as_decimal()
+   >>> ContinuedFraction.from_coefficients(1, 2, 2, 2).as_decimal()
    >>> Decimal('1.416666666666666666666666667')
 
    ...
 
    # 10th convergent of sqrt(2)
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+   >>> ContinuedFraction.from_coefficients(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
    ContinuedFraction(8119, 5741)
-   >>> ContinuedFraction.from_elements(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_decimal()
+   >>> ContinuedFraction.from_coefficients(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2).as_decimal()
    >>> Decimal('1.414213551646054694304128201')
 
-With the 10th convergent :math:`\frac{8119}{5741}` of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few elements as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of elements in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
+With the 10th convergent :math:`\frac{8119}{5741}` of :math:`\sqrt{2}` we have obtained an approximation that is accurate to :math:`6` decimal places in the fractional part. We'd ideally like to have as few coefficients as possible in our :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` for a desired level of accuracy, but this partly depends on how fast the partial, finite continued fractions represented by the chosen sequences of coefficients in our approximations are converging to the true value of :math:`\sqrt{2}` - these partial, finite continued fractions in a given continued fraction are called :ref:`convergents <continued-fractions.convergents-and-rational-approximations>`, and will be discussed in more detail later on.
 
-If we use the 100th convergent (with :math:`101` elements consisting of the integer part  :math:`1`, plus a tail of one hundred 2s), we get more accurate results:
+If we use the 100th convergent (with :math:`101` coefficients consisting of the integer part  :math:`1`, plus a tail of one hundred 2s), we get more accurate results:
 
 .. code:: python
 
    # Create a `ContinuedFraction` from the sequence 1, 2, 2, 2, ..., 2, with one hundred 2s in the tail
-   >>> sqrt2_100 = ContinuedFraction.from_elements(1, *[2] * 100)
+   >>> sqrt2_100 = ContinuedFraction.from_coefficients(1, *[2] * 100)
    ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
-   >>> tuple(sqrt2_100.elements)
+   >>> tuple(sqrt2_100.coefficients)
    # -> (1, 2, 2, 2, ..., 2) where there are `100` 2s after the `1`
    >>> sqrt2_100.as_decimal()
    Decimal('1.414213562373095048801688724')
 
-The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this construction is now accurate up to 27 digits in the fractional part, but the decimal representation stops there. This is because the :py:mod:`decimal` library uses a default `contextual precision <https://docs.python.org/3/library/decimal.html#decimal.DefaultContext>`_ of 28 digits, including the integer part. The :py:mod:`decimal` precision can be increased, and the accuracy of the "longer" approximation above can be compared, as follows:
+The decimal value of ``ContinuedFraction.from_coefficients(1, *[2] * 100)`` in this construction is now accurate up to 27 digits in the fractional part, but the decimal representation stops there. This is because the :py:mod:`decimal` library uses a default `contextual precision <https://docs.python.org/3/library/decimal.html#decimal.DefaultContext>`_ of 28 digits, including the integer part. The :py:mod:`decimal` precision can be increased, and the accuracy of the "longer" approximation above can be compared, as follows:
 
 .. code:: python
 
@@ -789,13 +789,13 @@ The decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` in this 
     28
     # Increase it to 100 digits, and try again
     >>> decimal.getcontext().prec = 100
-    >>> sqrt2_100 = ContinuedFraction.from_elements(1, *[2] * 100)
+    >>> sqrt2_100 = ContinuedFraction.from_coefficients(1, *[2] * 100)
     >>> sqrt2_100
     ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
     >>> sqrt2_100.as_decimal()
     Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
 
-Now, the decimal value of ``ContinuedFraction.from_elements(1, *[2] * 100)`` is accurate up to 75 digits in the fractional part, but deviates from the `true value <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_ after the 76th digit onwards.
+Now, the decimal value of ``ContinuedFraction.from_coefficients(1, *[2] * 100)`` is accurate up to 75 digits in the fractional part, but deviates from the `true value <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_ after the 76th digit onwards.
 
 .. _continued-fractions.even-and-odd-order-convergents:
 
@@ -827,7 +827,7 @@ The different behaviour of even- and odd-indexed convergents can be illustrated 
    >>> decimal.getcontext().prec = 100
    #
    # Construct an approximation for the square root of 2, with one hundred 2s in the tail
-   >>> cf = ContinuedFraction.from_elements(1, *([2] * 100))
+   >>> cf = ContinuedFraction.from_coefficients(1, *([2] * 100))
    >>> cf
    >>> ContinuedFraction(228725309250740208744750893347264645481, 161733217200188571081311986634082331709)
    >>> cf.as_decimal()
@@ -885,7 +885,7 @@ A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7
 .. code:: python
 
    >>> cf = ContinuedFraction(-415, 93)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (-5, 1, 1, 6, 7)
    >>> dict(cf.convergents)
    {0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)}
@@ -931,7 +931,7 @@ This can be illustrated again using the continued fraction for :math:`-\frac{415
 .. code:: python
 
    >>> cf = ContinuedFraction(-415, 93)
-   >>> tuple(cf.elements)
+   >>> tuple(cf.coefficients)
    (-5, 1, 1, 6, 7)
    >>> dict(cf.convergents)
    {0: ContinuedFraction(-5, 1), 1: ContinuedFraction(-4, 1), 2: ContinuedFraction(-9, 2), 3: ContinuedFraction(-58, 13), 4: ContinuedFraction(-415, 93)}
@@ -961,7 +961,7 @@ This can be illustrated again using the continued fraction for :math:`-\frac{415
 Remainders
 ==========
 
-The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the (simple) continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the elements of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`:
+The :math:`k`-th remainder :math:`R_k` of a (simple) continued fraction :math:`[a_0; a_1,\ldots]` of a real number :math:`x` is the (simple) continued fraction :math:`[a_k;a_{k + 1},\ldots]`, obtained from the original by "removing" the coefficients of the :math:`(k - 1)`-st convergent :math:`C_{k - 1} := [a_0;a_1,\ldots,a_{k - 1}]`:
 
 .. math::
 
@@ -1015,7 +1015,7 @@ This allows successive remainders to computed starting from :math:`R_n = [a_n;]`
 Khinchin Mean & Khinchin's Constant
 ====================================
 
-For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and a positive integer :math:`n` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` elements starting from :math:`a_1` (excluding the leading element :math:`a_0`):
+For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and a positive integer :math:`n` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` coefficients starting from :math:`a_1` (excluding the leading element :math:`a_0`):
 
 .. math::
 
@@ -1033,15 +1033,15 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
 
 .. code:: python
 
-   >>> tuple(ContinuedFraction(649, 200).elements)
+   >>> tuple(ContinuedFraction(649, 200).coefficients)
    (3, 4, 12, 4)
    >>> ContinuedFraction(649, 200).khinchin_mean
    Decimal('5.76899828122963409526846589869819581508636474609375')
-   >>> tuple(ContinuedFraction(415, 93).elements)
+   >>> tuple(ContinuedFraction(415, 93).coefficients)
    (4, 2, 6, 7)
    >>> ContinuedFraction(415, 93).khinchin_mean
    Decimal('4.37951913988788898990378584130667150020599365234375')
-   >>> tuple((ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).elements)
+   >>> tuple((ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).coefficients)
    (7, 1, 2, 2, 2, 1, 1, 11, 1, 2, 12)
    >>> (ContinuedFraction(649, 200) + ContinuedFraction(415, 93)).khinchin_mean
    Decimal('2.15015313349074244086978069390170276165008544921875')
@@ -1052,10 +1052,10 @@ For rational numbers, which have finite continued fractions, the Khinchin means 
 .. code:: python
 
    # 4th Khinchin mean for `\pi` using a 5-element continued fraction approximation
-   >>> ContinuedFraction.from_elements(3, 7, 15, 1, 292).khinchin_mean
+   >>> ContinuedFraction.from_coefficients(3, 7, 15, 1, 292).khinchin_mean
    Decimal('13.2325345812843568893413248588331043720245361328125')
    # 19th Khinchin mean for `\pi` using a 20-element continued fraction approximation
-   >>> ContinuedFraction.from_elements(3, 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, 1, 14, 2, 1, 1, 2, 2, 2, 2).khinchin_mean
+   >>> ContinuedFraction.from_coefficients(3, 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, 1, 14, 2, 1, 1, 2, 2, 2, 2).khinchin_mean
    Decimal('2.60994679070748158977721686824224889278411865234375')
 
 and :math:`\gamma = [0; 1, 1, 2, 1,\ldots]`, the `Euler-Mascheroni constant <https://en.wikipedia.org/wiki/Euler%27s_constant>`_:
@@ -1063,10 +1063,10 @@ and :math:`\gamma = [0; 1, 1, 2, 1,\ldots]`, the `Euler-Mascheroni constant <htt
 .. code:: python
 
    # 4th Khinchin mean for `\gamma` using a 5-element continued fraction approximation
-   >>> ContinuedFraction.from_elements(0, 1, 1, 2, 1).khinchin_mean
+   >>> ContinuedFraction.from_coefficients(0, 1, 1, 2, 1).khinchin_mean
    Decimal('1.4422495703074085238171164746745489537715911865234375')
    # 19th Khinchin mean for `\gamma` using a 20-element continued fraction approximation
-   >>> ContinuedFraction.from_elements(0, 1, 1, 2, 1, 2, 1, 4, 3, 13, 5, 1, 1, 8, 1, 2, 4, 1, 1, 40).khinchin_mean
+   >>> ContinuedFraction.from_coefficients(0, 1, 1, 2, 1, 2, 1, 4, 3, 13, 5, 1, 1, 8, 1, 2, 4, 1, 1, 40).khinchin_mean
    Decimal('2.308255739839563336346373034757561981678009033203125')
 
 The constant :math:`\gamma`, which has not been proved to be irrational, is defined as:

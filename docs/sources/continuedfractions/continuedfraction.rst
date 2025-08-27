@@ -9,3 +9,4 @@
 .. automodule:: continuedfractions.continuedfraction
     :members:
     :special-members: __neg__
+    :exclude-members: elements, fraction_from_elements

@@ -6,7 +6,7 @@
 continuedfractions
 ==================
 
-A simple extension of the Python :py:mod:`fractions` standard library for working with (finite, simple) `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
+A simple extension of the Python :py:class:`fractions.Fraction` standard library class for working with (finite, simple) `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
 
 The package is designed for users interested in:
 

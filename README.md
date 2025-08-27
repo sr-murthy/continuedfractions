@@ -18,7 +18,7 @@
 
 # continuedfractions
 
-A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
+A simple extension of the Python [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) standard library class for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
 
 Install from [PyPI](https://pypi.org/project/continuedfractions/):
 ```shell

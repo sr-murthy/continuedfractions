@@ -13,7 +13,7 @@ from continuedfractions.lib import (
 	continued_fraction_real,
 	convergent,
 	convergents,
-	fraction_from_elements,
+	fraction_from_coefficients,
 	mediant,
 	remainder,
 	remainders,
@@ -87,22 +87,22 @@ class TestContinuedFractionReal:
 		assert tuple(continued_fraction_real(x)) == expected
 
 
-class TestFractionFromElements:
+class TestFractionFromCoefficients:
 
 	@pytest.mark.parametrize(
-	    "elements",
+	    "coeffs",
 	    [
 	        (1, 2.),
 	        (1., 2),
 	        (1., 2.)
 	    ],
 	)
-	def test_fraction_from_elements__invalid_elements__value_error_raised(self, elements):
+	def test_fraction_from_coeffs__invalid_coeffs__value_error_raised(self, coeffs):
 		with pytest.raises(ValueError):
-			fraction_from_elements(*elements)
+			fraction_from_coefficients(*coeffs)
 
 	@pytest.mark.parametrize(
-	    "elements, fraction",
+	    "coeffs, fraction",
 	    [
 	        ([1, 2], Fraction(3, 2)),
 	        ([-5000], Fraction(-5000, 1)),
@@ -117,11 +117,11 @@ class TestFractionFromElements:
 	        ([3, 2, 5, 4, 2], Fraction(356, 103)),
 	    ],
 	)
-	def test_fraction_from_elements__valid_elements__correct_fraction_returned(self, elements, fraction):
+	def test_fraction_from_coefficients__valid_coefficients__correct_fraction_returned(self, coeffs, fraction):
 		
 		expected = fraction
 
-		assert fraction_from_elements(*elements) == expected
+		assert fraction_from_coefficients(*coeffs) == expected
 
 
 class TestConvergent:

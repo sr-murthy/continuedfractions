@@ -212,3 +212,8 @@ show_missing = true
 skip_covered = true
 skip_empty = true
 sort = "Name"
+exclude_also = [
+    "def from_elements",
+    "def elements",
+    "def fraction_from_elements"
+]

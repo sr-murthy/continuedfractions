@@ -107,9 +107,6 @@ source-includes = [
 editable-backend = "path"
 
 [tool.pdm.dev-dependencies]
-build = [
-    "pip>=23.1.2",
-]
 dev = [
     "ipython",
     "ipdb",
@@ -138,7 +135,8 @@ test = [
     "pytest-xdist",
     "sympy",
 ]
-deploy = [
+pack = [
+    "pip",
     "twine>=4.0.2",
 ]
 

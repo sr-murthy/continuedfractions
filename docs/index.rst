@@ -11,8 +11,8 @@ A simple extension of the Python :py:class:`fractions.Fraction` standard library
 The package is designed for users interested in:
 
 - learning about and working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
-- exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
-- operating on them as rationals and instances of the standard library :py:class:`fractions.Fraction` class
+- to allow stateful computations involving key properties such as elements/coefficients, convergents, semiconvergents, remainders, and others
+- operating on them as rationals and instances of the :py:class:`fractions.Fraction` standard library class
 - making approximations of and experimental computations for irrational numbers
 - exploring other related objects such as enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences
 

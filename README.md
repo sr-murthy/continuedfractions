@@ -36,8 +36,8 @@ See the [project docs](https://continuedfractions.readthedocs.io) for more detai
 The `continuedfractions` package is designed for users interested in:
 
 * learning about and working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
-* exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
-* operating on them as rationals and instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class
+* to allow stateful computations involving key properties such as elements/coefficients, convergents, semiconvergents, remainders, and others
+* operating on them as rationals and instances of the [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) standard library class
 * making approximations of and experimental computations for irrational numbers
 * exploring other related objects, such as enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences
 

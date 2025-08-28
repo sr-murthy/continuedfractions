@@ -50,7 +50,7 @@ We use here a widely used notation for continued fractions, which is as a tuple 
 
    a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 + \ddots \cfrac{1}{a_n + \ddots}}}
 
-where :math:`a_0` is the integer part, and :math:`a_1,a_2,\ldots` are (positive) integers defining the fractional part, in the representation. If the order is finite, i.e. :math:`n < \infty`, then this expression describes a rational number, for which we may assume the last element :math:`a_n > 1` because :math:`[a_0; a_1, a_2, \ldots a_{n - 1}, a_n = 1] = [a_0; a_1, a_2, \ldots a_{n - 1} + 1]`.
+where :math:`a_0` is the integer part, and :math:`a_1,a_2,\ldots` are (positive) integers defining the fractional part, in the representation. If the order is finite, i.e. :math:`n < \infty`, then this expression describes a rational number, for which we may assume the last coefficient :math:`a_n > 1` because :math:`[a_0; a_1, a_2, \ldots a_{n - 1}, a_n = 1] = [a_0; a_1, a_2, \ldots a_{n - 1} + 1]`.
 
 .. _continued-fractions.from-numeric-types:
 
@@ -266,7 +266,7 @@ A :py:class:`ValueError` is raised if the tail coefficients provided are invalid
 
 .. note::
 
-   If the last of the new coefficients passed to :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` happens to be :math:`1` then it is added to the previous element to ensure uniqueness of the new sequence of coefficients of the resulting continued fraction, e.g.:
+   If the last of the new coefficients passed to :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` happens to be :math:`1` then it is added to the previous coefficient to ensure uniqueness of the new sequence of coefficients of the resulting continued fraction, e.g.:
 
    .. code:: python
 
@@ -383,7 +383,7 @@ Rational operations for :py:class:`~continuedfractions.continuedfraction.Continu
    >>> id(cf), id(-cf)
    (4603182592, 4599771072)
 
-There is no support for binary operations involving :py:class:`decimal.Decimal`, :py:class:`complex`:
+Binary operations involving :py:class:`decimal.Decimal` or :py:class:`complex`: will trigger errors.
 
 .. code:: python
 
@@ -392,7 +392,7 @@ There is no support for binary operations involving :py:class:`decimal.Decimal`,
    >>> ContinuedFraction(3, 2) + complex(1, 2)
    TypeError: argument should be a string or a Rational instance
 
-The full set of rational operations can be viewed directly in the `class source <https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/continuedfraction.py>`_ or the :doc:`API reference <continuedfractions/continuedfraction>`.
+The full set of rational operations, which are implemented by overriding certain magic methods, can be viewed directly in the `class source <https://github.com/sr-murthy/continuedfractions/blob/main/src/continuedfractions/continuedfraction.py>`_.
 
 .. _continued-fractions.negative-continued-fractions:
 
@@ -446,7 +446,7 @@ where :math:`R_1 - 1 = [a_1 - 1;a_2,\ldots, a_n]` and :math:`\frac{1}{R_1 - 1} =
 
 .. note::
 
-   If the last element :math:`a_n = 1` then :math:`[a_0; a_1, \ldots, a_n] = [a_0;a_1,\ldots,a_{n - 1} + 1]` is of order :math:`(n - 1)`. So in the representation :math:`[-(q + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n]` above for :math:`-\frac{a}{b}`, if :math:`a_1 = 2` then :math:`a_1 - 1 = 1` and the segment :math:`[-(q + 1); 1, a_1 - 1] = [-(q + 1); 1, 1] = [-(q + 1); 2]` is of order :math:`1`.
+   If the last coefficient :math:`a_n = 1` then :math:`[a_0; a_1, \ldots, a_n] = [a_0;a_1,\ldots,a_{n - 1} + 1]` is of order :math:`(n - 1)`. So in the representation :math:`[-(q + 1); 1, a_1 - 1, a_2, a_3,\ldots, a_n]` above for :math:`-\frac{a}{b}`, if :math:`a_1 = 2` then :math:`a_1 - 1 = 1` and the segment :math:`[-(q + 1); 1, a_1 - 1] = [-(q + 1); 1, 1] = [-(q + 1); 2]` is of order :math:`1`.
 
 If :math:`\bar{R}_1` denotes the :ref:`1st remainder <continued-fractions.remainders>` :math:`[1; a_1 - 1, a_2, a_3,\ldots, a_n]` in the representation above for :math:`-\frac{a}{b}` then :math:`\bar{R}_1` is an :math:`n`-order, simple continued fraction. A special case is when :math:`a_1 = 1`: in this case :math:`a_0 = -1` and :math:`\bar{R}_1 = [a_2 + 1; a_3, \ldots, a_n]` is an :math:`(n - 2)`-order simple continued fraction. Note that this special case also applies when :math:`0 < a < b`.
 
@@ -1015,7 +1015,7 @@ This allows successive remainders to computed starting from :math:`R_n = [a_n;]`
 Khinchin Mean & Khinchin's Constant
 ====================================
 
-For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and a positive integer :math:`n` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` coefficients starting from :math:`a_1` (excluding the leading element :math:`a_0`):
+For a (possibly infinite) continued fraction :math:`[a_0; a_1, a_2,\ldots]` and a positive integer :math:`n` we define its :math:`n`-th **Khinchin mean** :math:`K_n` as the geometric mean of its first :math:`n` coefficients starting from :math:`a_1` (excluding the leading coefficient :math:`a_0`):
 
 .. math::
 
@@ -1051,10 +1051,10 @@ For rational numbers, which have finite continued fractions, the Khinchin means 
 
 .. code:: python
 
-   # 4th Khinchin mean for `\pi` using a 5-element continued fraction approximation
+   # 4th Khinchin mean for `\pi` using a continued fraction with `5` coefficients
    >>> ContinuedFraction.from_coefficients(3, 7, 15, 1, 292).khinchin_mean
    Decimal('13.2325345812843568893413248588331043720245361328125')
-   # 19th Khinchin mean for `\pi` using a 20-element continued fraction approximation
+   # 19th Khinchin mean for `\pi` using a continued fraction with `20` coefficients
    >>> ContinuedFraction.from_coefficients(3, 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, 1, 14, 2, 1, 1, 2, 2, 2, 2).khinchin_mean
    Decimal('2.60994679070748158977721686824224889278411865234375')
 
@@ -1062,10 +1062,10 @@ and :math:`\gamma = [0; 1, 1, 2, 1,\ldots]`, the `Euler-Mascheroni constant <htt
 
 .. code:: python
 
-   # 4th Khinchin mean for `\gamma` using a 5-element continued fraction approximation
+   # 4th Khinchin mean for `\gamma` using a continued fraction with `5` coefficients
    >>> ContinuedFraction.from_coefficients(0, 1, 1, 2, 1).khinchin_mean
    Decimal('1.4422495703074085238171164746745489537715911865234375')
-   # 19th Khinchin mean for `\gamma` using a 20-element continued fraction approximation
+   # 19th Khinchin mean for `\gamma` using a continued fraction with `20` coefficients
    >>> ContinuedFraction.from_coefficients(0, 1, 1, 2, 1, 2, 1, 4, 3, 13, 5, 1, 1, 8, 1, 2, 4, 1, 1, 40).khinchin_mean
    Decimal('2.308255739839563336346373034757561981678009033203125')
 

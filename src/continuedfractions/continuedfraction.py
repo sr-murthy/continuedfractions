@@ -355,19 +355,19 @@ class ContinuedFraction(Fraction):
         >>> ContinuedFraction.from_coefficients('0', 1)
         Traceback (most recent call last):
         ...
-        ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive.
+        ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
         >>> ContinuedFraction.from_coefficients(0, 1, 2.5)
         Traceback (most recent call last):
         ...
-        ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive.
+        ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
         >>> ContinuedFraction.from_coefficients(1, 0)
         Traceback (most recent call last):
         ...
-        ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive.
+        ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
         >>> ContinuedFraction.from_coefficients(1, -1)
         Traceback (most recent call last):
         ...
-        ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive.
+        ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
         """
         # Create a new ``ContinuedFraction`` instance from the given elements
         # and initialise with elements only - no need to initialise via
@@ -379,7 +379,7 @@ class ContinuedFraction(Fraction):
         if any(not isinstance(coeff, int) or (coeff <= 0 and i > 0) for i, coeff in enumerate(coeffs)):
             raise ValueError(
                 "Continued fraction coefficients must be integers, and all "
-                "coefficients after the 1st must be positive."
+                "coefficients from the 1st onwards must be positive."
             )
 
         # A step to ensure uniqueness of the simple form of the continued

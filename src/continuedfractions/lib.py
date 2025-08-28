@@ -451,7 +451,8 @@ def fraction_from_coefficients(*coeffs: int) -> Fraction:
     Raises
     ------
     ValueError
-        If any of the coefficients are not integers.
+        If any of the coefficients are not integers, or the tail coefficients
+        are not positive.
 
     Examples
     --------
@@ -466,10 +467,15 @@ def fraction_from_coefficients(*coeffs: int) -> Fraction:
     >>> fraction_from_coefficients(4.5, 2, 6, 7)
     Traceback (most recent call last):
     ...
-    ValueError: Continued fraction coefficients must be integers.
+    ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
     """
-    if any(not isinstance(coeff, int) for coeff in coeffs):
-        raise ValueError("Continued fraction coefficients must be integers.")
+    n = len(coeffs)
+
+    if any(not isinstance(coeffs[i], int) or (i > 0 and coeffs[i] < 1) for i in range(n)):
+        raise ValueError(
+            "Continued fraction coefficients must be integers, and "
+            "all coefficients from the 1st onwards must be positive."
+        )
 
     return convergent(len(coeffs) - 1, *coeffs)
 

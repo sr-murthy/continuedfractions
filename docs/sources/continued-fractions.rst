@@ -195,16 +195,16 @@ A :py:class:`ValueError` is raised if the given coefficients are not integers, o
 
    >>> ContinuedFraction.from_coefficients('0', 1)
    ...
-   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
+   ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
    >>> ContinuedFraction.from_coefficients(0, 1, 2.5)
    ...
-   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
+   ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
    >>> ContinuedFraction.from_coefficients(1, 0)
    ...
-   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
+   ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
    >>> ContinuedFraction.from_coefficients(1, -1)
    ...
-   ValueError: Continued fraction coefficients must be integers, and all coefficients after the 1st must be positive
+   ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
 
 Here is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
 

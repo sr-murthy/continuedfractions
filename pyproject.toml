@@ -166,8 +166,6 @@ addopts = """\
     --cov-config=pyproject.toml \
     --cov-report=xml \
     --cov-report=html \
-    --dist worksteal \
-    --numprocesses=auto \
     -ra \
     --tb=native \
     --verbosity=3\

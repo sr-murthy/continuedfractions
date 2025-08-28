@@ -250,8 +250,11 @@ class TestRemainder:
 	    ],
 	)
 	def test_remainder__valid_elements__correct_remainder_returned(self, k, elements, expected_remainder):
-	
-		assert remainder(k, *elements) == expected_remainder
+		try:
+			assert remainder(k, *elements) == expected_remainder
+		except AssertionError:
+			import ipdb; ipdb.set_trace()
+			print()
 
 
 class TestRemainders:

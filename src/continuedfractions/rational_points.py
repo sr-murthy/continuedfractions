@@ -30,9 +30,9 @@ class RationalTuple(tuple):
     The class serves as a generic base for other custom rational-valued tuple
     types defined in this library:
 
-    * `~continuedfractions.rational_points.Dim2RationalCoordinates`
-    * `~continuedfractions.rational_points.Dim3RationalCoordinates`
-    * `~continuedfractions.rational_points.RationalPoint`
+    * :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates`
+    * :py:class:`~continuedfractions.rational_points.Dim3RationalCoordinates`
+    * :py:class:`~continuedfractions.rational_points.RationalPoint`
 
     It does not contain any mathematical structure. That is left to the other
     custom types listed above.
@@ -44,7 +44,7 @@ class RationalTuple(tuple):
     >>> RationalTuple(F(1, 2), CF(3, 4))
     RationalTuple(1/2, 3/4)
     """
-    def __new__(cls, *args: Any) -> RationalTuple:
+    def __new__(cls, *args: numbers.Rational) -> RationalTuple:
         """Constructor.
         """
         if args is None or any(not isinstance(arg, numbers.Rational) for arg in args):
@@ -101,7 +101,7 @@ class Dim2RationalCoordinates(RationalTuple):
     >>> c.y
     Fraction(3, 4)
     """
-    def __new__(cls, *args: Any) -> Dim2RationalCoordinates:
+    def __new__(cls, *args: numbers.Rational) -> Dim2RationalCoordinates:
         """Constructor.
         """
         self = super().__new__(cls, *args)
@@ -173,7 +173,7 @@ class Dim3RationalCoordinates(RationalTuple):
     >>> c.z
     ContinuedFraction(4, 5)
     """
-    def __new__(cls, *args: Any) -> Dim2RationalCoordinates:
+    def __new__(cls, *args: numbers.Rational) -> Dim3RationalCoordinates:
         """Constructor.
         """
         self = super().__new__(cls, *args)
@@ -807,7 +807,7 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return self.__class__(-self.x, -self.y)
 
-    def __mul__(self, other: Any) -> RationalPoint:
+    def __mul__(self, other: Any) -> None:
         """Does not support component-wise right-multiplication by a scalar to respect notational convention.
         """
         raise NotImplementedError(

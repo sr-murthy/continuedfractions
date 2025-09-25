@@ -294,7 +294,7 @@ Mediants can give good rational approximations to real numbers. We can illustrat
 
    >>> ContinuedFraction('0.5').right_mediant(Fraction(2, 3))
    ContinuedFraction(3, 5)
-   >>> ContinuedFraction('0.6').elements
+   >>> tuple(ContinuedFraction('0.6').coefficients)
    (0, 1, 1, 2)
    >>> ContinuedFraction(1, 2).mediant(ContinuedFraction('2/3'))
    ContinuedFraction(3, 5)
@@ -440,23 +440,49 @@ Two integers :math:`a, b` are said to be **coprime** (or **relatively prime**) i
 
 The notion of coprimality can be extended to finite sets of integers: a finite set of integers :math:`S = \{a, b, c, \ldots\}` can be called coprime if the GCD of all the integers in :math:`S` is :math:`1`. A stronger condition is met by :math:`S` if it is **pairwise coprime**, which means the GCD of any two integers in :math:`S` is :math:`1`. The latter implies the former, but the converse does not necessarily hold.
 
-Coprimality has a number of important and interesting `properties <https://en.wikipedia.org/wiki/Coprime_integers#Properties>`_ that are beyond the scope of the package documentation, but of relevance here is a particular way of computing sequences of all pairs of (positive) coprime integers not exceeding a given positive integer :math:`n`, using ternary trees, as described below.
+Coprimality is important in several basic ways for the sequences that can be generated with the :doc:`sequences <continuedfractions/sequences>` library, and in this section, some effective methods for generating coprime integer pairs are described, with code examples.
 
+.. _sequences.simple-approach:
+
+A Simple Approach
+-----------------
+
+The :py:func:`~continuedfractions.sequences.coprime_pairs` function is a simple but relatively fast generator of pairs of coprime integers bounded by a given integer :math:`n \geq 1`. Here's an example for :math:`n = 5`:
+
+.. code:: python
+
+   >>> tuple(coprime_integers(5))
+   (1, 1), (2, 1), (3, 1), (3, 2), (4, 1), (4, 3), (5, 1), (5, 2), (5, 3), (5, 4)
+
+It can be verified that the number of coprime pairs returned by the function here, namely, :math:`10`, is indeed equal to :math:`\phi(1) + \phi(2) + \phi(3) + \phi(4) + \phi(5) = 10`, where :math:`\phi(n)` is Euler's totient function that counts the number of (positive) integers coprime to a given integer :math:`n \geq 1`, and :math:`\phi(1) = 1`. The function that counts the value of :math:`\sum_{k=1}^n \phi(k)` for a given :math:`n` is the summatory totient function :math:`\Phi(n)`, and the number of coprime pairs returned by :py:func:`~continuedfractions.sequences.coprime_pairs` is equal to :math:`\Phi(n)`. Here are a few examples for :math:`n = 1,\ldots,5`:
+
+.. code:: python
+
+   >>> sum(1 for _ in coprime_integers(1))
+   1
+   >>> sum(1 for _ in coprime_integers(2))
+   2
+   >>> sum(1 for _ in coprime_integers(3))
+   4
+   >>> sum(1 for _ in coprime_integers(4))
+   6
+   >>> sum(1 for _ in coprime_integers(5))
+   10
+   >>> sum(1 for _ in coprime_integers(10))
+   32
 
 .. _sequences.ksrm-trees:
 
 KSRM Trees
 ----------
 
+Coprime integer pairs can also be generated from trees, and a particularly interesting tree-based generative approach is described below.
+
 The :py:class:`~continuedfractions.sequences.KSRMTree` class is a class implementation of two ternary trees for representing (and generating) all pairs of (positive) coprime integers, as presented in separate papers by A. R. Kanga, and `R. Saunders and T. Randall <https://doi.org/10.2307/3618576>`_, and `D. W. Mitchell <https://doi.org/10.2307/3622017>`_.
 
 .. note::
 
    The class is named ``KSRMTree`` purely for convenience, but it is actually a representation of two (ternary) trees.
-
-.. note::
-
-   The author could not access the Kanga paper online, but the core result is described in the papers of Saunders and Randall, and of Mitchell.
 
 Firstly, we describe some background material on the KSRM trees, which are presented in the papers mentioned above. These are concerned with primitive Pythagorean triples, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node, starting with the parent nodes, has three children given by the relations:
 
@@ -539,13 +565,7 @@ The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main s
    >>> list(tree.search(10))
    [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (9, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1)]
 
-The number of coprime pairs generated for a given :math:`n \geq 1` is given by:
-
-.. math::
-
-   \phi(1) + \phi(2) + \cdots + \phi(n) = \sum_{k = 1}^n \phi(k)
-
-where :math:`\phi(k)` is the totient function.
+The number of coprime pairs generated for a given :math:`n \geq 1` is given by :math:`\Phi(n) = \sum_{k = 1}^n \phi(k)`.
 
 The :py:meth:`~continuedfractions.sequences.KSRMTree.search` method is only a wrapper for the actual search function on roots, which is :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`. This is also a generator, and implements a branch and bound, depth first search (DFS) of the KSRM trees, with pre-ordered traversal of nodes (current node -> left branch -> mid branch -> right branch), and backtracking and pruning on visited nodes. The backtracking function is implemented as the private method :py:meth:`~continuedfractions.sequences.KSRMTree._backtrack`.
 
@@ -637,7 +657,7 @@ As :math:`F_n` also contains the special fraction :math:`\frac{0}{1}` as its ini
 
 .. math::
 
-   |F_n| = 1 + \phi(1) + \phi(2) + \cdots + \phi(n) = 1 + \sum_{k = 1}^n \phi(k)
+   |F_n| = 1 + \phi(1) + \phi(2) + \cdots + \phi(n) = 1 + \Phi(n)
 
 For :math:`n > 1` the sequence :math:`F_n` contains all elements of :math:`F_{n - 1}`. Thus, the length :math:`|F_n|` can also be written as:
 
@@ -693,6 +713,8 @@ References
 
 [2] Hatcher, A. (2024, September). Topology of Numbers. American Mathematical Society. https://pi.math.cornell.edu/~hatcher/TN/TNbook.pdf
 
-[3] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+[3] Kanga, A. R. (1990). The Family Tree of Pythagorean Triplets. The Mathematical Gazette, 26(15), 15-17.
 
-[4] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
+[4] Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
+
+[5] Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576

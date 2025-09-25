@@ -3,6 +3,7 @@ __all__ = [
     'continued_fraction_rational',
     'convergent',
     'convergents',
+    'fraction_from_coefficients',
     'fraction_from_elements',
     'left_mediant',
     'mediant',
@@ -18,6 +19,7 @@ __all__ = [
 import decimal
 import functools
 import typing
+import warnings
 
 from decimal import Decimal
 from fractions import Fraction
@@ -28,9 +30,9 @@ from fractions import Fraction
 
 
 def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None, None]:     # pragma: no cover
-    """Implementation of the core continued fraction algorithm which generates the (ordered) sequence of elements of the (finite) simple continued fraction of the given rational number.
+    """Implementation of the core continued fraction algorithm which generates the (ordered) sequence of coefficients of the (finite) simple continued fraction of the given rational number.
 
-    The resulting sequence of elements, :math:`a_0,a_1,\\ldots a_n`, defines
+    The resulting sequence of coefficients :math:`a_0,a_1,\\ldots a_n`, defines
     the simple continued fraction:
 
     .. math::
@@ -44,7 +46,7 @@ def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None
        [a_0; a_1, a_2\\ldots, a_n]
 
     The order of the continued fraction is said to be :math:`n`. If the last
-    element :math:`a_n = 1` the sequence can be rewritten as
+    coefficient :math:`a_n = 1` the sequence can be rewritten as
     :math:`[a_0; a_1, a_2\\ldots, a_{n - 1} + 1]`, which is then unique for
     the given rational.
 
@@ -52,7 +54,7 @@ def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None
     use the `Euclidean division lemma <https://en.wikipedia.org/wiki/Euclid%27s_lemma>`_.
     This is described in more detail in the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/creating-continued-fractions.html#negative-continued-fractions>`_.
 
-    For a definition of "continued fraction", "element", "order",
+    For a definition of "continued fraction", "coefficient", "order",
     "finite continued fraction", "simple continued fraction", please consult
     the
     `package documentation <https://continuedfractions.readthedocs.io/en/stable>`_,
@@ -68,8 +70,8 @@ def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None
     Yields
     ------
     int
-        Elements of a unique simple continued fraction of the given rational
-        number.
+        Coefficients of the unique simple continued fraction of the given 
+        rational number.
 
     Examples
     --------
@@ -82,12 +84,12 @@ def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None
     4
     12
     4
-    >>> list(continued_fraction_rational(Fraction(415, 93)))
-    [4, 2, 6, 7]
-    >>> list(continued_fraction_rational(Fraction(-649, 200)))
-    [-4, 1, 3, 12, 4]
-    >>> list(continued_fraction_rational(Fraction(123235, 334505)))
-    [0, 2, 1, 2, 1, 1, 250, 1, 13]
+    >>> tuple(continued_fraction_rational(Fraction(415, 93)))
+    (4, 2, 6, 7)
+    >>> tuple(continued_fraction_rational(Fraction(-649, 200)))
+    (-4, 1, 3, 12, 4)
+    >>> tuple(continued_fraction_rational(Fraction(123235, 334505)))
+    (0, 2, 1, 2, 1, 1, 250, 1, 13)
 
     Notes
     -----
@@ -123,7 +125,7 @@ def continued_fraction_real(x: int | Fraction | float | str | Decimal, /) -> typ
     repeated application of `Euclidean division <https://en.wikipedia.org/wiki/Euclidean_division>`_
     to the fractional part :math:`x - [x]`, which is called the remainder.
 
-    If the last element :math:`a_n = 1` the sequence can be rewritten as
+    If the last coefficient :math:`a_n = 1` the sequence can be rewritten as
     :math:`[a_0; a_1, a_2\\ldots, a_{n - 1} + 1]`.
 
     As Python :py:class:`float` values, like all floating point
@@ -201,8 +203,8 @@ def continued_fraction_real(x: int | Fraction | float | str | Decimal, /) -> typ
         yield from continued_fraction_rational(Fraction(*(Decimal(x).as_integer_ratio())))
 
 
-def convergent(k: int, *elements: int) -> Fraction:
-    """Returns the :math:`k`-th convergent of a (simple) continued fraction from a sequence of its elements.
+def convergent(k: int, *coeffs: int) -> Fraction:
+    """Returns the :math:`k`-th convergent of a (simple) continued fraction from a sequence of its coefficients.
 
     Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
     :math:`k`-th convergent is defined as:
@@ -232,30 +234,32 @@ def convergent(k: int, *elements: int) -> Fraction:
     This function is a faithful implementation of this algorithm.
 
     A :py:class:`ValueError` is raised if :math:`k` is not an integer or is an
-    integer greater than the number of elements, or if any of the elements are
-    not integers.
+    integer greater than the number of coefficients, or if any of the
+    coefficient are not integers.
 
     Parameters
     ----------
     k : `int`
         The order of the convergent. Must be a non-negative integer less than
-        the number of elements.
+        the number of coefficients.
 
-    *elements : `int`
-        A variable-length sequence of integer elements of a continued fraction.
+    *coeffs : `int`
+        A variable-length sequence of integer coefficients of a continued
+        fraction.
 
     Returns
     -------
     fractions.Fraction
-        A rational fraction constructed from the given sequence of elements of
+        A rational fraction constructed from the given sequence of coefficients
+        of
         a continued fraction, representing the :math:`k`-order convergent of a
-        (finite) simple continued fraction as given by a sequence of elements.
+        (finite) simple continued fraction as given by a sequence of coefficients.
 
     Raises
     ------
     ValueError
         If :math:`k` is not a non-negative integer less than the number of
-        elements, or if any of the elements are not integers.
+        coefficients, or if any of the elements are not integers.
 
     Examples
     --------
@@ -270,44 +274,38 @@ def convergent(k: int, *elements: int) -> Fraction:
     >>> convergent(3)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     >>> convergent(-1, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     >>> convergent(4, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     """
     # Define the order of the continued fraction - may be ``-1`` if no elements
     # are given.
-    n = len(elements) - 1
+    n = len(coeffs) - 1
 
-    if n == -1 or not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
+    if n == -1 or not isinstance(k, int) or k < 0 or k > n or any(not isinstance(coeffs[i], int) or coeffs[i] < 1 for i in range(1, n + 1)):
         raise ValueError(
-            "`k` must be a non-negative integer not exceeding the order of \n"
-            "the continued fraction (number of tail elements), and the tail \n"
-            "elements must all be positive integers."
+            "`k` must be a non-negative integer not exceeding the order of "
+            "the continued fraction (number of tail coefficients), and the tail "
+            "coefficients must all be positive integers."
         )
 
-    a, b = elements[0], 1
+    a, b = coeffs[0], 1
     
     if k == 0:
         return Fraction(a, b)
 
-    c, d = (elements[1] * a) + b, elements[1]
+    c, d = (coeffs[1] * a) + b, coeffs[1]
 
     if k == 1:
         return Fraction(c, d)
 
-    for e in elements[2:k + 1]:
+    for e in coeffs[2:k + 1]:
         p, q = (e * c) + a, (e * d) + b
         a, b = c, d
         c, d = p, q
@@ -315,11 +313,11 @@ def convergent(k: int, *elements: int) -> Fraction:
     return Fraction(p, q)
 
 
-def convergents(*elements: int) -> typing.Generator[Fraction, None, None]:
-    """Generates an (ordered) sequence of all convergents of a (simple) continued fraction from a sequence of its elements.
+def convergents(*coeffs: int) -> typing.Generator[Fraction, None, None]:
+    """Generates an (ordered) sequence of all convergents of a (simple) continued fraction from a sequence of its coefficients.
 
     If :math:`n` is the order of the continued fraction represented by the
-    given sequence of its elements then there are :math:`n + 1` convergents
+    given sequence of its coefficients then there are :math:`n + 1` convergents
     :math:`C_0, C_1, \\ldots, C_n`, and the function generates these in that
     order.
 
@@ -329,20 +327,20 @@ def convergents(*elements: int) -> typing.Generator[Fraction, None, None]:
     Parameters
     ----------
     *elements : `int`
-        A variable-length sequence of integer elements of a (simple)
+        A variable-length sequence of integer coefficients of a (simple)
         continued fraction.
 
     Yields
     ------
     fractions.Fraction
-        Each element generated is a :py:class:`fractions.Fraction` instance and
-        a :math:`k`-th convergent of the given continued fraction.
+        Each convergent that is generated is a :py:class:`fractions.Fraction`
+        instance and a :math:`k`-th convergent of the given continued fraction.
 
     Raises
     ------
     ValueError
-        If there are any non-integer elements, or the tail elements are not
-        positive integers.
+        If there are any non-integer coefficients, or the tail coefficients
+        are not positive integers.
 
     Examples
     --------
@@ -356,27 +354,26 @@ def convergents(*elements: int) -> typing.Generator[Fraction, None, None]:
     (Fraction(-5, 1), Fraction(-4, 1), Fraction(-9, 2), Fraction(-58, 13), Fraction(-415, 93))
     >>> tuple(convergents(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
     (Fraction(1, 1), Fraction(3, 2), Fraction(10, 7), Fraction(43, 30), Fraction(225, 157), Fraction(1393, 972), Fraction(9976, 6961), Fraction(81201, 56660), Fraction(740785, 516901), Fraction(7489051, 5225670))
-
     """
-    # Define the order of the continued fraction - may be ``-1`` if no elements
+    # Define the order of the continued fraction - may be ``-1`` if no coefficients
     # are given.
-    n = len(elements) - 1
+    n = len(coeffs) - 1
 
-    if n == -1 or any(not isinstance(elements[i], int) or (elements[i] <= 0 and i > 0) for i in range(n + 1)):
+    if n == -1 or any(not isinstance(coeffs[i], int) or (coeffs[i] <= 0 and i > 0) for i in range(n + 1)):
         raise ValueError(
-            "Continued fraction elements must be integers, and all \n"
-            "tail elements (from the 1st element onwards) must be positive."
+            "Continued fraction elements must be coefficients, and all \n"
+            "tail coefficients (from the 1st coefficient onwards) must be positive."
         )
 
-    a, b = elements[0], 1
+    a, b = coeffs[0], 1
     yield Fraction(a, b)
 
     if n > 0:
-        c, d = (elements[1] * a) + b, elements[1]
+        c, d = (coeffs[1] * a) + b, coeffs[1]
         yield Fraction(c, d)
 
         if n > 1:
-            for e in elements[2:]:
+            for e in coeffs[2:]:
                 p, q = (e * c) + a, (e * d) + b
                 yield Fraction(p, q)
                 a, b = c, d
@@ -422,14 +419,69 @@ def fraction_from_elements(*elements: int) -> Fraction:
     ...
     ValueError: Continued fraction elements must be integers
     """
+    warnings.warn(
+        "The `from_elements` function is deprecated and will be removed "
+        "in future releases. Please use the `from_coefficients` instead."
+    )
     if any(not isinstance(elem, int) for elem in elements):
         raise ValueError("Continued fraction elements must be integers")
 
     return convergent(len(elements) - 1, *elements)
 
 
-def remainder(k: int, *elements: int) -> Fraction:
-    """Returns the :math:`k`-th remainder of a (simple) continued fraction from a sequence of its elements.
+def fraction_from_coefficients(*coeffs: int) -> Fraction:
+    """Returns the rational number represented by a (simple) continued fraction from a sequence of its coefficients.
+
+    The coefficient must be given as positional arguments: if your coefficients
+    are contained in an iterable unpack them in the function call using the
+    unpacking operator ``*``, as described in the examples below.
+
+    Parameters
+    ----------
+    *coeffs : `int`
+        A variable-length sequence of integer coefficients of a simple
+        continued fraction.
+
+    Returns
+    -------
+    fractions.Fraction
+        A rational number constructed from a sequence of coefficients of a
+        simple continued fraction which represents the number.
+
+    Raises
+    ------
+    ValueError
+        If any of the coefficients are not integers, or the tail coefficients
+        are not positive.
+
+    Examples
+    --------
+    >>> fraction_from_coefficients(3, 4, 12, 4)
+    Fraction(649, 200)
+    >>> fraction_from_coefficients(-4, 1, 3, 12, 4)
+    Fraction(-649, 200)
+    >>> fraction_from_coefficients(4, 2, 6, 7)
+    Fraction(415, 93)
+    >>> fraction_from_coefficients(*[4, 2, 6, 7])
+    Fraction(415, 93)
+    >>> fraction_from_coefficients(4.5, 2, 6, 7)
+    Traceback (most recent call last):
+    ...
+    ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
+    """
+    n = len(coeffs)
+
+    if any(not isinstance(coeffs[i], int) or (i > 0 and coeffs[i] < 1) for i in range(n)):
+        raise ValueError(
+            "Continued fraction coefficients must be integers, and "
+            "all coefficients from the 1st onwards must be positive."
+        )
+
+    return convergent(len(coeffs) - 1, *coeffs)
+
+
+def remainder(k: int, *coeffs: int) -> Fraction:
+    """Returns the :math:`k`-th remainder of a (simple) continued fraction from a sequence of its coefficients.
 
     Given a (simple) continued fraction  :math:`[a_0;a_1,a_2,\\ldots]` the
     :math:`k`-th remainder :math:`R_k` is the (simple) continued fraction
@@ -442,7 +494,7 @@ def remainder(k: int, *elements: int) -> Fraction:
     where :math:`R_0` is just the original continued fraction, i.e.
     :math:`R_0 = [a_0; a_1, a_2, \\ldots]`.
 
-    The remainders satisfy the recurrence relation:
+    The remainders have the property that:
 
     .. math::
 
@@ -450,22 +502,18 @@ def remainder(k: int, *elements: int) -> Fraction:
 
     If the continued fraction :math:`[a_0; a_1, a_2,\\ldots]` is finite of
     order :math:`n` then all :math:`R_k` are rational. If we let
-    :math:`R_k = \\frac{s_k}{t_k}` then the recurrence relation above can
-    be written as:
+    :math:`R_k = \\frac{s_k}{t_k}` then the property above can be written as:
 
     .. math::
 
        R_{k - 1} = \\frac{s_{k - 1}}{t_{k - 1}} = \\frac{a_{k - 1}s_k + t_k}{s_k}, \\hskip{3em} k \\geq 1
 
-    As this library only deals with finite continued fractions, this function
-    always produces remainders as instances of :py:class:`~fractions.Fraction`.
+    As this library can only represent finite continued fractions, this
+    function always produces remainders as instances of
+    :py:class:`~fractions.Fraction`.
 
     The integer :math:`k` must be non-negative and cannot exceed the order
-    of the continued fraction, i.e. the number of its tail elements.
-
-    A :py:class:`ValueError` is raised if :math:`k` is not an integer, or is an
-    integer greater than the number of elements, or if any of the elements are
-    not integers, or if any of the tail elements are not positive integers.
+    of the continued fraction, i.e. the number of tail coefficients.
 
     Parameters
     ----------
@@ -474,22 +522,22 @@ def remainder(k: int, *elements: int) -> Fraction:
         exceeding the order of the continued fraction.
 
     *elements : `int`
-        A variable-length sequence of integer elements of a (simple) continued
-        fraction.
+        A variable-length sequence of integer coefficients of a (simple)
+        continued fraction.
 
     Returns
     -------
     fractions.Fraction
-        A rational fraction constructed from the given sequence of elements of
-        a continued fraction, representing its :math:`k`-th remainder, as
-        defined above.
+        A rational fraction constructed from the given sequence of
+        coefficients of a continued fraction, representing its :math:`k`-th
+        remainder, as defined above.
 
     Raises
     ------
     ValueError
         If :math:`k` is not an integer, or is an integer greater than the
-        number of elements, or if any of the elements are not integers, or if
-        any of the tail elements are not positive integers.
+        number of coefficients, or if any of the coefficients are not integers,
+        or if the tail coefficients are not positive integers.
 
     Examples
     --------
@@ -514,56 +562,46 @@ def remainder(k: int, *elements: int) -> Fraction:
     >>> remainder(1)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     >>> remainder(-1, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     >>> remainder(4, 3, 4, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     >>> remainder(1, 3, 0, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     >>> remainder(1, 3, -1, 12, 4)
     Traceback (most recent call last):
     ...
-    ValueError: `k` must be a non-negative integer not exceeding the order of 
-    the continued fraction (number of tail elements), and the tail 
-    elements must all be positive integers.
+    ValueError: `k` must be a non-negative integer not exceeding the order of the continued fraction (number of tail coefficients), and the tail coefficients must all be positive integers.
     """
-    # Define the order of the continued fraction - may be ``-1`` if no elements
-    # are given.
-    n = len(elements) - 1
+    # Define the order of the continued fraction - may be ``-1`` if no
+    # coefficients are given.
+    n = len(coeffs) - 1
 
-    if n == -1 or not isinstance(k, int) or k < 0 or k > n or any(not isinstance(elements[i], int) or elements[i] < 1 for i in range(1, n + 1)):
+    if n == -1 or not isinstance(k, int) or k < 0 or k > n or any(not isinstance(coeffs[i], int) or coeffs[i] < 1 for i in range(1, n + 1)):
         raise ValueError(
-            "`k` must be a non-negative integer not exceeding the order of \n"
-            "the continued fraction (number of tail elements), and the tail \n"
-            "elements must all be positive integers."
+            "`k` must be a non-negative integer not exceeding the order of "
+            "the continued fraction (number of tail coefficients), and the tail "
+            "coefficients must all be positive integers."
         )
 
     if k == n:
-        return Fraction(elements[-1], 1)
+        return Fraction(coeffs[-1], 1)
 
-    return fraction_from_elements(*elements[k:])
+    return fraction_from_coefficients(*coeffs[k:])
 
 
-def remainders(*elements: int) -> typing.Generator[Fraction, None, None]:
-    """Generates an (ordered) sequence of all remainders of a (simple) continued fraction from a sequence of its elements in descending order of index.
+def remainders(*coeffs: int) -> typing.Generator[Fraction, None, None]:
+    """Generates an (ordered) sequence of all remainders of a (simple) continued fraction from a sequence of its coefficients in descending order of index.
 
     If :math:`n` is the order of the continued fraction represented by the
-    given sequence of its elements then there are :math:`n + 1` remainders
+    given sequence of its coefficients then there are :math:`n + 1` remainders
     :math:`R_0, R_1, \\ldots, R_n`, and the function generates these in
     reverse order :math:`R_0, R_1, \\ldots, R_n`.
 
@@ -573,20 +611,20 @@ def remainders(*elements: int) -> typing.Generator[Fraction, None, None]:
     Parameters
     ----------
     *elements : `int`
-        A variable-length sequence of integer elements of a (simple)
+        A variable-length sequence of integer coefficients of a (simple)
         continued fraction.
 
     Yields
     ------
     fractions.Fraction
-        Each element generated is a :py:class:`fractions.Fraction` instance and
+        Each remainder generated is a :py:class:`fractions.Fraction` instance and
         a :math:`k`-th remainder of the given continued fraction.
 
     Raises
     ------
     ValueError
-        If no elements are given, or there are any non-integer elements, or
-        the tail elements are not positive integers.
+        If no coefficients are given, or there are any non-integer elements, or
+        the tail coefficients are not positive integers.
 
     Examples
     --------
@@ -603,42 +641,38 @@ def remainders(*elements: int) -> typing.Generator[Fraction, None, None]:
     >>> tuple(remainders())
     Traceback (most recent call last):
     ...
-    ValueError: Continued fraction elements must be integers, and all 
-    tail elements (from the 1st element onwards) must be positive.
+    ValueError: Continued fraction elements must be integers, and all tail elements (from the 1st element onwards) must be positive.
     >>> tuple(remainders(0, 0))
     Traceback (most recent call last):
     ...
-    ValueError: Continued fraction elements must be integers, and all 
-    tail elements (from the 1st element onwards) must be positive.
+    ValueError: Continued fraction elements must be integers, and all tail elements (from the 1st element onwards) must be positive.
     >>> tuple(remainders(1, 0))
     Traceback (most recent call last):
     ...
-    ValueError: Continued fraction elements must be integers, and all 
-    tail elements (from the 1st element onwards) must be positive.
+    ValueError: Continued fraction elements must be integers, and all tail elements (from the 1st element onwards) must be positive.
     >>> tuple(remainders(1, 2, -1))
     Traceback (most recent call last):
     ...
-    ValueError: Continued fraction elements must be integers, and all 
-    tail elements (from the 1st element onwards) must be positive.
+    ValueError: Continued fraction elements must be integers, and all tail elements (from the 1st element onwards) must be positive.
     """
     # Define the order of the continued fraction - may be ``-1`` if no elements
     # are given.
-    n = len(elements) - 1
+    n = len(coeffs) - 1
 
-    if n == -1 or any(not isinstance(elements[i], int) or (elements[i] <= 0 and i > 0) for i in range(n + 1)):
+    if n == -1 or any(not isinstance(coeffs[i], int) or (coeffs[i] <= 0 and i > 0) for i in range(n + 1)):
         raise ValueError(
-            "Continued fraction elements must be integers, and all \n"
+            "Continued fraction elements must be integers, and all "
             "tail elements (from the 1st element onwards) must be positive."
         )
 
-    a, b = elements[-1], 1
+    a, b = coeffs[-1], 1
     yield Fraction(a, b)
 
     if n > 0:
         i = n - 1
 
         while i >= 0:
-            a, b = elements[i] * a + b, a
+            a, b = coeffs[i] * a + b, a
             yield Fraction(a, b)
             i -= 1
 
@@ -747,8 +781,8 @@ if __name__ == "__main__":      # pragma: no cover
     #
     #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/lib.py
     #
-    # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
-    #       assume a context precision of 28 digits
+    # NOTE: the doctest examples using ``decimal.Decimal`` values are based on
+    #       a context precision of 28 digits
     decimal.getcontext().prec = 28
     import doctest
     doctest.testmod()

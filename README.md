@@ -18,7 +18,7 @@
 
 # continuedfractions
 
-A simple extension of the Python [`fractions`](https://docs.python.org/3/library/fractions.html) standard library for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
+A simple extension of the Python [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) standard library class for working with (finite, simple) [continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) as Python objects.
 
 Install from [PyPI](https://pypi.org/project/continuedfractions/):
 ```shell
@@ -33,12 +33,10 @@ See the [project docs](https://continuedfractions.readthedocs.io) for more detai
 
 [Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
 
-The `continuedfractions` package is designed for users interested in:
+The `continuedfractions` package is aimed at users interested in:
 
-* learning about and working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
-* exploring their key properties, such as elements/coefficients, convergents, semiconvergents, remainders, and others
-* operating on them as rationals and instances of the standard library [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) class
-* making approximations of and experimental computations for irrational numbers
-* exploring other related objects, such as enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences
-
-The project is [licensed](LICENSE) under the [Mozilla Public License 2.0](https://opensource.org/licenses/MPL-2.0).
+* working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
+- making stateful computations involving key properties such as elements/coefficients, convergents, semiconvergents, remainders, and others
+* operating on them as rationals and instances of the [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) standard library class
+* testing approximations for irrational numbers
+* exploring other related objects such as rational points in the plane, enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences

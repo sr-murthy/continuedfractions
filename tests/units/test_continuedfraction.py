@@ -30,7 +30,7 @@ class TestContinuedFraction:
     @pytest.mark.parametrize(
         """valid_inputs,
            expected_fraction_obj,
-           expected_elements,
+           expected_coeffs,
            expected_order,
            expected_counter,
            expected_khinchin_mean,
@@ -451,7 +451,7 @@ class TestContinuedFraction:
         self,
         valid_inputs,
         expected_fraction_obj,
-        expected_elements,
+        expected_coeffs,
         expected_order,
         expected_counter,
         expected_khinchin_mean,
@@ -480,8 +480,8 @@ class TestContinuedFraction:
         except decimal.Inexact:
             pass
 
-        # Compare the element sequences
-        assert tuple(received.elements) == expected_elements
+        # Compare the coefficient sequences
+        assert tuple(received.coefficients) == expected_coeffs
 
         # Compare the orders
         assert received.order == expected_order
@@ -514,7 +514,7 @@ class TestContinuedFraction:
         assert received.mediant(1) == expected_ref_simple_mediant
 
         expected_remainders = tuple(
-            (k, ContinuedFraction.from_elements(*expected_elements[k:]))
+            (k, ContinuedFraction.from_coefficients(*expected_coeffs[k:]))
             for k in reversed(range(received.order + 1))
         )
         # Compare the remainders using the ``.remainder`` method
@@ -527,7 +527,7 @@ class TestContinuedFraction:
         assert tuple(received.remainders) == expected_remainders
 
     @pytest.mark.parametrize(
-        "invalid_elements",
+        "invalid_coeffs",
         [
             (0, 0),
             (1, 0),
@@ -546,12 +546,12 @@ class TestContinuedFraction:
             (-3, 4, 0, -1),
         ]
     )
-    def test_ContinuedFraction__from_elements__invalid_elements__value_error_raised(self, invalid_elements):
+    def test_ContinuedFraction__from_coefficients__invalid_coeffs__value_error_raised(self, invalid_coeffs):
         with pytest.raises(ValueError):
-            ContinuedFraction.from_elements(*invalid_elements)
+            ContinuedFraction.from_coefficients(*invalid_coeffs)
 
     @pytest.mark.parametrize(
-        "elements, expected",
+        "coeffs, expected",
         [
             ((-2,), ContinuedFraction(-2, 1)),
             ((-2, 2,), ContinuedFraction(-3, 2)),
@@ -566,14 +566,14 @@ class TestContinuedFraction:
             ((1, 1, 1,), ContinuedFraction(3, 2))
         ]
     )
-    def test_ContinuedFraction__from_elements__valid_elements__correct_fraction_returned(self, elements, expected):
-            received = ContinuedFraction.from_elements(*elements)
+    def test_ContinuedFraction__from_coeffs__valid_coeffs__correct_fraction_returned(self, coeffs, expected):
+            received = ContinuedFraction.from_coefficients(*coeffs)
 
             assert received == expected
-            assert tuple(received.elements) == tuple(expected.elements)
+            assert tuple(received.coefficients) == tuple(expected.coefficients)
 
     @pytest.mark.parametrize(
-        "instance, invalid_elements",
+        "instance, invalid_coeffs",
         [
             (ContinuedFraction(1, 2), ()),
             (ContinuedFraction(1, 2), ("invalid", 1)),
@@ -581,12 +581,12 @@ class TestContinuedFraction:
             (ContinuedFraction(1, 2), (1, 2, -1)),
         ],
     )
-    def test_ContinuedFraction__extend__invalid_elements__value_error_raised(self, instance, invalid_elements):
+    def test_ContinuedFraction__extend__invalid_coeffs__value_error_raised(self, instance, invalid_coeffs):
         with pytest.raises(ValueError):
-            instance.extend(*invalid_elements)
+            instance.extend(*invalid_coeffs)
 
     @pytest.mark.parametrize(
-        "instance, new_elements, expected_comparative_instance",
+        "instance, new_coeffs, expected_comparative_instance",
         [
             (ContinuedFraction(0, 1), (1,), ContinuedFraction(1, 1)),
             (ContinuedFraction(0, 1), (2,), ContinuedFraction(1, 2)),
@@ -600,16 +600,16 @@ class TestContinuedFraction:
             (ContinuedFraction(-415, 93), (2, 1, 5), ContinuedFraction(-7403, 1659))
         ]
     )
-    def test_ContinuedFraction__extend__valid_elements__correctly_extended(self, instance, new_elements, expected_comparative_instance):
+    def test_ContinuedFraction__extend__valid_coeffs__correctly_extended(self, instance, new_coeffs, expected_comparative_instance):
         original_id = id(instance)
-        original_elements = tuple(instance.elements)
+        original_coeffs = tuple(instance.coefficients)
 
-        instance.extend(*new_elements)
+        instance.extend(*new_coeffs)
 
         assert id(instance) == original_id
         assert instance == expected_comparative_instance
         assert hash(instance) == hash(expected_comparative_instance)
-        assert instance == ContinuedFraction.from_elements(*original_elements, *new_elements)
+        assert instance == ContinuedFraction.from_coefficients(*original_coeffs, *new_coeffs)
         assert instance.order == expected_comparative_instance.order
         assert instance.counter == expected_comparative_instance.counter
         assert tuple(instance.convergents) == tuple(expected_comparative_instance.convergents)
@@ -617,7 +617,7 @@ class TestContinuedFraction:
         assert instance.khinchin_mean == expected_comparative_instance.khinchin_mean
 
     @pytest.mark.parametrize(
-        "instance, invalid_elements",
+        "instance, invalid_coeffs",
         [
             (ContinuedFraction(1, 2), ()),
             (ContinuedFraction(1, 2), ("invalid", 1)),
@@ -626,12 +626,12 @@ class TestContinuedFraction:
             (ContinuedFraction(649, 200), (3, 4, 4)),
         ],
     )
-    def test_ContinuedFraction__truncate__invalid_elements__value_error_raised(self, instance, invalid_elements):
+    def test_ContinuedFraction__truncate__invalid_coeffs__value_error_raised(self, instance, invalid_coeffs):
         with pytest.raises(ValueError):
-            instance.truncate(*invalid_elements)
+            instance.truncate(*invalid_coeffs)
 
     @pytest.mark.parametrize(
-        "instance, tail_elements, expected_comparative_instance",
+        "instance, tail_coeffs, expected_comparative_instance",
         [
             (ContinuedFraction(1, 2), (2,), ContinuedFraction(0, 1)),
             (ContinuedFraction(3, 2), (2,), ContinuedFraction(1, 1)),
@@ -644,18 +644,18 @@ class TestContinuedFraction:
             (ContinuedFraction(-415, 93), (1, 1, 6, 7,), ContinuedFraction(-5, 1)),
         ]
     )
-    def test_ContinuedFraction__truncate__valid_elements__correctly_truncated(self, instance, tail_elements, expected_comparative_instance):
+    def test_ContinuedFraction__truncate__valid_coeffs__correctly_truncated(self, instance, tail_coeffs, expected_comparative_instance):
         original_id = id(instance)
-        original_elements = tuple(instance.elements)
+        original_coeffs = tuple(instance.coefficients)
         order = instance.order
-        truncation_length = len(tail_elements)
+        truncation_length = len(tail_coeffs)
 
-        instance.truncate(*tail_elements)
+        instance.truncate(*tail_coeffs)
 
         assert id(instance) == original_id
         assert instance == expected_comparative_instance
         assert hash(instance) == hash(expected_comparative_instance)
-        assert instance == ContinuedFraction.from_elements(*original_elements[:order + 1 - truncation_length])
+        assert instance == ContinuedFraction.from_coefficients(*original_coeffs[:order + 1 - truncation_length])
         assert instance.order == expected_comparative_instance.order
         assert instance.counter == expected_comparative_instance.counter
         assert tuple(instance.convergents) == tuple(expected_comparative_instance.convergents)
@@ -769,6 +769,33 @@ class TestContinuedFraction:
         assert test_cf.semiconvergent(k, m) == expected_semiconvergent
         assert test_cf.semiconvergent(k, m) == test_cf.convergent(k - 1).right_mediant(test_cf.convergent(k), k=m)
 
+    @pytest.mark.parametrize(
+        "cf, expected_projective_height",
+        [
+            (ContinuedFraction(0, 1), 1),
+            (ContinuedFraction(1, 1), 1),
+            (ContinuedFraction(1, 2), 2),
+            (ContinuedFraction(-1, 2), 2),
+            (ContinuedFraction(1, -2), 2),
+        ]
+    )
+    def test_ContinuedFraction__projective_height(self, cf, expected_projective_height):
+        assert cf.projective_height == expected_projective_height
+
+    @pytest.mark.parametrize(
+        "cf, expected_log_projective_height",
+        [
+            (ContinuedFraction(0, 1), Decimal('0')),
+            (ContinuedFraction(1, 1), Decimal('0')),
+            (ContinuedFraction(1, 2), Decimal('0.69314718055994528622676398299518041312694549560546875')),
+            (ContinuedFraction(-1, 2), Decimal('0.69314718055994528622676398299518041312694549560546875')),
+            (ContinuedFraction(1, -2), Decimal('0.69314718055994528622676398299518041312694549560546875')),
+        ]
+    )
+    def test_ContinuedFraction__log_projective_height(self, cf, expected_log_projective_height):
+        assert cf.log_projective_height == expected_log_projective_height
+
+
     def test_ContinuedFraction__rational_operations(self):
         f0 = ContinuedFraction(2, 1)
         f1 = ContinuedFraction(649, 200)
@@ -847,7 +874,7 @@ class TestContinuedFraction:
         assert abs(f2) == f1
 
     @pytest.mark.parametrize(
-        "operand, expected, expected_elements",
+        "operand, expected, expected_coeffs",
         [
             (ContinuedFraction(-2, 1), ContinuedFraction(2, 1), (2,)),
             (ContinuedFraction(-1, 1), ContinuedFraction(1, 1), (1,)),
@@ -867,8 +894,8 @@ class TestContinuedFraction:
             (ContinuedFraction(649, 200), ContinuedFraction(-649, 200), (-4, 1, 3, 12, 4,)),
         ]
     )
-    def test___neg__(self, operand, expected, expected_elements):
+    def test___neg__(self, operand, expected, expected_coeffs):
         received = -operand
 
         assert expected == received
-        assert tuple(received.elements) == expected_elements
+        assert tuple(received.coefficients) == expected_coeffs

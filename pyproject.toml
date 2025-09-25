@@ -107,9 +107,6 @@ source-includes = [
 editable-backend = "path"
 
 [tool.pdm.dev-dependencies]
-build = [
-    "pip>=23.1.2",
-]
 dev = [
     "ipython",
     "ipdb",
@@ -138,7 +135,8 @@ test = [
     "pytest-xdist",
     "sympy",
 ]
-deploy = [
+pack = [
+    "pip",
     "twine>=4.0.2",
 ]
 
@@ -150,7 +148,7 @@ unittests = {shell = "make unittests", help = "Run unit tests & measure coverage
 
 [tool.pdm.version]
 source = "file"
-path = "src/continuedfractions/version.py"
+path = "src/continuedfractions/__version__.py"
 
 # For ``pytest`` configuration, including TOML-specific configuration see:
 #
@@ -168,8 +166,6 @@ addopts = """\
     --cov-config=pyproject.toml \
     --cov-report=xml \
     --cov-report=html \
-    --dist worksteal \
-    --numprocesses=auto \
     -ra \
     --tb=native \
     --verbosity=3\
@@ -202,7 +198,7 @@ omit = [
     "*.pyc",
     "*.env",
     "*__pycache__*",
-    "version.py"
+    "__version__.py"
 ]
 source = ["src"]
 
@@ -212,3 +208,8 @@ show_missing = true
 skip_covered = true
 skip_empty = true
 sort = "Name"
+exclude_also = [
+    "def from_elements",
+    "def elements",
+    "def fraction_from_elements"
+]

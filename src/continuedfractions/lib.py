@@ -781,8 +781,8 @@ if __name__ == "__main__":      # pragma: no cover
     #
     #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/lib.py
     #
-    # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
-    #       assume a context precision of 28 digits
+    # NOTE: the doctest examples using ``decimal.Decimal`` values are based on
+    #       a context precision of 28 digits
     decimal.getcontext().prec = 28
     import doctest
     doctest.testmod()

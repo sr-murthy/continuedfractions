@@ -8,13 +8,13 @@ continuedfractions
 
 A simple extension of the Python :py:class:`fractions.Fraction` standard library class for working with (finite, simple) `continued fractions <https://en.wikipedia.org/wiki/Continued_fraction>`_ as Python objects.
 
-The package is designed for users interested in:
+The package is aimed at users interested in:
 
-- learning about and working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
-- to allow stateful computations involving key properties such as elements/coefficients, convergents, semiconvergents, remainders, and others
+- working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
+- making stateful computations involving key properties such as elements/coefficients, convergents, semiconvergents, remainders, and others
 - operating on them as rationals and instances of the :py:class:`fractions.Fraction` standard library class
-- making approximations of and experimental computations for irrational numbers
-- exploring other related objects such as enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences
+- testing approximations of irrational numbers
+- exploring other related objects such as rational points in the plane, enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences
 
 Installation
 ------------
@@ -31,9 +31,7 @@ or the ``main`` branch of the repo:
 
    pip install -U git+https://github.com/sr-murthy/continuedfractions
 
-Only standard libraries used, so there are no dependencies.
-
-For the source use the :doc:`API reference <sources/api-reference>`. Or if you're interested in contributing you can start with the :doc:`contributions guide <sources/contributing>`.
+Only standard libraries used, and there are no 3rd party dependencies.
 
 .. note::
 
@@ -44,6 +42,7 @@ For the source use the :doc:`API reference <sources/api-reference>`. Or if you'r
    :caption: Contents:
 
    sources/continued-fractions
+   sources/rational-points
    sources/sequences
    sources/contributing
    sources/api-reference

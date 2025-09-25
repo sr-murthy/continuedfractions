@@ -168,10 +168,10 @@ Continued fractions can also be constructed from sequences of coefficients, usin
 
 .. _continued-fractions.creation-from-coefficients:
 
-New Instances From a Complete Sequence of Coefficients
-------------------------------------------------------
+Sequences of Coefficients
+-------------------------
 
-The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` class method allows new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances to be created from a complete (ordered) sequence of coefficients. Some examples are given below.
+The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` class method can be used to create new instances from a complete (ordered) sequence of coefficients. Some examples are given below.
 
 .. code:: python
 
@@ -220,8 +220,8 @@ For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFr
 
 .. _continued-fractions.inplace-extension:
 
-In-place Extension by New Coefficients
---------------------------------------
+In-place Extension
+------------------
 
 The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` instance method can be used to perform an in-place extension from new coefficients - the new coefficients are added to the existing instance tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and an array of :math:`k \geq 1` non-negative integers :math:`(b_1, \ldots, b_k)` the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
 
@@ -281,8 +281,8 @@ A :py:class:`ValueError` is raised if the tail coefficients provided are invalid
 
 .. _continued-fractions.inplace-truncation:
 
-In-place Truncation of Tail Coefficients
-----------------------------------------
+In-place Truncation
+-------------------
 
 The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.truncate` instance method can be used to perform an in-place truncation of a contiguous trailing segment of the existing tail - the tail coefficients to be truncated are removed from the existing tail in the given order. To be precise, given a continued fraction :math:`[a_0; a_1, \ldots, a_n]` of order :math:`n` and a :math:`k`-length segment (or contiguous section) :math:`(a_{n - k + 1}, \ldots, a_n)` of its tail, where :math:`1 \leq k \leq n`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.extend` method implements the mapping:
 
@@ -799,16 +799,16 @@ Now, the decimal value of ``ContinuedFraction.from_coefficients(1, *[2] * 100)``
 
 .. _continued-fractions.even-and-odd-order-convergents:
 
-Even- and Odd-Indexed Convergents
+Even- and Odd-order Convergents
 ---------------------------------
 
-The even- and odd-indexed convergents behave differently: the even-indexed convergents :math:`C_0,C_2,C_4,\ldots` strictly increase from below :math:`x`, while the odd-indexed convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease from above :math:`x`, both at a decreasing rate. This is captured by the formula:
+The even- and odd-order convergents behave differently: the even-order convergents :math:`C_0,C_2,C_4,\ldots` strictly increase from below :math:`x`, while the odd-order convergents :math:`C_1,C_3,C_5,\ldots` strictly decrease from above :math:`x`, both at a decreasing rate. This is captured by the formula:
 
 .. math::
 
    \frac{p_k}{q_k} - \frac{p_{k - 2}}{q_{k - 2}} = \frac{(-1)^ka_k}{q_kq_{k - 2}}, \hskip{3em} k \geq 2
 
-The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides properties for generating even-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_order_convergents`) and odd-indexed convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_convergents`), as illustrated below.
+The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class provides properties for generating even-order convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.even_order_convergents`) and odd-order convergents (:py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.odd_convergents`), as illustrated below.
 
 .. code:: python
 
@@ -819,7 +819,7 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
 
 As with the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property the result is a generator of enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, where the enumeration is by convergent index.
 
-The different behaviour of even- and odd-indexed convergents can be illustrated by a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail, using dictionaries to store the even- and odd-indexed convergents:
+The different behaviour of even- and odd-order convergents can be illustrated by a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` approximation of :math:`\sqrt{2}` with one hundred 2s in the tail, using dictionaries to store the even- and odd-order convergents:
 
 .. code:: python
 
@@ -833,7 +833,7 @@ The different behaviour of even- and odd-indexed convergents can be illustrated 
    >>> cf.as_decimal()
    Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462093522589829309077750929')
    #
-   # Differences between consecutive even-indexed convergents
+   # Differences between consecutive even-order convergents
    >>> cf_even_convergents = dict(cf.even_order_convergents)
    >>> cf_even_convergents[2] - cf_even_convergents[0]
    >>> ContinuedFraction(2, 5)
@@ -846,7 +846,7 @@ The different behaviour of even- and odd-indexed convergents can be illustrated 
    >>> cf_even_convergents[10] - cf_even_convergents[8]
    >>> ContinuedFraction(2, 5654885)
    #
-   # Differences between consecutive odd-indexed convergents
+   # Differences between consecutive odd-order convergents
    >>> cf_odd_convergents = dict(cf.odd_order_convergents)
    >>> cf_odd_convergents[3] - cf_odd_convergents[1]
    >>> ContinuedFraction(-1, 12)
@@ -876,9 +876,9 @@ is called a **semiconvergent** of :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:
 
 If on the other hand :math:`\frac{p_{k - 1}}{q_{k - 1}} \geq \frac{p_k}{q_k}` the inequality above would be reversed. 
 
-Some definitions of semiconvergents are more restricted: one such definition is the same as above, except that :math:`m` is required to be an integer in the range :math:`0..a_{k + 1}`, i.e. :math:`0 \leq m \leq a_{k + 1}`, where the corner cases are :math:`m = 0` in which case the semiconvergent is equal to :math:`\frac{p_{k - 1}}{q_{k - 1}}`, and :math:`m = a_{n + 1}` (if this is defined) in which the case the semiconvergent is equal to :math:`\frac{p_{k + 1}}{q_{k + 1}}`. Another restrictive definition is also the same as the first definition above except that :math:`m` is required to be an integer in the range :math:`1..a_{k + 1} - 1`, i.e. :math:`0 < m < a_{k + 1}`. In this latter definition, the two corner cases listed above are excluded.
+In the definition given above of the :math:`m`-th semiconvergent, the integer :math:`m` is required to be in the range :math:`0..a_{k + 1}`, i.e. :math:`0 \leq m \leq a_{k + 1}`, where the corner cases are :math:`m = 0` in which case the semiconvergent is equal to :math:`\frac{p_{k - 1}}{q_{k - 1}}`, and :math:`m = a_{n + 1}` (if this is defined) in which the case the semiconvergent is equal to :math:`\frac{p_{k + 1}}{q_{k + 1}}`.
 
-The first, more general definition is used here, and has been implemented in the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class as the (cached) :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.semiconvergent` method. This takes two arguments: (1) a positive integer :math:`k` determining two consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}, \frac{p_k}{q_k}` for which to take a semiconvergent, and (2) a positive integer :math:`m` for the index of the semiconvergent (see the definition of :ref:`"right-mediant"  <sequences.mediants.generalised>`).
+This definitin has been implemented as the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.semiconvergent` method. This takes two arguments: (1) a positive integer :math:`k` determining two consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}, \frac{p_k}{q_k}` for which to take a semiconvergent, and (2) a positive integer :math:`m` for the index of the semiconvergent (see the definition of :ref:`"right-mediant"  <sequences.mediants.generalised>`).
 
 A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7]` for :math:`-\frac{415}{93}`.
 
@@ -916,7 +916,7 @@ A few examples are given below for the continued fraction :math:`[-5; 1, 1, 6, 7
 
 In relation to consecutive convergents :math:`\frac{p_{k - 1}}{q_{k - 1}}` and :math:`\frac{p_k}{q_k}` the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` is the mediant of their :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` and the :math:`k`-th convergent :math:`\frac{p_k}{q_k}`. The semiconvergent sequence :math:`\left( \frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k} \right)` is monotonic in :math:`m`, bounded on one side by :math:`\frac{p_k}{q_k}` (the side depends on whether :math:`k` is odd or even), and has the limit :math:`\frac{p_k}{q_k}` as :math:`m \to \infty`. This can be seen in the example above.
 
-The semiconvergents have the same alternating behaviour in :math:`k` as the convergents: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
+The semiconvergents also alternate in :math:`k`: the difference between the :math:`m`-th semiconvergent :math:`\frac{p_{k - 1} + mp_k}{q_{k - 1} + mq_k}` and the :math:`(m - 1)`-st semiconvergent :math:`\frac{p_{k - 1} + (m - 1)p_k}{q_{k - 1} + (m - 1)q_k}` is given by:
 
 .. math::
 
@@ -1080,6 +1080,32 @@ The constant :math:`\gamma`, which has not been proved to be irrational, is defi
    \end{align}
 
 where :math:`H_n = \sum_{k=1}^n \frac1{k} = 1 + \frac{1}{2} + \frac{1}{3} + \cdots \frac{1}{n}` is the :math:`n`-th harmonic number.
+
+.. continued-fractions.height-functions:
+
+Height Functions
+================
+
+As with :ref:`rational points in the plane <rational-points.projective-space-and-homogeneous-coordinates>` the rationals :math:`\mathbb{Q}` can be identified with elements of a subset of projective space :math:`\mathbb{P}^1(\mathbb{Q}) = \frac{\mathbb{Q}^2 \setminus \{(0, 0)\}}{\sim}` consisting of equivalence classes :math:`\left[\frac{a}{c}:1\right]`, where :math:`\frac{a}{c} \in \mathbb{Q}` and :math:`\sim` is the (non-zero) scalar multiple equivalence relation. For a given rational :math:`P = \frac{a}{c}` each equivalence class :math:`\left[\frac{a}{c}:1\right]` is a collection of homogeneous coordinates for :math:`P` in :math:`\mathbb{P}^1(\mathbb{Q})`, which are all non-zero scalar multiples of each other. We can choose as a representative projective point for :math:`P` the class :math:`\left[a: c\right]` where :math:`a, c \in \mathbb{Z}` are not both zero.
+
+In this setting, the projective height :math:`H(P)` of :math:`P = \frac{a}{c}` is defined as :math:`\text{max}(|a|, |c|)`, and the logarithmic projective height of :math:`P` is defined :math:`\text{log}\left(H(P)\right) = \text{log}\left(\text{max}(|a|, |c|)\right)`.
+
+These are implemented by the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.projective_height` and :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.log_projective_height` properties.
+
+Some examples are given below.
+
+.. code:: python
+
+   >>> ContinuedFraction(0, 1).projective_height
+   1
+   >>> ContinuedFraction(2, 3).projective_height
+   3
+   >>> ContinuedFraction(2, 3).log_projective_height
+   Decimal('1.0986122886681097821082175869378261268138885498046875')
+   >>> ContinuedFraction(3, -2).log_projective_height
+   >>> 3
+   >>> ContinuedFraction(3, -2).log_projective_height
+   Decimal('1.0986122886681097821082175869378261268138885498046875')
 
 .. _continued-fractions.references:
 

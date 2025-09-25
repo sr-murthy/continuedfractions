@@ -125,16 +125,13 @@ numpydoc_xref_param_type = False
 
 # Intersphinx mappings to reference external documentation domains
 intersphinx_mapping = {
-    'coverage': ('https://coverage.readthedocs.io/en/7.3.1/', None),
     'matplotlib': ('https://matplotlib.org/stable/', None),
     'networkx': ('https://networkx.org/documentation/stable/', None),
     'numpy':  ('https://numpy.org/doc/stable/', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'pdm': ('https://pdm-project.org/latest/', None),
     'pygraphviz': ('https://pygraphviz.github.io/documentation/stable/', None),
-    'pytest': ('https://docs.pytest.org/en/7.4.x/', None),
     'python': ('https://docs.python.org/3', None),
-    'scipy': ('https://docs.scipy.org/doc/scipy/', None),
     'sympy': ('https://docs.sympy.org/latest/', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
 }
@@ -196,6 +193,7 @@ html_baseurl = 'https://continuedfractions.readthedocs.io/en/latest/'
 html_sidebars = {
     "sources/continued-fractions": [],
     "sources/sequences": [],
+    "sources/rational-points": [],
     "sources/contributing": [],
     "sources/continuedfractions/*": ["sidebar-nav-bs"],
 }

@@ -12,6 +12,7 @@ __all__ = [
 import collections
 import decimal
 import functools
+import math
 import statistics
 import typing
 import warnings
@@ -63,50 +64,6 @@ class ContinuedFraction(Fraction):
     * a single numeric valid string (:py:class:`str`) - validity is
       determined in the superclass by the
       :py:data:`fractions._RATIONAL_FORMAT` test
-
-
-    Examples
-    --------
-    Construct the continued fraction for the rational `649/200`.
-
-    >>> cf = ContinuedFraction(649, 200)
-    >>> cf
-    ContinuedFraction(649, 200)
-    >>> cf.as_decimal()
-    Decimal('3.245')
-
-    Inspect the coefficients, order, convergents, and remainders.
-
-    >>> tuple(cf.coefficients)
-    (3, 4, 12, 4)
-    >>> cf.order
-    3
-    >>> cf.convergent(0), cf.convergent(1), cf.convergent(2), cf.convergent(3)
-    (ContinuedFraction(3, 1), ContinuedFraction(13, 4), ContinuedFraction(159, 49), ContinuedFraction(649, 200))
-    >>> cf.remainder(0), cf.remainder(1), cf.remainder(2), cf.remainder(3)
-    (ContinuedFraction(649, 200), ContinuedFraction(200, 49), ContinuedFraction(49, 4), ContinuedFraction(4, 1))
-
-    Inspect the element counts.
-
-    >>> cf.counter
-    Counter({4: 2, 3: 1, 12: 1})
-
-    Check some properties of the convergents and remainders.
-
-    >>> assert cf.remainder(1) == 1 / (cf - cf.convergent(0))
-
-    Construct continued fractions from element sequences.
-
-    >>> cf_inverse = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
-    >>> cf_inverse
-    ContinuedFraction(200, 649)
-    >>> assert cf_inverse == 1/cf
-    >>> assert cf * cf_inverse == 1
-    >>> cf_negative_inverse = ContinuedFraction.from_elements(-1, 1, 2, 4, 12, 4)
-    >>> cf_negative_inverse
-    ContinuedFraction(-200, 649)
-    >>> assert cf_negative_inverse == -1/cf
-    >>> assert cf * cf_negative_inverse == -1
     """
     @property
     def elements(self) -> typing.Generator[int, None, None]:
@@ -161,12 +118,12 @@ class ContinuedFraction(Fraction):
         >>> cf.order
         7
         """
-        return sum(1 for e in self.coefficients) - 1
+        return sum(1 for coeff in self.coefficients) - 1
 
 
     @property
     def counter(self) -> collections.Counter:
-        """:py:class:`collections.Counter` : A counter for the elements.
+        """:py:class:`collections.Counter` : A counter for the coefficients.
 
         Examples
         --------
@@ -177,7 +134,7 @@ class ContinuedFraction(Fraction):
         return collections.Counter(self.coefficients)
 
     @property
-    def khinchin_mean(self) -> Decimal | None:
+    def khinchin_mean(self) -> decimal.Decimal | None:
         """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
 
         We define the Khinchin mean :math:`K_n` of a (simple) continued
@@ -1014,6 +971,48 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__(mediant(self, other))
 
+    @property
+    def projective_height(self) -> int:
+        """:py:class:`int` : The projective height of this rational number.
+
+        Returns
+        -------
+        int
+            The projective height of the fraction as a rational number. This
+            will always be a positive integer.
+
+        Examples
+        --------
+        >>> ContinuedFraction(0, 1).projective_height
+        1
+        >>> ContinuedFraction(-1, 2).projective_height
+        2
+        >>> ContinuedFraction(3, -2).projective_height
+        3
+        """
+        return max(abs(self).as_integer_ratio())
+
+    @property
+    def log_projective_height(self) -> Decimal:
+        """:py:class:`decimal.Decimal` : The (natural) logarithm of the projective height of this rational number.
+
+        Returns
+        -------
+        decimal.Decimal
+            The (natural) logarithm of the projective height of this fraction
+            as a rational number.
+
+        Examples
+        --------
+        >>> ContinuedFraction(0, 1).log_projective_height
+        Decimal('0')
+        >>> ContinuedFraction(-1, 2).log_projective_height
+        Decimal('0.69314718055994528622676398299518041312694549560546875')
+        >>> ContinuedFraction(3, -2).log_projective_height
+        Decimal('1.0986122886681097821082175869378261268138885498046875')
+        """
+        return Decimal(math.log(self.projective_height))
+
     def __add__(self, other, /):
         return self.__class__(super().__add__(other))
 
@@ -1119,8 +1118,8 @@ if __name__ == "__main__":      # pragma: no cover
     #
     #     PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/continuedfraction.py
     #
-    # NOTE: the doctest examples using ``float`` or ``decimal.Decimal`` values
-    #       assume a context precision of 28 digits.
+    # NOTE: the doctest examples using ``decimal.Decimal`` values are based on
+    #       a context precision of 28 digits.
     decimal.getcontext().prec = 28
     import doctest
     doctest.testmod()

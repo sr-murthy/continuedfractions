@@ -1088,7 +1088,7 @@ Height Functions
 
 As with :ref:`rational points in the plane <rational-points.projective-space-and-homogeneous-coordinates>` the rationals :math:`\mathbb{Q}` can be identified with elements of a subset of projective space :math:`\mathbb{P}^1(\mathbb{Q}) = \frac{\mathbb{Q}^2 \setminus \{(0, 0)\}}{\sim}` consisting of equivalence classes :math:`\left[\frac{a}{c}:1\right]`, where :math:`\frac{a}{c} \in \mathbb{Q}` and :math:`\sim` is the (non-zero) scalar multiple equivalence relation. For a given rational :math:`P = \frac{a}{c}` each equivalence class :math:`\left[\frac{a}{c}:1\right]` is a collection of homogeneous coordinates for :math:`P` in :math:`\mathbb{P}^1(\mathbb{Q})`, which are all non-zero scalar multiples of each other. We can choose as a representative projective point for :math:`P` the class :math:`\left[a: c\right]` where :math:`a, c \in \mathbb{Z}` are not both zero.
 
-In this setting, the projective height :math:`H(P)` of :math:`P = \frac{a}{c}` is defined as :math:`\text{max}(|a|, |c|)`, and the logarithmic projective height of :math:`P` is defined :math:`\text{log}\left(H(P)\right) = \text{log}\left(\text{max}(|a|, |c|)\right)`.
+In this setting, the projective height :math:`H(P)` of :math:`P = \frac{a}{c}` is defined as :math:`\text{max}(|a|, |c|)`, and the logarithmic projective height of :math:`P` is defined as :math:`\text{log}\left(H(P)\right) = \text{log}\left(\text{max}(|a|, |c|)\right)`.
 
 These are implemented by the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.projective_height` and :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.log_projective_height` properties.
 

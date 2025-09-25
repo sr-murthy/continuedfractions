@@ -165,7 +165,7 @@ class Dim3RationalCoordinates(RationalTuple):
     >>> from continuedfractions.continuedfraction import ContinuedFraction as CF
     >>> c = Dim3RationalCoordinates(1, F(-2, 3), CF(4, 5))
     >>> c
-    Dim2RationalCoordinates(1, -2/3, 4/5)
+    Dim3RationalCoordinates(1, -2/3, 4/5)
     >>> c.x
     1
     >>> c.y

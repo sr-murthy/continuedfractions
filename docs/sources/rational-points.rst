@@ -70,9 +70,17 @@ Internally, the rational components of a :py:class:`~continuedfractions.rational
    >>> P.y
    ContinuedFraction(4, 5)
    >>> P.coordinates
-   Dim2RationalCoordinates(ContinuedFraction(3, 5), ContinuedFraction(4, 5))
+   Dim2RationalCoordinates(3/5, 4/5)
 
-Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.RationalPoint.Dim2RationalCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for 2D rational coordinates.
+Note that the :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for 2D rational coordinates, which can also be used to access the rational point coordinates:
+
+.. code:: python
+
+   >>> P = RP(F(3, 5), F(4, 5))
+   >>> P.coordinates.x
+   ContinuedFraction(3, 5)
+   >>> P.coordinates.y
+   ContinuedFraction(4, 5)
 
 As :py:class:`~continuedfractions.rational_points.RationalPoint` objects are also instances of :py:class:`tuple`, they support almost all of the common :py:class:`tuple`-compatible operations including indexing, sorting, iteration, unpacking:
 
@@ -282,20 +290,25 @@ Some examples are given below:
    >>> RP(F(1, 2), F(2, 3)).homogeneous_coordinates
    (3, 4, 6)
 
-Note that the examples involving ``RP(F(3, 5), F(4, 5))`` and ``RP(F(5, 13), F(12, 13))`` yield the primitive Pythagorean triples :math:`(3, 4, 5)` and :math:`(5, 12, 13)` respectively because the underlying rational points :math:`\left(\frac{3}{5},\frac{4}{5}\right)` and :math:`\left(\frac{5}{13},\frac{12}{13}\right)` fall on the unit circle :math:`x^2 + y^2 = 1` and have numerators which are coprime. The example with ``RP(F(6, 10), F(8, 10))`` yields the non-primitive Pythagorean triple :math:`(6, 8, 10)` which happens to be a scalar multiple :math:`2\cdot(3, 4, 5)` of :math:`(3, 4, 5)`, but both are homogeneous coordinates for the same rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)`.
+.. note::
 
-Also note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` returns a :py:class:`~continuedfractions.rational_points.Dim3RationalCoordinates` object, which is a simple and scalable :py:class:`tuple`-based wrapper for 3D rational coordinates. This means that homogeneous coordinates can be scaled and re-scaled at will:
+   The term "minimal" above refers to the fact that the integer coordinates returned by :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` are (setwise) coprime and are the smallest possible (in magnitude), by construction, with respect to the coordinates of the original rational point, as will be described below.
+
+The examples involving ``RP(F(3, 5), F(4, 5))`` and ``RP(F(5, 13), F(12, 13))`` yield the primitive Pythagorean triples :math:`(3, 4, 5)` and :math:`(5, 12, 13)` respectively because the underlying rational points :math:`\left(\frac{3}{5},\frac{4}{5}\right)` and :math:`\left(\frac{5}{13},\frac{12}{13}\right)` fall on the unit circle :math:`x^2 + y^2 = 1` and have numerators which are coprime. The example with ``RP(F(6, 10), F(8, 10))`` yields the non-primitive Pythagorean triple :math:`(6, 8, 10)` which happens to be a scalar multiple :math:`2\cdot(3, 4, 5)` of :math:`(3, 4, 5)`, but both are homogeneous coordinates for the same rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)`.
+
+Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` returns a :py:class:`~continuedfractions.rational_points.Dim3RationalCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for 3D rational coordinates which are accesible via the object, and the coordinates can be scaled and re-scaled any number of times:
 
 .. code:: python
 
-   >>> RP(1, 2).homogeneous_coordinates
-   Dim3RationalCoordinates(1, 2, 1)
-   >>> RP(1, 2).homogeneous_coordinates.scale(F(-1, 2))
-   Dim3RationalCoordinates(-1/2, -1, -1/2)
-   >>> RP(1, 2).homogeneous_coordinates.scale(F(-1, 2)).scale(-2)
-   Dim3RationalCoordinates(1, 2, 1)
-
-The term "minimal" above refers to the fact that the integer coordinates returned by :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` are (setwise) coprime and are the smallest possible (in magnitude), by construction, with respect to the coordinates of the original rational point, as described below.
+   >>> P = RP(F(3, 5), F(4, 5))
+   >>> P.homogeneous_coordinates
+   Dim3RationalCoordinates(3, 4, 5)
+   >>> P.homogeneous_coordinates.x, P.homogeneous_coordinates.y, P.homogeneous_coordinates.z
+   (3, 4, 5)
+   >>> P.homogeneous_coordinates.scale(2)
+   Dim3RationalCoordinates(6, 8, 10)
+   >>> P.homogeneous_coordinates.scale(2).scale(F(1, 2))
+   Dim3RationalCoordinates(3, 4, 5)
 
 Users can refer to textbooks for more details on homogeneous coordinates and projective spaces, but, with respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left[\frac{a}{c},\frac{b}{d},1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and allows rational points to be studied in a 3D setting.
 
@@ -320,10 +333,10 @@ Some examples are given below:
 
 .. code:: python
 
-   >>> RP(F(0, 0)).projective_height
+   >>> RP(0, 0).projective_height
    1
    >>> RP(2, F(1, 2)).projective_height
-   6
+   4
    >>> RP(F(3, 5), F(4, 5)).projective_height
    5
    >>> RP(F(-3, 5), F(4, 5)).projective_height
@@ -339,7 +352,7 @@ Some examples are given below:
 
 .. code:: python
 
-   >>> RP(F(0, 0)).log_projective_height
+   >>> RP(0, 0).log_projective_height
    Decimal('0')
    >>> RP(2, F(1, 2)).log_projective_height
    Decimal('1.3862943611198905724535279659903608262538909912109375')

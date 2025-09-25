@@ -16,16 +16,13 @@ __all__ = [
 import math
 import typing
 
-from itertools import chain, product
+from itertools import chain
 
 # -- 3rd party libraries --
 
 # -- Internal libraries --
 from continuedfractions.utils import NamedCallableProxy
 from continuedfractions.continuedfraction import ContinuedFraction
-
-KSRMNode: typing.TypeAlias = tuple[int, int]        #: Custom type for nodes of the KSRM coprime pairs tree
-KSRMBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generating branches of the KSRM coprime pairs tree
 
 
 def rationals(
@@ -418,6 +415,10 @@ def _coprime_integers(n: int, /) -> typing.Generator[int, None, None]:
     yield from (m for m in range(n, 0, -1) if math.gcd(m, n) == 1)
 
 
+KSRMTreeNode: typing.TypeAlias = tuple[int, int]        #: Custom type for nodes of the KSRM coprime pairs tree
+KSRMTreeBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generating branches of the KSRM coprime pairs tree
+
+
 class KSRMTree:
     """A class implementation of the Kanga-Saunders-Randall-Mitchell (KSRM) ternary trees for representing and generating pairs of all (positive) coprime integers.
 
@@ -446,9 +447,9 @@ class KSRMTree:
     # two roots ``(2, 1), (3, 1)``, and the three branch generating functions.
     __slots__ = ('_roots', '_branches')
 
-    _roots: tuple[KSRMNode, KSRMNode]
+    _roots: tuple[KSRMTreeNode, KSRMTreeNode]
 
-    _branches: tuple[KSRMBranch]    # noqa: F821
+    _branches: tuple[KSRMTreeBranch]    # noqa: F821
 
     def __new__(cls) -> KSRMTree:
         """Class constructor.
@@ -487,7 +488,7 @@ class KSRMTree:
         return self._roots
 
     @property
-    def branches(self) -> tuple[KSRMBranch]:    # noqa: F821
+    def branches(self) -> tuple[KSRMTreeBranch]:    # noqa: F821
         """:py:class:`tuple`: The tuple of three branch generating functions of the KSRM trees.
 
         There are three branch generating functions, given by the mappings:
@@ -546,11 +547,11 @@ class KSRMTree:
     def _backtrack(
         self,
         n: int,
-        visited: list[tuple[KSRMNode, KSRMBranch]],     # noqa: F821
+        visited: list[tuple[KSRMTreeNode, KSRMTreeBranch]],     # noqa: F821
         /,
         *,
         node_bound: int = None
-    ) -> tuple[KSRMNode, KSRMBranch, int, KSRMBranch]:  # noqa: F821
+    ) -> tuple[KSRMTreeNode, KSRMTreeBranch, int, KSRMTreeBranch]:  # noqa: F821
         """Backtracks on the KSRM coprime pairs trees from a failed node to the nearest previously visited node that satisfies the node bound.
 
         A private function that backtracks on the KSRM coprime pairs trees: the
@@ -665,7 +666,7 @@ class KSRMTree:
         # branch of the last visited node before the current node.
         return cur_node, cur_branch, cur_index, last_branch
 
-    def search_root(self, n: int, root: KSRMNode, /) -> typing.Generator[KSRMNode, None, None]:
+    def search_root(self, n: int, root: KSRMTreeNode, /) -> typing.Generator[KSRMTreeNode, None, None]:
         """Depth-first branch-and-bound generative search function (in pre-order, NLMR), with backtracking and pruning, on the KSRM coprime pairs trees, starting from the given root node.
 
         The given root node need not be the canonical roots, :math:`(2, 1)`,
@@ -825,7 +826,7 @@ class KSRMTree:
         # debugging easier.
         return
 
-    def search(self, n: int, /) -> typing.Generator[KSRMNode, None, None]:
+    def search(self, n: int, /) -> typing.Generator[KSRMTreeNode, None, None]:
         """Depth-first branch-and-bound generative search function (in pre-order, NLMR) on the KSRM coprime pairs trees to find all pairs of coprime (positive) integers not exceeding the given integer :math:`n \\geq 1`.
     
         See the :py:meth:`~continuedfractions.sequences.KSRMTree.search_root`
@@ -834,6 +835,8 @@ class KSRMTree:
         This method mainly calls the root-based search method
         :py:meth:`~continuedfractions.sequences.KSRMTree.search_root` for the
         two canonical roots :math:`(2, 1)` and :math:`(3, 1)`.
+
+        The two KSRM trees are actually only traversed if :math:`n > 3`.
 
         Parameters
         ----------
@@ -860,7 +863,7 @@ class KSRMTree:
         >>> list(tree.search("not an integer"))
         Traceback (most recent call last):
         ...
-        ValueError: `n` must be a positive integer
+        ValueError: `n` must be a positive integer.
         >>> list(tree.search(1))
         [(1, 1)]
         >>> list(tree.search(2))
@@ -873,27 +876,33 @@ class KSRMTree:
         [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (8, 3), (7, 2), (5, 2), (8, 5), (9, 2), (4, 1), (7, 4), (9, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (9, 7), (7, 3), (5, 1), (9, 5), (7, 1), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1)]
         """
         if not isinstance(n, int) or n < 1:
-            raise ValueError("`n` must be a positive integer")
+            raise ValueError("`n` must be a positive integer.")
 
-        yield 1, 1
-
+        if n == 1:
+            yield (1, 1)
         if n == 2:
-            yield 2, 1
-        elif n > 1:
-            yield from self.search_root(n - 1, self.roots[0])
+            yield from ((1, 1), (2, 1))
+        elif n == 3:
+            yield from ((1, 1), (2, 1), (3, 2), (3, 1))
+        elif n > 3:
+            yield from chain(
+                ((1, 1),),
+                self.search_root(n - 1, self.roots[0]),
+                self.search_root(n - 1, self.roots[1]),
+                ((n, i) for i in _coprime_integers(n))
+            )
 
-        if n > 2:
-            yield from self.search_root(n - 1, self.roots[1])
-            yield from tuple(product([n], _coprime_integers(n)))
 
+def coprime_pairs(n: int, /) -> typing.Generator[tuple[int, int], None, None]:
+    """Generates a sequence (tuple) of all pairs :math:`(a, b)` of (positive) coprime integers :math:`a, b` such that :math:`a, b <= n`.
 
-def coprime_pairs(n: int, /) -> typing.Generator[KSRMNode, None, None]:
-    """Generates a sequence (tuple) of all pairs of (positive) coprime integers :math:`<= n`.
+    This is a simple but fast implementation of the naive :math:`\\bigO(n^2)``
+    algorithm for finding pairs of coprime integers which do not exceed a given
+    positive integer :math:`n`.
 
-    Calls the KSRM tree :py:meth:`~continuedfractions.sequences.KSRMTree.search`
-    to perform the search up to :math:`n - 1` and then uses the private function
-    :py:func:`~continuedfractions.sequences._coprime_integers` for the search
-    for pairs involving :math:`n`.
+    It does **not** call on the
+    :py:meth:`~continuedfractions.sequences.KSRMTree.search` method, which is
+    not as fast as this one.
 
     A :py:class:`ValueError` is raised if ``n`` is not an :py:class:`int`
     or is an :py:class:`int` less than :math:`1`.
@@ -925,22 +934,24 @@ def coprime_pairs(n: int, /) -> typing.Generator[KSRMNode, None, None]:
     >>> tuple(coprime_pairs(2))
     ((1, 1), (2, 1))
     >>> tuple(coprime_pairs(3))
-    ((1, 1), (2, 1), (3, 2), (3, 1))
+    ((1, 1), (2, 1), (3, 1), (3, 2))
     >>> tuple(coprime_pairs(5))
-    ((1, 1), (2, 1), (3, 2), (3, 1), (4, 3), (4, 1), (5, 4), (5, 3), (5, 2), (5, 1))
+    ((1, 1), (2, 1), (3, 1), (3, 2), (4, 1), (4, 3), (5, 1), (5, 2), (5, 3), (5, 4))
     >>> tuple(coprime_pairs(10))
-    ((1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (8, 3), (7, 2), (5, 2), (8, 5), (4, 1), (7, 4), (6, 1), (8, 1), (3, 1), (5, 3), (7, 5), (7, 3), (5, 1), (7, 1), (9, 8), (9, 7), (9, 5), (9, 4), (9, 2), (9, 1), (10, 9), (10, 7), (10, 3), (10, 1))
+    ((1, 1), (2, 1), (3, 1), (3, 2), (4, 1), (4, 3), (5, 1), (5, 2), (5, 3), (5, 4), (6, 1), (6, 5), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (8, 1), (8, 3), (8, 5), (8, 7), (9, 1), (9, 2), (9, 4), (9, 5), (9, 7), (9, 8), (10, 1), (10, 3), (10, 7), (10, 9))
+    >>> tuple(coprime_pairs("invalid input"))
+    Traceback (most recent call last):
+    ...
+    ValueError: `n` must be a positive integer
     """
     if not isinstance(n, int) or n < 1:
         raise ValueError("`n` must be a positive integer")
 
-    if n == 1:
-        yield (1, 1)
-    else:
-        yield from chain(
-            KSRMTree().search(n - 1),
-            product([n], _coprime_integers(n))
-        )
+    yield (1, 1)
+
+    for i in range(1, n + 1):
+        for j in (_j for _j in range(1, i) if _j < i and math.gcd(i, _j) == 1):
+            yield (i, j)
 
 
 class FareyFraction(ContinuedFraction):

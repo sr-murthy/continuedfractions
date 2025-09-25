@@ -18,4 +18,5 @@ API Reference
    continuedfractions/lib
    continuedfractions/continuedfraction
    continuedfractions/sequences
+   continuedfractions/rational-points
    continuedfractions/utils

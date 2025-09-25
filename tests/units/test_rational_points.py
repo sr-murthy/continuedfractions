@@ -1,0 +1,528 @@
+# -- IMPORTS --
+
+# -- Standard libraries --
+
+import decimal
+
+# Set the :py:mod:`decimal` context for the test computations in this module
+# using default precision of 28 digits, including the integer part, and 
+# turn off the :py:class:`decimal.Inexact` trap
+context = decimal.Context(prec=28, Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN)
+context.traps[decimal.Inexact] = False
+decimal.setcontext(context)
+
+from decimal import Decimal as D
+from fractions import Fraction as F
+
+# -- 3rd party libraries --
+import pytest
+
+# -- Internal libraries --
+from continuedfractions.continuedfraction import ContinuedFraction as CF
+from continuedfractions.rational_points import (
+    RationalPoint as RP,
+    RationalTuple as RT,
+    Dim2RationalCoordinates as D2RC,
+    Dim3RationalCoordinates as D3RC,
+)
+
+
+class TestRationalTuple:
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (D('0'),),
+            (0, 1., 2),
+            (0, .5),
+            (-1/2, 3, 4),
+            (D('2'), 3, '4'),
+        ]
+    )
+    def test_RationalTuple___new____invalid_args__value_error_raised(self, args):
+        with pytest.raises(ValueError):
+            RT(*args)
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (1, F(-2, 3), CF(4, 5), 6),
+            (F(1, 2), CF(3, 4), 5),
+            (1, -2),
+            (CF(1, 2),),
+            (0,)
+        ]
+    )
+    def test_RationalTuple___new__(self, args):
+        t = RT(*args)
+        assert t == args
+
+    @pytest.mark.parametrize(
+        "rational_tuple, invalid_arg",
+        [
+            (RT(1, -2), 3, D('4'),),
+            (RT(1, F(   2, 3), CF(-4, 5)), 1.5,),
+            (RT(1, -2, 3), -1/2,),
+        ]
+    )
+    def test_RationalTuple_scale(self, rational_tuple, invalid_arg):
+        with pytest.raises(ValueError):
+            rational_tuple.scale(invalid_arg)
+
+    @pytest.mark.parametrize(
+        "rational_tuple, scalar, expected_scaled_rational_tuple",
+        [
+            (RT(1, -2), 3, RT(3, -6),),
+            (RT(1, F(2, 3), CF(-4, 5)), 15, RT(15, 10, -12),),
+            (RT(1, -2, 3), -1, RT(-1, 2, -3)),
+            (RT(1, F(2, 3), CF(3, 4)), F(1, 2), RT(F(1, 2), F(1, 3), CF(3, 8))),
+            (RT(1, -2), 0, RT(0, 0)),
+        ]
+    )
+    def test_RationalTuple_scale(self, rational_tuple, scalar, expected_scaled_rational_tuple):
+        received = rational_tuple.scale(scalar)
+        assert isinstance(received, RT)
+        assert received == expected_scaled_rational_tuple
+
+
+class TestDim2RationalCoordinates:
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (D('0'),),
+            (0, 1., 2),
+            (0, .5),
+            (-1/2, 3, 4),
+            (D('2'), 3, '4'),
+            (1, F(2, 3), CF(4, 5))
+        ]
+    )
+    def test_Dim2RationalCoordinates___new____invalid_args__value_error_raised(self, args):
+        with pytest.raises(ValueError):
+            D2RC(*args)
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (1, F(-2, 3)),
+            (F(1, 2), CF(3, 4)),
+            (1, -2),
+            (CF(1, 2), -2),
+            (0, 1),
+        ]
+    )
+    def test_Dim2RationalCoordinates___new__(self, args):
+        t = D2RC(*args)
+        assert t == args
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (1, F(-2, 3)),
+            (F(1, 2), CF(3, 4)),
+            (1, -2),
+            (CF(1, 2), -2),
+            (0, 1),
+        ]
+    )
+    def test_Dim2RationalCoordinates_x_and_y_coordinates(self, args):
+        t = D2RC(*args)
+        assert (t.x, t.y) == args
+
+
+class TestDim3RationalCoordinates:
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (D('0'),),
+            (0, 1., 2),
+            (0, .5),
+            (-1/2, 3, 4),
+            (D('2'), 3, '4'),
+            (1, F(1, 2))
+        ]
+    )
+    def test_Dim3RationalCoordinates___new____invalid_args__value_error_raised(self, args):
+        with pytest.raises(ValueError):
+            D3RC(*args)
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (1, F(-2, 3), CF(4, 5)),
+            (F(1, 2), -3, CF(4, 5)),
+            (F(1, 2), CF(4, 5), -3),
+            (1, CF(-2, 3), F(4, 5)),
+            (CF(1, 2), F(-3, 4), 5),
+        ]
+    )
+    def test_Dim3RationalCoordinates___new__(self, args):
+        t = D3RC(*args)
+        assert t == args
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (1, F(-2, 3), CF(4, 5)),
+            (F(1, 2), -3, CF(4, 5)),
+            (F(1, 2), CF(4, 5), -3),
+            (1, CF(-2, 3), F(4, 5)),
+            (CF(1, 2), F(-3, 4), 5),
+        ]
+    )
+    def test_Dim3RationalCoordinates_x_and_y_and_z_coordinates(self, args):
+        t = D3RC(*args)
+        assert (t.x, t.y, t.z) == args
+
+
+class TestRationalPoint:
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (0,),
+            (0, 1, 2),
+            (0, .5),
+            (-1/2, 3, 4),
+            (D('2'), 3),
+        ]
+    )
+    def test_RationalPoint___new____invalid_args__value_error_raised(self, args):
+        with pytest.raises(ValueError):
+            RP.__new__(RP.__class__, *args)
+
+    @pytest.mark.parametrize(
+        "rational_point",
+        [
+            (RP(1, 2),),
+            (RP(1, F(2, 3)),),
+            (RP(F(1, 2), 3),),
+            (RP(F(3, 5), F(4, 5)),),
+            (RP(F(-3, 5), F(4, 5)),),
+        ]
+    )
+    def test_RationalPoint___repr__(self, rational_point):
+        x, y = rational_point[0].coordinates
+        assert rational_point[0].__repr__() == f'RationalPoint({x}, {y})'
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_x",
+        [
+            (RP(1, 2), CF(1, 1),),
+            (RP(1, F(2, 3)), CF(1, 1),),
+            (RP(F(1, 2), 3), CF(1, 2),),
+            (RP(F(3, 5), F(4, 5)), CF(3, 5),),
+            (RP(F(-3, 5), F(4, 5)), CF(-3, 5),),
+        ]
+    )
+    def test_RationalPoint_x_property(self, rational_point, expected_x):
+        assert rational_point.x == expected_x
+
+    @pytest.mark.parametrize(
+        "rational_point, y",
+        [
+            (RP(1, 2), CF(2, 1),),
+            (RP(1, F(2, 3)), CF(2, 3),),
+            (RP(F(1, 2), 3), CF(3, 1),),
+            (RP(F(3, 5), F(4, 5)), CF(4, 5),),
+            (RP(F(-3, 5), F(4, 5)), CF(4, 5),),
+        ]
+    )
+    def test_RationalPoint_y_property(self, rational_point, y):
+        expected_y = y
+        assert rational_point.y == expected_y
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_coordinates",
+        [
+            (RP(1, 2), (CF(1, 1), CF(2, 1)),),
+            (RP(1, F(2, 3)), (CF(1, 1), CF(2, 3)),),
+            (RP(F(1, 2), 3), (CF(1, 2), CF(3, 1)),),
+            (RP(F(3, 5), F(4, 5)), (CF(3, 5), CF(4, 5)),),
+            (RP(F(-3, 5), F(4, 5)), (CF(-3, 5), CF(4, 5)),),
+        ]
+    )
+    def test_RationalPoint_coordinates_property(self, rational_point, expected_coordinates):
+        assert rational_point.coordinates == expected_coordinates
+
+    @pytest.mark.parametrize(
+        "rational_point1, invalid_other",
+        [
+            (RP(0, 0), (1, 2),),
+            (RP(1, 2), D('0'),),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), -1,),
+            (RP(F(1, 2), F(3, 4)), 5,),
+        ]
+    )
+    def test_RationalPoint_dot_product__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+        with pytest.raises(ValueError):
+            rational_point1.dot_product(invalid_other)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_dot_product",
+        [
+            (RP(0, 0), RP(1, 2), CF(0, 1),),
+            (RP(1, 2), RP(0, 0), CF(0, 1),),
+            (RP(1, 1), RP(1, 1), CF(2, 1),),
+            (RP(1, 1), RP(-1, 1), CF(0, 1),),
+            (RP(F(1, 2), F(3, 4)), RP(F(-1, 2), F(-3, 4)), CF(-13, 16),),
+            (RP(F(3, 5), F(4, 5)), RP(F(3, 5), F(4, 5)), CF(1, 1),),
+        ]
+    )
+    def test_RationalPoint_dot_product(self, rational_point1, rational_point2, expected_dot_product):
+        assert rational_point1.dot_product(rational_point2) == expected_dot_product
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_norm_squared",
+        [
+            (RP(0, 0), CF(0, 1),),
+            (RP(1, F(2, 3)), CF(13, 9),),
+            (RP(F(1, 2), 3), CF(37, 4),),
+            (RP(F(3, 5), F(4, 5)), CF(1, 1),),
+            (RP(F(-3, 5), F(4, 5)), CF(1, 1),),
+        ]
+    )
+    def test_RationalPoint_norm_squared_property(self, rational_point, expected_norm_squared):
+        assert rational_point.norm_squared == expected_norm_squared
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_norm",
+        [
+            (RP(0, 0), D('0'),),
+            (RP(1, F(2, 3)), D('1.201850425154663097706407089'),),
+            (RP(F(1, 2), 3), D('3.041381265149109844499842123'),),
+            (RP(F(3, 5), F(4, 5)), D('1'),),
+            (RP(F(-3, 5), F(4, 5)), D('1'),),
+        ]
+    )
+    def test_RationalPoint_norm_property(self, rational_point, expected_norm):
+        assert rational_point.norm == expected_norm
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_absolute_value",
+        [
+            (RP(0, 0), D('0'),),
+            (RP(1, F(2, 3)), D('1.201850425154663097706407089'),),
+            (RP(F(1, 2), 3), D('3.041381265149109844499842123'),),
+            (RP(F(3, 5), F(4, 5)), D('1'),),
+            (RP(F(-3, 5), F(4, 5)), D('1'),),
+        ]
+    )
+    def test_RationalPoint___abs__(self, rational_point, expected_absolute_value):
+        assert abs(rational_point) == expected_absolute_value
+
+    @pytest.mark.parametrize(
+        "rational_point1, invalid_other",
+        [
+            (RP(0, 0), (1, 2),),
+            (RP(1, 2), D('0'),),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), -1,),
+            (RP(F(1, 2), F(3, 4)), 5,),
+        ]
+    )
+    def test_RationalPoint_distance_squared__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+        with pytest.raises(ValueError):
+            rational_point1.distance_squared(invalid_other)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_distance_squared",
+        [
+            (RP(0, 0), RP(1, 2), CF(5, 1),),
+            (RP(1, 1), RP(1, 1), CF(0, 1),),
+            (RP(1, 1), RP(-1, 1), CF(4, 1),),
+            (RP(F(1, 2), F(3, 4)), RP(F(-1, 2), F(-3, 4)), CF(13, 4),),
+            (RP(F(3, 5), F(4, 5)), RP(1, 1), CF(1, 5),),
+        ]
+    )
+    def test_RationalPoint_distance_squared(self, rational_point1, rational_point2, expected_distance_squared):
+        assert rational_point1.distance_squared(rational_point2) == expected_distance_squared
+
+    @pytest.mark.parametrize(
+        "rational_point1, invalid_other",
+        [
+            (RP(0, 0), (1, 2),),
+            (RP(1, 2), D('0'),),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), -1,),
+            (RP(F(1, 2), F(3, 4)), 5,),
+        ]
+    )
+    def test_RationalPoint_distance__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+        with pytest.raises(ValueError):
+            rational_point1.distance(invalid_other)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_distance",
+        [
+            (RP(0, 0), RP(1, 2), D('2.236067977499789696409173669'),),
+            (RP(1, 1), RP(1, 1), D('0'),),
+            (RP(1, 1), RP(-1, 1), D('2'),),
+            (RP(F(1, 2), F(3, 4)), RP(F(-1, 2), F(-3, 4)), D('1.802775637731994646559610634'),),
+            (RP(F(3, 5), F(4, 5)), RP(1, 1), D('0.4472135954999579392818347337'),),
+        ]
+    )
+    def test_RationalPoint_distance(self, rational_point1, rational_point2, expected_distance):
+        assert rational_point1.distance(rational_point2) == expected_distance
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_is_unit_point",
+        [
+            (RP(0, 0), False),
+            (RP(1, F(2, 3)), False),
+            (RP(F(1, 2), 3), False),
+            (RP(F(3, 5), F(4, 5)), True),
+            (RP(F(-3, 5), F(4, 5)), True),
+        ]
+    )
+    def test_RationalPoint_is_unit_point(self, rational_point, expected_is_unit_point):
+        assert rational_point.is_unit_point() == expected_is_unit_point
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_is_lattice_point",
+        [
+            (RP(0, 0), True),
+            (RP(F(2, 1), 5), True),
+            (RP(F(1, 2), 3), False),
+            (RP(F(3, 5), F(4, 5)), False),
+            (RP(-1, 2), True),
+        ]
+    )
+    def test_RationalPoint_is_lattice_point(self, rational_point, expected_is_lattice_point):
+        assert rational_point.is_lattice_point() == expected_is_lattice_point
+
+    @pytest.mark.parametrize(
+        "rational_point1, invalid_other",
+        [
+            (RP(0, 0), (1, 2),),
+            (RP(1, 2), D('0'),),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), -1,),
+            (RP(F(1, 2), F(3, 4)), 5,),
+        ]
+    )
+    def test_RationalPoint_rectilinear_distance__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+        with pytest.raises(ValueError):
+            rational_point1.rectilinear_distance(invalid_other)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_rectilinear_distance",
+        [
+            (RP(0, 0), RP(1, 2), CF(3, 1),),
+            (RP(1, 1), RP(1, 1), CF(0, 1),),
+            (RP(1, 1), RP(-1, 1), CF(2, 1),),
+            (RP(F(1, 2), F(3, 4)), RP(F(-1, 2), F(-3, 4)), CF(5, 2),),
+            (RP(F(3, 5), F(4, 5)), RP(1, 1), CF(3, 5),),
+        ]
+    )
+    def test_RationalPoint_rectilinear_distance(self, rational_point1, rational_point2, expected_rectilinear_distance):
+        assert rational_point1.rectilinear_distance(rational_point2) == expected_rectilinear_distance
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_rectilinear_norm",
+        [
+            (RP(0, 0), CF(0, 1),),
+            (RP(1, F(2, 3)), CF(5, 3),),
+            (RP(F(1, 2), 3), CF(7, 2),),
+            (RP(F(3, 5), F(4, 5)), CF(7, 5),),
+            (RP(F(-3, 5), F(4, 5)), CF(7, 5),),
+        ]
+    )
+    def test_RationalPoint_rectilinear_norm_property(self, rational_point, expected_rectilinear_norm):
+        assert rational_point.rectilinear_norm == expected_rectilinear_norm
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_homogeneous_coordinates",
+        [
+            (RP(0, 0), (0, 0, 1),),
+            (RP(F(2, 1), 5), (2, 5, 1),),
+            (RP(F(1, 2), 3), (1, 6, 2),),
+            (RP(F(3, 5), F(4, 5)), (3, 4, 5),),
+            (RP(F(-3, 5), F(4, 5)), (-3, 4, 5),),
+            (RP(-1, 2), (-1, 2, 1),),
+        ]
+    )
+    def test_RationalPoint_homogeneous_coordinates_property(self, rational_point, expected_homogeneous_coordinates):
+        assert rational_point.homogeneous_coordinates == expected_homogeneous_coordinates
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_projective_height",
+        [
+            (RP(0, 0), 1,),
+            (RP(F(2, 1), 5), 5,),
+            (RP(F(1, 2), 3), 6,),
+            (RP(F(3, 5), F(4, 5)), 5,),
+            (RP(F(-3, 5), F(4, 5)), 5,),
+            (RP(-1, 2), 2,),
+        ]
+    )
+    def test_RationalPoint_projective_height_property(self, rational_point, expected_projective_height):
+        assert rational_point.projective_height == expected_projective_height
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_log_projective_height",
+        [
+            (RP(0, 0), D('0'),),
+            (RP(F(2, 1), 5), D('1.6094379124341002817999424223671667277812957763671875'),),
+            (RP(F(1, 2), 3), D('1.791759469228054957312679107417352497577667236328125'),),
+            (RP(F(3, 5), F(4, 5)), D('1.6094379124341002817999424223671667277812957763671875'),),
+            (RP(F(-3, 5), F(4, 5)), D('1.6094379124341002817999424223671667277812957763671875'),),
+            (RP(-1, 2), D('0.69314718055994528622676398299518041312694549560546875'),),
+        ]
+    )
+    def test_RationalPoint_log_projective_height_property(self, rational_point, expected_log_projective_height):
+        assert rational_point.log_projective_height == expected_log_projective_height
+
+    def test_RationalPoint_rational_operations__invalid_operands__type_errors_raised(self):
+
+        with pytest.raises(TypeError):
+            RP(1, 2) + 3
+            RP(1, 2) + Decimal('3')
+            RP(1, 2) + -.3
+
+            RP(1, 2) - 3
+            RP(1, 2) - Decimal('3')
+            RP(1, 2) - .3
+
+            Decimal('3') * RP(1, 2)
+            .3 * RP(1, 2)
+
+        with pytest.raises(NotImplementedError):
+            RP(1, 2) * 3
+            RP(3, 4) * RP(1, 2)
+
+    def test_RationalPoint_rational_operations(self):
+        r0 = RP(0, 0)
+        r1 = RP(1, 1)
+        r1_minus = RP(-1, -1)
+        pt1 = RP(F(3, 5), F(4, 5))
+        pt1_minus = RP(F(-3, 5), F(-4, 5))
+        pt2 = RP(F(5, 13), F(12, 13))
+        pt2_minus = RP(F(-5, 13), F(-12, 13))
+
+        for r in [r1, r1_minus, pt1, pt1_minus, pt2, pt2_minus]:
+            assert r0 + r == r + r0 == r - r0 == r
+            assert 0 * r == r0
+
+        assert -r0 == -1 * r0 == r0
+        assert -r1 == -1 * r1 == r0 - r1 == r1_minus
+        assert -pt1 == -1 * pt1 == r0 - pt1 == pt1_minus
+        assert -pt1_minus == -1 * pt1_minus == r0 - pt1_minus == pt1
+        assert -pt2 == -1 * pt2 == r0 - pt2 == pt2_minus
+        assert -pt2_minus == -1 * pt2_minus == r0 - pt2_minus == pt2
+
+        for r, r_minus in [(r1, r1_minus), (pt1, pt1_minus), (pt2, pt2_minus)]:
+            assert r + r_minus == r_minus + r == r0
+            assert r - r_minus == 2 * r
+            assert r_minus - r == -2 * r
+
+        assert r1 + pt1 + pt2 == RP(F(129, 65), F(177, 65))
+        assert 2 * (r1 + pt1 + pt2) == 2 * r1 + 2 * pt1 + 2 * pt2
+        assert -(r1 + pt1 + pt2) == r1_minus + pt1_minus + pt2_minus == RP(F(-129, 65), F(-177, 65))
+        assert r1 + r1_minus + pt1 + pt1_minus + pt2 + pt2_minus  == RP(0, 0)
+
+        for r in [r0, r1, pt1, pt1_minus, pt2, pt2_minus]:
+            assert 1 * r == r

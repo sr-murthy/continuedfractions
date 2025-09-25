@@ -46,7 +46,7 @@ Some examples are given below:
 Type, Internal Representation and Generic Operations
 ----------------------------------------------------
 
-The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`), so that it is not possible to create objects with fewer or more than 2 non-rational values:
+The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`), so that it is not possible to create objects with non-rational values, or with fewer or more than 2 values:
 
 .. code:: python
 
@@ -70,7 +70,9 @@ Internally, the rational components of a :py:class:`~continuedfractions.rational
    >>> P.y
    ContinuedFraction(4, 5)
    >>> P.coordinates
-   (ContinuedFraction(3, 5), ContinuedFraction(4, 5))
+   Dim2RationalCoordinates(ContinuedFraction(3, 5), ContinuedFraction(4, 5))
+
+Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.RationalPoint.Dim2RationalCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for 2D rational coordinates.
 
 As :py:class:`~continuedfractions.rational_points.RationalPoint` objects are also instances of :py:class:`tuple`, they support almost all of the common :py:class:`tuple`-compatible operations including indexing, sorting, iteration, unpacking:
 
@@ -85,6 +87,10 @@ As :py:class:`~continuedfractions.rational_points.RationalPoint` objects are als
    [ContinuedFraction(-2, 3), ContinuedFraction(1, 1)]
    >>> (*P, 4)
    (ContinuedFraction(1, 1), ContinuedFraction(-2, 3), 4)
+   >>> for x in P:
+   ...     print(x)
+   1
+   -2/3
 
 **except** for operations such as concatenation with plain tuples, which will fail:
 
@@ -142,6 +148,17 @@ Multiplication is limited to rational scalar multiplication from the left, not f
    TypeError: unsupported operand type(s) for /: 'RationalPoint' and 'RationalPoint'
 
 This once again reflects an operational view of :math:`\mathbb{Q}^2` as a vector space over :math:`\mathbb{Q}`, where a small number of basic binary and unary operations are defined. Users can implement their own custom subclasses based on :py:class:`~continuedfractions.rational_points.RationalPoint` with additional behaviour if so desired.
+
+Note that scalar multiplication of rational points can also be realised via the :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
+
+.. code:: python
+
+   >>> RP(F(1, 2), F(3, 4)).scale(2)
+   RationalPoint(1, 3/2)
+   >>> RP(F(11, 2), F(3, 4)).scale(-2)
+   RationalPoint(-11, -3/2)
+   >>> RP(F(1, 2), F(3, 4)).scale(0)
+   RationalPoint(0, 0)
 
 .. _rational-points.metrics:
 
@@ -267,7 +284,18 @@ Some examples are given below:
 
 Note that the examples involving ``RP(F(3, 5), F(4, 5))`` and ``RP(F(5, 13), F(12, 13))`` yield the primitive Pythagorean triples :math:`(3, 4, 5)` and :math:`(5, 12, 13)` respectively because the underlying rational points :math:`\left(\frac{3}{5},\frac{4}{5}\right)` and :math:`\left(\frac{5}{13},\frac{12}{13}\right)` fall on the unit circle :math:`x^2 + y^2 = 1` and have numerators which are coprime. The example with ``RP(F(6, 10), F(8, 10))`` yields the non-primitive Pythagorean triple :math:`(6, 8, 10)` which happens to be a scalar multiple :math:`2\cdot(3, 4, 5)` of :math:`(3, 4, 5)`, but both are homogeneous coordinates for the same rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)`.
 
-The term "minimal" here refers to the fact that the integer coordinates returned by :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` are (setwise) coprime and are the smallest possible (in magnitude), by construction, with respect to the coordinates of the original rational point, as described below.
+Also note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` returns a :py:class:`~continuedfractions.rational_points.Dim3RationalCoordinates` object, which is a simple and scalable :py:class:`tuple`-based wrapper for 3D rational coordinates. This means that homogeneous coordinates can be scaled and re-scaled at will:
+
+.. code:: python
+
+   >>> RP(1, 2).homogeneous_coordinates
+   Dim3RationalCoordinates(1, 2, 1)
+   >>> RP(1, 2).homogeneous_coordinates.scale(F(-1, 2))
+   Dim3RationalCoordinates(-1/2, -1, -1/2)
+   >>> RP(1, 2).homogeneous_coordinates.scale(F(-1, 2)).scale(-2)
+   Dim3RationalCoordinates(1, 2, 1)
+
+The term "minimal" above refers to the fact that the integer coordinates returned by :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` are (setwise) coprime and are the smallest possible (in magnitude), by construction, with respect to the coordinates of the original rational point, as described below.
 
 Users can refer to textbooks for more details on homogeneous coordinates and projective spaces, but, with respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left[\frac{a}{c},\frac{b}{d},1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and allows rational points to be studied in a 3D setting.
 
@@ -294,8 +322,8 @@ Some examples are given below:
 
    >>> RP(F(0, 0)).projective_height
    1
-   >>> RP(F(1, 2),F(1, 2)).projective_height
-   2
+   >>> RP(2, F(1, 2)).projective_height
+   6
    >>> RP(F(3, 5), F(4, 5)).projective_height
    5
    >>> RP(F(-3, 5), F(4, 5)).projective_height
@@ -313,8 +341,8 @@ Some examples are given below:
 
    >>> RP(F(0, 0)).log_projective_height
    Decimal('0')
-   >>> RP(F(1, 2),F(1, 2)).log_projective_height
-   Decimal('0.69314718055994528622676398299518041312694549560546875')
+   >>> RP(2, F(1, 2)).log_projective_height
+   Decimal('1.3862943611198905724535279659903608262538909912109375')
    >>> RP(F(3, 5), F(4, 5)).log_projective_height
    Decimal('1.6094379124341002817999424223671667277812957763671875')
    >>> RP(F(-3, 5), F(4, 5)).log_projective_height

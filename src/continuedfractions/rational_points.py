@@ -341,7 +341,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> RP.zero()
+        >>> RationalPoint.zero()
         RationalPoint(0, 0)
         """
         return cls(0, 0)
@@ -375,11 +375,13 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
         >>> RP.sum(RP(-1, 1), RP(1, -1))
         RationalPoint(0, 0)
         >>> RP.sum(RP(1, 1), RP(2, 1), RP(3, 1))
         RationalPoint(6, 3)
-        >>> RP.sum(RP(0, 0), RP(1, F(-1, 2), RP(F(3, 5, F(4, 5)), RP(F(5, 12), 6))))
+        >>> RP.sum(RP(0, 0), RP(1, F(-1, 2)), RP(F(3, 5), F(4, 5)), RP(F(5, 12), 6))
         RationalPoint(121/60, 63/10)
         """
         return sum(rational_points, start=cls.zero())

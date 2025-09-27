@@ -366,11 +366,6 @@ class RationalPoint(Dim2RationalCoordinates):
         RationalPoint
             The sum of the rational points.
 
-        Raises
-        ------
-        TypeError
-            If any incompatible types are detected.
-
         Examples
         --------
         >>> from fractions import Fraction as F

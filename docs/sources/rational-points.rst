@@ -341,7 +341,7 @@ The :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coor
 Projective Height
 ~~~~~~~~~~~~~~~~~
 
-The :py:attr:`~continuedfractions.rational_points.RationalPoint.projective_height` property returns the projective height :math:`H` of a rational point :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` as given by:
+The :py:attr:`~continuedfractions.rational_points.RationalPoint.height` property returns the (projective) height :math:`H` of a rational point :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` as given by:
 
 .. math::
 
@@ -353,36 +353,36 @@ Some examples are given below:
 
 .. code:: python
 
-   >>> RP(0, 0).projective_height
+   >>> RP(0, 0).height
    1
-   >>> RP(2, F(1, 2)).projective_height
+   >>> RP(2, F(1, 2)).height
    4
-   >>> RP(F(3, 5), F(4, 5)).projective_height
+   >>> RP(F(3, 5), F(4, 5)).height
    5
-   >>> RP(F(-3, 5), F(4, 5)).projective_height
+   >>> RP(F(-3, 5), F(4, 5)).height
    5
-   >>> RP(F(6, 10), F(8, 10)).projective_height
+   >>> RP(F(6, 10), F(8, 10)).height
    5
-   >>> RP(F(5, 13), F(12, 13)).projective_height
+   >>> RP(F(5, 13), F(12, 13)).height
    13
 
-Derived from this is the :py:attr:`~continuedfractions.rational_points.RationalPoint.log_projective_height` property which yields the (natural, i.e. base :math:`e`) logarithm of the projective height :math:`H` for a rational point :math:`P` as defined above, that is, :math:`\text{log}\left(H\left(P\right)\right) = \text{log}\left(H\left(\frac{a}{c},\frac{b}{d}\right)\right)`, where :math:`H` is as defined above.
+Derived from this is the :py:attr:`~continuedfractions.rational_points.RationalPoint.log_height` property which yields the (natural, i.e. base :math:`e`) logarithm of the height :math:`H` of a rational point :math:`P` as defined above, that is, :math:`\text{log}\left(H\left(P\right)\right) = \text{log}\left(H\left(\frac{a}{c},\frac{b}{d}\right)\right)`, where :math:`H` is as defined above.
 
 Some examples are given below:
 
 .. code:: python
 
-   >>> RP(0, 0).log_projective_height
+   >>> RP(0, 0).log_height
    Decimal('0')
-   >>> RP(2, F(1, 2)).log_projective_height
+   >>> RP(2, F(1, 2)).log_height
    Decimal('1.3862943611198905724535279659903608262538909912109375')
-   >>> RP(F(3, 5), F(4, 5)).log_projective_height
+   >>> RP(F(3, 5), F(4, 5)).log_height
    Decimal('1.6094379124341002817999424223671667277812957763671875')
-   >>> RP(F(-3, 5), F(4, 5)).log_projective_height
+   >>> RP(F(-3, 5), F(4, 5)).log_height
    Decimal('1.6094379124341002817999424223671667277812957763671875')
-   >>> RP(F(6, 10), F(8, 10)).log_projective_height
+   >>> RP(F(6, 10), F(8, 10)).log_height
    Decimal('1.6094379124341002817999424223671667277812957763671875')
-   >>> RP(F(5, 13), F(12, 13)).log_projective_height
+   >>> RP(F(5, 13), F(12, 13)).log_height
    Decimal('2.564949357461536738611584951286204159259796142578125')
 
 .. _rational-points.other-props:

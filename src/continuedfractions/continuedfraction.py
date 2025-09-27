@@ -972,46 +972,46 @@ class ContinuedFraction(Fraction):
         return self.__class__(mediant(self, other))
 
     @property
-    def projective_height(self) -> int:
-        """:py:class:`int` : The projective height of this rational number.
+    def height(self) -> int:
+        """:py:class:`int` : The (projective) height of this rational number.
 
         Returns
         -------
         int
-            The projective height of the fraction as a rational number. This
-            will always be a positive integer.
+            The height of the fraction as a rational number represented by
+            homogeneous coordinates in projective space :math:`\\mathbb{P}^1(\\mathbb{Q})`.
 
         Examples
         --------
-        >>> ContinuedFraction(0, 1).projective_height
+        >>> ContinuedFraction(0, 1).height
         1
-        >>> ContinuedFraction(-1, 2).projective_height
+        >>> ContinuedFraction(-1, 2).height
         2
-        >>> ContinuedFraction(3, -2).projective_height
+        >>> ContinuedFraction(3, -2).height
         3
         """
         return max(abs(self).as_integer_ratio())
 
     @property
-    def log_projective_height(self) -> Decimal:
-        """:py:class:`decimal.Decimal` : The (natural) logarithm of the projective height of this rational number.
+    def log_height(self) -> Decimal:
+        """:py:class:`decimal.Decimal` : The (natural) logarithm of the height of this rational number as defined above.
 
         Returns
         -------
         decimal.Decimal
-            The (natural) logarithm of the projective height of this fraction
-            as a rational number.
+            The (natural) logarithm of the height of this fraction
+            as a rational number as defined above.
 
         Examples
         --------
-        >>> ContinuedFraction(0, 1).log_projective_height
+        >>> ContinuedFraction(0, 1).log_height
         Decimal('0')
-        >>> ContinuedFraction(-1, 2).log_projective_height
+        >>> ContinuedFraction(-1, 2).log_height
         Decimal('0.69314718055994528622676398299518041312694549560546875')
-        >>> ContinuedFraction(3, -2).log_projective_height
+        >>> ContinuedFraction(3, -2).log_height
         Decimal('1.0986122886681097821082175869378261268138885498046875')
         """
-        return Decimal(math.log(self.projective_height))
+        return Decimal(math.log(self.height))
 
     def __add__(self, other, /):
         return self.__class__(super().__add__(other))

@@ -480,7 +480,7 @@ class TestRationalPoint:
         assert rational_point.homogeneous_coordinates == expected_homogeneous_coordinates
 
     @pytest.mark.parametrize(
-        "rational_point, expected_projective_height",
+        "rational_point, expected_height",
         [
             (RP(0, 0), 1,),
             (RP(F(2, 1), 5), 5,),
@@ -490,11 +490,11 @@ class TestRationalPoint:
             (RP(-1, 2), 2,),
         ]
     )
-    def test_RationalPoint_projective_height_property(self, rational_point, expected_projective_height):
-        assert rational_point.projective_height == expected_projective_height
+    def test_RationalPoint_height_property(self, rational_point, expected_height):
+        assert rational_point.height == expected_height
 
     @pytest.mark.parametrize(
-        "rational_point, expected_log_projective_height",
+        "rational_point, expected_log_height",
         [
             (RP(0, 0), D('0'),),
             (RP(F(2, 1), 5), D('1.6094379124341002817999424223671667277812957763671875'),),
@@ -504,8 +504,8 @@ class TestRationalPoint:
             (RP(-1, 2), D('0.69314718055994528622676398299518041312694549560546875'),),
         ]
     )
-    def test_RationalPoint_log_projective_height_property(self, rational_point, expected_log_projective_height):
-        assert rational_point.log_projective_height == expected_log_projective_height
+    def test_RationalPoint_log_projective_height_property(self, rational_point, expected_log_height):
+        assert rational_point.log_height == expected_log_height
 
     def test_RationalPoint_rational_operations__invalid_operands__type_errors_raised(self):
 

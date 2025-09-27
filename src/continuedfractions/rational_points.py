@@ -714,8 +714,8 @@ class RationalPoint(Dim2RationalCoordinates):
         return HomogeneousCoordinates((lcm * self.x).numerator, (lcm * self.y).numerator, lcm)
 
     @property
-    def projective_height(self) -> int:
-        """:py:class:`int` : The height of the rational point as the height of its unique (up to sign) representative point in the projective space :math:`\\mathbb{P}^2`.
+    def height(self) -> int:
+        """:py:class:`int` : The (projective) height of the rational point in the projective space :math:`\\mathbb{P}^2`.
 
         The projective height :math:`H\\left(\\frac{a}{c},\\frac{b}{d}\\right)`
         of a rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
@@ -726,9 +726,9 @@ class RationalPoint(Dim2RationalCoordinates):
            \\text{max}\\left(|a|\\lvert \\frac{\\lambda}{c} \\rvert, |b|\\lvert \\frac{\\lambda}{d} \\rvert, \\lambda \\right)
 
         where :math:`\\lambda = \\text{lcm}(c, d) > 0`, and :math:`\\left(\\lambda \\frac{a}{c}, \\lambda \\frac{b}{d}, \\lambda\\right) = \\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`
-        is the unique (up to sign) representative point :math:`\\left(\\lambda \\frac{a}{c}, \\lambda \\frac{b}{d}, \\lambda\\right) = \\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`
-        of :math:`P` in :math:`\\mathbb{P}^2`, and also a sequence of homogeneous
-        coordinates for :math:`P`.
+        is a unique sequence of integer-valued homogeneous coordinates
+        :math:`\\left(\\lambda \\frac{a}{c}, \\lambda \\frac{b}{d}, \\lambda\\right) = \\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`
+        of :math:`P` in :math:`\\mathbb{P}^2`.
 
         Returns
         -------
@@ -738,22 +738,22 @@ class RationalPoint(Dim2RationalCoordinates):
         Examples
         --------
         >>> from fractions import Fraction as F
-        >>> RationalPoint(0, 0).projective_height
+        >>> RationalPoint(0, 0).height
         1
-        >>> RationalPoint(1, 1).projective_height
+        >>> RationalPoint(1, 1).height
         1
-        >>> RationalPoint(-1, 1).projective_height
+        >>> RationalPoint(-1, 1).height
         1
-        >>> RationalPoint(F(3, 5), F(4, 5)).projective_height
+        >>> RationalPoint(F(3, 5), F(4, 5)).height
         5
-        >>> RationalPoint(F(1, 2), F(3, 5)).projective_height
+        >>> RationalPoint(F(1, 2), F(3, 5)).height
         10
         """
         return max(map(abs, self.homogeneous_coordinates))
         
     @property
-    def log_projective_height(self) -> Decimal:
-        """:py:class:`~decimal.Decimal` : The natural logarithm of the projective height of the rational point as defined above.
+    def log_height(self) -> Decimal:
+        """:py:class:`~decimal.Decimal` : The natural logarithm of the (projective) height of the rational point as defined above.
 
         The (natural) logarithm of the projective height of a rational point
         :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)` as given by:
@@ -763,30 +763,30 @@ class RationalPoint(Dim2RationalCoordinates):
            \\text{log}\\left(H\\left(\\frac{a}{c}, \\frac{b}{d}\\right)\\right) = \\text{log}\\left(\\text{max}\\left(|a|\\lvert \\frac{\\lambda}{c} \\rvert, |b|\\lvert \\frac{\\lambda}{d} \\rvert, \\lambda \\right)\\right)
 
         where :math:`\\lambda = \\text{lcm}(c, d) > 0` and :math:`\\left(\\lambda \\frac{a}{c}, \\lambda \\frac{b}{d}, \\lambda\\right) = \\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`
-        is the unique (up to sign) representative point of :math:`P` in
-        :math:`\\mathbb{P}^2`, as defined above.
+        is a unique sequence of integer-valued homogeneous coordinates for
+        :math:`P` in :math:`\\mathbb{P}^2`, as defined above.
 
         Returns
         -------
         decimal.Decimal
-            The (natural) logarithm of the projective height of this rational
-            point in :math:`\\mathbb{P}^2` as defined above.
+            The (natural) logarithm of the height of this rational point in
+            :math:`\\mathbb{P}^2` as defined above.
 
         Examples
         --------
         >>> from fractions import Fraction as F
-        >>> RationalPoint(0, 0).log_projective_height
+        >>> RationalPoint(0, 0).log_height
         Decimal('0')
-        >>> RationalPoint(1, 1).log_projective_height
+        >>> RationalPoint(1, 1).log_height
         Decimal('0')
-        >>> RationalPoint(-1, 1).log_projective_height
+        >>> RationalPoint(-1, 1).log_height
         Decimal('0')
-        >>> RationalPoint(F(3, 5), F(4, 5)).log_projective_height
+        >>> RationalPoint(F(3, 5), F(4, 5)).log_height
         Decimal('1.6094379124341002817999424223671667277812957763671875')
-        >>> RationalPoint(F(1, 2), F(3, 5)).log_projective_height
+        >>> RationalPoint(F(1, 2), F(3, 5)).log_height
         Decimal('2.30258509299404590109361379290930926799774169921875')
         """
-        return Decimal(math.log(self.projective_height, math.e))
+        return Decimal(math.log(self.height, math.e))
 
     def __add__(self, other: RationalPoint) -> RationalPoint:
         """:py:class:`~continuedfractions.rational_points.RationalPoint` : Component-wise addition for two rational points.

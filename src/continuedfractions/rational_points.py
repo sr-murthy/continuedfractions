@@ -13,10 +13,8 @@ __all__ = [
 
 # -- Standard libraries --
 import decimal
-import functools
 import math
 import numbers
-import typing
 
 from decimal import Decimal
 from typing import Any

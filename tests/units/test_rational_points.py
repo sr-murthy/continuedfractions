@@ -292,6 +292,20 @@ class TestRationalPoint:
         with pytest.raises(ValueError):
             rational_point1.dot_product(invalid_other)
 
+    def test_RationalPoint_zero(self):
+        assert RP.zero() == RP(0, 0)
+
+    @pytest.mark.parametrize(
+        "rational_points, expected_sum",
+        [
+            ((RP(1, 1), RP(1, 2), RP(1, 3),), RP(3, 6)),
+            ((RP(F(1, 2), 1), RP(F(-1, 2), -1),), RP(0, 0)),
+            ((RP(0, 0), RP(1, F(-1, 2)), RP(F(3, 5), F(4, 5)), RP(F(5, 12), 6)), RP(F(121, 60), F(63, 10)))
+        ]
+    )
+    def test_RationalPoint_sum(self, rational_points, expected_sum):
+        assert RP.sum(*rational_points) == expected_sum
+
     @pytest.mark.parametrize(
         "rational_point1, rational_point2, expected_dot_product",
         [

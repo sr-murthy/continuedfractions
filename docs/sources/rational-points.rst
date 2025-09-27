@@ -55,6 +55,13 @@ It is not possible to create objects with non-rational values, or with fewer or 
    ...
    ValueError: A `RationalPoint` object must be specified as a pair of rational numbers `r` and `s`, each of type either integer (`int`), or fraction (`Fraction` or `ContinuedFraction`).
 
+Note that the zero rational point :math:`(0, 0)` can also be obtained via the :py:meth:`~continuedfractions.rational_points.RationalPoint.zero` class method:
+
+.. code:: python
+
+   >>> RP.zero()
+   RationalPoint(0, 0)
+
 .. _rational-points.internal-rep-and-coordinates:
 
 Internal Representation & Coordinates
@@ -170,6 +177,15 @@ multiplication is limited to left multiplication by instances of type :py:class:
    TypeError: unsupported operand type(s) for /: 'RationalPoint' and 'RationalPoint'
 
 This once again reflects an operational view of :math:`\mathbb{Q}^2` as a vector space over :math:`\mathbb{Q}`, where only a small number of basic and well defined binary and unary operations are supported. Users can implement their own custom subclasses based on :py:class:`~continuedfractions.rational_points.RationalPoint` with additional behaviour if so desired.
+
+Note that in relation to addition, specifically, the :py:meth:`~continuedfractions.rational_points.RationalPoint.sum` class method can be used to add arbitary numbers of rational points given variadically:
+
+.. code:: python
+
+   >>> RP.sum(RP(0, 0), RP(1, F(-1, 2), RP(F(3, 5, F(4, 5)), RP(F(5, 12), 6))))
+   RationalPoint(121/60, 63/10)
+
+This should be the preferred method as the Python built-in :py:func:`sum` function sets an internal :py:class:`int` start value of ``0``, which causes it to fail on :py:class:`~continuedfractions.rational_points.RationalPoint` instances.
 
 .. _rational-points.linear-transforms:
 

@@ -13,8 +13,10 @@ __all__ = [
 
 # -- Standard libraries --
 import decimal
+import functools
 import math
 import numbers
+import typing
 
 from decimal import Decimal
 from typing import Any
@@ -327,6 +329,60 @@ class RationalPoint(Dim2RationalCoordinates):
 
       r, s = args
       return super().__new__(cls, ContinuedFraction(r), ContinuedFraction(s))
+
+    @classmethod
+    def zero(cls) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : The zero rational point.
+
+        Returns
+        -------
+        RationalPoint
+            The zero rational point.
+
+        Examples
+        --------
+        >>> RP.zero()
+        RationalPoint(0, 0)
+        """
+        return cls(0, 0)
+
+    @classmethod
+    def sum(cls, *rational_points: RationalPoint) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : The sum of a variable number of rational points.
+
+        This is designed as a helper method for rational point summation
+        because the built-in :py:func:`sum` function only works for
+        :py:class:`~continuedfractions.rational_points.RationalPoint`
+        instances if the ``start`` value is set to ``0``, which many users may
+        not be aware of.
+
+        Parameters
+        ----------
+        rational_points : typing.Iterable
+            A variable number of
+            :py:class:`~continuedfractions.rational_points.RationalPoint`
+            instances to add.
+
+        Returns
+        -------
+        RationalPoint
+            The sum of the rational points.
+
+        Raises
+        ------
+        TypeError
+            If any incompatible types are detected.
+
+        Examples
+        --------
+        >>> RP.sum(RP(-1, 1), RP(1, -1))
+        RationalPoint(0, 0)
+        >>> RP.sum(RP(1, 1), RP(2, 1), RP(3, 1))
+        RationalPoint(6, 3)
+        >>> RP.sum(RP(0, 0), RP(1, F(-1, 2), RP(F(3, 5, F(4, 5)), RP(F(5, 12), 6))))
+        RationalPoint(121/60, 63/10)
+        """
+        return sum(rational_points, start=cls.zero())
 
     @property
     def coordinates(self) -> Dim2RationalCoordinates:

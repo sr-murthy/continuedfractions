@@ -41,12 +41,7 @@ Some examples are given below:
    >>> Q
    RationalPoint(1, 2/3)
 
-.. _rational-points.type-and-internal-rep:
-
-Type, Internal Representation and Generic Operations
-----------------------------------------------------
-
-The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`), so that it is not possible to create objects with non-rational values, or with fewer or more than 2 values:
+It is not possible to create objects with non-rational values, or with fewer or more than 2 values:
 
 .. code:: python
 
@@ -60,6 +55,11 @@ The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a cus
    ...
    ValueError: A `RationalPoint` object must be specified as a pair of rational numbers `r` and `s`, each of type either integer (`int`), or fraction (`Fraction` or `ContinuedFraction`).
 
+.. _rational-points.internal-rep-and-coordinates:
+
+Internal Representation & Coordinates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Internally, the rational components of a :py:class:`~continuedfractions.rational_points.RationalPoint` object are stored as :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects, and are accessible individually via the superclass :py:attr:`~continuedfractions.rational_points.Dim2RationalCoordinates.x` and :py:attr:`~continuedfractions.rational_points.Dim2RationalCoordinates.y` properties, and via the :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property, as illustrated below:
 
 .. code:: python
@@ -72,7 +72,7 @@ Internally, the rational components of a :py:class:`~continuedfractions.rational
    >>> P.coordinates
    Dim2RationalCoordinates(3/5, 4/5)
 
-Note that the :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for 2D rational coordinates, which can also be used to access the rational point coordinates:
+The :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for 2D rational coordinates, which can also be used to access the rational point coordinates:
 
 .. code:: python
 
@@ -82,7 +82,23 @@ Note that the :py:attr:`~continuedfractions.rational_points.RationalPoint.coordi
    >>> P.coordinates.y
    ContinuedFraction(4, 5)
 
-As :py:class:`~continuedfractions.rational_points.RationalPoint` objects are also instances of :py:class:`tuple`, they support almost all of the common :py:class:`tuple`-compatible operations including indexing, sorting, iteration, unpacking:
+.. _rational-points.generic-ops:
+
+Generic Properties & Operations
+-------------------------------
+
+The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`). As a :py:class:`tuple` subtype type and equality checks for the parent type are always satisfied, and hash values are consistent:
+
+.. code:: python
+
+   >>> P = RP(F(1, 2), F(3, 5)); P
+   >>> RationalPoint(1/2, 3/5)
+   >>> isinstance(P, tuple)
+   True
+   >>> P == (F(1, 2), F(3, 5))
+   >>> assert hash(P) == hash(tuple(P))
+
+Almost all of the common :py:class:`tuple`-compatible operations are supported, including indexing, sorting, iteration, unpacking:
 
 .. code:: python
 
@@ -108,7 +124,7 @@ As :py:class:`~continuedfractions.rational_points.RationalPoint` objects are als
    ...
    TypeError: Addition is defined only between two `RationalPoint` instances.
 
-This is because, as described in the next section, :py:class:`~continuedfractions.rational_points.RationalPoint` implements a custom :py:meth:`~continuedfractions.rational_points.RationalPoint.__add__` method to implement the natural component-wise addition of rational points which makes them an (additive) Abelian group.
+This is because :py:class:`~continuedfractions.rational_points.RationalPoint` implements a custom :py:meth:`~continuedfractions.rational_points.RationalPoint.__add__` method to implement the natural component-wise addition of rational points which makes them an (additive) Abelian group.
 
 .. _rational-points.rational-ops:
 
@@ -371,10 +387,10 @@ Some examples are given below:
 
 .. _rational-points.other-props:
 
-Other Properties: Lattice Points
---------------------------------
+Lattice Points
+--------------
 
-There is no specific subclass for lattice points (rational points with integer coordinates) but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_lattice_point` method does provide a way to filter for these:
+Lattice points, which form an Abelian subgroup of the rational points, are not directly supported by a specific subclass, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_lattice_point` method does provide a way to filter for these:
 
 .. code:: python
 

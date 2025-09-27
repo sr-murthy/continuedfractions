@@ -33,6 +33,7 @@ class RationalTuple(tuple):
 
     * :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates`
     * :py:class:`~continuedfractions.rational_points.Dim3RationalCoordinates`
+    * :py:class:`~continuedfractions.rational_points.HomogeneousCoordinates`
     * :py:class:`~continuedfractions.rational_points.RationalPoint`
 
     It does not contain any mathematical structure. That is left to the other

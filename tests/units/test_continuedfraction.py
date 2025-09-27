@@ -770,7 +770,7 @@ class TestContinuedFraction:
         assert test_cf.semiconvergent(k, m) == test_cf.convergent(k - 1).right_mediant(test_cf.convergent(k), k=m)
 
     @pytest.mark.parametrize(
-        "cf, expected_projective_height",
+        "cf, expected_height",
         [
             (ContinuedFraction(0, 1), 1),
             (ContinuedFraction(1, 1), 1),
@@ -779,11 +779,11 @@ class TestContinuedFraction:
             (ContinuedFraction(1, -2), 2),
         ]
     )
-    def test_ContinuedFraction__projective_height(self, cf, expected_projective_height):
-        assert cf.projective_height == expected_projective_height
+    def test_ContinuedFraction__height(self, cf, expected_height):
+        assert cf.height == expected_height
 
     @pytest.mark.parametrize(
-        "cf, expected_log_projective_height",
+        "cf, expected_log_height",
         [
             (ContinuedFraction(0, 1), Decimal('0')),
             (ContinuedFraction(1, 1), Decimal('0')),
@@ -792,8 +792,8 @@ class TestContinuedFraction:
             (ContinuedFraction(1, -2), Decimal('0.69314718055994528622676398299518041312694549560546875')),
         ]
     )
-    def test_ContinuedFraction__log_projective_height(self, cf, expected_log_projective_height):
-        assert cf.log_projective_height == expected_log_projective_height
+    def test_ContinuedFraction__log_height(self, cf, expected_log_height):
+        assert cf.log_height == expected_log_height
 
 
     def test_ContinuedFraction__rational_operations(self):

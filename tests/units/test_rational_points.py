@@ -24,6 +24,7 @@ from continuedfractions.rational_points import (
     RationalTuple as RT,
     Dim2RationalCoordinates as D2RC,
     Dim3RationalCoordinates as D3RC,
+    HomogeneousCoordinates as HC,
 )
 
 
@@ -177,6 +178,36 @@ class TestDim3RationalCoordinates:
         assert (t.x, t.y, t.z) == args
 
 
+class TestHomogeneousCoordinates:
+
+    @pytest.mark.parametrize(
+        "args",
+        [
+            (1, F(-2, 3), CF(4, 5)),
+            (F(1, 2), -3, CF(4, 5)),
+            (F(1, 2), CF(4, 5), -3),
+            (1, CF(-2, 3), F(4, 5)),
+            (CF(1, 2), F(-3, 4), 5),
+        ]
+    )
+    def test_HomogeneousCoordinates___new__(self, args):
+        t = HC(*args)
+        assert t == args
+
+    @pytest.mark.parametrize(
+        "homogeneous_coordinates, expected_rational_point",
+        [
+            (HC(1, F(-2, 3), CF(4, 5)), RP(F(5, 4), F(-5, 6)),),
+            (HC(F(1, 2), -3, CF(4, 5)), RP(F(5, 8), F(-15, 4)),),
+            (HC(F(1, 2), CF(4, 5), -3), RP(F(-1, 6), F(-4, 15)),),
+            (HC(1, CF(-2, 3), F(4, 5)), RP(F(5, 4), F(-5, 6)),),
+            (HC(CF(1, 2), F(-3, 4), 5), RP(F(1, 10), F(-3, 20))),
+        ]
+    )
+    def test_HomogeneousCoordinates_to_rational_point(self, homogeneous_coordinates, expected_rational_point):
+        assert homogeneous_coordinates.to_rational_point() == expected_rational_point
+
+
 class TestRationalPoint:
 
     @pytest.mark.parametrize(
@@ -237,11 +268,11 @@ class TestRationalPoint:
     @pytest.mark.parametrize(
         "rational_point, expected_coordinates",
         [
-            (RP(1, 2), (CF(1, 1), CF(2, 1)),),
-            (RP(1, F(2, 3)), (CF(1, 1), CF(2, 3)),),
-            (RP(F(1, 2), 3), (CF(1, 2), CF(3, 1)),),
-            (RP(F(3, 5), F(4, 5)), (CF(3, 5), CF(4, 5)),),
-            (RP(F(-3, 5), F(4, 5)), (CF(-3, 5), CF(4, 5)),),
+            (RP(1, 2), D2RC(CF(1, 1), CF(2, 1)),),
+            (RP(1, F(2, 3)), D2RC(CF(1, 1), CF(2, 3)),),
+            (RP(F(1, 2), 3), D2RC(CF(1, 2), CF(3, 1)),),
+            (RP(F(3, 5), F(4, 5)), D2RC(CF(3, 5), CF(4, 5)),),
+            (RP(F(-3, 5), F(4, 5)), D2RC(CF(-3, 5), CF(4, 5)),),
         ]
     )
     def test_RationalPoint_coordinates_property(self, rational_point, expected_coordinates):
@@ -260,6 +291,20 @@ class TestRationalPoint:
     def test_RationalPoint_dot_product__invalid_other__value_error_raised(self, rational_point1, invalid_other):
         with pytest.raises(ValueError):
             rational_point1.dot_product(invalid_other)
+
+    def test_RationalPoint_zero(self):
+        assert RP.zero() == RP(0, 0)
+
+    @pytest.mark.parametrize(
+        "rational_points, expected_sum",
+        [
+            ((RP(1, 1), RP(1, 2), RP(1, 3),), RP(3, 6)),
+            ((RP(F(1, 2), 1), RP(F(-1, 2), -1),), RP(0, 0)),
+            ((RP(0, 0), RP(1, F(-1, 2)), RP(F(3, 5), F(4, 5)), RP(F(5, 12), 6)), RP(F(121, 60), F(63, 10)))
+        ]
+    )
+    def test_RationalPoint_sum(self, rational_points, expected_sum):
+        assert RP.sum(*rational_points) == expected_sum
 
     @pytest.mark.parametrize(
         "rational_point1, rational_point2, expected_dot_product",
@@ -437,19 +482,19 @@ class TestRationalPoint:
     @pytest.mark.parametrize(
         "rational_point, expected_homogeneous_coordinates",
         [
-            (RP(0, 0), (0, 0, 1),),
-            (RP(F(2, 1), 5), (2, 5, 1),),
-            (RP(F(1, 2), 3), (1, 6, 2),),
-            (RP(F(3, 5), F(4, 5)), (3, 4, 5),),
-            (RP(F(-3, 5), F(4, 5)), (-3, 4, 5),),
-            (RP(-1, 2), (-1, 2, 1),),
+            (RP(0, 0), HC(0, 0, 1),),
+            (RP(F(2, 1), 5), HC(2, 5, 1),),
+            (RP(F(1, 2), 3), HC(1, 6, 2),),
+            (RP(F(3, 5), F(4, 5)), HC(3, 4, 5),),
+            (RP(F(-3, 5), F(4, 5)), HC(-3, 4, 5),),
+            (RP(-1, 2), HC(-1, 2, 1),),
         ]
     )
     def test_RationalPoint_homogeneous_coordinates_property(self, rational_point, expected_homogeneous_coordinates):
         assert rational_point.homogeneous_coordinates == expected_homogeneous_coordinates
 
     @pytest.mark.parametrize(
-        "rational_point, expected_projective_height",
+        "rational_point, expected_height",
         [
             (RP(0, 0), 1,),
             (RP(F(2, 1), 5), 5,),
@@ -459,11 +504,11 @@ class TestRationalPoint:
             (RP(-1, 2), 2,),
         ]
     )
-    def test_RationalPoint_projective_height_property(self, rational_point, expected_projective_height):
-        assert rational_point.projective_height == expected_projective_height
+    def test_RationalPoint_height_property(self, rational_point, expected_height):
+        assert rational_point.height == expected_height
 
     @pytest.mark.parametrize(
-        "rational_point, expected_log_projective_height",
+        "rational_point, expected_log_height",
         [
             (RP(0, 0), D('0'),),
             (RP(F(2, 1), 5), D('1.6094379124341002817999424223671667277812957763671875'),),
@@ -473,8 +518,8 @@ class TestRationalPoint:
             (RP(-1, 2), D('0.69314718055994528622676398299518041312694549560546875'),),
         ]
     )
-    def test_RationalPoint_log_projective_height_property(self, rational_point, expected_log_projective_height):
-        assert rational_point.log_projective_height == expected_log_projective_height
+    def test_RationalPoint_log_projective_height_property(self, rational_point, expected_log_height):
+        assert rational_point.log_height == expected_log_height
 
     def test_RationalPoint_rational_operations__invalid_operands__type_errors_raised(self):
 

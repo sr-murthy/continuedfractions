@@ -243,7 +243,9 @@ Note that the ``RP(1, 1)`` examples involve the rational point :math:`(1, 1)` wh
    >>> abs(RP(F(3, 5), F(4, 5)))
    Decimal('1')
 
-The rational points of unit norm lie on the unit circle :math:`x^2 + y^2 = 1`, and this property can also be checked with the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_unit_point` method:
+The implementation of Euclidean norm here is based on :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the standard dot product of vectors in :math:`\mathbb{R}^2`.
+
+The rational points of unit norm lie on the unit circle :math:`C_1: x^2 + y^2 = 1`, and this property can also be checked with the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_unit_point` method:
 
 .. code:: python
 

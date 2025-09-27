@@ -399,7 +399,7 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return Dim2RationalCoordinates(*self)
 
-    def dot_product(self, other: RationalPoint, /) -> ContinuedFraction:
+    def dot(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.
 
         If :math:`r = \\left( \\frac{a_1}{c_1}, \\frac{a_2}{c_2} \\right)` and
@@ -429,15 +429,15 @@ class RationalPoint(Dim2RationalCoordinates):
         --------
         >>> r = RationalPoint(Fraction(1, 2), Fraction(3, 4))
         >>> s = RationalPoint(Fraction(1, 3), Fraction(2, 5))
-        >>> r.dot_product(s)
+        >>> r.dot(s)
         ContinuedFraction(7, 15)
-        >>> r.dot_product(2)
+        >>> r.dot(2)
         Traceback (most recent call last):
         ...
         ValueError: The dot product is only defined between `RationalPoint` instances.
-        >>> r.dot_product(RationalPoint(0, 0))
+        >>> r.dot(RationalPoint(0, 0))
         ContinuedFraction(0, 1)
-        >>> r.dot_product(RationalPoint(1, 1))
+        >>> r.dot(RationalPoint(1, 1))
         ContinuedFraction(5, 4)
         """
         if not isinstance(other, self.__class__):
@@ -482,7 +482,7 @@ class RationalPoint(Dim2RationalCoordinates):
         >>> RationalPoint(0, 0).norm_squared
         ContinuedFraction(0, 1)
         """
-        return self.dot_product(self)
+        return self.dot(self)
 
     @property
     def norm(self) -> Decimal:

@@ -288,9 +288,9 @@ class TestRationalPoint:
             (RP(F(1, 2), F(3, 4)), 5,),
         ]
     )
-    def test_RationalPoint_dot_product__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+    def test_RationalPoint_dot__invalid_other__value_error_raised(self, rational_point1, invalid_other):
         with pytest.raises(ValueError):
-            rational_point1.dot_product(invalid_other)
+            rational_point1.dot(invalid_other)
 
     def test_RationalPoint_zero(self):
         assert RP.zero() == RP(0, 0)
@@ -317,8 +317,8 @@ class TestRationalPoint:
             (RP(F(3, 5), F(4, 5)), RP(F(3, 5), F(4, 5)), CF(1, 1),),
         ]
     )
-    def test_RationalPoint_dot_product(self, rational_point1, rational_point2, expected_dot_product):
-        assert rational_point1.dot_product(rational_point2) == expected_dot_product
+    def test_RationalPoint_dot(self, rational_point1, rational_point2, expected_dot_product):
+        assert rational_point1.dot(rational_point2) == expected_dot_product
 
     @pytest.mark.parametrize(
         "rational_point, expected_norm_squared",

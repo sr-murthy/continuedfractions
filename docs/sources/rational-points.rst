@@ -82,10 +82,10 @@ The :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` pro
    >>> P.coordinates.y
    ContinuedFraction(4, 5)
 
-.. _rational-points.generic-ops:
+.. _rational-points.generic-tuple-props:
 
-Generic Properties & Operations
--------------------------------
+Generic Tuple Properties & Operations
+-------------------------------------
 
 The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`). As a :py:class:`tuple` subtype type and equality checks for the parent type are always satisfied, and hash values are consistent:
 
@@ -102,9 +102,8 @@ Almost all of the common :py:class:`tuple`-compatible operations are supported, 
 
 .. code:: python
 
-   >>> P = RP(1, F(-2, 3))
-   >>> isinstance(P, tuple)
-   True
+   >>> P = RP(1, F(-2, 3)); P
+   RationalPoint(1, -2/3)
    >>> P[0], P[1]
    (ContinuedFraction(1, 1), ContinuedFraction(-2, 3))
    >>> sorted(P)
@@ -172,7 +171,12 @@ multiplication is limited to left multiplication by instances of type :py:class:
 
 This once again reflects an operational view of :math:`\mathbb{Q}^2` as a vector space over :math:`\mathbb{Q}`, where only a small number of basic and well defined binary and unary operations are supported. Users can implement their own custom subclasses based on :py:class:`~continuedfractions.rational_points.RationalPoint` with additional behaviour if so desired.
 
-Note that scalar multiplication of rational points can also be realised via the :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
+.. _rational-points.linear-transforms:
+
+Linear Transformations
+----------------------
+
+Currently, :py:class:`~continuedfractions.rational_points.RationalPoint` does not generally support linear transformations (e.g. reflections, translations, rotations) except for scaling, which is available via the :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
 
 .. code:: python
 
@@ -182,6 +186,8 @@ Note that scalar multiplication of rational points can also be realised via the 
    RationalPoint(-11, -3/2)
    >>> RP(F(1, 2), F(3, 4)).scale(0)
    RationalPoint(0, 0)
+
+Support for additional linear transformations will be added in future releases.
 
 .. _rational-points.metrics:
 
@@ -284,7 +290,7 @@ The :py:class:`~continuedfractions.rational_points.RationalPoint` provides some 
 Projective Space :math:`\mathbb{P}^2(\mathbb{Q})` and Homogeneous Coordinates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` property provides a way to get a unique (up to sign) sequence of minimal integer coordinates for rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q}) = \frac{\mathbb{Q}^3 \setminus \{(0, 0, 0)\}}{\sim}`, where :math:`\sim` is the (non-zero) scalar multiple equivalence relation on non-zero rational number triples, e.g. :math:`\left(3, 4, 6\right)` is a scalar multiple :math:`6 \cdot \left(\frac{1}{2},\frac{2}{3},1\right)` of :math:`\left(\frac{1}{2},\frac{2}{3},1\right)`, while :math:`(3, 4, 5)` isn't: instead :math:`(3, 4, 5)` is a scalar multiple :math:`5 \cdot \left(\frac{3}{5}, \frac{4}{5}, 1\right)` of :math:`\left(\frac{3}{5}, \frac{4}{5}, 1\right)`.
+The :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` property provides a way to get a unique (up to sign) sequence of "minimal" integer-valued coordinates for rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q}) = \frac{\mathbb{Q}^3 \setminus \{(0, 0, 0)\}}{\sim}`, where :math:`\sim` is the (non-zero) scalar multiple equivalence relation on non-zero rational number triples, e.g. :math:`\left(3, 4, 6\right)` is a scalar multiple :math:`6 \cdot \left(\frac{1}{2},\frac{2}{3},1\right)` of :math:`\left(\frac{1}{2},\frac{2}{3},1\right)`, while :math:`(3, 4, 5)` isn't: instead :math:`(3, 4, 5)` is a scalar multiple :math:`5 \cdot \left(\frac{3}{5}, \frac{4}{5}, 1\right)` of :math:`\left(\frac{3}{5}, \frac{4}{5}, 1\right)`.
 
 Some examples are given below:
 
@@ -304,10 +310,6 @@ Some examples are given below:
    HomogeneousCoordinates(3, 4, 5)
    >>> RP(F(1, 2), F(2, 3)).homogeneous_coordinates
    HomogeneousCoordinates(3, 4, 6)
-
-.. note::
-
-   The term "minimal" above refers to the fact that the integer coordinates returned by :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` are (setwise) coprime and are the smallest possible (in magnitude), by construction, with respect to the coordinates of the original rational point, as will be described below.
 
 The examples involving ``RP(F(3, 5), F(4, 5))`` and ``RP(F(5, 13), F(12, 13))`` yield the primitive Pythagorean triples :math:`(3, 4, 5)` and :math:`(5, 12, 13)` respectively because the underlying rational points :math:`\left(\frac{3}{5},\frac{4}{5}\right)` and :math:`\left(\frac{5}{13},\frac{12}{13}\right)` fall on the unit circle :math:`x^2 + y^2 = 1` and have numerators which are coprime. The example with ``RP(F(6, 10), F(8, 10))`` yields the non-primitive Pythagorean triple :math:`(6, 8, 10)` which happens to be a scalar multiple :math:`2\cdot(3, 4, 5)` of :math:`(3, 4, 5)`, but both are homogeneous coordinates for the same rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)`.
 
@@ -385,7 +387,7 @@ Some examples are given below:
    >>> RP(F(5, 13), F(12, 13)).log_height
    Decimal('2.564949357461536738611584951286204159259796142578125')
 
-.. _rational-points.other-props:
+.. _rational-points.lattice-points:
 
 Lattice Points
 --------------
@@ -402,6 +404,13 @@ Lattice points, which form an Abelian subgroup of the rational points, are not d
    False
 
 This can be useful when filtering a large collection of :py:class:`~continuedfractions.rational_points.RationalPoint` instances for lattice points.
+
+.. _rational-points.rational-points-on-curves:
+
+Rational Points on Curves
+-------------------------
+
+Rational points on curves forms a large subject that isn't supported directly in any way in the library, which is fairly small and generic in scope. Support may be added in the future for rational points on some well known plane curves, such as the unit circle, unit hyperbola, and possibly some simple elliptic curves also, in the form of class features that allow the group properties of such points to be explored.
 
 .. _rational-points.references:
 

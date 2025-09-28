@@ -560,33 +560,50 @@ class TestRationalPoint:
 
     def test_RationalPoint_rational_operations(self):
         r0 = RP(0, 0)
+
         r1 = RP(1, 1)
         r1_minus = RP(-1, -1)
+
         pt1 = RP(F(3, 5), F(4, 5))
         pt1_minus = RP(F(-3, 5), F(-4, 5))
-        pt2 = RP(F(5, 13), F(12, 13))
-        pt2_minus = RP(F(-5, 13), F(-12, 13))
 
-        for r in [r1, r1_minus, pt1, pt1_minus, pt2, pt2_minus]:
-            assert r0 + r == r + r0 == r - r0 == r
-            assert 0 * r == r0
+        pt2 = RP(F(1, 2), F(3, 4))
+        pt2_minus = RP(F(-1, 2), F(-3, 4))
 
-        assert -r0 == -1 * r0 == r0
-        assert -r1 == -1 * r1 == r0 - r1 == r1_minus
-        assert -pt1 == -1 * pt1 == r0 - pt1 == pt1_minus
-        assert -pt1_minus == -1 * pt1_minus == r0 - pt1_minus == pt1
-        assert -pt2 == -1 * pt2 == r0 - pt2 == pt2_minus
-        assert -pt2_minus == -1 * pt2_minus == r0 - pt2_minus == pt2
+        # Addition:
+        #     preserves identity with ``(0, 0)``
+        for r in [r1, r1_minus, pt1, pt1_minus]:
+            assert r0 + r == r + r0 == r
+        #     is associative
+        assert r1 + (pt1 + pt2) == (r1 + pt1) + pt2
+        #     is commutative
+        assert r1 + pt1 == pt1 + r1
+        assert r1 + pt2 == pt2 + r1
+        assert pt1 + pt2 == pt2 + pt1
 
-        for r, r_minus in [(r1, r1_minus), (pt1, pt1_minus), (pt2, pt2_minus)]:
-            assert r + r_minus == r_minus + r == r0
-            assert r - r_minus == 2 * r
-            assert r_minus - r == -2 * r
+        # Negation and subtraction:
+        #     sign carries through as expected
+        assert -r1 == r1_minus
+        assert -pt1 == pt1_minus
+        assert -pt2 == pt2_minus
+        #     inverses cancel out
+        assert r1 + r1_minus == r1_minus + r1 == r0
+        assert pt1 + pt1_minus == pt1_minus + pt1 == r0
+        assert pt2 + pt2_minus == pt2_minus + pt2 == r0
+        #     subtractions as expected
+        assert r1 - pt1 == -pt1 + r1 == RP(F(2, 5), F(1, 5))
+        assert r1 - pt2 == -pt2 + r1 == RP(F(1, 2), F(1, 4))
+        assert pt1 - pt2 == -pt2 + pt1 == RP(F(1, 10), F(1, 20))
 
-        assert r1 + pt1 + pt2 == RP(F(129, 65), F(177, 65))
+        # Scalar left-multiplication
+        #     preserves identity with ``1``
+        assert 1 * r1 == r1
+        assert 1 * pt1 == pt1
+        assert 1 * pt2 == pt2
+        #     zeroes identity with ``0``
+        assert 0 * r1 == r0
+        assert 0 * pt1 == r0
+        assert 0 * pt2 == r0
+        #     distributes over addition of rational points
         assert 2 * (r1 + pt1 + pt2) == 2 * r1 + 2 * pt1 + 2 * pt2
-        assert -(r1 + pt1 + pt2) == r1_minus + pt1_minus + pt2_minus == RP(F(-129, 65), F(-177, 65))
-        assert r1 + r1_minus + pt1 + pt1_minus + pt2 + pt2_minus  == RP(0, 0)
 
-        for r in [r0, r1, pt1, pt1_minus, pt2, pt2_minus]:
-            assert 1 * r == r

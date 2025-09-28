@@ -917,8 +917,8 @@ class RationalPoint(Dim2RationalCoordinates):
         The second operand as represented by ``other`` must be an instance of
         :py:class:`~continuedfractions.rational_points.RationalPoint`.
         """
-        if not isinstance(other, RationalPoint):
-            raise TypeError(                                                    # pragma: no cover
+        if not isinstance(other, RationalPoint):                            # pragma: no cover
+            raise TypeError(                                                    
                 'Subtraction is defined only between two `RationalPoint` '
                 'instances.'
             )

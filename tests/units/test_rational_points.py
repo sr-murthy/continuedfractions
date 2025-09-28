@@ -340,15 +340,26 @@ class TestRationalPoint:
         assert rational_point1.dot(rational_point2) == expected_dot_product
 
     @pytest.mark.parametrize(
-        "rational_point, expected_transpose",
+        "rational_point, expected_orthogonal",
         [
             (RP(0, 0), RP(0, 0)),
             (RP(1, 2), RP(-2, 1)),
             (RP(1, -2), RP(2, 1))
         ]
     )
-    def test_RationalPoint_transpose(self, rational_point, expected_transpose):
-        assert rational_point.transpose() == expected_transpose
+    def test_RationalPoint_orthogonal(self, rational_point, expected_orthogonal):
+        assert rational_point.orthogonal() == expected_orthogonal
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_permutation",
+        [
+            (RP(0, 0), RP(0, 0)),
+            (RP(1, 2), RP(2, 1)),
+            (RP(1, -2), RP(-2, 1))
+        ]
+    )
+    def test_RationalPoint_permute(self, rational_point, expected_permutation):
+        assert rational_point.permute() == expected_permutation
 
     @pytest.mark.parametrize(
         "rational_point, expected_norm_squared",

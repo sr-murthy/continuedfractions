@@ -445,8 +445,8 @@ class RationalPoint(Dim2RationalCoordinates):
 
         return Decimal(math.degrees(angle))
 
-    def transpose(self) -> RationalPoint:
-        """:py:class:`~continuedfractions.rational_points.RationalPoint` : The "transpose" of the rational point as its vector transpose.
+    def orthogonal(self) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a rational point which as a vector is orthogonal to the original point.
 
         This is described by the linear transformation:
 
@@ -456,31 +456,60 @@ class RationalPoint(Dim2RationalCoordinates):
 
         for points
         :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`,
-        and has the property that :math:`P \\cdot P^T = P^T \\cdot P = 0` where
-        :math:`P^T` is the transpose.
+        and has the property that :math:`P \\cdot P^{\\perp} = P^{\\perp} \\cdot P = 0` where
+        :math:`\\perp` is the orthogonality relation..
 
         Returns
         -------
         RationalPoint
-            The "transpose" of the rational point as its vector transpose.
+            The "orthogonal" of the rational point as defined above.
 
         Examples
         --------
         >>> from fractions import Fraction as F
         >>> from continuedfractions.rational_points import RationalPoint as RP
-        >>> RP(F(1, 2), F(3, 4)).transpose()
+        >>> RP(F(1, 2), F(3, 4)).orthogonal()
         RationalPoint(-3/4, 1/2)
-        >>> RP(1, -2).transpose()
+        >>> RP(1, -2).orthogonal()
         RationalPoint(2, 1)
+        >>> RP(1, -2).orthogonal().dot(RP(1, -2))
+        ContinuedFraction(0, 1)
         """
         return self.__class__(-self.y, self.x)
+
+    def permute(self) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point by swapping the original coordinates.
+
+        This is described by the linear transformation:
+
+        .. math::
+
+           \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} \\begin{bmatrix}0 & 1 \\\\1 & 0 \\end{bmatrix} = \\begin{bmatrix} \\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
+
+        for points
+        :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`.
+
+        Returns
+        -------
+        RationalPoint
+            The permuted rational point with the original coordinates
+            swapped.
+
+        Examples
+        --------
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 2).permute()
+        RationalPoint(2, 1)
+        """
+        return self.__class__(self.y, self.x)
+
 
     def dot(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.
 
         If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
         :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are two
-        rational points in the plane their Eucliean dot product
+        rational points in the plane their dot product
         :math:`P \\cdot P'` is the rational number:
 
         .. math::
@@ -533,7 +562,8 @@ class RationalPoint(Dim2RationalCoordinates):
 
         The Euclidean (:math:`\\ell_2`) norm squared :math:`\\|P\\|_{2}^2` of a
         rational point :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d} \\right)`
-        in the plane is the dot product of :math:`r` with itself:
+        in the plane, which is the dot product :math:`P \\cdot P` of
+        :math:`P` with itself:
 
         .. math::
 
@@ -896,7 +926,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\left(\\frac{a_1}{c_1}, \\frac{b_1}{d_1}\\right) + \\left(\\frac{a_2}{c_2}, \\frac{b_2}{d_2}\\right) = \\left(\\frac{a_1c_2 + a_2c_1}{c_1c_2}, \\frac{b_1d_2 + b_2d_1}{d_1d_2}\\right)
+           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) + \\left(\\frac{a'}{c'}, \\frac{b'}{d'}\\right) = \\left(\\frac{ac' + a'c}{cc'}, \\frac{bd' + b'd}{dd'}\\right)
 
         The second operand as represented by ``other`` must be an instance of
         :py:class:`~continuedfractions.rational_points.RationalPoint`.
@@ -916,7 +946,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\left(\\frac{a_1}{c_1}, \\frac{b_1}{d_1}\\right) - \\left(\\frac{a_2}{c_2}, \\frac{b_2}{d_2}\\right) = \\left(\\frac{a_1c_2 - a_2c_1}{c_1c_2}, \\frac{b_1d_2 - b_2d_1}{d_1d_2}\\right)
+           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) - \\left(\\frac{a'}{c'}, \\frac{b'}{d'}\\right) = \\left(\\frac{ac' - a'c}{cc'}, \\frac{bd' - b'd}{dd'}\\right)
 
         The second operand as represented by ``other`` must be an instance of
         :py:class:`~continuedfractions.rational_points.RationalPoint`.

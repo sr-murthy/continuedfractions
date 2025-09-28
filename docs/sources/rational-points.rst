@@ -6,7 +6,7 @@
 Rational Points in the Plane
 ============================
 
-The :doc:`rational_points <continuedfractions/rational-points>` library provides a simple object-oriented interface for creating and operating on rational points in the ordinary :math:`xy`-plane, that is, points :math:`P = (x, y) \in \mathbb{R}^2` with rational coordinates :math:`x = \frac{a}{c}, y=\frac{b}{d} \in \mathbb{Q}` (where :math:`x,y` are necessarily reduced form fractions), which are thus elements of :math:`\mathbb{Q}^2`. One of the goals is to allow computing with rational points as pairs of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`  objects in a stateful way. There are also some features for computing certain arithmetical properties of rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`.
+The :doc:`rational_points <continuedfractions/rational-points>` library provides a simple object-oriented interface for creating and operating on rational points in the ordinary :math:`xy`-plane, that is, points :math:`P = (x, y) \in \mathbb{R}^2` with rational coordinates :math:`x = \frac{a}{c}, y=\frac{b}{d} \in \mathbb{Q}` (where :math:`x,y` are necessarily reduced form fractions), which are thus elements of :math:`\mathbb{Q}^2`. One of the goals is to allow computing with rational points as pairs of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`  objects in an intuitive, stateful way. There are also some features for computing certain arithmetical properties of rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`.
 
 .. note::
 
@@ -229,45 +229,48 @@ The implementation uses :py:func:`math.atan2` which respects angle signs in all 
 Scaling
 ~~~~~~~
 
-Scaling is available via the :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
+Scaling by rational values is available via :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
 
 .. code:: python
 
    >>> RP(F(1, 2), F(3, 4)).scale(2)
    RationalPoint(1, 3/2)
-   >>> RP(F(11, 2), F(3, 4)).scale(-2)
-   RationalPoint(-11, -3/2)
+   >>> RP(F(5, 4), F(-6, 11)).scale(F(-1, 2))
+   RationalPoint(-5/8, 3/11)
    >>> RP(F(1, 2), F(3, 4)).scale(0)
    RationalPoint(0, 0)
 
-.. _rational-points.vector-transpose:
+.. _rational-points.other-transformations:
 
-Vector Transposition
-~~~~~~~~~~~~~~~~~~~~
+Other Transformations
+~~~~~~~~~~~~~~~~~~~~~
 
-A vector transpose method :py:meth:`~continuedfractions.rational_points.RationalPoint.transpose` is available which maps points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to tranposes :math:`P^T = \left(-\frac{b}{d}, \frac{a}{c}\right)`:
+Currently only a few simple linear transformations are available, including :py:meth:`~continuedfractions.rational_points.RationalPoint.orthogonal`, which sends a point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to a point :math:`P^{\perp} = \left(-\frac{b}{d}, \frac{a}{c}\right)` "orthogonal" to :math:`P`:
 
 .. code:: python
 
-   >>> RP(F(1, 2), F(3, 4)).transpose()
+   >>> RP(F(1, 2), F(3, 4)).orthogonal()
    RationalPoint(-3/4, 1/2)
-   >>> RP(1, -2).transpose()
+   >>> RP(1, -2).orthogonal()
    RationalPoint(2, 1)
 
-This implements the linear transformation:
-
-.. math::
-
-   \begin{bmatrix}\frac{a}{c} \\ \frac{b}{d} \end{bmatrix} \begin{bmatrix}0 & -1 \\1 & 0 \end{bmatrix} = \begin{bmatrix} -\frac{b}{d} \\ \frac{a}{c} \end{bmatrix}
-
-and has the property that :math:`P \cdot P^T = P^T \cdot P = 0`:
+This is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & -1 \\1 & 0 \end{bmatrix}` and has the property that :math:`P \cdot P^{\perp} = P^{\perp} \cdot P = 0`:
 
 .. code:: python
 
    >>> RP(1, 1).angle(as_degrees=True)
    Decimal('45')
-   >>> RP(1, 1).transpose().angle(as_degrees=True)
+   >>> RP(1, 1).orthogonal().angle(as_degrees=True)
    Decimal('135')
+
+And also :py:meth:`~continuedfractions.rational_points.RationalPoint.permute`, which permutes (swaps) the coordinates of points:
+
+.. code:: python
+
+   >>> RP(F(1, 2), F(3, 4)).permute()
+   RationalPoint(3/4, 1/2)
+
+This is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & 1 \\1 & 0 \end{bmatrix}`.
 
 .. _rational-points.metrics:
 
@@ -307,7 +310,7 @@ The ``RP(1, 1)`` examples involve the rational point :math:`(1, 1)` whose Euclid
    >>> abs(RP(F(3, 5), F(4, 5)))
    Decimal('1')
 
-The implementation of Euclidean norm here is based on :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the standard dot product :math:`(x, y) \cdot (x', y') = xx' + yy'` of vectors in :math:`\mathbb{R}^2`.
+The implementation of Euclidean norm here is based on :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the standard dot product :math:`(x, y) \cdot (x', y')^T = xx' + yy'` of vectors in :math:`\mathbb{R}^2`.
 
 The rational points of unit norm lie on the unit circle :math:`C_1: x^2 + y^2 = 1`, and this can be checked simply by checking the norm squared:
 

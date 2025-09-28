@@ -222,7 +222,7 @@ By default :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` re
    >>> RP(-1, 0).angle(as_degrees=True)
    Decimal('180')
 
-The implementation uses :py:func:`math.atan2` which respects angle signs in all four quadrants of the plane by using both :math:`x`- and :math:`y`-coordinates in computing :math:`\text{arctan}\left(\frac{y}{x}\right)` and returns a value in the interval :math:`[-\pi, \pi]`.
+The implementation uses :py:func:`math.atan2` which respects angle signs in all four quadrants of the plane in computing :math:`\text{arctan}\left(\frac{y}{x}\right)` and returns a value in the interval :math:`[-\pi, \pi]`.
 
 .. _rational-points.scaling:
 

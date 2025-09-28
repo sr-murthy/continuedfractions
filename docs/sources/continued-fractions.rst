@@ -645,7 +645,7 @@ Convergents are useful for fast approximation algorithms. A key property in this
    q_k &= a_kq_{k - 1} + q_{k - 2},        \hskip{3em}    k \geq 2
    \end{align}
 
-where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`, and :math:`q_1 = p_1`. This means that the :math:`k`-th convergent can be computed from the :math:`(k - 1)`-st and :math:`(k - 2)`-nd convergents. This formula is faithfully implemented, iteratively, by the :py:meth:`~continuedfractions.lib.convergent` method.
+where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`, and :math:`q_1 = p_1`. (This can be proved by induction.) This means that the :math:`k`-th convergent can be computed from the :math:`(k - 1)`-st and :math:`(k - 2)`-nd convergents. This formula is faithfully implemented, iteratively, by the :py:meth:`~continuedfractions.lib.convergent` method.
 
 The same formula is also involved in the implementation of the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property, which returns a generator of an enumerated sequence of all the convergents of the continued fraction:
 

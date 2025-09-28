@@ -107,7 +107,7 @@ pdm install -v --dev --no-editable --no-self
 
 ## CI
 
-The main CI workflow is defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
+The main CI workflows are defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
 and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml).
 Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests,and doctests, in that order.
 

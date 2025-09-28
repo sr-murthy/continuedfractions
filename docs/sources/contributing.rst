@@ -126,7 +126,7 @@ or via `PDM <https://pdm.fming.dev/latest/>`_:
 CI :fas:`circle-play`
 =====================
 
-The main CI workflow is defined in the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ and the `CodeQL Analysis YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml>`_. Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests,and  doctests, in that order.
+The main CI workflows are defined in the `CI YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml>`_ and the `CodeQL Analysis YML <https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml>`_. Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests,and  doctests, in that order.
 
 .. _contributing.versioning-and-releases:
 

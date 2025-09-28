@@ -443,7 +443,37 @@ class RationalPoint(Dim2RationalCoordinates):
         if not as_degrees:
             return angle
 
-        return Decimal(math.degrees(angle))    
+        return Decimal(math.degrees(angle))
+
+    def transpose(self) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : The "transpose" of the rational point as its vector transpose.
+
+        This is described by the linear transformation:
+
+        .. math::
+
+           \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} \\begin{bmatrix}0 & -1 \\\\1 & 0 \\end{bmatrix} = \\begin{bmatrix} -\\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
+
+        for points
+        :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`,
+        and has the property that :math:`P \\cdot P^T = P^T \\cdot P = 0` where
+        :math:`P^T` is the transpose.
+
+        Returns
+        -------
+        RationalPoint
+            The "transpose" of the rational point as its vector transpose.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(F(1, 2), F(3, 4)).transpose()
+        RationalPoint(-3/4, 1/2)
+        >>> RP(1, -2).transpose()
+        RationalPoint(2, 1)
+        """
+        return self.__class__(-self.y, self.x)
 
     def dot(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.

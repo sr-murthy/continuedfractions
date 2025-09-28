@@ -191,26 +191,43 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Vector Properties and Operations
 --------------------------------
 
-This is not intended to be a linear algebra library so linear transformations (e.g. rotation, reflection, translation) aren't generally supported, at least currently. Some basic functionality for treating rational points as vectors of :math:`\mathbb{Q}^2` does exist in the form of properties and operations such as angle, dot product, norm, distances in relation to other rational points, while some simple transformations sucn as scaling, transposition, and coordinate swapping are available.
+This is not intended to be a linear algebra library and currently linear transformations (e.g. rotation, reflection, translation) aren't generally supported. Some basic functionality for treating rational points as vectors of :math:`\mathbb{Q}^2` does exist in the form of properties and operations such as angle, dot product, norm, distances in relation to other rational points, while some simple transformations sucn as scaling, transposition, and coordinate swapping are available.
 
-Dot products, norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, for the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`. Angles (both in radians and degrees) are available via the :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` method:
+Dot products, norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
+
+.. _rational-points.angles:
+
+Angles
+~~~~~~
+
+Angles (both in radians and degrees) are available via the :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` method:
 
 .. code:: python
 
    >>> RP(1, 0).angle()
    Decimal('0')
-   >>> RP(1, 0).angle(as_degrees=True)
-   Decimal('0')
    >>> RP(0, 1).angle()
    Decimal('1.5707963267948965579989817342720925807952880859375')
-   >>> RP(0, 1).angle(as_degrees=True)
-   Decimal('90')
    >>> RP(-1, 0).angle()
    Decimal('3.141592653589793115997963468544185161590576171875')
+
+By default :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` returns radian angles. For degrees the ``as_degrees=True`` option can be used:
+
+.. code:: python
+
+   >>> RP(1, 0).angle(as_degrees=True)
+   Decimal('0')
+   >>> RP(0, 1).angle(as_degrees=True)
+   Decimal('90')
    >>> RP(-1, 0).angle(as_degrees=True)
    Decimal('180')
 
 The implementation uses :py:func:`math.atan2` which respects angle signs in all four quadrants of the plane by using both :math:`x`- and :math:`y`-coordinates in computing :math:`\text{arctan}\left(\frac{y}{x}\right)` and returns a value in the interval :math:`[-\pi, \pi]`.
+
+.. _rational-points.scaling:
+
+Scaling
+~~~~~~~
 
 Scaling is available via the :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
 
@@ -222,6 +239,35 @@ Scaling is available via the :py:meth:`~continuedfractions.rational_points.Ratio
    RationalPoint(-11, -3/2)
    >>> RP(F(1, 2), F(3, 4)).scale(0)
    RationalPoint(0, 0)
+
+.. _rational-points.vector-transpose:
+
+Vector Transposition
+~~~~~~~~~~~~~~~~~~~~
+
+A vector transpose method :py:meth:`~continuedfractions.rational_points.RationalPoint.transpose` is available which maps points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to tranposes :math:`P^T = \left(-\frac{b}{d}, \frac{a}{c}\right)`:
+
+.. code:: python
+
+   >>> RP(F(1, 2), F(3, 4)).transpose()
+   RationalPoint(-3/4, 1/2)
+   >>> RP(1, -2).transpose()
+   RationalPoint(2, 1)
+
+This implements the linear transformation:
+
+.. math::
+
+   \begin{bmatrix}\frac{a}{c} \\ \frac{b}{d} \end{bmatrix} \begin{bmatrix}0 & -1 \\1 & 0 \end{bmatrix} = \begin{bmatrix} -\frac{b}{d} \\ \frac{a}{c} \end{bmatrix}
+
+and has the property that :math:`P \cdot P^T = P^T \cdot P = 0`:
+
+.. code:: python
+
+   >>> RP(1, 1).angle(as_degrees=True)
+   Decimal('45')
+   >>> RP(1, 1).transpose().angle(as_degrees=True)
+   Decimal('135')
 
 .. _rational-points.metrics:
 

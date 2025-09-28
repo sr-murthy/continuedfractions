@@ -340,6 +340,17 @@ class TestRationalPoint:
         assert rational_point1.dot(rational_point2) == expected_dot_product
 
     @pytest.mark.parametrize(
+        "rational_point, expected_transpose",
+        [
+            (RP(0, 0), RP(0, 0)),
+            (RP(1, 2), RP(-2, 1)),
+            (RP(1, -2), RP(2, 1))
+        ]
+    )
+    def test_RationalPoint_transpose(self, rational_point, expected_transpose):
+        assert rational_point.transpose() == expected_transpose
+
+    @pytest.mark.parametrize(
         "rational_point, expected_norm_squared",
         [
             (RP(0, 0), CF(0, 1),),

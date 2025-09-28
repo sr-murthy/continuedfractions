@@ -251,7 +251,7 @@ Some examples are given below of these.
    >>> RP(F(3, 5), F(4, 5)).norm
    Decimal('1')
 
-Note that the ``RP(1, 1)`` examples involve the rational point :math:`(1, 1)` whose Euclidean norm is :math:`\sqrt{2}`, while the ``RP(F(3, 5), F(4, 5))`` examples involve the unit circle rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)` of norm :math:`1`. Also note that an alternative way to calculate Euclidean norm for :py:class:`~continuedfractions.rational_points.RationalPoint` objects is to call on the :py:func:`abs` built-in:
+Note that the ``RP(1, 1)`` examples involve the rational point :math:`(1, 1)` whose Euclidean norm is :math:`\sqrt{2}`, while the ``RP(F(3, 5), F(4, 5))`` examples involve the unit circle rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)` of norm :math:`1`. An alternative way to calculate Euclidean norm for :py:class:`~continuedfractions.rational_points.RationalPoint` objects is to call on the :py:func:`abs` built-in:
 
 .. code:: python
 
@@ -264,18 +264,19 @@ Note that the ``RP(1, 1)`` examples involve the rational point :math:`(1, 1)` wh
 
 The implementation of Euclidean norm here is based on :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the standard dot product :math:`(x, y) \cdot (x', y') = (xx', yy')` of vectors in :math:`\mathbb{R}^2`.
 
-The rational points of unit norm lie on the unit circle :math:`C_1: x^2 + y^2 = 1`, and this property can also be checked with the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_unit_point` method:
+The rational points of unit norm lie on the unit circle :math:`C_1: x^2 + y^2 = 1`, and this can be checked simply by checking the norm squared:
 
 .. code:: python
 
-   >>> RP(0, 1).is_unit_point()
+   >>> assert RP(1, 0).norm_squared == 1
    True
-   >>> RP(0, -1).is_unit_point()
+   >>> assert RP(0, 1).norm_squared == 1
    True
-   >>> RP(F(3, 5), F(4, 5)).is_unit_point()
+   >>> assert RP(F(3, 5), F(4, 5)).norm_squared == 1
    True
-   >>> RP(1, 1).is_unit_point()
-   False
+   >>> assert RP(1, 1).norm_squared == 1
+   ...
+   AssertionError:
 
 The Euclidean distance operations for two rational points :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` and :math:`P' = \left(\frac{a'}{c'},\frac{b'}{d'}\right)` include :py:meth:`~continuedfractions.rational_points.RationalPoint.distance_squared`, which implements :math:`\|P - P'\|_{2}^2 = \left(\frac{a}{c} - \frac{a'}{c'}\right)^2 + \left(\frac{b}{d} - \frac{b'}{d'}\right)^2 = \frac{(ac' - a'c)^2}{(cc')^2} + \frac{(bd' - b'd)^2}{(dd')^2}`, the rational-valued square of the distance proper, and returns a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` value, while :py:meth:`~continuedfractions.rational_points.RationalPoint.distance`, returns the actual distance :math:`\|P - P'\|_2 = \sqrt{\left(\frac{a}{c} - \frac{a'}{c'}\right)^2 + \left(\frac{b}{d} - \frac{b'}{d'}\right)^2} = \sqrt{\frac{(ac' - a'c)^2}{(cc')^2} + \frac{(bd' - b'd)^2}{(dd')^2}}` as a :py:class:`~decimal.Decimal` value. 
 

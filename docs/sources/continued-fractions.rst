@@ -138,7 +138,7 @@ For this reason, floats and float division are avoided, and rationals are proces
 
 Continued fractions for irrational numbers given directly as :py:class:`float` instances end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` value to a :py:class:`fractions.Fraction` instance. However, as described in the :ref:`next section <continued-fractions.from-coefficients>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances with arbitrary sequences of coefficients, which can give much more accurate results.
 
-An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`, where the :py:class:`decimal.Decimal` precision has been set to `100`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` value:
+An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`, where the :py:class:`decimal.Decimal` precision has been set to :math:`100`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` value:
 
 .. code:: python
 
@@ -483,7 +483,7 @@ and also fractions :math:`\frac{a}{b}` where :math:`|a| > |b|`:
 
 The construction (creation + initialisation) of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances occurs mostly in the :py:class:`fractions.Fraction` class, but there are no sign-related differences either in the construction steps in :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__new__`.
 
-A few examples are given below (those involving :py:class:`decimal.Decimal` have precision set to `100`)
+A few examples are given below (those involving :py:class:`decimal.Decimal` have precision set to :math:`100`)
 
 .. code:: python
 

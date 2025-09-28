@@ -433,19 +433,6 @@ class TestRationalPoint:
         assert rational_point1.distance(rational_point2) == expected_distance
 
     @pytest.mark.parametrize(
-        "rational_point, expected_is_unit_point",
-        [
-            (RP(0, 0), False),
-            (RP(1, F(2, 3)), False),
-            (RP(F(1, 2), 3), False),
-            (RP(F(3, 5), F(4, 5)), True),
-            (RP(F(-3, 5), F(4, 5)), True),
-        ]
-    )
-    def test_RationalPoint_is_unit_point(self, rational_point, expected_is_unit_point):
-        assert rational_point.is_unit_point() == expected_is_unit_point
-
-    @pytest.mark.parametrize(
         "rational_point, expected_is_lattice_point",
         [
             (RP(0, 0), True),

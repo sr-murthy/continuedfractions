@@ -657,27 +657,6 @@ class RationalPoint(Dim2RationalCoordinates):
 
         return self.distance_squared(other).as_decimal().sqrt()
 
-    def is_unit_point(self) -> bool:
-        """:py:class:`bool` : Whether the rational point falls on the unit circle, which is the case if it has unit (:math:`\\ell_2`) norm.
-
-        Returns
-        -------
-        bool
-            Whether the coordinates satisfy the unit circle equation:
-
-            .. math::
-
-               x^2 + y^2 = 1
-
-        Examples
-        --------
-        >>> RationalPoint(Fraction(3, 5), Fraction(4, 5)).is_unit_point()
-        True
-        >>> RationalPoint(Fraction(3, 4), Fraction(4, 5)).is_unit_point()
-        False
-        """
-        return self.norm_squared == 1
-
     def is_lattice_point(self) -> bool:
         """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.
 

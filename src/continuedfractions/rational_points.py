@@ -402,7 +402,7 @@ class RationalPoint(Dim2RationalCoordinates):
     def angle(self, /, *, as_degrees: bool = False) -> Decimal:
         """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the rational point as a vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
         
-        Uses :py:func:`math.arctan2`, which respects angle signs in the four
+        Uses :py:func:`math.atan2`, which respects angle signs in the four
         quadrants by using both :math:`x`- and :math:`y`-coordinates of a
         plane point :math:`P = (x, y)`:
 
@@ -411,7 +411,7 @@ class RationalPoint(Dim2RationalCoordinates):
         * :math:`-\\pi < \\theta \\leq -\\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{III}` (:math:`x \\leq 0, y < 0`)
         * :math:`-\\frac{\\pi}{2} < \\theta < 0` for :math:`P` in quadrant :math:`\\text{IV}` (:math:`x > 0, y < 0`)
 
-        The optional ``as_degrees` boolean can be used to return the angle in
+        The optional ``as_degrees`` boolean can be used to return the angle in
         degrees.
 
         Parameters

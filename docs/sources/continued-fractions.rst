@@ -42,7 +42,7 @@ The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) b
 
    All references to "continued fraction" are to the simple forms.
 
-We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail". The order of the continued fraction is therefore the length of its tail.
+The leading integer :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, can be viewed as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail". The order of the continued fraction is therefore the length of its tail.
 
 We use here a widely used notation for continued fractions, which is as a tuple of integers :math:`[a_0; a_1, a_2, \ldots, a_n, \ldots]` standing for the expression:
 
@@ -132,9 +132,9 @@ You can also set indicators that :py:class:`~decimal.Decimal` computations shoul
 Irrational Numbers
 ------------------
 
-Every finite continued fraction represents a rational number, as a finite continued fraction is a "nested" sum of rational numbers. Conversely, every rational number can be represented as a finite (and simple) continued fraction, by an iterative procedure using `Euclidean division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_. On the other hand, infinite continued fractions represent `irrational numbers <https://en.wikipedia.org/wiki/Irrational_number>`_ and conversely every infinite continued fraction represents an irrational number.
+Rational numbers are represented by finite continued fractions, while irrational numbers can only be represented by infinite continued fractions. There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, cannot be represented exactly by Python :py:class:`float` instances, for example, :math:`\frac{1}{3} = 0.33333...` which, as a :py:class:`float` value ``1/3`` leads to the approximate Python fraction ``Fraction(6004799503160661, 18014398509481984)``.
 
-There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, also, cannot be represented exactly as Python :py:class:`float` instances. To deal with this, the package processes rational numbers using the :py:class:`fractions.Fraction` class, which allows for exact continued fractions for any rational number, limited only by the available memory and/or capacity of the running environment.
+To deal with this, the package processes rational numbers using the :py:class:`fractions.Fraction` class, which allows for exact continued fractions for any rational number, limited only by the available memory and/or capacity of the running environment.
 
 Continued fractions for irrational numbers given directly as :py:class:`float` instances end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` value to a :py:class:`fractions.Fraction` instance. However, as described in the :ref:`next section <continued-fractions.from-coefficients>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances with arbitrary sequences of coefficients, which can give much more accurate results.
 
@@ -652,7 +652,7 @@ Using the continued fraction :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` as
 Fast Algorithms for Computing Convergents
 -----------------------------------------
 
-Convergents have very important properties that are key to fast approximation algorithms. A key property in this regard is a recurrence relation between the convergents given by:
+Convergents are useful for fast approximation algorithms. A key property in this regard is the recurrence relation between the convergents given by:
 
 .. math::
    

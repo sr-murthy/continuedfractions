@@ -10,7 +10,7 @@ Building on :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` 
 
 .. note::
 
-   The term "rational point" (plural "rational points") in this documentation refers to such points exclusively, and the notation :math:`\mathbb{Q}^2` will be used for brevity when convenient.
+   The term "rational point" (plural "rational points") in this documentation refers to such points exclusively, and the notation :math:`\mathbb{Q}^2` will be used when convenient.
 
 The main feature of the library is the :py:class:`~continuedfractions.rational_points.RationalPoint` class for creating and operating on rational points as Python objects, specifically, :py:class:`tuple`-type pairs of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects. The class, its features and usage is described in more detail below.
 
@@ -205,6 +205,8 @@ As a vector subspace of :math:`\mathbb{R}^2` rational points can be viewed as 2D
    >>> RP(1, 1).angle(as_degrees=True)
    Decimal('45')
 
+The implementation uses :py:func:`math.atan2` which respects angle signs in the four quadrants by using both :math:`x`- and :math:`y`-coordinates of a plane point :math:`P = (x, y)`.
+
 .. _rational-points.linear-transforms:
 
 Linear Transformations
@@ -374,10 +376,10 @@ For a rational point :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` the projec
 
 The :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` property is simply the implementation of the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)` (where :math:`\lambda = \text{lcm}(c, d) > 0`) for rational points.
 
-.. _rational-points:projective-height:
+.. _rational-points.heights:
 
-Projective Height
-~~~~~~~~~~~~~~~~~
+Heights
+~~~~~~~
 
 The :py:attr:`~continuedfractions.rational_points.RationalPoint.height` property returns the (projective) height :math:`H` of a rational point :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` as given by:
 
@@ -451,7 +453,7 @@ Rational points on curves forms a large subject that isn't supported directly in
 .. _rational-points.references:
 
 References
-==========
+----------
 
 [1] Clader, E., Ross, D. (2025 May). Beginning Algebraic Geometry. Springer. https://link.springer.com/content/pdf/10.1007/978-3-031-88819-9.pdf
 

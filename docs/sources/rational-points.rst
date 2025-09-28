@@ -187,6 +187,24 @@ Note that in relation to addition, specifically, the :py:meth:`~continuedfractio
 
 This should be the preferred method as the Python built-in :py:func:`sum` function sets an internal :py:class:`int` start value of ``0``, which causes it to fail on :py:class:`~continuedfractions.rational_points.RationalPoint` instances.
 
+.. _rational-points.vector-properties:
+
+Vector Properties
+-----------------
+
+As a vector subspace of :math:`\mathbb{R}^2` rational points can be viewed as 2D vectors with properties such as angle, norm, distances in relation to other rational points etc. Discussion of norms and distances can be found in later sections :ref:`here <rational-points.euclidean-metrics>` and :ref:`here <rational-points.rectilinear-metrics>`. Angles (both in radians and degrees) are available via :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` method:
+
+.. code:: python
+
+   >>> RP(1, 0).angle()
+   Decimal('0')
+   >>> RP(1, 0).angle(as_degrees=True)
+   Decimal('0')
+   >>> RP(1, 1).angle()
+   Decimal('0.78539816339744827899949086713604629039764404296875')
+   >>> RP(1, 1).angle(as_degrees=True)
+   Decimal('45')
+
 .. _rational-points.linear-transforms:
 
 Linear Transformations

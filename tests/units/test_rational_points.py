@@ -11,6 +11,8 @@ context = decimal.Context(prec=28, Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN)
 context.traps[decimal.Inexact] = False
 decimal.setcontext(context)
 
+import math
+
 from decimal import Decimal as D
 from fractions import Fraction as F
 
@@ -307,6 +309,23 @@ class TestRationalPoint:
         assert RP.sum(*rational_points) == expected_sum
 
     @pytest.mark.parametrize(
+        "rational_point, expected_angle, expected_angle_as_degrees",
+        [
+            (RP(1, 0), D('0'), D('0'),),
+            (RP(1, 1), D(math.atan2(1, 1)), D('45'),),
+            (RP(0, 1), D(math.atan2(1, 0)), D('90'),),
+            (RP(-1, 1), D(math.atan2(1, -1)), D('135'),),
+            (RP(-1, 0), D(math.atan2(0, -1)), D('180'),),
+            (RP(-1, -1), D(math.atan2(-1, -1)), -D('135'),),
+            (RP(0, -1), D(math.atan2(-1, 0)), -D('90'),),
+            (RP(1, -1), D(math.atan2(-1, 1)), -D('45'),),
+        ]
+    )
+    def test_RationalPoint_angle(self, rational_point, expected_angle, expected_angle_as_degrees):
+        assert rational_point.angle() == expected_angle
+        assert rational_point.angle(as_degrees=True) == expected_angle_as_degrees
+
+    @pytest.mark.parametrize(
         "rational_point1, rational_point2, expected_dot_product",
         [
             (RP(0, 0), RP(1, 2), CF(0, 1),),
@@ -525,14 +544,14 @@ class TestRationalPoint:
 
         with pytest.raises(TypeError):
             RP(1, 2) + 3
-            RP(1, 2) + Decimal('3')
+            RP(1, 2) + D('3')
             RP(1, 2) + -.3
 
             RP(1, 2) - 3
-            RP(1, 2) - Decimal('3')
+            RP(1, 2) - D('3')
             RP(1, 2) - .3
 
-            Decimal('3') * RP(1, 2)
+            D('3') * RP(1, 2)
             .3 * RP(1, 2)
 
         with pytest.raises(NotImplementedError):

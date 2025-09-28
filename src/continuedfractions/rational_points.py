@@ -399,6 +399,52 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return Dim2RationalCoordinates(*self)
 
+    def angle(self, /, *, as_degrees: bool = False) -> Decimal:
+        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the rational point as a vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
+        
+        Uses :py:func:`math.arctan2`, which respects angle signs in the four
+        quadrants by using both :math:`x`- and :math:`y`-coordinates of a
+        plane point :math:`P = (x, y)`:
+
+        * :math:`0 \\leq \\theta \\leq \\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{I}` (:math:`x, y \\geq 0`)
+        * :math:`\\frac{\\pi}{2} < \\theta \\leq \\pi` for :math:`P` in quadrant :math:`\\text{II}` (:math:`x < 0, y \\geq 0`)
+        * :math:`-\\pi < \\theta \\leq -\\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{III}` (:math:`x \\leq 0, y < 0`)
+        * :math:`-\\frac{\\pi}{2} < \\theta < 0` for :math:`P` in quadrant :math:`\\text{IV}` (:math:`x > 0, y < 0`)
+
+        The optional ``as_degrees` boolean can be used to return the angle in
+        degrees.
+
+        Parameters
+        ----------
+        as_degrees : bool, default=False
+            Whether to return the angle in degrees.
+
+        Returns
+        -------
+        decimal.Decimal
+           The radian angle :math:`\\theta` between the rational point as a
+           vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis,
+           where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
+
+        Examples
+        --------
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 0).angle()
+        Decimal('0')
+        >>> RP(1, 0).angle(as_degrees=True)
+        Decimal('0')
+        >>> RP(1, 1).angle()
+        Decimal('0.78539816339744827899949086713604629039764404296875')
+        >>> RP(1, 1).angle(as_degrees=True)
+        Decimal('45')
+        """
+        angle = Decimal(math.atan2(self.y, self.x))
+
+        if not as_degrees:
+            return angle
+
+        return Decimal(math.degrees(angle))    
+
     def dot(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.
 

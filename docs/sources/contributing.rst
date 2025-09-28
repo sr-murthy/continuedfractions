@@ -133,6 +133,6 @@ The main CI workflow is defined in the `CI YML <https://github.com/sr-murthy/con
 Versioning and Releases :fas:`upload`
 =====================================
 
-The latest release is ``1.5.0``.
+The latest release is ``1.6.0``.
 
 There is currently no dedicated pipeline for releases - both `GitHub releases <https://github.com/sr-murthy/continuedfractions/releases>`_ and `PyPI packages <https://pypi.org/project/continuedfractions>`_ are published manually, but both have the same version tag.

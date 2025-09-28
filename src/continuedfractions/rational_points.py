@@ -277,7 +277,7 @@ class HomogeneousCoordinates(Dim3RationalCoordinates):
         >>> HomogeneousCoordinates(3, 4, 5).to_rational_point()
         RationalPoint(3/5, 4/5)
         """
-        return RationalPoint(ContinuedFraction(self.x, self.z), ContinuedFraction(self.y, self.z))
+        return RationalPoint(Fraction(self.x, self.z), Fraction(self.y, self.z))
 
 
 class RationalPoint(Dim2RationalCoordinates):

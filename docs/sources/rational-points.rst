@@ -94,7 +94,7 @@ The :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` pro
 Generic Tuple Properties & Operations
 -------------------------------------
 
-The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`). As a :py:class:`tuple` subtype type and equality checks for the parent type are always satisfied, and hash values are consistent:
+The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`). As a subtype of :py:class:`tuple` checks for type and equality in relation to the parent type are always satisfied, and hash values are consistent:
 
 .. code:: python
 
@@ -102,7 +102,6 @@ The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a cus
    >>> RationalPoint(1/2, 3/5)
    >>> isinstance(P, tuple)
    True
-   >>> P == (F(1, 2), F(3, 5))
    >>> assert hash(P) == hash(tuple(P))
 
 Almost all of the common :py:class:`tuple`-compatible operations are supported, including indexing, sorting, iteration, unpacking:
@@ -263,7 +262,7 @@ Note that the ``RP(1, 1)`` examples involve the rational point :math:`(1, 1)` wh
    >>> abs(RP(F(3, 5), F(4, 5)))
    Decimal('1')
 
-The implementation of Euclidean norm here is based on :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the standard dot product of vectors in :math:`\mathbb{R}^2`.
+The implementation of Euclidean norm here is based on :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the standard dot product :math:`(x, y) \cdot (x', y') = (xx', yy')` of vectors in :math:`\mathbb{R}^2`.
 
 The rational points of unit norm lie on the unit circle :math:`C_1: x^2 + y^2 = 1`, and this property can also be checked with the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_unit_point` method:
 

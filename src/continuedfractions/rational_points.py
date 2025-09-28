@@ -351,8 +351,8 @@ class RationalPoint(Dim2RationalCoordinates):
         This is designed as a helper method for rational point summation
         because the built-in :py:func:`sum` function only works for
         :py:class:`~continuedfractions.rational_points.RationalPoint`
-        instances if the ``start`` value is set to ``0``, which many users may
-        not be aware of.
+        instances if the ``start`` value is set to ``RP(0, 0)``, which many
+        users may not be aware of.
 
         Parameters
         ----------

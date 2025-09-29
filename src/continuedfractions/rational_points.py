@@ -452,7 +452,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} \\begin{bmatrix}0 & -1 \\\\1 & 0 \\end{bmatrix} = \\begin{bmatrix} -\\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
+           \\begin{bmatrix}0 & -1 \\\\1 & 0 \\end{bmatrix} \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} = \\begin{bmatrix} -\\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
 
         for points
         :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`,
@@ -484,7 +484,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} \\begin{bmatrix}0 & 1 \\\\1 & 0 \\end{bmatrix} = \\begin{bmatrix} \\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
+           \\begin{bmatrix}0 & 1 \\\\1 & 0 \\end{bmatrix} \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} = \\begin{bmatrix} \\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
 
         for points
         :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`.

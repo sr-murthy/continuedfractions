@@ -42,7 +42,7 @@ The representation :math:`[3; 4, 12, 4]` is called **simple** (or **regular**) b
 
    All references to "continued fraction" are to the simple forms.
 
-We can think of :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail". The order of the continued fraction is therefore the length of its tail.
+The leading integer :math:`3`, which is the integer part of :math:`\frac{649}{200} = 3.245`, can be viewed as the "head" of the continued fraction, and the integers :math:`4, 12, 4`, which determine the fractional part :math:`\cfrac{1}{4 + \cfrac{1}{12 + \cfrac{1}{4}}} = \frac{49}{200} = 0.245` of the continued fraction, as its "tail". The order of the continued fraction is therefore the length of its tail.
 
 We use here a widely used notation for continued fractions, which is as a tuple of integers :math:`[a_0; a_1, a_2, \ldots, a_n, \ldots]` standing for the expression:
 
@@ -132,13 +132,13 @@ You can also set indicators that :py:class:`~decimal.Decimal` computations shoul
 Irrational Numbers
 ------------------
 
-Every finite continued fraction represents a rational number, as a finite continued fraction is a "nested" sum of rational numbers. Conversely, every rational number can be represented as a finite (and simple) continued fraction, by an iterative procedure using `Euclidean division <https://en.wikipedia.org/wiki/Continued_fraction#Calculating_continued_fraction_representations>`_. On the other hand, infinite continued fractions represent `irrational numbers <https://en.wikipedia.org/wiki/Irrational_number>`_ and conversely every infinite continued fraction represents an irrational number.
+Rational numbers are represented by finite continued fractions, while irrational numbers can only be represented by infinite continued fractions. There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, cannot be represented exactly by Python :py:class:`float` instances, for example, :math:`\frac{1}{3} = 0.33333...` which, as a :py:class:`float` value ``1/3`` leads to the approximate Python fraction ``Fraction(6004799503160661, 18014398509481984)``.
 
-There are infinitely many rational and irrational numbers that cannot be represented exactly as binary fractions, which form the basis for `floating point arithmetic <https://docs.python.org/3/tutorial/floatingpoint.html>`_, and, therefore, also, cannot be represented exactly as Python :py:class:`float` instances. To deal with this, the package processes rational numbers using the :py:class:`fractions.Fraction` class, which allows for exact continued fractions for any rational number, limited only by the available memory and/or capacity of the running environment.
+For this reason, floats and float division are avoided, and rationals are processed internally using :py:class:`fractions.Fraction` where possible.
 
 Continued fractions for irrational numbers given directly as :py:class:`float` instances end up as fractional approximations, as they rely on converting :py:class:`decimal.Decimal` representations of the given :py:class:`float` value to a :py:class:`fractions.Fraction` instance. However, as described in the :ref:`next section <continued-fractions.from-coefficients>`, the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` method can be used to create :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances with arbitrary sequences of coefficients, which can give much more accurate results.
 
-An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`, where the :py:class:`decimal.Decimal` precision has been set to `100`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` value:
+An example is given below for the irrational :math:`\sqrt{2}`, which is given by the infinite periodic continued fraction :math:`[1; 2, 2, 2, \ldots]`, where the :py:class:`decimal.Decimal` precision has been set to :math:`100`. We first begin by constructing the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance for :math:`\sqrt{2}` directly from a ``math.sqrt(2)`` value:
 
 .. code:: python
 
@@ -156,8 +156,6 @@ An example is given below for the irrational :math:`\sqrt{2}`, which is given by
 
 
 Here, ``ContinuedFraction(6369051672525773, 4503599627370496)`` is a fractional approximation of :math:`\sqrt{2}`, for the reasons described above, and not exact, as reflected in the tail coefficients of the sequence deviating from the mathematically correct value of :math:`2`. Also, note that the decimal value of ``ContinuedFraction(math.sqrt(2))`` above for :math:`\sqrt{2}` is only accurate up to :math:`15` digits in the fractional part, compared to the `first one million digit representation <https://apod.nasa.gov/htmltest/gifcity/sqrt2.1mil>`_.
-
-However, in the :ref:`next section <continued-fractions.from-coefficients>`, we describe a way to construct continued fractions with arbitary sequences of coefficients, which can produce results of any given desired level of accuracy for irrational numbers.
 
 .. _continued-fractions.from-coefficients:
 
@@ -187,7 +185,7 @@ The :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coeff
    >>> tuple(cf_negative_inverse.coefficients)
    (-1, 1, 2, 4, 12, 4)
 
-The given sequence of coefficients can be arbitrarily long, subject to the limitations of the environment, system etc.
+The given sequence of coefficients can be arbitrarily long, subject to the usual limitations of the system.
 
 A :py:class:`ValueError` is raised if the given coefficients are not integers, or if any tail coefficients are not positive integers.
 
@@ -206,7 +204,7 @@ A :py:class:`ValueError` is raised if the given coefficients are not integers, o
    ...
    ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
 
-Here is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
+Below is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` with :math:`[1; \overbrace{2, 2,\ldots, 2]}^{1000 \text{ twos}}` where the tail contains :math:`1000` twos.
 
 .. code:: python
 
@@ -216,7 +214,7 @@ Here is an example for approximating :math:`\sqrt{2}` using :py:meth:`~continued
 
 The algorithm implemented by :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` is division-free and uses a well known recurrence relation for convergents of simple continued fractions, which is described :ref:`here <continued-fractions.fast-algorithms>`.
 
-For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` will produce exactly the same results as the constructor for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, but allows the user to specify an exact sequence of coefficients, if it is known, or an arbitrary sequence of coefficients for :ref:`approximations <continued-fractions.rational-approximation>` or experimental computations.
+For rational numbers :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.from_coefficients` will always produce exactly the same results as calling :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` directly.
 
 .. _continued-fractions.inplace-extension:
 
@@ -332,11 +330,7 @@ Rational Operations
 
 The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class is a subclass of :py:class:`fractions.Fraction` and supports all of the rational operations implemented in the superclass. This means that :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are fully operable as rational numbers, as well as encapsulating the properties of (finite) simple continued fractions.
 
-.. note::
-
-   Implementations of rational operations in the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class will always return a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance **unless** the operation is binary and the other operand is either not a :py:class:`fractions.Fraction` instance, or in some operations, such as :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__pow__`, :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__rpow__` etc., not an :py:class:`int`.
-
-A few examples are given below of some key rational operations for the rational :math:`\frac{649}{200}` with ``ContinuedFraction(649, 200)``.
+A few examples are given below.
 
 .. code:: python
 
@@ -371,19 +365,9 @@ A few examples are given below of some key rational operations for the rational 
    >>> assert ContinuedFraction.from_coefficients(10, 1, 1, 7, 1, 4, 1, 3, 5, 1, 7, 2) == cf ** 2
    # True
 
-As these examples illustrate, the continued fraction properties of the :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances are fully respected by the rational operations.
+Rational operations can, in principle, involve any instance of :py:class:`numbers.Rational`, but in practice correct, predictable results are only guaranteed with :py:class:`int`, :py:class:`~fractions.Fraction` and of course :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, and in these cases the outputs are always new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
 
-Rational operations for :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` can involve any instance of :py:class:`numbers.Rational`, including :py:class:`int` and :py:class:`fractions.Fraction`, but results are only guaranteed for the latter two types, and in these cases the result is always a new :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instance.
-
-.. code:: python
-
-   >>> cf = ContinuedFraction('0.5')
-   >>> cf
-   ContinuedFraction(1, 2)
-   >>> id(cf), id(-cf)
-   (4603182592, 4599771072)
-
-Binary operations involving :py:class:`decimal.Decimal` or :py:class:`complex`: will trigger errors.
+Binary operations involving incompatible types such as :py:class:`decimal.Decimal` or :py:class:`complex` will trigger errors.
 
 .. code:: python
 
@@ -499,7 +483,7 @@ and also fractions :math:`\frac{a}{b}` where :math:`|a| > |b|`:
 
 The construction (creation + initialisation) of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances occurs mostly in the :py:class:`fractions.Fraction` class, but there are no sign-related differences either in the construction steps in :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.__new__`.
 
-A few examples are given below (those involving :py:class:`decimal.Decimal` have precision set to `100`)
+A few examples are given below (those involving :py:class:`decimal.Decimal` have precision set to :math:`100`)
 
 .. code:: python
 
@@ -652,7 +636,7 @@ Using the continued fraction :math:`[3; 4, 12, 4]` of :math:`\frac{649}{200}` as
 Fast Algorithms for Computing Convergents
 -----------------------------------------
 
-Convergents have very important properties that are key to fast approximation algorithms. A key property in this regard is a recurrence relation between the convergents given by:
+Convergents are useful for fast approximation algorithms. A key property in this regard is the recurrence relation between the convergents given by:
 
 .. math::
    
@@ -661,7 +645,7 @@ Convergents have very important properties that are key to fast approximation al
    q_k &= a_kq_{k - 1} + q_{k - 2},        \hskip{3em}    k \geq 2
    \end{align}
 
-where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`, and :math:`q_1 = p_1`. This means that the :math:`k`-th convergent can be computed from the :math:`(k - 1)`-st and :math:`(k - 2)`-nd convergents. This formula is faithfully implemented, iteratively, by the :py:meth:`~continuedfractions.lib.convergent` method.
+where :math:`p_0 = a_0`, :math:`q_0 = 1`, :math:`p_1 = p_1p_0 + 1`, and :math:`q_1 = p_1`. (This can be proved by induction.) This means that the :math:`k`-th convergent can be computed from the :math:`(k - 1)`-st and :math:`(k - 2)`-nd convergents. This formula is faithfully implemented, iteratively, by the :py:meth:`~continuedfractions.lib.convergent` method.
 
 The same formula is also involved in the implementation of the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property, which returns a generator of an enumerated sequence of all the convergents of the continued fraction:
 

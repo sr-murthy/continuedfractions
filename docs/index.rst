@@ -33,6 +33,8 @@ or the ``main`` branch of the repo:
 
 Only standard libraries used, and there are no 3rd party dependencies.
 
+In terms of Python versions, any version from 3.10+ should be fine on any platform (Linux, MacOS, Windows etc.). Earlier Python versions may not work because of some aspects of type hinting.
+
 .. note::
 
    All graphs in the documentation are generated using `Graphviz <https://graphviz.org/>`_ (`DOT language <https://graphviz.org/doc/info/lang.html>`_) and the `edotor <https://edotor.net/>`_ graphical editor. The graph source files (:program:`.dot`) can be viewed `here <https://github.com/sr-murthy/continuedfractions/tree/main/docs/_static>`_.

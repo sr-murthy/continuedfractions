@@ -89,7 +89,7 @@ class RationalTuple(tuple):
 
 
 class Dim2RationalCoordinates(RationalTuple):
-    """A tuple wrapper for a sequence of two rational coordinates representing a point in :math:`\\mathbb{Q}^2`.
+    """A thin :py:class:`tuple` wrapper for a sequence of two rational coordinates representing a point in :math:`\\mathbb{Q}^2`.
 
     Examples
     --------
@@ -159,7 +159,7 @@ class Dim2RationalCoordinates(RationalTuple):
 
 
 class Dim3RationalCoordinates(RationalTuple):
-    """A tuple wrapper for a sequence of three rational coordinates representing a point in :math:`\\mathbb{Q}^3`.
+    """A thin :py:class:`tuple` wrapper for a sequence of three rational coordinates representing a point in :math:`\\mathbb{Q}^3`.
 
     Examples
     --------
@@ -277,7 +277,7 @@ class HomogeneousCoordinates(Dim3RationalCoordinates):
         >>> HomogeneousCoordinates(3, 4, 5).to_rational_point()
         RationalPoint(3/5, 4/5)
         """
-        return RationalPoint(ContinuedFraction(self.x, self.z), ContinuedFraction(self.y, self.z))
+        return RationalPoint(Fraction(self.x, self.z), Fraction(self.y, self.z))
 
 
 class RationalPoint(Dim2RationalCoordinates):
@@ -351,8 +351,8 @@ class RationalPoint(Dim2RationalCoordinates):
         This is designed as a helper method for rational point summation
         because the built-in :py:func:`sum` function only works for
         :py:class:`~continuedfractions.rational_points.RationalPoint`
-        instances if the ``start`` value is set to ``0``, which many users may
-        not be aware of.
+        instances if the ``start`` value is set to ``RP(0, 0)``, which many
+        users may not be aware of.
 
         Parameters
         ----------
@@ -365,11 +365,6 @@ class RationalPoint(Dim2RationalCoordinates):
         -------
         RationalPoint
             The sum of the rational points.
-
-        Raises
-        ------
-        TypeError
-            If any incompatible types are detected.
 
         Examples
         --------
@@ -398,25 +393,130 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> r = RationalPoint(Fraction(1, 2), Fraction(-3, 4))
-        >>> r.coordinates
+        >>> P = RationalPoint(Fraction(1, 2), Fraction(-3, 4))
+        >>> P.coordinates
         Dim2RationalCoordinates(1/2, -3/4)
         """
         return Dim2RationalCoordinates(*self)
 
-    def dot_product(self, other: RationalPoint, /) -> ContinuedFraction:
+    def angle(self, /, *, as_degrees: bool = False) -> Decimal:
+        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the rational point as a vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
+        
+        Uses :py:func:`math.atan2`, which respects angle signs in the four
+        quadrants by using both :math:`x`- and :math:`y`-coordinates of a
+        plane point :math:`P = (x, y)`:
+
+        * :math:`0 \\leq \\theta \\leq \\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{I}` (:math:`x, y \\geq 0`)
+        * :math:`\\frac{\\pi}{2} < \\theta \\leq \\pi` for :math:`P` in quadrant :math:`\\text{II}` (:math:`x < 0, y \\geq 0`)
+        * :math:`-\\pi < \\theta \\leq -\\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{III}` (:math:`x \\leq 0, y < 0`)
+        * :math:`-\\frac{\\pi}{2} < \\theta < 0` for :math:`P` in quadrant :math:`\\text{IV}` (:math:`x > 0, y < 0`)
+
+        The optional ``as_degrees`` boolean can be used to return the angle in
+        degrees.
+
+        Parameters
+        ----------
+        as_degrees : bool, default=False
+            Whether to return the angle in degrees.
+
+        Returns
+        -------
+        decimal.Decimal
+           The radian angle :math:`\\theta` between the rational point as a
+           vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis,
+           where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
+
+        Examples
+        --------
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 0).angle()
+        Decimal('0')
+        >>> RP(1, 0).angle(as_degrees=True)
+        Decimal('0')
+        >>> RP(1, 1).angle()
+        Decimal('0.78539816339744827899949086713604629039764404296875')
+        >>> RP(1, 1).angle(as_degrees=True)
+        Decimal('45')
+        """
+        angle = Decimal(math.atan2(self.y, self.x))
+
+        if not as_degrees:
+            return angle
+
+        return Decimal(math.degrees(angle))
+
+    def orthogonal(self) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a rational point which as a vector is orthogonal to the original point.
+
+        This is described by the linear transformation:
+
+        .. math::
+
+           \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} \\begin{bmatrix}0 & -1 \\\\1 & 0 \\end{bmatrix} = \\begin{bmatrix} -\\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
+
+        for points
+        :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`,
+        and has the property that :math:`P \\cdot P^{\\perp} = P^{\\perp} \\cdot P = 0` where
+        :math:`\\perp` is the orthogonality relation..
+
+        Returns
+        -------
+        RationalPoint
+            The "orthogonal" of the rational point as defined above.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(F(1, 2), F(3, 4)).orthogonal()
+        RationalPoint(-3/4, 1/2)
+        >>> RP(1, -2).orthogonal()
+        RationalPoint(2, 1)
+        >>> RP(1, -2).orthogonal().dot(RP(1, -2))
+        ContinuedFraction(0, 1)
+        """
+        return self.__class__(-self.y, self.x)
+
+    def permute(self) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point by swapping the original coordinates.
+
+        This is described by the linear transformation:
+
+        .. math::
+
+           \\begin{bmatrix}\\frac{a}{c} \\\\\\frac{b}{d}\\end{bmatrix} \\begin{bmatrix}0 & 1 \\\\1 & 0 \\end{bmatrix} = \\begin{bmatrix} \\frac{b}{d} \\\\ \\frac{a}{c} \\end{bmatrix}
+
+        for points
+        :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`.
+
+        Returns
+        -------
+        RationalPoint
+            The permuted rational point with the original coordinates
+            swapped.
+
+        Examples
+        --------
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 2).permute()
+        RationalPoint(2, 1)
+        """
+        return self.__class__(self.y, self.x)
+
+
+    def dot(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.
 
-        If :math:`r = \\left( \\frac{a_1}{c_1}, \\frac{a_2}{c_2} \\right)` and
-        :math:`s  = \\left( \\frac{b_1}{d_1}, \\frac{b_2}{d_2} \\right)` are two
-        rational points in the plane their Eucliean dot product
-        :math:`r \\cdot s` is the rational number:
+        If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are two
+        rational points in the plane their dot product
+        :math:`P \\cdot P'` is the rational number:
 
         .. math::
         
            \\begin{align}
-           r \\cdot s &= \\frac{a_1b_1}{c_1d_1} + \\frac{a_2b_2}{c_2d_2} \\\\
-                      &= \\frac{a_1b_1c_2d_2 + a_2b_2c_1d_1}{c_1c_2d_1d_2}        
+           P \\cdot P' &= \\frac{aa'}{cc'} + \\frac{bb'}{dd'} \\\\
+                      &= \\frac{aa'dd' + bb'cc'}{cc'dd'}        
            \\end{align}
 
         This value is returned as a 
@@ -432,17 +532,17 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> r = RationalPoint(Fraction(1, 2), Fraction(3, 4))
-        >>> s = RationalPoint(Fraction(1, 3), Fraction(2, 5))
-        >>> r.dot_product(s)
+        >>> P = RationalPoint(Fraction(1, 2), Fraction(3, 4))
+        >>> Q = RationalPoint(Fraction(1, 3), Fraction(2, 5))
+        >>> P.dot(Q)
         ContinuedFraction(7, 15)
-        >>> r.dot_product(2)
+        >>> P.dot(2)
         Traceback (most recent call last):
         ...
         ValueError: The dot product is only defined between `RationalPoint` instances.
-        >>> r.dot_product(RationalPoint(0, 0))
+        >>> P.dot(RationalPoint(0, 0))
         ContinuedFraction(0, 1)
-        >>> r.dot_product(RationalPoint(1, 1))
+        >>> P.dot(RationalPoint(1, 1))
         ContinuedFraction(5, 4)
         """
         if not isinstance(other, self.__class__):
@@ -460,14 +560,15 @@ class RationalPoint(Dim2RationalCoordinates):
     def norm_squared(self) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The square of the Euclidean (:math:`\\ell_2`) norm of a rational point in the plane.
 
-        The Euclidean (:math:`\\ell_2`) norm squared :math:`\\|r\\|_{2}^2` of a
-        rational point :math:`r = \\left(\\frac{a}{c}, \\frac{b}{d} \\right)`
-        in the plane is the dot product of :math:`r` with itself:
+        The Euclidean (:math:`\\ell_2`) norm squared :math:`\\|P\\|_{2}^2` of a
+        rational point :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d} \\right)`
+        in the plane, which is the dot product :math:`P \\cdot P` of
+        :math:`P` with itself:
 
         .. math::
 
            \\begin{align}
-           \\|r\\|_{2}^2 = r \\cdot r &= \\frac{a^2}{c^2} + \\frac{b^2}{d^2} \\\\
+           \\|P\\|_{2}^2 = P \\cdot P &= \\frac{a^2}{c^2} + \\frac{b^2}{d^2} \\\\
                                     &= \\frac{a^2d^2 + b^2c^2}{c^2d^2}
            \\end{align}
 
@@ -487,19 +588,19 @@ class RationalPoint(Dim2RationalCoordinates):
         >>> RationalPoint(0, 0).norm_squared
         ContinuedFraction(0, 1)
         """
-        return self.dot_product(self)
+        return self.dot(self)
 
     @property
     def norm(self) -> Decimal:
         """:py:class:`~decimal.Decimal` : The Euclidean norm of a rational point in the plane.
 
-        The Euclidean norm :math:`\\|r\\|_2` of a rational point
-        :math:`r = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)`, as given by:
+        The Euclidean norm :math:`\\|P\\|_2` of a rational point
+        :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)`, as given by:
 
         .. math::
 
            \\begin{align}
-           \\|r\\|_2 = \\sqrt{r \\cdot r} &= \\sqrt{\\frac{a^2}{c^2} + \\frac{b^2}{d^2}} \\\\
+           \\|P\\|_2 = \\sqrt{P \\cdot P} &= \\sqrt{\\frac{a^2}{c^2} + \\frac{b^2}{d^2}} \\\\
                                           &= \\sqrt{\\frac{a^2d^2 + b^2c^2}{c^2d^2}}
            \\end{align}
 
@@ -524,22 +625,25 @@ class RationalPoint(Dim2RationalCoordinates):
     def distance_squared(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The square of the Euclidean distance between this point and another rational point in the plane.
 
-        If :math:`r = \\left( \\frac{a_1}{c_1}, \\frac{a_2}{c_2} \\right)` and
-        :math:`s  = \\left( \\frac{b_1}{d_1}, \\frac{b_2}{d_2} \\right)` are
+        If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are
         two rational points in the plane the square of their Euclidean distance
-        :math:`\\|r - s\\|_{2}^2` is the non-negative rational number:
+        :math:`\\|P - P'\\|_{2}^2` is the non-negative rational number:
 
         .. math::
 
            \\begin{align}
-           \\|r - s\\|^2 &= \\left( \\frac{a_1}{c_1} - \\frac{b_1}{d_1} \\right)^2 + \\left( \\frac{a_2}{c_2} - \\frac{b_2}{d_2} \\right)^2 \\\\
-                       &= \\left( \\frac{a_1d_1 - b_1c_1}{c_1d_1} \\right)^2 + \\left( \\frac{a_2d_2 - b_2c_2}{c_2d_2} \\right)^2 \\\\
+           \\|P - P'\\|^2 &= \\left( \\frac{a}{c} - \\frac{a'}{c'} \\right)^2 + \\left( \\frac{b}{d} - \\frac{b'}{d'} \\right)^2 \\\\
+                          &= \\left( \\frac{ac' - a'c}{cc'} \\right)^2 + \\left( \\frac{bd' - b'd}{dd'} \\right)^2 \\\\
+                          &= \\frac{\\left(ac' - a'c\\right)^2d^2d'^2 + \\left(bd' - b'd\\right)^2c^2c'^2}{c^2c'^2d^2d'^2}
            \\end{align}
 
-        where :math:`\\|r - s\\|_{2}^2 = 0 \\iff r = s`.
+        where :math:`\\|P - P'\\|_{2}^2 = 0` if and only if :math:`P = P'`.
 
-        The Euclidean distance :math:`\\|r - s\\|_2` is simply the square root of
-        this quantity.
+        The Euclidean distance :math:`\\|P - P'\\|_2` is simply the square root of
+        this quantity, but will in general not be a rational number **unless**
+        :math:`\\left( \\frac{ac' - a'c}{cc'} \\right)^2 + \\left( \\frac{bd' - b'd}{dd'} \\right)^2`
+        is a square of a rational number.
 
         Returns
         -------
@@ -549,12 +653,12 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> r = RationalPoint(Fraction(3, 5), Fraction(4, 5))
-        >>> r
+        >>> P = RationalPoint(Fraction(3, 5), Fraction(4, 5))
+        >>> P
         RationalPoint(3/5, 4/5)
-        >>> r.distance_squared(RationalPoint(0, 0))
+        >>> P.distance_squared(RationalPoint(0, 0))
         ContinuedFraction(1, 1)
-        >>> r.distance_squared(RationalPoint(1, 1))
+        >>> P.distance_squared(RationalPoint(1, 1))
         ContinuedFraction(1, 5)
         >>> RationalPoint(0, 0).distance_squared(RationalPoint(1, 1))
         ContinuedFraction(2, 1)
@@ -576,19 +680,11 @@ class RationalPoint(Dim2RationalCoordinates):
     def distance(self, other: RationalPoint, /) -> Decimal:
         """:py:class:`~decimal.Decimal` : The Euclidean distance between this point and another rational point in the plane.
 
-        If :math:`r = \\left( \\frac{a_1}{c_1}, \\frac{a_2}{c_2} \\right)` and
-        :math:`s  = \\left( \\frac{b_1}{d_1}, \\frac{b_2}{d_2} \\right)` are
-        two rational points in the plane their Euclidean distance
-        :math:`\\|r - s\\|_2` is the non-negative number:
+        For rational points :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` this is the
+        square root :math:`\\sqrt{\\|P - P'\\|}` of :math:`\\|P - P'\\|` as defined above.
 
-        .. math::
-
-           \\begin{align}
-           \\|r - s\\|_2 &= \\sqrt{\\left( \\frac{a_1}{c_1} - \\frac{b_1}{d_1} \\right)^2 + \\left( \\frac{a_2}{c_2} - \\frac{b_2}{d_2} \\right)^2} \\\\
-                       &= \\sqrt{\\left( \\frac{a_1d_1 - b_1c_1}{c_1d_1} \\right)^2 + \\left( \\frac{a_2d_2 - b_2c_2}{c_2d_2} \\right)^2} \\\\
-           \\end{align}
-
-        where :math:`\\|r - s\\|_2 = 0 \\iff r = s`.
+        And of course :math:`\\|P - P'\\|_{2} = 0` if and only if :math:`P = P'`.
 
         Returns
         -------
@@ -598,12 +694,12 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> r = RationalPoint(Fraction(3, 5), Fraction(4, 5))
-        >>> r
+        >>> P = RationalPoint(Fraction(3, 5), Fraction(4, 5))
+        >>> P
         RationalPoint(3/5, 4/5)
-        >>> r.distance(RationalPoint(0, 0))
+        >>> P.distance(RationalPoint(0, 0))
         Decimal('1')
-        >>> r.distance_squared(RationalPoint(1, 1))
+        >>> P.distance_squared(RationalPoint(1, 1))
         ContinuedFraction(1, 5)
         >>> RationalPoint(0, 0).distance(RationalPoint(1, 1))
         Decimal('1.414213562373095048801688724')
@@ -615,27 +711,6 @@ class RationalPoint(Dim2RationalCoordinates):
             )
 
         return self.distance_squared(other).as_decimal().sqrt()
-
-    def is_unit_point(self) -> bool:
-        """:py:class:`bool` : Whether the rational point falls on the unit circle, which is the case if it has unit (:math:`\\ell_2`) norm.
-
-        Returns
-        -------
-        bool
-            Whether the coordinates satisfy the unit circle equation:
-
-            .. math::
-
-               x^2 + y^2 = 1
-
-        Examples
-        --------
-        >>> RationalPoint(Fraction(3, 5), Fraction(4, 5)).is_unit_point()
-        True
-        >>> RationalPoint(Fraction(3, 4), Fraction(4, 5)).is_unit_point()
-        False
-        """
-        return self.norm_squared == 1
 
     def is_lattice_point(self) -> bool:
         """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.
@@ -661,11 +736,11 @@ class RationalPoint(Dim2RationalCoordinates):
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction`: The rectilinear (:math:`\\ell_1` or taxicab) norm of the rational point.
 
         The rectilinear (:math:`\\ell_1` or taxicab) norm :math:`\\|r\\|_1` of
-        a rational point :math:`r = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` is given by:
+        a rational point :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` is given by:
 
         .. math::
 
-           \\|r\\|_1 = \\lvert\\frac{a}{c}\\rvert + \\lvert\\frac{b}{d}\\rvert
+           \\|P\\|_1 = \\lvert\\frac{a}{c}\\rvert + \\lvert\\frac{b}{d}\\rvert
 
         The rectilinear norm of a rational point is a non-negative rational
         number, hence the property produces 
@@ -697,19 +772,19 @@ class RationalPoint(Dim2RationalCoordinates):
     def rectilinear_distance(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The rectilinear (:math:`\\ell_1` or taxicab) distance between this rational point and another.
 
-        If :math:`r = \\left( \\frac{a_1}{c_1}, \\frac{a_2}{c_2} \\right)` and
-        :math:`s  = \\left( \\frac{b_1}{d_1}, \\frac{b_2}{d_2} \\right)` are
-        two rational points in the plane their rectilinear (or taxicab)
-        distance :math:`\\|r - s\\|_1` is the non-negative rational number:
+        If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are
+        two rational points in the plane their rectilinear distance
+        :math:`\\|P - P'\\|_1` is the non-negative rational number:
 
         .. math::
 
            \\begin{align}
-           \\|r - s\\|_1 &= \\lvert \\frac{a_1}{c_1} - \\frac{b_1}{d1} \\rvert + \\lvert \\frac{a_2}{c_2} - \\frac{b_2}{d2} \\rvert \\\\
-                         &= \\lvert \\frac{a_1d_1 - b_1c_1}{c_1d_1} \\rvert + \\lvert \\frac{a_2d_2 - b_2c_2}{c_2d_2} \\rvert
+           \\|P - P'\\|_1 &= \\lvert \\frac{a}{c} - \\frac{a'}{c'} \\rvert + \\lvert \\frac{b}{d} - \\frac{b'}{d'} \\rvert \\\\
+                          &= \\lvert \\frac{ac' - a'c}{cc'} \\rvert + \\lvert \\frac{bd' - b'd}{dd'} \\rvert
            \\end{align}
 
-        where :math:`\\|r - s\\| = 0 \\iff r = s`.
+        where :math:`\\|P - P'\\| = 0` if and only if :math:`P = P'`.
 
         Returns
         -------
@@ -739,8 +814,7 @@ class RationalPoint(Dim2RationalCoordinates):
         For a rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
         the triple
         :math:`\\left(\\lambda \\frac{a}{c}, \\lambda \\frac{b}{d}, \\lambda\\right) = \\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`,
-        where :math:`\\lambda = \\text{lcm}(c, d) > 0`, represents a unique (up to
-        sign) sequence of homogeneous coordinates for :math:`P` in :math:`\\mathbb{P}^2` such
+        where :math:`\\lambda = \\text{lcm}(c, d) > 0`, represents a unique representative sequence of homogeneous coordinates for :math:`P` in :math:`\\mathbb{P}^2` such
         that
         :math:`\\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`
         are all integers (not all zero) and :math:`\\text{gcd}\\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right) = 1`.
@@ -851,7 +925,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\left(\\frac{a_1}{c_1}, \\frac{b_1}{d_1}\\right) + \\left(\\frac{a_2}{c_2}, \\frac{b_2}{d_2}\\right) = \\left(\\frac{a_1c_2 + a_2c_1}{c_1c_2}, \\frac{b_1d_2 + b_2d_1}{d_1d_2}\\right)
+           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) + \\left(\\frac{a'}{c'}, \\frac{b'}{d'}\\right) = \\left(\\frac{ac' + a'c}{cc'}, \\frac{bd' + b'd}{dd'}\\right)
 
         The second operand as represented by ``other`` must be an instance of
         :py:class:`~continuedfractions.rational_points.RationalPoint`.
@@ -871,13 +945,13 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\left(\\frac{a_1}{c_1}, \\frac{b_1}{d_1}\\right) - \\left(\\frac{a_2}{c_2}, \\frac{b_2}{d_2}\\right) = \\left(\\frac{a_1c_2 - a_2c_1}{c_1c_2}, \\frac{b_1d_2 - b_2d_1}{d_1d_2}\\right)
+           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) - \\left(\\frac{a'}{c'}, \\frac{b'}{d'}\\right) = \\left(\\frac{ac' - a'c}{cc'}, \\frac{bd' - b'd}{dd'}\\right)
 
         The second operand as represented by ``other`` must be an instance of
         :py:class:`~continuedfractions.rational_points.RationalPoint`.
         """
-        if not isinstance(other, RationalPoint):
-            raise TypeError(                                                    # pragma: no cover
+        if not isinstance(other, RationalPoint):                            # pragma: no cover
+            raise TypeError(                                                    
                 'Subtraction is defined only between two `RationalPoint` '
                 'instances.'
             )

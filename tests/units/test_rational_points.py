@@ -11,6 +11,8 @@ context = decimal.Context(prec=28, Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN)
 context.traps[decimal.Inexact] = False
 decimal.setcontext(context)
 
+import math
+
 from decimal import Decimal as D
 from fractions import Fraction as F
 
@@ -288,9 +290,9 @@ class TestRationalPoint:
             (RP(F(1, 2), F(3, 4)), 5,),
         ]
     )
-    def test_RationalPoint_dot_product__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+    def test_RationalPoint_dot__invalid_other__value_error_raised(self, rational_point1, invalid_other):
         with pytest.raises(ValueError):
-            rational_point1.dot_product(invalid_other)
+            rational_point1.dot(invalid_other)
 
     def test_RationalPoint_zero(self):
         assert RP.zero() == RP(0, 0)
@@ -307,6 +309,23 @@ class TestRationalPoint:
         assert RP.sum(*rational_points) == expected_sum
 
     @pytest.mark.parametrize(
+        "rational_point, expected_angle, expected_angle_as_degrees",
+        [
+            (RP(1, 0), D('0'), D('0'),),
+            (RP(1, 1), D(math.atan2(1, 1)), D('45'),),
+            (RP(0, 1), D(math.atan2(1, 0)), D('90'),),
+            (RP(-1, 1), D(math.atan2(1, -1)), D('135'),),
+            (RP(-1, 0), D(math.atan2(0, -1)), D('180'),),
+            (RP(-1, -1), D(math.atan2(-1, -1)), -D('135'),),
+            (RP(0, -1), D(math.atan2(-1, 0)), -D('90'),),
+            (RP(1, -1), D(math.atan2(-1, 1)), -D('45'),),
+        ]
+    )
+    def test_RationalPoint_angle(self, rational_point, expected_angle, expected_angle_as_degrees):
+        assert rational_point.angle() == expected_angle
+        assert rational_point.angle(as_degrees=True) == expected_angle_as_degrees
+
+    @pytest.mark.parametrize(
         "rational_point1, rational_point2, expected_dot_product",
         [
             (RP(0, 0), RP(1, 2), CF(0, 1),),
@@ -317,8 +336,30 @@ class TestRationalPoint:
             (RP(F(3, 5), F(4, 5)), RP(F(3, 5), F(4, 5)), CF(1, 1),),
         ]
     )
-    def test_RationalPoint_dot_product(self, rational_point1, rational_point2, expected_dot_product):
-        assert rational_point1.dot_product(rational_point2) == expected_dot_product
+    def test_RationalPoint_dot(self, rational_point1, rational_point2, expected_dot_product):
+        assert rational_point1.dot(rational_point2) == expected_dot_product
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_orthogonal",
+        [
+            (RP(0, 0), RP(0, 0)),
+            (RP(1, 2), RP(-2, 1)),
+            (RP(1, -2), RP(2, 1))
+        ]
+    )
+    def test_RationalPoint_orthogonal(self, rational_point, expected_orthogonal):
+        assert rational_point.orthogonal() == expected_orthogonal
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_permutation",
+        [
+            (RP(0, 0), RP(0, 0)),
+            (RP(1, 2), RP(2, 1)),
+            (RP(1, -2), RP(-2, 1))
+        ]
+    )
+    def test_RationalPoint_permute(self, rational_point, expected_permutation):
+        assert rational_point.permute() == expected_permutation
 
     @pytest.mark.parametrize(
         "rational_point, expected_norm_squared",
@@ -412,19 +453,6 @@ class TestRationalPoint:
     )
     def test_RationalPoint_distance(self, rational_point1, rational_point2, expected_distance):
         assert rational_point1.distance(rational_point2) == expected_distance
-
-    @pytest.mark.parametrize(
-        "rational_point, expected_is_unit_point",
-        [
-            (RP(0, 0), False),
-            (RP(1, F(2, 3)), False),
-            (RP(F(1, 2), 3), False),
-            (RP(F(3, 5), F(4, 5)), True),
-            (RP(F(-3, 5), F(4, 5)), True),
-        ]
-    )
-    def test_RationalPoint_is_unit_point(self, rational_point, expected_is_unit_point):
-        assert rational_point.is_unit_point() == expected_is_unit_point
 
     @pytest.mark.parametrize(
         "rational_point, expected_is_lattice_point",
@@ -525,14 +553,14 @@ class TestRationalPoint:
 
         with pytest.raises(TypeError):
             RP(1, 2) + 3
-            RP(1, 2) + Decimal('3')
+            RP(1, 2) + D('3')
             RP(1, 2) + -.3
 
             RP(1, 2) - 3
-            RP(1, 2) - Decimal('3')
+            RP(1, 2) - D('3')
             RP(1, 2) - .3
 
-            Decimal('3') * RP(1, 2)
+            D('3') * RP(1, 2)
             .3 * RP(1, 2)
 
         with pytest.raises(NotImplementedError):
@@ -541,33 +569,50 @@ class TestRationalPoint:
 
     def test_RationalPoint_rational_operations(self):
         r0 = RP(0, 0)
+
         r1 = RP(1, 1)
         r1_minus = RP(-1, -1)
+
         pt1 = RP(F(3, 5), F(4, 5))
         pt1_minus = RP(F(-3, 5), F(-4, 5))
-        pt2 = RP(F(5, 13), F(12, 13))
-        pt2_minus = RP(F(-5, 13), F(-12, 13))
 
-        for r in [r1, r1_minus, pt1, pt1_minus, pt2, pt2_minus]:
-            assert r0 + r == r + r0 == r - r0 == r
-            assert 0 * r == r0
+        pt2 = RP(F(1, 2), F(3, 4))
+        pt2_minus = RP(F(-1, 2), F(-3, 4))
 
-        assert -r0 == -1 * r0 == r0
-        assert -r1 == -1 * r1 == r0 - r1 == r1_minus
-        assert -pt1 == -1 * pt1 == r0 - pt1 == pt1_minus
-        assert -pt1_minus == -1 * pt1_minus == r0 - pt1_minus == pt1
-        assert -pt2 == -1 * pt2 == r0 - pt2 == pt2_minus
-        assert -pt2_minus == -1 * pt2_minus == r0 - pt2_minus == pt2
+        # Addition:
+        #     preserves identity with ``(0, 0)``
+        for r in [r1, r1_minus, pt1, pt1_minus]:
+            assert r0 + r == r + r0 == r
+        #     is associative
+        assert r1 + (pt1 + pt2) == (r1 + pt1) + pt2
+        #     is commutative
+        assert r1 + pt1 == pt1 + r1
+        assert r1 + pt2 == pt2 + r1
+        assert pt1 + pt2 == pt2 + pt1
 
-        for r, r_minus in [(r1, r1_minus), (pt1, pt1_minus), (pt2, pt2_minus)]:
-            assert r + r_minus == r_minus + r == r0
-            assert r - r_minus == 2 * r
-            assert r_minus - r == -2 * r
+        # Negation and subtraction:
+        #     sign carries through as expected
+        assert -r1 == r1_minus
+        assert -pt1 == pt1_minus
+        assert -pt2 == pt2_minus
+        #     inverses cancel out
+        assert r1 + r1_minus == r1_minus + r1 == r0
+        assert pt1 + pt1_minus == pt1_minus + pt1 == r0
+        assert pt2 + pt2_minus == pt2_minus + pt2 == r0
+        #     subtractions as expected
+        assert r1 - pt1 == -pt1 + r1 == RP(F(2, 5), F(1, 5))
+        assert r1 - pt2 == -pt2 + r1 == RP(F(1, 2), F(1, 4))
+        assert pt1 - pt2 == -pt2 + pt1 == RP(F(1, 10), F(1, 20))
 
-        assert r1 + pt1 + pt2 == RP(F(129, 65), F(177, 65))
+        # Scalar left-multiplication
+        #     preserves identity with ``1``
+        assert 1 * r1 == r1
+        assert 1 * pt1 == pt1
+        assert 1 * pt2 == pt2
+        #     zeroes identity with ``0``
+        assert 0 * r1 == r0
+        assert 0 * pt1 == r0
+        assert 0 * pt2 == r0
+        #     distributes over addition of rational points
         assert 2 * (r1 + pt1 + pt2) == 2 * r1 + 2 * pt1 + 2 * pt2
-        assert -(r1 + pt1 + pt2) == r1_minus + pt1_minus + pt2_minus == RP(F(-129, 65), F(-177, 65))
-        assert r1 + r1_minus + pt1 + pt1_minus + pt2 + pt2_minus  == RP(0, 0)
 
-        for r in [r0, r1, pt1, pt1_minus, pt2, pt2_minus]:
-            assert 1 * r == r

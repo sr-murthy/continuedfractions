@@ -6,11 +6,11 @@
 Rational Points in the Plane
 ============================
 
-The :doc:`rational_points <continuedfractions/rational-points>` library provides a simple object-oriented interface for creating and operating on rational points in the ordinary :math:`xy`-plane, that is, points :math:`P = (x, y) \in \mathbb{R}^2` with rational coordinates :math:`x = \frac{a}{c}, y=\frac{b}{d} \in \mathbb{Q}` (where :math:`x,y` are necessarily reduced form fractions), which are thus elements of :math:`\mathbb{Q}^2`. One of the goals is to allow computing with rational points as pairs of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`  objects in an intuitive, stateful way. There are also some features for computing certain arithmetical properties of rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`.
+The :doc:`rational_points <continuedfractions/rational-points>` library provides a simple object-oriented interface for creating and operating on rational points in the ordinary :math:`xy`-plane, that is, points :math:`P = (x, y) \in \mathbb{R}^2` with rational coordinates :math:`x = \frac{a}{c}, y=\frac{b}{d} \in \mathbb{Q}` (where :math:`x,y` are necessarily reduced form fractions), which are thus elements of :math:`\mathbb{Q}^2`. One of the goals is to allow rational points to described by pairs of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`  objects, and compute with them in an intuitive, stateful way. There are also some features for computing certain arithmetical properties of rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`.
 
 .. note::
 
-   The term "rational point" (plural "rational points") in this documentation refers to such points exclusively, and the notation :math:`\mathbb{Q}^2` will be used when convenient.
+   The term "rational point" (and "rational points") in this documentation refers to such points exclusively, and the notation :math:`\mathbb{Q}^2` will be used when convenient.
 
 The main feature is the :py:class:`~continuedfractions.rational_points.RationalPoint` class, and this is discussed in more detail below.
 
@@ -99,7 +99,7 @@ The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a cus
 .. code:: python
 
    >>> P = RP(F(1, 2), F(3, 5)); P
-   >>> RationalPoint(1/2, 3/5)
+   RationalPoint(1/2, 3/5)
    >>> isinstance(P, tuple)
    True
    >>> assert hash(P) == hash(tuple(P))
@@ -191,7 +191,7 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Vector Properties and Operations
 --------------------------------
 
-This is not intended to be a linear algebra library and currently linear transformations (e.g. rotation, reflection, translation) aren't generally supported. Some basic functionality for treating rational points as vectors of :math:`\mathbb{Q}^2` does exist in the form of properties and operations such as angle, dot product, norm, distances in relation to other rational points, while some simple transformations sucn as scaling, transposition, and coordinate swapping are available.
+This is not intended to be a linear algebra library and currently linear transformations (e.g. rotation, reflection, translation) aren't generally supported. Some basic functionality for treating rational points as vectors of :math:`\mathbb{Q}^2` does exist in the form of properties and operations such as angle, dot product, norm, distances in relation to other rational points, while some simple transformations sucn as scaling, counter-clockwise rotation through :math:`90` degrees , and permuting coordinates are available.
 
 Dot products, norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
 
@@ -245,7 +245,7 @@ Scaling by rational values is available via :py:meth:`~continuedfractions.ration
 Other Transformations
 ~~~~~~~~~~~~~~~~~~~~~
 
-Currently only a few simple linear transformations are available, including :py:meth:`~continuedfractions.rational_points.RationalPoint.orthogonal`, which sends a point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to a point :math:`P^{\perp} = \left(-\frac{b}{d}, \frac{a}{c}\right)` "orthogonal" to :math:`P`:
+Currently only a few simple transformations are available, including :py:meth:`~continuedfractions.rational_points.RationalPoint.orthogonal`, which sends a point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to a point :math:`P^{\perp} = \left(-\frac{b}{d}, \frac{a}{c}\right)` whose vector is perpendicular to that of :math:`P`:
 
 .. code:: python
 
@@ -254,7 +254,7 @@ Currently only a few simple linear transformations are available, including :py:
    >>> RP(1, -2).orthogonal()
    RationalPoint(2, 1)
 
-This is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & -1 \\1 & 0 \end{bmatrix}` and has the property that :math:`P \cdot P^{\perp} = P^{\perp} \cdot P = 0`:
+This is the linear transformation that rotates the vector of :math:`P` through :math:`90` degrees counter-clockwise, and is described by the matrix :math:`\begin{bmatrix}0 & -1 \\1 & 0 \end{bmatrix}`: it has the property that :math:`P \cdot P^{\perp} = P^{\perp} \cdot P = 0`:
 
 .. code:: python
 
@@ -271,6 +271,8 @@ And also :py:meth:`~continuedfractions.rational_points.RationalPoint.permute`, w
    RationalPoint(3/4, 1/2)
 
 This is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & 1 \\1 & 0 \end{bmatrix}`.
+
+Other transformations such as reflection in the axes or a given line, and translation in coordinates, may be added in the future.
 
 .. _rational-points.metrics:
 
@@ -369,14 +371,14 @@ Some examples are given below of both of these.
 Height Functions
 ----------------
 
-The :py:class:`~continuedfractions.rational_points.RationalPoint` provides some basic methods relating to the notion of heights of points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`, a subset of which can be identified with rational points in the plane. These are described in more detail below.
+The :py:class:`~continuedfractions.rational_points.RationalPoint` provides some basic methods relating to the notion of heights of points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`, a subset of which can be identified with rational points in the plane. These methods and the basic background theory are described in more detail below.
 
-.. _rational-points.projective-space-and-homogeneous-coordinates:
+.. _rational-points.homogeneous-coordinates:
 
-Projective Space :math:`\mathbb{P}^2(\mathbb{Q})` and Homogeneous Coordinates
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Homogeneous Coordinates
+~~~~~~~~~~~~~~~~~~~~~~~
 
-The :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` property provides a way to get a unique (up to sign) sequence of "minimal" integer-valued coordinates for rational points in projective space :math:`\mathbb{P}^2(\mathbb{Q}) = \frac{\mathbb{Q}^3 \setminus \{(0, 0, 0)\}}{\sim}`, where :math:`\sim` is the (non-zero) scalar multiple equivalence relation on non-zero rational number triples, e.g. :math:`\left(3, 4, 6\right)` is a scalar multiple :math:`6 \cdot \left(\frac{1}{2},\frac{2}{3},1\right)` of :math:`\left(\frac{1}{2},\frac{2}{3},1\right)`, while :math:`(3, 4, 5)` isn't: instead :math:`(3, 4, 5)` is a scalar multiple :math:`5 \cdot \left(\frac{3}{5}, \frac{4}{5}, 1\right)` of :math:`\left(\frac{3}{5}, \frac{4}{5}, 1\right)`.
+The :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` property provides a way to get a sequence of integer-valued homogeneous coordinates for rational points in projective space :math:`\mathbb{P}^2(\mathbb{Q}) = \frac{\mathbb{Q}^3 \setminus \{(0, 0, 0)\}}{\sim}`, where :math:`\sim` is the (non-zero) scalar multiple equivalence relation on non-zero rational number triples, e.g. :math:`\left(3, 4, 6\right)` is a scalar multiple :math:`6 \cdot \left(\frac{1}{2},\frac{2}{3},1\right)` of :math:`\left(\frac{1}{2},\frac{2}{3},1\right)`, while :math:`(3, 4, 5)` isn't: instead :math:`(3, 4, 5)` is a scalar multiple :math:`5 \cdot \left(\frac{3}{5}, \frac{4}{5}, 1\right)` of :math:`\left(\frac{3}{5}, \frac{4}{5}, 1\right)`.
 
 Some examples are given below:
 
@@ -418,18 +420,16 @@ Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneou
    >>> hcoords.to_rational_point()
    RationalPoint(3/5, 4/5)
 
-For more background users can refer to textbooks on algebraic geometry. With respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left[\frac{a}{c},\frac{b}{d},1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and allows rational points to be studied in a 3D setting.
+For more background on homogeneous coordinates users can refer to textbooks on algebraic geometry. With respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c}, \frac{b}{d}\right) \longmapsto \left[\frac{a}{c}: \frac{b}{d}: 1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and for a given rational point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` the elements of its image :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]`, under this mapping, are non-zero scalar multiples of each other and are called homogeneous coordinates for :math:`P` in :math:`\mathbb{P}^2(\mathbb{Q})`. In particular, :math:`\left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)` is a scalar multiple of :math:`\left( \frac{a}{c}, \frac{b}{d}, 1 \right)`, where :math:`\lambda = \text{lcm}(c, d) > 0`, and can be taken as a representative sequence of homogeneous coordinates for :math:`P`.
 
-For a rational point :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` the projective point :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right] \in \mathbb{P}^2(\mathbb{Q})` can be understood as an infinite collection of non-zero :math:`\mathbb{Q}`-scaled coordinates, the so-called homogeneous coordinates of :math:`P`, which, being mutually equivalent under :math:`\sim`, all correspond to the same point of :math:`\mathbb{P}^2(\mathbb{Q})`, and any one of which can be identified with :math:`P`. We can choose from this class :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` the triple :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right)`, where :math:`\lambda = \text{lcm}(c, d) > 0` (least common multiple of :math:`c` and :math:`d`), because this is a non-zero scalar multiple of :math:`\left(\frac{a}{c},\frac{b}{d},1\right)`, and thus an element of the equivalence class :math:`\left[\frac{a}{c}:\frac{b}{d}:1\right]`. The triple :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right)` is unique up to sign for :math:`P` because :math:`-1 \cdot \left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right) = \left(-\lambda \frac{a}{c}, -\lambda \frac{b}{d}, -\lambda\right)` is the only other triple with coordinates of the same magnitude. And it has the property that :math:`\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda` are all integers, because :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right) = \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)`, and :math:`\text{gcd}\left(a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda\right) = \text{gcd}\left(|a|\frac{\lambda}{|c|}, |b|\frac{\lambda}{|d|}, \lambda\right) = \text{gcd}\left(|a|\frac{|d|}{\text{gcd}(c, d)}, |b|\frac{|c|}{\text{gcd}(c, d)}, \frac{|c||d|}{\text{gcd}(c, d)} \right) = 1`.
-
-The :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` property is simply the implementation of the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)` (where :math:`\lambda = \text{lcm}(c, d) > 0`) for rational points.
+:py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` simply implements the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)`, where, :math:`\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda` are integers, as :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right) = \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)`, and :math:`\text{gcd}\left(a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda\right) = \text{gcd}\left(|a|\frac{|d|}{\text{gcd}(c, d)}, |b|\frac{|c|}{\text{gcd}(c, d)}, \frac{|c||d|}{\text{gcd}(c, d)} \right) = 1` (from the relation :math:`\text{lcm}(c, d) = \frac{|c||d|}{\text{gcd}(c, d)}`).
 
 .. _rational-points.heights:
 
 Heights
 ~~~~~~~
 
-The :py:attr:`~continuedfractions.rational_points.RationalPoint.height` property returns the (projective) height :math:`H` of a rational point :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` as given by:
+The :py:attr:`~continuedfractions.rational_points.RationalPoint.height` property returns the height :math:`H` of a rational point :math:`P = \left(\frac{a}{c},\frac{b}{d}\right)` as given by:
 
 .. math::
 

@@ -814,8 +814,7 @@ class RationalPoint(Dim2RationalCoordinates):
         For a rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
         the triple
         :math:`\\left(\\lambda \\frac{a}{c}, \\lambda \\frac{b}{d}, \\lambda\\right) = \\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`,
-        where :math:`\\lambda = \\text{lcm}(c, d) > 0`, represents a unique (up to
-        sign) sequence of homogeneous coordinates for :math:`P` in :math:`\\mathbb{P}^2` such
+        where :math:`\\lambda = \\text{lcm}(c, d) > 0`, represents a unique representative sequence of homogeneous coordinates for :math:`P` in :math:`\\mathbb{P}^2` such
         that
         :math:`\\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right)`
         are all integers (not all zero) and :math:`\\text{gcd}\\left(a \\frac{\\lambda}{c}, b \\frac{\\lambda}{d}, \\lambda\\right) = 1`.

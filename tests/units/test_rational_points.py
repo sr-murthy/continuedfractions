@@ -362,6 +362,32 @@ class TestRationalPoint:
         assert rational_point.permute() == expected_permutation
 
     @pytest.mark.parametrize(
+        "rational_point, invalid_x_translate, invalid_y_translate",
+        [
+            (RP(1, 2), 1/2, -0.1),
+            (RP(1, 2), D('1'), None),
+        ]
+    )
+    def test_RationalPoint_translate__invalid_x_or_y_translates__value_error_raised(self, rational_point, invalid_x_translate, invalid_y_translate):
+        with pytest.raises(ValueError):
+            rational_point.translate(x_by=invalid_x_translate, y_by=invalid_y_translate)
+
+    @pytest.mark.parametrize(
+        "rational_point, x_translate, y_translate, expected_translate",
+        [
+            (RP(1, 2), None, None, RP(1, 2)),
+            (RP(0, 0), 1, -1, RP(1, -1)),
+            (RP(F(1, 2), F(-2, 3)), F(1, 4), F(-1, 3), RP(F(3, 4), -1)),
+            (RP(F(3, 5), F(4, 5)), F(-3, 5), F(-4, 5), RP(0, 0))
+        ]
+    )
+    def test_RationalPoint_translate(self, rational_point, x_translate, y_translate, expected_translate):
+        if x_translate and y_translate:
+            assert rational_point.translate(x_by=x_translate, y_by=y_translate) == expected_translate
+        else:
+            assert rational_point.translate() == expected_translate
+
+    @pytest.mark.parametrize(
         "rational_point, expected_norm_squared",
         [
             (RP(0, 0), CF(0, 1),),

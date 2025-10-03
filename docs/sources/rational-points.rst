@@ -245,7 +245,7 @@ Scaling by rational values is available via :py:meth:`~continuedfractions.ration
 Other Transformations
 ~~~~~~~~~~~~~~~~~~~~~
 
-Currently only a few simple transformations are available, including :py:meth:`~continuedfractions.rational_points.RationalPoint.orthogonal`, which sends a point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to a point :math:`P^{\perp} = \left(-\frac{b}{d}, \frac{a}{c}\right)` whose vector is perpendicular to that of :math:`P`:
+A few simple transformations are available, including :py:meth:`~continuedfractions.rational_points.RationalPoint.orthogonal`, which sends a point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to a point :math:`P^{\perp} = \left(-\frac{b}{d}, \frac{a}{c}\right)` whose vector is perpendicular to that of :math:`P`:
 
 .. code:: python
 
@@ -263,16 +263,27 @@ This is the linear transformation that rotates the vector of :math:`P` through :
    >>> RP(1, 1).orthogonal().angle(as_degrees=True)
    Decimal('135')
 
-And also :py:meth:`~continuedfractions.rational_points.RationalPoint.permute`, which permutes (swaps) the coordinates of points:
+Basis permutation is available via :py:meth:`~continuedfractions.rational_points.RationalPoint.permute`:
 
 .. code:: python
 
    >>> RP(F(1, 2), F(3, 4)).permute()
    RationalPoint(3/4, 1/2)
 
-This is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & 1 \\1 & 0 \end{bmatrix}`.
+This swaps the coordinates and is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & 1 \\1 & 0 \end{bmatrix}`.
 
-Other transformations such as reflection in the axes or a given line, and translation in coordinates, may be added in the future.
+Translation in coordinates is available via :py:meth:`~continuedfractions.rational_points.RationalPoint.translate`:
+
+.. code:: python
+
+   >>> RP(F(-1, 2), F(3, 4)).translate(x_by=F(-1, 4), y_by=F(1, 2))
+   RationalPoint(-3/4, 7/4)
+   >>> RP(1, 2).translate()
+   RationalPoint(1, 2)
+
+This uses two optional arguments (``x_by`` and ``y_by``) both set to ``0`` defaults for the translation in :math:`x`- and/or :math:`y`-coordinates.
+
+Other transformations such as reflection in the axes or a given line, and rotation, may be added in the future.
 
 .. _rational-points.metrics:
 

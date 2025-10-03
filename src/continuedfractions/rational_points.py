@@ -503,6 +503,62 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return self.__class__(self.y, self.x)
 
+    def translate(self, /, *, x_by: int | Fraction | ContinuedFraction = 0, y_by: int | Fraction | ContinuedFraction = 0) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or/ :math:`y`-coordinates by rational values.
+
+        Implements the mapping:
+
+        .. math::
+
+           \\left(\\left(\\frac{a}{c},\\frac{b}{d}), \\lambda, \\mu\\right \\longmapsto \\left(\\frac{a}{c} + \\lambda, \\frac{b}{d} + \\mu\\right
+
+        for rational points :math:`\\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`
+        and rational scalars :math:`\\lambda, \\mu \\in \\mathbb{Q}`.
+
+        This will not be a linear transformation as the origin :math:`(0, 0)` of
+        :math:`\\math{Q}^2` wil be moved for any non-zero scalars.
+
+        Parameters
+        ----------
+        x_by : int or Fraction or ContinuedFraction, default=0
+            The optional parameter for translating the :math:`x`-coordinate,
+            with a defaut value of :math:`0`. Must be a rational value.
+
+        y_by : int or Fraction or ContinuedFraction, default=0
+            The optional parameter for translating the :math:`y`-coordinate,
+            with a defaut value of :math:`0`. Must be a rational value.
+
+        Returns
+        -------
+        A new rational point translated from the original using the given
+        coordinate translation parameters.
+
+        Raises
+        ------
+        ValueError
+            If the coordinate translation parameters are not of the expected
+            type.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P = RP(F(1, 2), F(-3, 4)); P
+        RationalPoint(1/2, -3/4)
+        >>> P.translate(x_by=F(-1, 4), y_by=2)
+        RationalPoint(1/4, 5/4)
+        >>> P.translate(x_by=-.5)
+        Traceback (most recent call last):
+        ...
+        ValueError: The coordinate translation parameters must be of type `int`, `fractions.Fraction` or `ContinuedFraction`.
+        """
+        if not (isinstance(x_by, (int, Fraction, ContinuedFraction)) and isinstance(y_by, (int, Fraction, ContinuedFraction))):
+            raise ValueError(
+                'The coordinate translation parameters must be of type `int`, '
+                '`fractions.Fraction` or `ContinuedFraction`.'
+            )
+
+        return self.__class__(self.x + x_by, self.y + y_by)
 
     def dot(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.

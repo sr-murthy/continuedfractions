@@ -191,7 +191,7 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Vector Properties and Operations
 --------------------------------
 
-This is not intended to be a linear algebra library and currently linear transformations (e.g. rotation, reflection, translation) aren't generally supported. Some basic functionality for treating rational points as vectors of :math:`\mathbb{Q}^2` does exist in the form of properties and operations such as angle, dot product, norm, distances in relation to other rational points, while some simple transformations sucn as scaling, counter-clockwise rotation through :math:`90` degrees , and permuting coordinates are available.
+This is not intended to be a linear algebra library and currently linear transformations (e.g. rotation, reflection) aren't generally supported. Some basic functionality for treating rational points as vectors of :math:`\mathbb{Q}^2` does exist in the form of properties and operations such as angle, dot product, norm, distances in relation to other rational points, while some simple transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, and permuting coordinates are available.
 
 Dot products, norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
 

@@ -444,6 +444,7 @@ class TestRationalPoint:
         "rational_point1, rational_point2, expected_distance_squared",
         [
             (RP(0, 0), RP(1, 2), CF(5, 1),),
+            (RP(1, 2), RP(0, 0), CF(5, 1),),
             (RP(1, 1), RP(1, 1), CF(0, 1),),
             (RP(1, 1), RP(-1, 1), CF(4, 1),),
             (RP(F(1, 2), F(3, 4)), RP(F(-1, 2), F(-3, 4)), CF(13, 4),),

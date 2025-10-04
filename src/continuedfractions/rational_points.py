@@ -728,6 +728,9 @@ class RationalPoint(Dim2RationalCoordinates):
         if other == self:
             return ContinuedFraction(0, 1)
 
+        if other == RationalPoint(0, 0):
+            return self.norm_squared
+
         if self == RationalPoint(0, 0):
             return other.norm_squared
 

@@ -400,7 +400,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return Dim2RationalCoordinates(*self)
 
     def angle(self, /, *, as_degrees: bool = False) -> Decimal:
-        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the rational point as a vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
+        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the position vector of the rational point in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
         
         Uses :py:func:`math.atan2`, which respects angle signs in the four
         quadrants by using both :math:`x`- and :math:`y`-coordinates of a
@@ -423,8 +423,8 @@ class RationalPoint(Dim2RationalCoordinates):
         -------
         decimal.Decimal
            The radian angle :math:`\\theta` between the rational point as a
-           vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis,
-           where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
+           position vector in :math:`\\mathbb{Q}^2` and the positive
+           :math:`x`-axis, where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
 
         Examples
         --------
@@ -446,7 +446,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return Decimal(math.degrees(angle))
 
     def orthogonal(self) -> RationalPoint:
-        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a rational point which as a vector is orthogonal to the original point.
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a rational point whose position vector is orthogonal to that of the original point.
 
         This is described by the linear transformation:
 
@@ -504,19 +504,19 @@ class RationalPoint(Dim2RationalCoordinates):
         return self.__class__(self.y, self.x)
 
     def translate(self, /, *, x_by: int | Fraction | ContinuedFraction = 0, y_by: int | Fraction | ContinuedFraction = 0) -> RationalPoint:
-        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or/ :math:`y`-coordinates by rational values.
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scalrs.
 
-        Implements the mapping:
+        Ann affine transformation which implements the mapping:
 
         .. math::
 
-           \\left(\\left(\\frac{a}{c},\\frac{b}{d}), \\lambda, \\mu\\right \\longmapsto \\left(\\frac{a}{c} + \\lambda, \\frac{b}{d} + \\mu\\right
+           \\left(\\left(\\frac{a}{c},\\frac{b}{d}\\right), \\lambda, \\mu\\right) \\longmapsto \\left(\\frac{a}{c} + \\lambda, \\frac{b}{d} + \\mu\\right)
 
         for rational points :math:`\\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`
         and rational scalars :math:`\\lambda, \\mu \\in \\mathbb{Q}`.
 
         This will not be a linear transformation as the origin :math:`(0, 0)` of
-        :math:`\\math{Q}^2` wil be moved for any non-zero scalars.
+        :math:`\\mathbb{Q}^2` wil be moved for any non-zero scalars.
 
         Parameters
         ----------
@@ -530,8 +530,9 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Returns
         -------
-        A new rational point translated from the original using the given
-        coordinate translation parameters.
+        RationalPoint
+            A new rational point translated from the original using the given
+            coordinate translation parameters.
 
         Raises
         ------
@@ -561,24 +562,24 @@ class RationalPoint(Dim2RationalCoordinates):
         return self.__class__(self.x + x_by, self.y + y_by)
 
     def dot(self, other: RationalPoint, /) -> ContinuedFraction:
-        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The dot product of two rational points as position vectors in :math:`\\mathbb{Q}^2`.
 
         If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
         :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are two
-        rational points in the plane their dot product
-        :math:`P \\cdot P'` is the rational number:
+        rational points in the plane their dot product :math:`P \\cdot P'` is
+        the rational number:
 
         .. math::
         
            \\begin{align}
            P \\cdot P' &= \\frac{aa'}{cc'} + \\frac{bb'}{dd'} \\\\
-                      &= \\frac{aa'dd' + bb'cc'}{cc'dd'}        
+                       &= \\frac{aa'dd' + bb'cc'}{cc'dd'}        
            \\end{align}
 
         This value is returned as a 
-        :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object
-        because this is the standard representation of rational numbers in this
-        package.
+        :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
+        object because this is the standard representation of rational numbers
+        in this package.
 
         Returns
         -------
@@ -611,6 +612,53 @@ class RationalPoint(Dim2RationalCoordinates):
             return ContinuedFraction(0)
 
         return (self.x * other.x) + (self.y * other.y)
+
+    def cross(self, other: RationalPoint, /) -> ContinuedFraction:
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The cross product of two rational points as position vectors in :math:`\\mathbb{Q}^2`.
+
+        If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are two
+        rational points in the plane their cross product
+        :math:`P \\times P'`, as the cross product of their position vectors,
+        is the rational number:
+
+        .. math::
+        
+           \\begin{align}
+           P \\times P' &= \\frac{a'b}{c'd} - \\frac{ab'}{cd'} \\\\
+                       &= \\frac{a'bcd' + ab'c'd}{cc'dd'}        
+           \\end{align}
+
+        Returns
+        -------
+        ContinuedFraction
+            The cross product of the position vectors of two rational points.
+
+        Examples
+        --------
+        >>> P = RationalPoint(2, 1)
+        >>> Q = RationalPoint(1, 2)
+        >>> P.cross(Q)
+        ContinuedFraction(-3, 1)
+        >>> Q.cross(P)
+        ContinuedFraction(3, 1)
+        >>> P.cross(P)
+        ContinuedFraction(0, 1)
+        >>> P.cross(1)
+        Traceback (most recent call last):
+        ...
+        ValueError: The cross product is only defined between `RationalPoint` instances.
+        """
+        if not isinstance(other, self.__class__):
+            raise ValueError(
+                'The cross product is only defined between `RationalPoint` '
+                'instances.'
+            )
+
+        if self.coordinates == (0, 0) or other.coordinates == (0, 0):
+            return ContinuedFraction(0)
+
+        return (self.y * other.x) - (self.x * other.y)    
 
     @property
     def norm_squared(self) -> ContinuedFraction:
@@ -737,7 +785,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
     def distance(self, other: RationalPoint, /) -> Decimal:
-        """:py:class:`~decimal.Decimal` : The Euclidean distance between this point and another rational point in the plane.
+        """:py:class:`~decimal.Decimal` : The Euclidean distance between this point and another rational point.
 
         For rational points :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
         :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` this is the

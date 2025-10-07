@@ -505,9 +505,9 @@ class RationalPoint(Dim2RationalCoordinates):
         return self.__class__(self.y, self.x)
 
     def translate(self, /, *, x_by: int | Fraction | ContinuedFraction = 0, y_by: int | Fraction | ContinuedFraction = 0) -> RationalPoint:
-        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scalrs.
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scalars.
 
-        Ann affine transformation which implements the mapping:
+        An affine transformation which implements the mapping:
 
         .. math::
 

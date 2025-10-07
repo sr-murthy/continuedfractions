@@ -15,6 +15,7 @@ __all__ = [
 import decimal
 import math
 import numbers
+import typing
 
 from decimal import Decimal
 from typing import Any
@@ -400,7 +401,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return Dim2RationalCoordinates(*self)
 
     def angle(self, /, *, as_degrees: bool = False) -> Decimal:
-        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the rational point as a vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
+        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the position vector of the rational point in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
         
         Uses :py:func:`math.atan2`, which respects angle signs in the four
         quadrants by using both :math:`x`- and :math:`y`-coordinates of a
@@ -423,8 +424,8 @@ class RationalPoint(Dim2RationalCoordinates):
         -------
         decimal.Decimal
            The radian angle :math:`\\theta` between the rational point as a
-           vector in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis,
-           where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
+           position vector in :math:`\\mathbb{Q}^2` and the positive
+           :math:`x`-axis, where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
 
         Examples
         --------
@@ -446,7 +447,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return Decimal(math.degrees(angle))
 
     def orthogonal(self) -> RationalPoint:
-        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a rational point which as a vector is orthogonal to the original point.
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a rational point whose position vector is orthogonal to that of the original point.
 
         This is described by the linear transformation:
 
@@ -503,26 +504,140 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return self.__class__(self.y, self.x)
 
+    def translate(self, /, *, x_by: int | Fraction | ContinuedFraction = 0, y_by: int | Fraction | ContinuedFraction = 0) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scalars.
+
+        An affine transformation which implements the mapping:
+
+        .. math::
+
+           \\left(\\left(\\frac{a}{c},\\frac{b}{d}\\right), \\lambda, \\mu\\right) \\longmapsto \\left(\\frac{a}{c} + \\lambda, \\frac{b}{d} + \\mu\\right)
+
+        for rational points :math:`\\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\in \\mathbb{Q}^2`
+        and rational scalars :math:`\\lambda, \\mu \\in \\mathbb{Q}`.
+
+        This will not be a linear transformation as the origin :math:`(0, 0)` of
+        :math:`\\mathbb{Q}^2` wil be moved for any non-zero scalars.
+
+        Parameters
+        ----------
+        x_by : int or Fraction or ContinuedFraction, default=0
+            The optional parameter for translating the :math:`x`-coordinate,
+            with a defaut value of :math:`0`. Must be a rational value.
+
+        y_by : int or Fraction or ContinuedFraction, default=0
+            The optional parameter for translating the :math:`y`-coordinate,
+            with a defaut value of :math:`0`. Must be a rational value.
+
+        Returns
+        -------
+        RationalPoint
+            A new rational point translated from the original using the given
+            coordinate translation parameters.
+
+        Raises
+        ------
+        ValueError
+            If the coordinate translation parameters are not of the expected
+            type.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P = RP(F(1, 2), F(-3, 4)); P
+        RationalPoint(1/2, -3/4)
+        >>> P.translate(x_by=F(-1, 4), y_by=2)
+        RationalPoint(1/4, 5/4)
+        >>> P.translate(x_by=-.5)
+        Traceback (most recent call last):
+        ...
+        ValueError: The coordinate translation parameters must be of type `int`, `fractions.Fraction` or `ContinuedFraction`.
+        """
+        if not (isinstance(x_by, (int, Fraction, ContinuedFraction)) and isinstance(y_by, (int, Fraction, ContinuedFraction))):
+            raise ValueError(
+                'The coordinate translation parameters must be of type `int`, '
+                '`fractions.Fraction` or `ContinuedFraction`.'
+            )
+
+        return self.__class__(self.x + x_by, self.y + y_by)
+
+    def reflect(self, axis: typing.Literal['x', 'y']) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by reflecting the original in the :math:`x`- or :math:`y`-axis.
+
+        Implements linear transformations given by the mappings:
+
+        .. math::
+
+           \\left(\\frac{a}{c}, \\frac{b}{d} \\right) \\longmapsto \\left(\\frac{a}{c}, -\\frac{b}{d}\\right)
+
+        for reflection in the :math:`x`-axis, and:
+
+        .. math::
+
+           \\left(\\frac{a}{c}, \\frac{b}{d} \\right) \\longmapsto \\left(-\\frac{a}{c}, \\frac{b}{d}\\right)
+
+        for reflection in the :math:`y`-axis, with matrices
+        :math:`\\begin{bmatrix}1 & 0\\\\0 & -1\\end{bmatrix}`, and
+        :math:`\\begin{bmatrix}-1 & 0\\\\0 & 1\\end{bmatrix}` respectively.
+
+        Parameters
+        ----------
+        axis : str
+            The axis of reflection: should be a string literal which is either
+            ``"x"`` or ``"y"``.
+
+        Returns
+        -------
+        RationalPoint
+            A new rational point reflected from the original in the given axis.
+
+        Raises
+        ------
+        ValueError
+            If the axis is invalid or incorrectly specified.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P = RP(1, 1)
+        >>> P.reflect(axis='x')
+        RationalPoint(1, -1)
+        >>> P.reflect(axis='y')
+        RationalPoint(-1, 1)
+        >>> P.reflect(axis="X")
+        Traceback (most recent call last):
+        ...
+        ValueError: The axis of reflection must be a string literal which is either "x" or "y".
+        """
+        if not (isinstance(axis, str) and axis in ['x', 'y']):
+            raise ValueError(
+                'The axis of reflection must be a string literal which is '
+                'either "x" or "y".'
+            )
+
+        return self.__class__(self.x, -self.y) if axis == 'x' else self.__class__(-self.x, self.y)
 
     def dot(self, other: RationalPoint, /) -> ContinuedFraction:
-        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The standard Euclidean dot product for two rational points in the plane.
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The dot product of two rational points as position vectors in :math:`\\mathbb{Q}^2`.
 
         If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
         :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are two
-        rational points in the plane their dot product
-        :math:`P \\cdot P'` is the rational number:
+        rational points in the plane their dot product :math:`P \\cdot P'` is
+        the rational number:
 
         .. math::
         
            \\begin{align}
            P \\cdot P' &= \\frac{aa'}{cc'} + \\frac{bb'}{dd'} \\\\
-                      &= \\frac{aa'dd' + bb'cc'}{cc'dd'}        
+                       &= \\frac{aa'dd' + bb'cc'}{cc'dd'}        
            \\end{align}
 
         This value is returned as a 
-        :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` object
-        because this is the standard representation of rational numbers in this
-        package.
+        :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`
+        object because this is the standard representation of rational numbers
+        in this package.
 
         Returns
         -------
@@ -555,6 +670,53 @@ class RationalPoint(Dim2RationalCoordinates):
             return ContinuedFraction(0)
 
         return (self.x * other.x) + (self.y * other.y)
+
+    def cross(self, other: RationalPoint, /) -> ContinuedFraction:
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The cross product of two rational points as position vectors in :math:`\\mathbb{Q}^2`.
+
+        If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are two
+        rational points in the plane their cross product
+        :math:`P \\times P'`, as the cross product of their position vectors,
+        is the rational number:
+
+        .. math::
+        
+           \\begin{align}
+           P \\times P' &= \\frac{a'b}{c'd} - \\frac{ab'}{cd'} \\\\
+                       &= \\frac{a'bcd' + ab'c'd}{cc'dd'}        
+           \\end{align}
+
+        Returns
+        -------
+        ContinuedFraction
+            The cross product of the position vectors of two rational points.
+
+        Examples
+        --------
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P, Q = RP(2, 1), RP(1, 2)
+        >>> P.cross(Q)
+        ContinuedFraction(-3, 1)
+        >>> Q.cross(P)
+        ContinuedFraction(3, 1)
+        >>> P.cross(P)
+        ContinuedFraction(0, 1)
+        >>> P.cross(1)
+        Traceback (most recent call last):
+        ...
+        ValueError: The cross product is only defined between `RationalPoint` instances.
+        """
+        if not isinstance(other, self.__class__):
+            raise ValueError(
+                'The cross product is only defined between `RationalPoint` '
+                'instances.'
+            )
+
+        if self.coordinates == (0, 0) or other.coordinates == (0, 0):
+            return ContinuedFraction(0)
+
+        return (self.y * other.x) - (self.x * other.y)    
 
     @property
     def norm_squared(self) -> ContinuedFraction:
@@ -595,7 +757,7 @@ class RationalPoint(Dim2RationalCoordinates):
         """:py:class:`~decimal.Decimal` : The Euclidean norm of a rational point in the plane.
 
         The Euclidean norm :math:`\\|P\\|_2` of a rational point
-        :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)`, as given by:
+        :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d} \\right)`, as given by:
 
         .. math::
 
@@ -672,17 +834,21 @@ class RationalPoint(Dim2RationalCoordinates):
         if other == self:
             return ContinuedFraction(0, 1)
 
+        if other == RationalPoint(0, 0):
+            return self.norm_squared
+
         if self == RationalPoint(0, 0):
             return other.norm_squared
 
         return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
     def distance(self, other: RationalPoint, /) -> Decimal:
-        """:py:class:`~decimal.Decimal` : The Euclidean distance between this point and another rational point in the plane.
+        """:py:class:`~decimal.Decimal` : The Euclidean distance between this point and another rational point.
 
         For rational points :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
         :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` this is the
-        square root :math:`\\sqrt{\\|P - P'\\|}` of :math:`\\|P - P'\\|` as defined above.
+        square root :math:`\\sqrt{\\|P - P'\\|_{2}^2}` of the distance squared
+        :math:`\\|P - P'\\|_{2}^2` as defined above.
 
         And of course :math:`\\|P - P'\\|_{2} = 0` if and only if :math:`P = P'`.
 
@@ -711,6 +877,68 @@ class RationalPoint(Dim2RationalCoordinates):
             )
 
         return self.distance_squared(other).as_decimal().sqrt()
+
+    def perpendicular_distance(self, other: RationalPoint, /) -> Decimal:
+        """:py:class:`~decimal.Decimal` : The perpendicular distance between this rational point and another.
+
+        Given a non-zero rational point
+        :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)`, the line
+        :math:`\\ell_{OP}` passing through the origin :math:`(0, 0)` and
+        :math:`P`, and another rational point
+        :math:`P' = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)`, the
+        perpendicular distance :math:`d^{\\perp}\\left(P, P'\\right)'` between
+        :math:`P` and :math:`P'` is defined here as the length
+        :math:`d^{\\perp}\\left(P, P'\\right)` of the line
+        segment connecting :math:`P'` and :math:`\\ell_{OP}`, perpendicular to
+        the latter, as given by:
+
+        .. math::
+
+           d^{\\perp}\\left(P, P'\\right) = \\frac{|P \\times P'|}{\\|P\\|_2}
+
+        where :math:`|P \\times P'|` is the cross product of :math:`P` and
+        :math:`P'`.
+
+        Returns
+        -------
+        decimal.Decimal
+            The perpendicular distance between this rational point and another
+            as defined above.
+
+        Examples
+        --------
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 0).perpendicular_distance(RP(0, 1))
+        Decimal('1')
+        >>> RP(0, 1).perpendicular_distance(RP(1, 0))
+        Decimal('1')
+        >>> RP(1, 0).perpendicular_distance(RP(1, 0))
+        Decimal('0')
+        >>> RP(1, 0).perpendicular_distance(RP(-1, 0))
+        Decimal('0')
+        >>> RP(0, 0).perpendicular_distance(RP(1, 0))
+        Traceback (most recent call last):
+        ...
+        ValueError: The perpendicular distance is defined only between two `RationalPoint` instances, the first of which must be non-zero, i.e. different from `RationalPoint(0, 0)`.
+        >>> RP(1, 0).perpendicular_distance(1)
+        Traceback (most recent call last):
+        ...
+        ValueError: The perpendicular distance is defined only between two `RationalPoint` instances, the first of which must be non-zero, i.e. different from `RationalPoint(0, 0)`.
+        """
+        if not isinstance(other, RationalPoint) or self == self.zero():
+            raise ValueError(
+                'The perpendicular distance is defined only between two '
+                '`RationalPoint` instances, the first of which must be '
+                'non-zero, i.e. different from `RationalPoint(0, 0)`.'
+            )
+
+        # If the two points are collinear with the origin ``(0, 0)`` return 0.
+        a, b = self.angle(as_degrees=True), other.angle(as_degrees=True)
+        if a == b or abs(a) + abs(b) == Decimal('180'):
+            return Decimal('0')
+
+        # Otherwise return the computed value
+        return abs(self.cross(other)).as_decimal() / self.norm
 
     def is_lattice_point(self) -> bool:
         """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.

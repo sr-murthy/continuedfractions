@@ -163,7 +163,7 @@ Some examples are given below.
    # True
 
 Consistent with :math:`\mathbb{Q}^2` being an Abelian group the addition, subtraction, negation, and rational scalar mutiplication operations always produce :py:class:`~continuedfractions.rational_points.RationalPoint` instances. The zero element (the additive identity in :math:`\mathbb{Q}^2` and also the origin of :math:`\mathbb{Q}^2` as a vector space) is represented by the value ``RationalPoint(0, 0)``, as can easily be verified. In particular, addition and subtraction are limited to :py:class:`~continuedfractions.rational_points.RationalPoint` instances, and raise a :py:class:`TypeError` if any other types are attempted, while 
-multiplication is limited to left multiplication by instances of type :py:class:`int`, :py:class:`~fractions.Fraction` or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`. Only scalar left-multiplication is supported in order to respect the notational convention of scalar-vector multiplication, while division is undefined:
+multiplication is limited to left-multiplication by instances of type :py:class:`int`, :py:class:`~fractions.Fraction` or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`. Only scalar left-multiplication is supported in order to respect the notational convention of scalar-vector multiplication, while division is undefined:
 
 .. code:: python
 
@@ -191,9 +191,9 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Vector Properties and Operations
 --------------------------------
 
-This is not intended to be a linear algebra library and currently linear transformations (e.g. rotation, reflection) aren't generally supported. Some basic functionality for treating rational points as vectors of :math:`\mathbb{Q}^2` does exist in the form of properties and operations such as angle, dot product, norm, distances in relation to other rational points, while some simple transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, and permuting coordinates are available.
+This is not intended to be a linear algebra library, and currently some linear transformations such as rotation and reflection aren't generally supported. Some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` does exist in the form of simple properties and methods, such as angle, dot and cross products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and affine transformations such as translation in coordinates, are also available.
 
-Dot products, norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
+Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
 
 .. _rational-points.angles:
 
@@ -229,7 +229,7 @@ The implementation uses :py:func:`math.atan2` which respects angle signs in all 
 Scaling
 ~~~~~~~
 
-Scaling by rational values is available via :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
+Scaling by rational values (via scalar left-multiplication), :math:`\left(\lambda, \left(\frac{a}{c}, \frac{b}{d}\right) \right) \longmapsto \left(\lambda\frac{a}{c}, \lambda\frac{b}{d}\right)`, is available via :py:meth:`~continuedfractions.rational_points.RationalTuple.scale` method (in the superclass :py:class:`~continuedfractions.rational_points.RationalTuple`):
 
 .. code:: python
 
@@ -240,12 +240,43 @@ Scaling by rational values is available via :py:meth:`~continuedfractions.ration
    >>> RP(F(1, 2), F(3, 4)).scale(0)
    RationalPoint(0, 0)
 
+
+.. _rational-points.products:
+
+Products
+~~~~~~~~
+Certain scalar-valued vector products, as ordinarily defined in Euclidean spaces, can be taken for pairs of rational points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)`, :math:`P' = \left(\frac{a'}{c'}, \frac{b'}{d'}\right) \in \mathbb{Q}^2`, including :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`:
+
+.. code:: python
+
+   >>> RP(1, 1).dot(RP(-1, 1))
+   ContinuedFraction(0, 1)
+   >>> RP(1, 1).dot(RP(1, 1))
+   ContinuedFraction(2, 1)
+   >>> RP(1, 1).dot(RP(F(3, 5), F(4, 5)))
+   ContinuedFraction(7, 5)
+
+and :py:meth:`~continuedfractions.rational_points.RationalPoint.cross` which implements the cross product :math:`P \times P' = \frac{a'b}{c'd} - \frac{ab'}{cd'}`:
+
+.. code:: python
+
+   >>> RP(1, 1).cross(RP(-1, 1))
+   ContinuedFraction(-2, 1)
+   >>> RP(1, 0).cross(RP(0, 1))
+   ContinuedFraction(-1, 1)
+   >>> RP(1, 0).cross(RP(1, 0))
+   ContinuedFraction(0, 1)
+
+As these products are rational-valued for rational points, both methods return :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
+
+Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` figures in the computation of norm-squared, :py:attr:`~continuedfractions.rational_points.RationalPoint.norm_squared`, as :math:`\|P\|_{2}^2 = P \cdot P`, and both :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` and :py:meth:`~continuedfractions.rational_points.RationalPoint.cross` figure in the computation of perpendicular distance, :py:meth:`~continuedfractions.rational_points.RationalPoint.perpendicular_distance`, as :math:`d^{\perp}\left(P, P'\right) = \frac{|P \times P'|}{\|P\|_2}`, where :math:`d^{\perp}\left(P, P'\right)` denotes the perpendicular distance between :math:`P` and :math:`P'`, as discussed here :ref:`here <rational-points.euclidean-metrics>`.
+
 .. _rational-points.other-transformations:
 
 Other Transformations
 ~~~~~~~~~~~~~~~~~~~~~
 
-Currently only a few simple transformations are available, including :py:meth:`~continuedfractions.rational_points.RationalPoint.orthogonal`, which sends a point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to a point :math:`P^{\perp} = \left(-\frac{b}{d}, \frac{a}{c}\right)` whose vector is perpendicular to that of :math:`P`:
+A few simple transformations are available, including :py:meth:`~continuedfractions.rational_points.RationalPoint.orthogonal`, which sends a point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right) \in \mathbb{Q}^2` to a point :math:`P^{\perp} = \left(-\frac{b}{d}, \frac{a}{c}\right)` whose vector is perpendicular to that of :math:`P`:
 
 .. code:: python
 
@@ -263,16 +294,38 @@ This is the linear transformation that rotates the vector of :math:`P` through :
    >>> RP(1, 1).orthogonal().angle(as_degrees=True)
    Decimal('135')
 
-And also :py:meth:`~continuedfractions.rational_points.RationalPoint.permute`, which permutes (swaps) the coordinates of points:
+Basis permutation is available via :py:meth:`~continuedfractions.rational_points.RationalPoint.permute`:
 
 .. code:: python
 
    >>> RP(F(1, 2), F(3, 4)).permute()
    RationalPoint(3/4, 1/2)
 
-This is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & 1 \\1 & 0 \end{bmatrix}`.
+This swaps the coordinates and is a linear transformation described by the matrix :math:`\begin{bmatrix}0 & 1 \\1 & 0 \end{bmatrix}`.
 
-Other transformations such as reflection in the axes or a given line, and translation in coordinates, may be added in the future.
+Translation in coordinates is available via :py:meth:`~continuedfractions.rational_points.RationalPoint.translate`:
+
+.. code:: python
+
+   >>> RP(F(-1, 2), F(3, 4)).translate(x_by=F(-1, 4), y_by=F(1, 2))
+   RationalPoint(-3/4, 7/4)
+   >>> RP(1, 2).translate()
+   RationalPoint(1, 2)
+
+This uses two optional arguments (``x_by`` and ``y_by``) both set to ``0`` defaults for the translation in :math:`x`- and/or :math:`y`-coordinates.
+
+Points may be reflected in either axis (:math:`x`- or :math:`y`-) with :py:meth:`~continuedfractions.rational_points.RationalPoint.reflect`:
+
+.. code:: python
+
+   >>> RP(1, 1).reflect(axis='x')
+   RationalPoint(1, -1)
+   >>> RP(1, 1).reflect(axis='y')
+   RationalPoint(-1, 1)
+
+These are linear transformations described by the matrices :math:`\begin{bmatrix}1 & 0\\0 & -1\end{bmatrix}`, and :math:`\begin{bmatrix}-1 & 0\\0 & 1\end{bmatrix}` respectively.
+
+Other transformations such as reflection in a given line, and rotation, may be added in the future.
 
 .. _rational-points.metrics:
 
@@ -345,6 +398,20 @@ Some examples of these are also given below.
 
 Note that ``RP(1, 1).distance(RP(0, 0))`` is the :py:class:`~decimal.Decimal` value of :math:`\sqrt{2} = \|(1, 1) - (0, 0)\|_2`, while ``RP(1, 1).distance(RP(F(3, 5), F(4, 5)))`` is the :py:class:`~decimal.Decimal` value of :math:`\frac{1}{\sqrt{5}} = \|\left(1, 1\right) - \left(\frac{3}{5},\frac{4}{5}\right)\|_2`.
 
+It is also possible to compute the perpendicular (or orthogonal) distance :math:`d^{\perp}\left(P, P'\right)` between a (non-zero) rational point :math:`P`, or more precisely, the line passing through the origin :math:`(0, 0)` and :math:`P`, denoted by :math:`\ell_{OP}`, and another rational point :math:`P'`, using the :py:meth:`~continuedfractions.rational_points.RationalPoint.perpendicular_distance` method:
+
+.. code:: python
+
+   >>> RP(1, 0).perpendicular_distance(RP(0, 1))
+   Decimal('1')
+   >>> RP(0, 1).perpendicular_distance(RP(1, 0))
+   Decimal('1')
+   >>> RP(1, 0).perpendicular_distance(RP(1, 0))
+   Decimal('0')
+   >>> RP(F(1, 2), F(1, 2)).perpendicular_distance(RP(0, 1))
+   Decimal('0.7071067811865475244008443621')
+
+The method returns a :py:class:`~decimal.Decimal` value for this distance, which is computed using a formula for the length of the straight-line segment connecting :math:`P'` with line :math:`\ell_{OP}`, which is perpendicular to the latter, given by :math:`d^{\perp}\left(P, P'\right) = \frac{|P \times P'|}{\|P\|_2}`. Note that :math:`d^{\perp}\left(P, P'\right)` is undefined if :math:`P = (0, 0)`, and equal to :math:`0` if :math:`P` and :math:`P'` coincide or, more generally, if they are collinear with the origin.
 
 .. _rational-points.rectilinear-metrics:
 

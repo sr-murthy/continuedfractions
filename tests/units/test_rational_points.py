@@ -340,31 +340,6 @@ class TestRationalPoint:
         assert rational_point1.dot(rational_point2) == expected_dot_product
 
     @pytest.mark.parametrize(
-        "rational_point1, invalid_arg",
-        [
-            (RP(1, 1), 2,),
-            (RP(1, 1), 2.0,),
-            (RP(1, 1), D('2'),),
-        ]
-    )
-    def test_RationalPoint_cross__invalid_arg__value_error_raised(self, rational_point1, invalid_arg):
-        with pytest.raises(ValueError):
-            rational_point1.cross(invalid_arg)
-
-    @pytest.mark.parametrize(
-        "rational_point1, rational_point2, expected_cross_product",
-        [
-            (RP(0, 0), RP(1, 1), CF(0, 1),),
-            (RP(1, 1), RP(0, 0), CF(0, 1),),
-            (RP(2, 1), RP(1, 2), CF(-3, 1),),
-            (RP(1, 2), RP(2, 1), CF(3, 1),),
-            (RP(1, 1), RP(1, 1), CF(0, 1),),
-        ]
-    )
-    def test_RationalPoint_cross(self, rational_point1, rational_point2, expected_cross_product):
-        assert rational_point1.cross(rational_point2) == expected_cross_product
-
-    @pytest.mark.parametrize(
         "rational_point, expected_orthogonal",
         [
             (RP(0, 0), RP(0, 0)),

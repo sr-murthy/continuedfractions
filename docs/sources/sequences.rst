@@ -484,7 +484,7 @@ The :py:class:`~continuedfractions.sequences.KSRMTree` class is a class implemen
 
    The class is named ``KSRMTree`` purely for convenience, but it is actually a representation of two (ternary) trees.
 
-Firstly, we describe some background material on the KSRM trees, which are presented in the papers mentioned above. These are concerned with primitive Pythagorean triples, but have a fundamental consequence for the representation (and generation) of coprime pairs: all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node, starting with the parent nodes, has three children given by the relations:
+The basic idea is that all pairs of (positive) coprime integers :math:`(a, b)`, where :math:`1 \leq b < a`, can be represented as nodes in one of two ternary trees, the first which has the "parent" node :math:`(2, 1)` and the second which has the parent node :math:`(3, 1)`. Each node, starting with the parent nodes, has three children given by the relations:
 
 .. math::
 

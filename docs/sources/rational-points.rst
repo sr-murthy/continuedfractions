@@ -191,7 +191,7 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Vector Properties and Operations
 --------------------------------
 
-This is not intended to be a linear algebra library, and currently some linear transformations such as rotation and reflection aren't generally supported. Some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` does exist in the form of simple properties and methods, such as angle, dot and cross products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and affine transformations such as translation in coordinates, are also available.
+While this is not intended to be a linear algebra library, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as angle, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and affine transformations such as translation in coordinates, are also available.
 
 Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
 
@@ -240,12 +240,11 @@ Scaling by rational values (via scalar left-multiplication), :math:`\left(\lambd
    >>> RP(F(1, 2), F(3, 4)).scale(0)
    RationalPoint(0, 0)
 
-
 .. _rational-points.products:
 
 Products
 ~~~~~~~~
-Certain scalar-valued vector products, as ordinarily defined in Euclidean spaces, can be taken for pairs of rational points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)`, :math:`P' = \left(\frac{a'}{c'}, \frac{b'}{d'}\right) \in \mathbb{Q}^2`, including :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`:
+The :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` method implements the standard Euclidean dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`:
 
 .. code:: python
 
@@ -256,20 +255,9 @@ Certain scalar-valued vector products, as ordinarily defined in Euclidean spaces
    >>> RP(1, 1).dot(RP(F(3, 5), F(4, 5)))
    ContinuedFraction(7, 5)
 
-and :py:meth:`~continuedfractions.rational_points.RationalPoint.cross` which implements the cross product :math:`P \times P' = \frac{a'b}{c'd} - \frac{ab'}{cd'}`:
+As this is rational-valued for rational points, the method return :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
 
-.. code:: python
-
-   >>> RP(1, 1).cross(RP(-1, 1))
-   ContinuedFraction(-2, 1)
-   >>> RP(1, 0).cross(RP(0, 1))
-   ContinuedFraction(-1, 1)
-   >>> RP(1, 0).cross(RP(1, 0))
-   ContinuedFraction(0, 1)
-
-As these products are rational-valued for rational points, both methods return :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
-
-Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` figures in the computation of norm-squared, :py:attr:`~continuedfractions.rational_points.RationalPoint.norm_squared`, as :math:`\|P\|_{2}^2 = P \cdot P`, and both :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` and :py:meth:`~continuedfractions.rational_points.RationalPoint.cross` figure in the computation of perpendicular distance, :py:meth:`~continuedfractions.rational_points.RationalPoint.perpendicular_distance`, as :math:`d^{\perp}\left(P, P'\right) = \frac{|P \times P'|}{\|P\|_2}`, where :math:`d^{\perp}\left(P, P'\right)` denotes the perpendicular distance between :math:`P` and :math:`P'`, as discussed here :ref:`here <rational-points.euclidean-metrics>`.
+Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` figures in the computation of norm-squared, :py:attr:`~continuedfractions.rational_points.RationalPoint.norm_squared`, as :math:`\|P\|_{2}^2 = P \cdot P`.
 
 .. _rational-points.other-transformations:
 
@@ -365,8 +353,6 @@ The ``RP(1, 1)`` examples involve the rational point :math:`(1, 1)` whose Euclid
    >>> abs(RP(F(3, 5), F(4, 5)))
    Decimal('1')
 
-The implementation of Euclidean norm here is based on :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the standard dot product :math:`(x, y) \cdot (x', y')^T = xx' + yy'` of vectors in :math:`\mathbb{R}^2`.
-
 The rational points of unit norm lie on the unit circle :math:`C_1: x^2 + y^2 = 1`, and this can be checked simply by checking the norm squared:
 
 .. code:: python
@@ -411,7 +397,7 @@ It is also possible to compute the perpendicular (or orthogonal) distance :math:
    >>> RP(F(1, 2), F(1, 2)).perpendicular_distance(RP(0, 1))
    Decimal('0.7071067811865475244008443621')
 
-The method returns a :py:class:`~decimal.Decimal` value for this distance, which is computed using a formula for the length of the straight-line segment connecting :math:`P'` with line :math:`\ell_{OP}`, which is perpendicular to the latter, given by :math:`d^{\perp}\left(P, P'\right) = \frac{|P \times P'|}{\|P\|_2}`. Note that :math:`d^{\perp}\left(P, P'\right)` is undefined if :math:`P = (0, 0)`, and equal to :math:`0` if :math:`P` and :math:`P'` coincide or, more generally, if they are collinear with the origin.
+The method returns a :py:class:`~decimal.Decimal` value for this distance, which is computed using a formula for the length of the straight-line segment connecting :math:`P'` with line :math:`\ell_{OP}`, which is perpendicular to the latter, given by :math:`d^{\perp}\left(P, P'\right) = \frac{|P \times P'|}{\|P\|_2}`, where :math:`|P \times P'|` denotes the quantity :math:`|x'y - xy'|` and :math:`P = (x, y), P' = (x', y')`. Note that :math:`d^{\perp}\left(P, P'\right)` is undefined if :math:`P = (0, 0)`, and equal to :math:`0` if :math:`P` and :math:`P'` coincide or, more generally, if they are collinear with the origin.
 
 .. _rational-points.rectilinear-metrics:
 

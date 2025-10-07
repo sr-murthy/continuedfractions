@@ -505,7 +505,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return self.__class__(self.y, self.x)
 
     def translate(self, /, *, x_by: int | Fraction | ContinuedFraction = 0, y_by: int | Fraction | ContinuedFraction = 0) -> RationalPoint:
-        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scalars.
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scaladef crossrs.
 
         An affine transformation which implements the mapping:
 
@@ -670,53 +670,6 @@ class RationalPoint(Dim2RationalCoordinates):
             return ContinuedFraction(0)
 
         return (self.x * other.x) + (self.y * other.y)
-
-    def cross(self, other: RationalPoint, /) -> ContinuedFraction:
-        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The cross product of two rational points as position vectors in :math:`\\mathbb{Q}^2`.
-
-        If :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
-        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` are two
-        rational points in the plane their cross product
-        :math:`P \\times P'`, as the cross product of their position vectors,
-        is the rational number:
-
-        .. math::
-        
-           \\begin{align}
-           P \\times P' &= \\frac{a'b}{c'd} - \\frac{ab'}{cd'} \\\\
-                       &= \\frac{a'bcd' + ab'c'd}{cc'dd'}        
-           \\end{align}
-
-        Returns
-        -------
-        ContinuedFraction
-            The cross product of the position vectors of two rational points.
-
-        Examples
-        --------
-        >>> from continuedfractions.rational_points import RationalPoint as RP
-        >>> P, Q = RP(2, 1), RP(1, 2)
-        >>> P.cross(Q)
-        ContinuedFraction(-3, 1)
-        >>> Q.cross(P)
-        ContinuedFraction(3, 1)
-        >>> P.cross(P)
-        ContinuedFraction(0, 1)
-        >>> P.cross(1)
-        Traceback (most recent call last):
-        ...
-        ValueError: The cross product is only defined between `RationalPoint` instances.
-        """
-        if not isinstance(other, self.__class__):
-            raise ValueError(
-                'The cross product is only defined between `RationalPoint` '
-                'instances.'
-            )
-
-        if self.coordinates == (0, 0) or other.coordinates == (0, 0):
-            return ContinuedFraction(0)
-
-        return (self.y * other.x) - (self.x * other.y)    
 
     @property
     def norm_squared(self) -> ContinuedFraction:
@@ -937,8 +890,9 @@ class RationalPoint(Dim2RationalCoordinates):
         if a == b or abs(a) + abs(b) == Decimal('180'):
             return Decimal('0')
 
-        # Otherwise return the computed value
-        return abs(self.cross(other)).as_decimal() / self.norm
+        # Otherwise compute the value
+        abs_cross_product = abs(self.y * other.x - self.x * other.y)
+        return abs_cross_product.as_decimal() / self.norm
 
     def is_lattice_point(self) -> bool:
         """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.

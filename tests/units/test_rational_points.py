@@ -507,6 +507,34 @@ class TestRationalPoint:
         assert rational_point1.distance(rational_point2) == expected_distance
 
     @pytest.mark.parametrize(
+        "rational_point, incompatible_operand",
+        [
+            (RP(1, 0), (1, 0),),
+            (RP(1, 0), 1,),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), D('1'),),
+            (RP(0, 0), RP(1, 0),),
+        ]
+    )
+    def test_RationalPoint_perpendicular_distance__incompatible_operand__value_error_raised(self, rational_point, incompatible_operand):
+        with pytest.raises(ValueError):
+            rational_point.perpendicular_distance(incompatible_operand)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_perpendicular_distance",
+        [
+            (RP(1, 0), RP(0, 1), D('1'),),
+            (RP(0, 1), RP(1, 0), D('1'),),
+            (RP(1, 0), RP(1, 0), D('0'),),
+            (RP(1, 0), RP(-1, 0), D('0'),),
+            (RP(F(1, 2), F(1, 2)), RP(0, 1), D('0.7071067811865475244008443621'),),
+            (RP(F(1, 2), F(1, 2)), RP(1, 1), D('0'),),
+        ]
+    )
+    def test_RationalPoint_perpendicular_distance(self, rational_point1, rational_point2, expected_perpendicular_distance):
+        assert rational_point1.perpendicular_distance(rational_point2) == expected_perpendicular_distance
+
+    @pytest.mark.parametrize(
         "rational_point, expected_is_lattice_point",
         [
             (RP(0, 0), True),

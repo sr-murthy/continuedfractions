@@ -636,8 +636,8 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> P = RationalPoint(2, 1)
-        >>> Q = RationalPoint(1, 2)
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P, Q = RP(2, 1), RP(1, 2)
         >>> P.cross(Q)
         ContinuedFraction(-3, 1)
         >>> Q.cross(P)
@@ -818,6 +818,68 @@ class RationalPoint(Dim2RationalCoordinates):
             )
 
         return self.distance_squared(other).as_decimal().sqrt()
+
+    def perpendicular_distance(self, other: RationalPoint, /) -> Decimal:
+        """:py:class:`~decimal.Decimal` : The perpendicular distance between this rational point and another.
+
+        Given a non-zero rational point
+        :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)`, the line
+        :math:`\\ell_{OP}` passing through the origin :math:`(0, 0)` and
+        :math:`P`, and another rational point
+        :math:`P' = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)`, the
+        perpendicular distance :math:`d^{\\perp}\\left(P, P'\\right)'` between
+        :math:`P` and :math:`P'` is defined here as the length
+        :math:`d^{\\perp}\\left(P, P'\\right)` of the line
+        segment connecting :math:`P'` and :math:`\\ell_{OP}`, perpendicular to
+        the latter, as given by:
+
+        .. math::
+
+           d^{\\perp}\\left(P, P'\\right) = \\frac{|P \\times P'|}{\\|P\\|_2}
+
+        where :math:`|P \\times P'|` is the cross product of :math:`P` and
+        :math:`P'`.
+
+        Returns
+        -------
+        decimal.Decimal
+            The perpendicular distance between this rational point and another
+            as defined above.
+
+        Examples
+        --------
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 0).perpendicular_distance(RP(0, 1))
+        Decimal('1')
+        >>> RP(0, 1).perpendicular_distance(RP(1, 0))
+        Decimal('1')
+        >>> RP(1, 0).perpendicular_distance(RP(1, 0))
+        Decimal('0')
+        >>> RP(1, 0).perpendicular_distance(RP(-1, 0))
+        Decimal('0')
+        >>> RP(0, 0).perpendicular_distance(RP(1, 0))
+        Traceback (most recent call last):
+        ...
+        ValueError: The perpendicular distance is defined only between two `RationalPoint` instances, the first of which must be non-zero, i.e. different from `RationalPoint(0, 0)`.
+        >>> RP(1, 0).perpendicular_distance(1)
+        Traceback (most recent call last):
+        ...
+        ValueError: The perpendicular distance is defined only between two `RationalPoint` instances, the first of which must be non-zero, i.e. different from `RationalPoint(0, 0)`.
+        """
+        if not isinstance(other, RationalPoint) or self == self.zero():
+            raise ValueError(
+                'The perpendicular distance is defined only between two '
+                '`RationalPoint` instances, the first of which must be '
+                'non-zero, i.e. different from `RationalPoint(0, 0)`.'
+            )
+
+        # If the two points are collinear with the origin ``(0, 0)`` return 0.
+        a, b = self.angle(as_degrees=True), other.angle(as_degrees=True)
+        if a == b or abs(a) + abs(b) == Decimal('180'):
+            return Decimal('0')
+
+        # Otherwise return the computed value
+        return abs(self.cross(other)).as_decimal() / self.norm
 
     def is_lattice_point(self) -> bool:
         """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.

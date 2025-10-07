@@ -340,6 +340,31 @@ class TestRationalPoint:
         assert rational_point1.dot(rational_point2) == expected_dot_product
 
     @pytest.mark.parametrize(
+        "rational_point1, invalid_arg",
+        [
+            (RP(1, 1), 2,),
+            (RP(1, 1), 2.0,),
+            (RP(1, 1), D('2'),),
+        ]
+    )
+    def test_RationalPoint_cross__invalid_arg__value_error_raised(self, rational_point1, invalid_arg):
+        with pytest.raises(ValueError):
+            rational_point1.cross(invalid_arg)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_cross_product",
+        [
+            (RP(0, 0), RP(1, 1), CF(0, 1),),
+            (RP(1, 1), RP(0, 0), CF(0, 1),),
+            (RP(2, 1), RP(1, 2), CF(-3, 1),),
+            (RP(1, 2), RP(2, 1), CF(3, 1),),
+            (RP(1, 1), RP(1, 1), CF(0, 1),),
+        ]
+    )
+    def test_RationalPoint_cross(self, rational_point1, rational_point2, expected_cross_product):
+        assert rational_point1.cross(rational_point2) == expected_cross_product
+
+    @pytest.mark.parametrize(
         "rational_point, expected_orthogonal",
         [
             (RP(0, 0), RP(0, 0)),
@@ -360,6 +385,58 @@ class TestRationalPoint:
     )
     def test_RationalPoint_permute(self, rational_point, expected_permutation):
         assert rational_point.permute() == expected_permutation
+
+    @pytest.mark.parametrize(
+        "rational_point, invalid_x_translate, invalid_y_translate",
+        [
+            (RP(1, 2), 1/2, -0.1),
+            (RP(1, 2), D('1'), None),
+        ]
+    )
+    def test_RationalPoint_translate__invalid_x_or_y_translates__value_error_raised(self, rational_point, invalid_x_translate, invalid_y_translate):
+        with pytest.raises(ValueError):
+            rational_point.translate(x_by=invalid_x_translate, y_by=invalid_y_translate)
+
+    @pytest.mark.parametrize(
+        "rational_point, x_translate, y_translate, expected_translate",
+        [
+            (RP(1, 2), None, None, RP(1, 2)),
+            (RP(0, 0), 1, -1, RP(1, -1)),
+            (RP(F(1, 2), F(-2, 3)), F(1, 4), F(-1, 3), RP(F(3, 4), -1)),
+            (RP(F(3, 5), F(4, 5)), F(-3, 5), F(-4, 5), RP(0, 0))
+        ]
+    )
+    def test_RationalPoint_translate(self, rational_point, x_translate, y_translate, expected_translate):
+        if x_translate and y_translate:
+            assert rational_point.translate(x_by=x_translate, y_by=y_translate) == expected_translate
+        else:
+            assert rational_point.translate() == expected_translate
+
+    @pytest.mark.parametrize(
+        "rational_point, invalid_axis",
+        [
+            (RP(1, 1), "X"),
+            (RP(1, 1), "Y"),
+        ]
+    )
+    def test_RationalPoint_reflect__invalid_axis__value_error_raised(self, rational_point, invalid_axis):
+        with pytest.raises(ValueError):
+            rational_point.reflect(axis=invalid_axis)
+
+    @pytest.mark.parametrize(
+        "rational_point, axis, expected_reflection",
+        [
+            (RP(1, 0), "x", RP(1, 0)),
+            (RP(1, 0), "y", RP(-1, 0)),
+            (RP(0, 1), "x", RP(0, -1)),
+            (RP(0, 1), "y", RP(0, 1)),
+            (RP(1, 1), "x", RP(1, -1)),
+            (RP(1, 1), "y", RP(-1, 1)),
+
+        ]
+    )
+    def test_RationalPoint_reflect(self, rational_point, axis, expected_reflection):
+        assert rational_point.reflect(axis=axis) == expected_reflection
 
     @pytest.mark.parametrize(
         "rational_point, expected_norm_squared",
@@ -418,6 +495,7 @@ class TestRationalPoint:
         "rational_point1, rational_point2, expected_distance_squared",
         [
             (RP(0, 0), RP(1, 2), CF(5, 1),),
+            (RP(1, 2), RP(0, 0), CF(5, 1),),
             (RP(1, 1), RP(1, 1), CF(0, 1),),
             (RP(1, 1), RP(-1, 1), CF(4, 1),),
             (RP(F(1, 2), F(3, 4)), RP(F(-1, 2), F(-3, 4)), CF(13, 4),),
@@ -453,6 +531,34 @@ class TestRationalPoint:
     )
     def test_RationalPoint_distance(self, rational_point1, rational_point2, expected_distance):
         assert rational_point1.distance(rational_point2) == expected_distance
+
+    @pytest.mark.parametrize(
+        "rational_point, incompatible_operand",
+        [
+            (RP(1, 0), (1, 0),),
+            (RP(1, 0), 1,),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), D('1'),),
+            (RP(0, 0), RP(1, 0),),
+        ]
+    )
+    def test_RationalPoint_perpendicular_distance__incompatible_operand__value_error_raised(self, rational_point, incompatible_operand):
+        with pytest.raises(ValueError):
+            rational_point.perpendicular_distance(incompatible_operand)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_perpendicular_distance",
+        [
+            (RP(1, 0), RP(0, 1), D('1'),),
+            (RP(0, 1), RP(1, 0), D('1'),),
+            (RP(1, 0), RP(1, 0), D('0'),),
+            (RP(1, 0), RP(-1, 0), D('0'),),
+            (RP(F(1, 2), F(1, 2)), RP(0, 1), D('0.7071067811865475244008443621'),),
+            (RP(F(1, 2), F(1, 2)), RP(1, 1), D('0'),),
+        ]
+    )
+    def test_RationalPoint_perpendicular_distance(self, rational_point1, rational_point2, expected_perpendicular_distance):
+        assert rational_point1.perpendicular_distance(rational_point2) == expected_perpendicular_distance
 
     @pytest.mark.parametrize(
         "rational_point, expected_is_lattice_point",

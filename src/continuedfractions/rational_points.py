@@ -15,6 +15,7 @@ __all__ = [
 import decimal
 import math
 import numbers
+import typing
 
 from decimal import Decimal
 from typing import Any
@@ -561,6 +562,63 @@ class RationalPoint(Dim2RationalCoordinates):
 
         return self.__class__(self.x + x_by, self.y + y_by)
 
+    def reflect(self, axis: typing.Literal['x', 'y']) -> RationalPoint:
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by reflecting the original in the :math:`x`- or :math:`y`-axis.
+
+        Implements linear transformations given by the mappings:
+
+        .. math::
+
+           \\left(\\frac{a}{c}, \\frac{b}{d} \\right) \\longmapsto \\left(\\frac{a}{c}, -\\frac{b}{d}\\right)
+
+        for reflection in the :math:`x`-axis, and:
+
+        .. math::
+
+           \\left(\\frac{a}{c}, \\frac{b}{d} \\right) \\longmapsto \\left(-\\frac{a}{c}, \\frac{b}{d}\\right)
+
+        for reflection in the :math:`y`-axis, with matrices
+        :math:`\\begin{bmatrix}1 & 0\\\\0 & -1\\end{bmatrix}`, and
+        :math:`\\begin{bmatrix}-1 & 0\\\\0 & 1\\end{bmatrix}` respectively.
+
+        Parameters
+        ----------
+        axis : str
+            The axis of reflection: should be a string literal which is either
+            ``"x"`` or ``"y"``.
+
+        Returns
+        -------
+        RationalPoint
+            A new rational point reflected from the original in the given axis.
+
+        Raises
+        ------
+        ValueError
+            If the axis is invalid or incorrectly specified.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P = RP(1, 1)
+        >>> P.reflect(axis='x')
+        RationalPoint(1, -1)
+        >>> P.reflect(axis='y')
+        RationalPoint(-1, 1)
+        >>> P.reflect(axis="X")
+        Traceback (most recent call last):
+        ...
+        ValueError: The axis of reflection must be a string literal which is either "x" or "y".
+        """
+        if not (isinstance(axis, str) and axis in ['x', 'y']):
+            raise ValueError(
+                'The axis of reflection must be a string literal which is '
+                'either "x" or "y".'
+            )
+
+        return self.__class__(self.x, -self.y) if axis == 'x' else self.__class__(-self.x, self.y)
+
     def dot(self, other: RationalPoint, /) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The dot product of two rational points as position vectors in :math:`\\mathbb{Q}^2`.
 
@@ -699,7 +757,7 @@ class RationalPoint(Dim2RationalCoordinates):
         """:py:class:`~decimal.Decimal` : The Euclidean norm of a rational point in the plane.
 
         The Euclidean norm :math:`\\|P\\|_2` of a rational point
-        :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)`, as given by:
+        :math:`P = \\left(\\frac{a}{c}, \\frac{b}{d} \\right)`, as given by:
 
         .. math::
 
@@ -789,7 +847,8 @@ class RationalPoint(Dim2RationalCoordinates):
 
         For rational points :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
         :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)` this is the
-        square root :math:`\\sqrt{\\|P - P'\\|}` of :math:`\\|P - P'\\|` as defined above.
+        square root :math:`\\sqrt{\\|P - P'\\|_{2}^2}` of the distance squared
+        :math:`\\|P - P'\\|_{2}^2` as defined above.
 
         And of course :math:`\\|P - P'\\|_{2} = 0` if and only if :math:`P = P'`.
 

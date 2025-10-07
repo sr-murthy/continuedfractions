@@ -413,6 +413,32 @@ class TestRationalPoint:
             assert rational_point.translate() == expected_translate
 
     @pytest.mark.parametrize(
+        "rational_point, invalid_axis",
+        [
+            (RP(1, 1), "X"),
+            (RP(1, 1), "Y"),
+        ]
+    )
+    def test_RationalPoint_reflect__invalid_axis__value_error_raised(self, rational_point, invalid_axis):
+        with pytest.raises(ValueError):
+            rational_point.reflect(axis=invalid_axis)
+
+    @pytest.mark.parametrize(
+        "rational_point, axis, expected_reflection",
+        [
+            (RP(1, 0), "x", RP(1, 0)),
+            (RP(1, 0), "y", RP(-1, 0)),
+            (RP(0, 1), "x", RP(0, -1)),
+            (RP(0, 1), "y", RP(0, 1)),
+            (RP(1, 1), "x", RP(1, -1)),
+            (RP(1, 1), "y", RP(-1, 1)),
+
+        ]
+    )
+    def test_RationalPoint_reflect(self, rational_point, axis, expected_reflection):
+        assert rational_point.reflect(axis=axis) == expected_reflection
+
+    @pytest.mark.parametrize(
         "rational_point, expected_norm_squared",
         [
             (RP(0, 0), CF(0, 1),),

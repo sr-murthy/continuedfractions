@@ -256,7 +256,7 @@ Certain scalar-valued vector products, as ordinarily defined in Euclidean spaces
    >>> RP(1, 1).dot(RP(F(3, 5), F(4, 5)))
    ContinuedFraction(7, 5)
 
-and :py:meth:`~continuedfractions.rational_points.RationalPoint.cross` which implements the cross product :math:`P \times P' = \frac{a'b}{c'd} - \frac{ab'}{cd'}`, where the first rational point is non-zero:
+and :py:meth:`~continuedfractions.rational_points.RationalPoint.cross` which implements the cross product :math:`P \times P' = \frac{a'b}{c'd} - \frac{ab'}{cd'}`:
 
 .. code:: python
 
@@ -314,7 +314,18 @@ Translation in coordinates is available via :py:meth:`~continuedfractions.ration
 
 This uses two optional arguments (``x_by`` and ``y_by``) both set to ``0`` defaults for the translation in :math:`x`- and/or :math:`y`-coordinates.
 
-Other transformations such as reflection in the axes or a given line, and rotation, may be added in the future.
+Points may be reflected in either axis (:math:`x`- or :math:`y`-) with :py:meth:`~continuedfractions.rational_points.RationalPoint.reflect`:
+
+.. code:: python
+
+   >>> RP(1, 1).reflect(axis='x')
+   RationalPoint(1, -1)
+   >>> RP(1, 1).reflect(axis='y')
+   RationalPoint(-1, 1)
+
+These are linear transformations described by the matrices :math:`\begin{bmatrix}1 & 0\\0 & -1\end{bmatrix}`, and :math:`\begin{bmatrix}-1 & 0\\0 & 1\end{bmatrix}` respectively.
+
+Other transformations such as reflection in a given line, and rotation, may be added in the future.
 
 .. _rational-points.metrics:
 

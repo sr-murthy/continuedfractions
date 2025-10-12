@@ -671,6 +671,65 @@ class RationalPoint(Dim2RationalCoordinates):
 
         return (self.x * other.x) + (self.y * other.y)
 
+    def det(self, other: RationalPoint, /) -> ContinuedFraction:
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The determinant of the :math:`2 \\times 2` matrix formed by this rational point and another.
+
+        Computes the (rational) determinant:
+
+        .. math::
+
+            \\begin{vmatrix}\\frac{a}{c} & \\frac{a'}{c'}\\\\\\frac{b}{d} & \\frac{b'}{d'}\\end{vmatrix} = \\frac{ab'}{cd'} - \\frac{a'b}{c'd} = \\frac{ab'c'd - a'bcd'}{cc'dd'}
+
+        of the matrix formed by the position vectors of two plane rational
+        points :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)`, where
+        :math:`P` is represented by ``self`` and :math:`P'` by ``other``.
+
+        Geometrically, the quantity represents the signed area of the
+        plane parallelogram formed by the position vectors of :math:`P` and
+        :math:`P'` and the vector sum :math:`P + P'`, where the sign is
+        positive or negative depending on whether
+        :math:`\\frac{bc}{ad} < \\frac{b'c'}{a'd'}` or 
+        :math:`\\frac{bc}{ad} > \\frac{b'c'}{a'd'}`, where
+        :math:`\\frac{bc}{ad}` and :math:`\\frac{b'c'}{a'd'}` are the
+        gradients of the lines passing through the origin :math:`(0, 0)`
+        and :math:`P` and :math:`P'` respectively. The quantity is zero
+        when these lines are collinear, i.e. when :math:`P` and :math:`P'`
+        line on a single line passing through :math:`(0, 0)`.
+        
+        Returns
+        -------
+        ContinuedFraction
+            The determinant of the :math:`2 \\times 2` matrix formed by the
+            position vector of this rational point and another, as described
+            above.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P, Q, R = RP(F(3, 5), F(4, 5)), RP(1, 1), RP(F(5, 4), 2); P, Q, R
+        (RationalPoint(3/5, 4/5), RationalPoint(1, 1), RationalPoint(5/4, 2))
+        >>> P.det(Q)
+        ContinuedFraction(-1, 5)
+        >>> P.det(R)
+        ContinuedFraction(1, 5)
+        >>> Q.det(R)
+        ContinuedFraction(3, 4)
+        >>> P.det(P)
+        ContinuedFraction(0, 1)
+        """
+        if not isinstance(other, self.__class__):
+            raise ValueError(
+                'The determinant is only defined between `RationalPoint` '
+                'instances.'
+            )
+
+        if self.coordinates == (0, 0) or other.coordinates == (0, 0):
+            return ContinuedFraction(0)
+
+        return (self.x * other.y) - (self.y * other.x)    
+
     @property
     def norm_squared(self) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The square of the Euclidean (:math:`\\ell_2`) norm of a rational point in the plane.
@@ -892,9 +951,8 @@ class RationalPoint(Dim2RationalCoordinates):
         if a == b or abs(a) + abs(b) == Decimal('180'):
             return Decimal('0')
 
-        # Otherwise compute the value
-        abs_cross_product = abs(self.y * other.x - self.x * other.y)
-        return abs_cross_product.as_decimal() / self.norm
+        # Otherwise compute the value and return
+        return abs(self.det(other)).as_decimal() / self.norm
 
     def is_lattice_point(self) -> bool:
         """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.

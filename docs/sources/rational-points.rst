@@ -244,7 +244,7 @@ Scaling by rational values (via scalar left-multiplication), :math:`\left(\lambd
 
 Products
 ~~~~~~~~
-The :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` method implements the standard Euclidean dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`:
+Certain scalar-valued products, as ordinarily defined, can be taken for pairs of rational points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)`, :math:`P' = \left(\frac{a'}{c'}, \frac{b'}{d'}\right) \in \mathbb{Q}^2`, including :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`::
 
 .. code:: python
 
@@ -255,9 +255,19 @@ The :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` method impl
    >>> RP(1, 1).dot(RP(F(3, 5), F(4, 5)))
    ContinuedFraction(7, 5)
 
-As this is rational-valued for rational points, the method return :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
+and :py:meth:`~continuedfractions.rational_points.RationalPoint.det` which implements the determinant :math:`\text{Det}(P, P') = \begin{vmatrix}\frac{a}{c} & \frac{a'}{c'}\\ \frac{b}{d} & \frac{b'}{d'}\end{vmatrix} = \frac{ab'}{cd'} - \frac{a'b}{c'd} = \frac{ab'c'd - a'bcd'}{cc'dd'}`:
 
-Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` figures in the computation of norm-squared, :py:attr:`~continuedfractions.rational_points.RationalPoint.norm_squared`, as :math:`\|P\|_{2}^2 = P \cdot P`.
+
+.. code:: python
+
+   >>> RP(1, 1).det(RP(-1, 1))
+   ContinuedFraction(2, 1)
+   >>> RP(1, 0).det(RP(0, 1))
+   ContinuedFraction(1, 1)
+   >>> RP(1, 0).det(RP(1, 0))
+   ContinuedFraction(0, 1)
+
+Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` is used in the computation of norm-squared, :py:attr:`~continuedfractions.rational_points.RationalPoint.norm_squared`, as :math:`\|P\|_{2}^2 = P \cdot P`, and :py:meth:`~continuedfractions.rational_points.RationalPoint.det` is used in the computation of perpendicular distance, :py:meth:`~continuedfractions.rational_points.RationalPoint.perpendicular_distance`, as :math:`d^{\perp}(P, P') = \frac{\lvert\text{Det}(P, P')\rvert}{\|P\|_2}`, where :math:`d^{\perp}\left(P, P'\right)` denotes the perpendicular distance between :math:`P` and :math:`P'`, as discussed here :ref:`here <rational-points.euclidean-metrics>`.
 
 .. _rational-points.other-transformations:
 

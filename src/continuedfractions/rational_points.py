@@ -1089,8 +1089,8 @@ class RationalPoint(Dim2RationalCoordinates):
     def height(self) -> int:
         """:py:class:`int` : The (projective) height of the rational point in the projective space :math:`\\mathbb{P}^2`.
 
-        The projective height :math:`H\\left(\\frac{a}{c},\\frac{b}{d}\\right)`
-        of a rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
+        The height :math:`H\\left(\\frac{a}{c},\\frac{b}{d}\\right)` of a
+        rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
         as given by:
 
         .. math::
@@ -1127,7 +1127,7 @@ class RationalPoint(Dim2RationalCoordinates):
     def log_height(self) -> Decimal:
         """:py:class:`~decimal.Decimal` : The natural logarithm of the (projective) height of the rational point as defined above.
 
-        The (natural) logarithm of the projective height of a rational point
+        The (natural) logarithm of the height of a rational point
         :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)` as given by:
 
         .. math::

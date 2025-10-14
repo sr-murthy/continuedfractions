@@ -191,9 +191,37 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Vector Properties and Operations
 --------------------------------
 
-While this is not intended to be a linear algebra library, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as angle, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and affine transformations such as translation in coordinates, are also available.
+While this is not intended to be a linear algebra library, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, angles, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and some affine transformations such as translation in coordinates, are also available.
 
 Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
+
+.. _rational-points.gradients:
+
+Gradients
+~~~~~~~~~
+
+Gradients (or slopes) of lines connecting rational points with either the origin :math:`(0, 0)` or other rational points can be computed with the :py:meth:`~continuedfractions.rational_points.RationalPoint.gradient` method. Some examples are given below:
+
+.. code:: python
+
+   >>> RP(1, 1).gradient()
+   ContinuedFraction(1, 1)
+   >>> RP(1, 1).gradient(other=RP(0, 1))
+   ContinuedFraction(0, 1)
+   >>> RP(1, 1).gradient(other=RP(2, F(3, 2)))
+   ContinuedFraction(1, 2)
+   >>> RP(1, 1).gradient(other=RP(2, 3))
+   ContinuedFraction(2, 1)
+   >>> RP(0, 1).gradient(other=RP(1, 0))
+   ContinuedFraction(-1, 1)
+
+The second rational point is optional, but if one is provided it must be a :py:class:`~continuedfractions.rational_points.RationalPoint` instance, otherwise a :py:class:`ValueError` is raised. This is also the case for vertical lines where the gradient is infinite:
+
+.. code:: python
+
+   >>> RP(1, 1).gradient(1, 0)
+   ...
+   ValueError: If a second rational point is provided, it must be a `RationalPoint` instance, and non-vertical with respect to this point.
 
 .. _rational-points.angles:
 

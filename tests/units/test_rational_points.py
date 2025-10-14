@@ -309,6 +309,44 @@ class TestRationalPoint:
         assert RP.sum(*rational_points) == expected_sum
 
     @pytest.mark.parametrize(
+        "rational_point1, invalid_other",
+        [
+            (RP(0, 0), (0, 0),),
+            (RP(1, 1), RP(1, 1),),
+            (RP(1, 1), D('0'),),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), -1,),
+        ]
+    )
+    def test_RationalPoint_gradient__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+        with pytest.raises(ValueError):
+            rational_point1.gradient(other=invalid_other)
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_gradient",
+        [
+            (RP(1, 1), CF(1, 1)),
+            (RP(1, F(1, 2)), CF(1, 2)),
+            (RP(1, 2), CF(2, 1)),
+            (RP(-1, 1), CF(-1, 1)),
+        ]
+    )
+    def test_RationalPoint_gradient__no_other_rational_point(self, rational_point, expected_gradient):
+        assert rational_point.gradient() == expected_gradient
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_gradient",
+        [
+            (RP(1, 1), RP(0, 1), CF(0, 1)),
+            (RP(1, 1), RP(2, 3), CF(2, 1)),
+            (RP(1, 1), RP(2, F(3, 2)), CF(1, 2)),
+            (RP(1, 0), RP(0, 1), CF(-1, 1)),
+        ]
+    )
+    def test_RationalPoint_gradient__other_rational_point(self, rational_point1, rational_point2, expected_gradient):
+        assert rational_point1.gradient(other=rational_point2) == expected_gradient
+
+    @pytest.mark.parametrize(
         "rational_point, expected_angle, expected_angle_as_degrees",
         [
             (RP(1, 0), D('0'), D('0'),),

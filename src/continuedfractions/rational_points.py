@@ -400,6 +400,78 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return Dim2RationalCoordinates(*self)
 
+    def gradient(self, *, other: RationalPoint = None) -> ContinuedFraction:
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : Computes the gradient (slope) of the line passing through this rational point and either the origin :math:`(0, 0)` (default) or another point`.
+        
+        If another rational point :math:`P' = (x', y')` (as represented by
+        ``other``) is provided then the gradient is computed as:
+
+        .. math::
+
+           \\frac{y' - y}{x' - x}
+
+        where :math:`P = (x, y)` is this rational point (as represented by
+        ``self``).
+
+        If no non-zero second rational point is provided the gradient is
+        computed with respect to the origin:
+
+        .. math::
+
+           \\frac{y}{x}
+
+        As the gradient of a vertical line is infinite (or undefined) the
+        method raises a :py:class:`ValueError`, which occurs whenver the
+        second rational point is vertical with respect to this point, i.e.
+        the two points have the same :math:`x`-coordinate.
+
+        Parameters
+        ----------
+        other : RationalPoint, default=None
+            An optional second rational point with respect to which the
+            gradient is computed.
+
+        Returns
+        -------
+        ContinuedFraction
+            The gradient (slope) of the line connecting this rational point and
+            either the origin :math:`(0, 0)` (default) or another point.
+
+        Raises
+        ------
+        ValueError
+            If ``other`` is not a rational point or the point it represents is
+            vertical with respect to this rational point.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 1).gradient()
+        ContinuedFraction(1, 1)
+        >>> RP(1, 1).gradient(other=RP(2, 1))
+        ContinuedFraction(0, 1)
+        >>> RP(1, 1).gradient(other=RP(2, F(3, 2)))
+        ContinuedFraction(1, 2)
+        >>> RP(0, 1).gradient(other=RP(1, 0))
+        ContinuedFraction(-1, 1)
+        >>> RP(1, 1).gradient(other=RP(1, 2))
+        Traceback (most recent call last):
+        ...
+        ValueError: If a second rational point is provided, it must be a `RationalPoint` instance, and non-vertical with respect to this point.
+        """
+        if other is None:
+            return ContinuedFraction(self.y, self.x)
+
+        if not isinstance(other, RationalPoint) or other.x == self.x:
+            raise ValueError(
+                'If a second rational point is provided, it must be a '
+                '`RationalPoint` instance, and non-vertical with respect '
+                'to this point.'
+            )
+
+        return ContinuedFraction(other.y - self.y, other.x - self.x)
+
     def angle(self, /, *, other: RationalPoint = None, as_degrees: bool = False) -> Decimal:
         """:py:class:`~decimal.Decimal`: The radian (or degree) angle between this rational point, as a position vector in :math:`\\mathbb{Q}^2`, and either another rational point or the positive :math:`x`-axis.
         

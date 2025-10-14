@@ -287,7 +287,7 @@ Scaling by rational values (via scalar left-multiplication), :math:`\left(\lambd
 
 Products
 ~~~~~~~~
-Certain scalar-valued products, as ordinarily defined, can be taken for pairs of rational points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)`, :math:`P' = \left(\frac{a'}{c'}, \frac{b'}{d'}\right) \in \mathbb{Q}^2`, including :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`::
+Certain scalar-valued products, as ordinarily defined, can be taken for pairs of rational points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)`, :math:`P' = \left(\frac{a'}{c'}, \frac{b'}{d'}\right) \in \mathbb{Q}^2`, including :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`:
 
 .. code:: python
 
@@ -508,7 +508,8 @@ Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneou
 
 .. code:: python
 
-   >>> P = RP(F(3, 5), F(4, 5))
+   >>> P = RP(F(3, 5), F(4, 5)); P
+   RationalPoint(3/5, 4/5)
    >>> P.homogeneous_coordinates
    HomogeneousCoordinates(3, 4, 5)
    >>> P.homogeneous_coordinates.x, P.homogeneous_coordinates.y, P.homogeneous_coordinates.z

@@ -678,7 +678,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-            \\begin{vmatrix}\\frac{a}{c} & \\frac{a'}{c'}\\\\\\frac{b}{d} & \\frac{b'}{d'}\\end{vmatrix} = \\frac{ab'}{cd'} - \\frac{a'b}{c'd} = \\frac{ab'c'd - a'bcd'}{cc'dd'}
+           \\begin{vmatrix}\\frac{a}{c} & \\frac{a'}{c'}\\\\\\frac{b}{d} & \\frac{b'}{d'}\\end{vmatrix} = \\frac{ab'}{cd'} - \\frac{a'b}{c'd} = \\frac{ab'c'd - a'bcd'}{cc'dd'}
 
         of the matrix formed by the position vectors of two plane rational
         points :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
@@ -690,12 +690,12 @@ class RationalPoint(Dim2RationalCoordinates):
         :math:`P'` and the vector sum :math:`P + P'`, where the sign is
         positive or negative depending on whether
         :math:`\\frac{bc}{ad} < \\frac{b'c'}{a'd'}` or 
-        :math:`\\frac{bc}{ad} > \\frac{b'c'}{a'd'}`, where
+        :math:`\\frac{bc}{ad} > \\frac{b'c'}{a'd'}` respectively, where
         :math:`\\frac{bc}{ad}` and :math:`\\frac{b'c'}{a'd'}` are the
         gradients of the lines passing through the origin :math:`(0, 0)`
         and :math:`P` and :math:`P'` respectively. The quantity is zero
         when these lines are collinear, i.e. when :math:`P` and :math:`P'`
-        line on a single line passing through :math:`(0, 0)`.
+        fall on a single line passing through :math:`(0, 0)`.
         
         Returns
         -------

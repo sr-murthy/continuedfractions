@@ -267,8 +267,6 @@ and :py:meth:`~continuedfractions.rational_points.RationalPoint.det` which imple
    >>> RP(1, 0).det(RP(1, 0))
    ContinuedFraction(0, 1)
 
-Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` is used in the computation of norm-squared, :py:attr:`~continuedfractions.rational_points.RationalPoint.norm_squared`, as :math:`\|P\|_{2}^2 = P \cdot P`, and :py:meth:`~continuedfractions.rational_points.RationalPoint.det` is used in the computation of perpendicular distance, :py:meth:`~continuedfractions.rational_points.RationalPoint.perpendicular_distance`, as :math:`d^{\perp}(P, P') = \frac{\lvert\text{Det}(P, P')\rvert}{\|P\|_2}`, where :math:`d^{\perp}\left(P, P'\right)` denotes the perpendicular distance between :math:`P` and :math:`P'`, as discussed here :ref:`here <rational-points.euclidean-metrics>`.
-
 .. _rational-points.other-transformations:
 
 Other Transformations
@@ -323,7 +321,7 @@ Points may be reflected in either axis (:math:`x`- or :math:`y`-) with :py:meth:
 
 These are linear transformations described by the matrices :math:`\begin{bmatrix}1 & 0\\0 & -1\end{bmatrix}`, and :math:`\begin{bmatrix}-1 & 0\\0 & 1\end{bmatrix}` respectively.
 
-Other transformations such as reflection in a given line, and rotation, may be added in the future.
+Other transformations, such as reflection in a given line etc., may be added in the future.
 
 .. _rational-points.metrics:
 

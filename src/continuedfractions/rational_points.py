@@ -505,7 +505,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return self.__class__(self.y, self.x)
 
     def translate(self, /, *, x_by: int | Fraction | ContinuedFraction = 0, y_by: int | Fraction | ContinuedFraction = 0) -> RationalPoint:
-        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scaladef crossrs.
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Returns a new rational point obtained by translating the original in the :math:`x`- and/or :math:`y`-coordinates by rational scalars.
 
         An affine transformation which implements the mapping:
 
@@ -523,11 +523,11 @@ class RationalPoint(Dim2RationalCoordinates):
         ----------
         x_by : int or Fraction or ContinuedFraction, default=0
             The optional parameter for translating the :math:`x`-coordinate,
-            with a defaut value of :math:`0`. Must be a rational value.
+            with a default value of :math:`0`. Must be a rational value.
 
         y_by : int or Fraction or ContinuedFraction, default=0
             The optional parameter for translating the :math:`y`-coordinate,
-            with a defaut value of :math:`0`. Must be a rational value.
+            with a default value of :math:`0`. Must be a rational value.
 
         Returns
         -------
@@ -849,8 +849,10 @@ class RationalPoint(Dim2RationalCoordinates):
 
            d^{\\perp}\\left(P, P'\\right) = \\frac{|P \\times P'|}{\\|P\\|_2}
 
-        where :math:`|P \\times P'|` is the cross product of :math:`P` and
-        :math:`P'`.
+        where :math:`|P \\times P'|` is defined here as a scalar cross product
+        (not vector cross product) of :math:`P` and :math:`P'`: so, if
+        :math:`P = (x, y), P' = (x', y')` then
+        :math:`|P \\times P'| := |x'y - xy'|`.
 
         Returns
         -------

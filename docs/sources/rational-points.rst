@@ -186,12 +186,12 @@ Note that in relation to addition, specifically, the :py:meth:`~continuedfractio
 
 This should be the preferred method as the Python built-in :py:func:`sum` function sets an internal :py:class:`int` start value of ``0``, which causes it to fail on :py:class:`~continuedfractions.rational_points.RationalPoint` instances.
 
-.. _rational-points.vector-props-and-operations:
+.. _rational-points.plane-geometry:
 
-Vector Properties and Operations
---------------------------------
+Simple Plane Geometry: Properties and Methods
+---------------------------------------------
 
-While this is not intended to be a linear algebra library, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, angles, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and some affine transformations such as translation in coordinates, are also available.
+This is not intended to be a comprehensive library for 2D linear algebra, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, angles, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and some affine transformations such as translation in coordinates, are also available.
 
 Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
 
@@ -363,7 +363,7 @@ Points may be reflected in either axis (:math:`x`- or :math:`y`-) with :py:meth:
 
 These are linear transformations described by the matrices :math:`\begin{bmatrix}1 & 0\\0 & -1\end{bmatrix}`, and :math:`\begin{bmatrix}-1 & 0\\0 & 1\end{bmatrix}` respectively.
 
-Other transformations, such as reflection in a given line etc., may be added in the future.
+Other transformations may be added in the future.
 
 .. _rational-points.metrics:
 
@@ -504,7 +504,7 @@ Some examples are given below:
 
 The examples involving ``RP(F(3, 5), F(4, 5))`` and ``RP(F(5, 13), F(12, 13))`` yield the primitive Pythagorean triples :math:`(3, 4, 5)` and :math:`(5, 12, 13)` respectively because the underlying rational points :math:`\left(\frac{3}{5},\frac{4}{5}\right)` and :math:`\left(\frac{5}{13},\frac{12}{13}\right)` fall on the unit circle :math:`x^2 + y^2 = 1` and have numerators which are coprime. The example with ``RP(F(6, 10), F(8, 10))`` yields the non-primitive Pythagorean triple :math:`(6, 8, 10)` which happens to be a scalar multiple :math:`2\cdot(3, 4, 5)` of :math:`(3, 4, 5)`, but both are homogeneous coordinates for the same rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)`.
 
-Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` returns a :py:class:`~continuedfractions.rational_points.HomogeneousCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for homogenous 3D rational coordinates: the individual components can be accessed from the object using descriptive labels, the coordinates can be scaled and re-scaled any number of times, and the original rational point can be recovered from the coordinates using the :py:meth:`~continuedfractions.rational_points.HomogeneousCoordinates.to_rational_point`, as the examples below demonstrate:
+The return value of :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` is a :py:class:`~continuedfractions.rational_points.HomogeneousCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for homogenous 3D rational coordinates: the individual components can be accessed from the object using descriptive labels, the coordinates can be scaled and re-scaled any number of times, and the original rational point can be recovered from the coordinates using the :py:meth:`~continuedfractions.rational_points.HomogeneousCoordinates.to_rational_point`, as the examples below demonstrate:
 
 .. code:: python
 
@@ -582,7 +582,7 @@ Some examples are given below:
 Lattice Points
 --------------
 
-Lattice points, which form an Abelian subgroup of the rational points, aren't directly supported by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_lattice_point` method does provide a way to filter for these:
+Lattice points, which form an Abelian subgroup of the rational points, and lattices aren't currently supported directly by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_lattice_point` method does provide a way to filter for these:
 
 .. code:: python
 
@@ -594,6 +594,8 @@ Lattice points, which form an Abelian subgroup of the rational points, aren't di
    False
 
 This may be useful when filtering a large collection of :py:class:`~continuedfractions.rational_points.RationalPoint` instances for lattice points.
+
+Support for representing and operating on rational and integral lattices and lattice points may be added in the future. Contributions would be welcome.
 
 .. _rational-points.rational-points-on-curves:
 
@@ -607,7 +609,7 @@ Rational points on curves forms a large subject that isn't supported directly in
 References
 ----------
 
-[1] Clader, E., Ross, D. (2025 May). Beginning Algebraic Geometry. Springer. https://link.springer.com/content/pdf/10.1007/978-3-031-88819-9.pdf
+[1] Clader, E., Ross, D. (2025 May). Beginning in Algebraic Geometry. Springer. https://link.springer.com/content/pdf/10.1007/978-3-031-88819-9.pdf
 
 [2] Courant, R., Robbins, H., & Stewart, I. (1996). What is mathematics?: An elementary approach to ideas and methods (2nd ed.). Oxford University Press
 

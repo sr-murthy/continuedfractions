@@ -400,9 +400,15 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return Dim2RationalCoordinates(*self)
 
-    def gradient(self, *, other: RationalPoint = None) -> ContinuedFraction:
+    def gradient(self, /, *, other: RationalPoint = None) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : Computes the gradient (slope) of the line passing through this rational point and either the origin :math:`(0, 0)` (default) or another point`.
         
+        If no second rational point is provided the gradient of this rational
+        point is computed with respect to the origin :math:`(0, 0)`: if this
+        rational point has a zero :math:`x`-coordinate, i.e. falls on the
+        :math:`y`-axis, then a :py:class:`ZeroDivision` error will be triggered
+        indirectly via ``Fraction(0, <denominator>)``.
+
         If another rational point :math:`P' = (x', y')` (as represented by
         ``other``) is provided then the gradient is computed as:
 

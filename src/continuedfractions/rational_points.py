@@ -400,17 +400,31 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return Dim2RationalCoordinates(*self)
 
-    def angle(self, /, *, as_degrees: bool = False) -> Decimal:
-        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the position vector of the rational point in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
+    def angle(self, /, *, other: RationalPoint = None, as_degrees: bool = False) -> Decimal:
+        """:py:class:`~decimal.Decimal`: The radian (or degree) angle between this rational point, as a position vector in :math:`\\mathbb{Q}^2`, and either another rational point or the positive :math:`x`-axis.
         
-        Uses :py:func:`math.atan2`, which respects angle signs in the four
-        quadrants by using both :math:`x`- and :math:`y`-coordinates of a
-        plane point :math:`P = (x, y)`:
+        If another rational point :math:`P'` (as represented by ``other``) is
+        provided, the computed angle is that between the position vector of
+        this rational point :math:`P = (x, y)` (as represented by ``self``) and
+        the other, as given by:
 
-        * :math:`0 \\leq \\theta \\leq \\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{I}` (:math:`x, y \\geq 0`)
-        * :math:`\\frac{\\pi}{2} < \\theta \\leq \\pi` for :math:`P` in quadrant :math:`\\text{II}` (:math:`x < 0, y \\geq 0`)
-        * :math:`-\\pi < \\theta \\leq -\\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{III}` (:math:`x \\leq 0, y < 0`)
-        * :math:`-\\frac{\\pi}{2} < \\theta < 0` for :math:`P` in quadrant :math:`\\text{IV}` (:math:`x > 0, y < 0`)
+        .. math::
+
+           \\alpha = \\text{arccos}\\left( \\frac{P \\cdot P'}{\\|P\\|\\|P'\\|} \\right)
+
+        If no other rational point is provided the computed angle is that
+        between the position vector of this rational point and the
+        positive :math:`x`-axis, as given by:
+
+        .. math::
+
+           \\alpha = \\text{atan2}\\left(\\frac{y}{x}\\right)
+
+        where :math:`\\text{atan2}` refers to the :math:`\\text{arctan}`
+        extension that uses both :math:`x`- and :math:`y`-coordinates of a plane point
+        :math:`P = (x, y)`, as implemented by :py:func:`math.atan2`. For reference
+        any standard book on trigonometry or plane geometry should contain a
+        definition.
 
         The optional ``as_degrees`` boolean can be used to return the angle in
         degrees.
@@ -423,9 +437,10 @@ class RationalPoint(Dim2RationalCoordinates):
         Returns
         -------
         decimal.Decimal
-           The radian angle :math:`\\theta` between the rational point as a
-           position vector in :math:`\\mathbb{Q}^2` and the positive
-           :math:`x`-axis, where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
+           The angle between this rational point, as a
+           position vector in :math:`\\mathbb{Q}^2`, and either another
+           rational point, if provided, or the positive
+           :math:`x`-axis.
 
         Examples
         --------
@@ -438,8 +453,17 @@ class RationalPoint(Dim2RationalCoordinates):
         Decimal('0.78539816339744827899949086713604629039764404296875')
         >>> RP(1, 1).angle(as_degrees=True)
         Decimal('45')
+        >>> RP(1, 1).angle(other=RP(0, 1))
+        Decimal('0.78539816339744827899949086713604629039764404296875')
+        >>> RP(1, 1).angle(other=RP(0, 1), as_degrees=True)
+        Decimal('45')
         """
-        angle = Decimal(math.atan2(self.y, self.x))
+        if other and other == self:
+            angle = Decimal('0')
+        elif other and other != self: 
+            angle = Decimal(math.acos(self.dot(other).as_decimal() / (self.norm * other.norm)))
+        else:
+            angle = Decimal(math.atan2(self.y, self.x))
 
         if not as_degrees:
             return angle

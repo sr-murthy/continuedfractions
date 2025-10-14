@@ -200,16 +200,31 @@ Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>
 Angles
 ~~~~~~
 
-Angles (both in radians and degrees) are available via the :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` method:
+Angles of position vectors of rational points, both in radians (default) and degrees, either with respect to the :math:`x`-axis, or to other rational points, can be taken with the :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` method. Below are examples of the first kind:
 
 .. code:: python
 
+   # Radian angle between the position vector of a given rational point and the positive `x`-axis
    >>> RP(1, 0).angle()
    Decimal('0')
    >>> RP(0, 1).angle()
    Decimal('1.5707963267948965579989817342720925807952880859375')
    >>> RP(-1, 0).angle()
    Decimal('3.141592653589793115997963468544185161590576171875')
+
+where the implementation is based on :py:func:`math.atan2`, which respects angle signs in all four quadrants of the plane in computing :math:`\text{arctan}\left(\frac{y}{x}\right)` for a plane point :math:`P = (x, y)` and returns a value in the interval :math:`(-\pi, \pi]`.
+
+Below are examples of the second kind (angles between position vectors of two rational points):
+
+.. code:: python
+
+   # Radian angles between the position vectors of two rational points
+   >>> RP(1, 1).angle(other=RP(0, 1)).angle()
+   Decimal('0.78539816339744827899949086713604629039764404296875')
+   >>> RP(1, 1).angle(other=RP(-1, 1)).angle()
+   Decimal('1.5707963267948965579989817342720925807952880859375')
+
+where the implementation is based on :py:func:`math.acos` and uses the standard formula :math:`\text{cos }\alpha = \frac{P \cdot P'}{\|P\\|\|P'\|}` for the angle :math:`\alpha` between the position vectors of two plane points :math:`P, P'`.
 
 By default :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` returns radian angles. For degrees the ``as_degrees=True`` option can be used:
 
@@ -221,8 +236,8 @@ By default :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` re
    Decimal('90')
    >>> RP(-1, 0).angle(as_degrees=True)
    Decimal('180')
-
-The implementation uses :py:func:`math.atan2` which respects angle signs in all four quadrants of the plane in computing :math:`\text{arctan}\left(\frac{y}{x}\right)` and returns a value in the interval :math:`[-\pi, \pi]`.
+   >>> RP(1, 1).angle(other=RP(-1, 1), as_degrees=True)
+   Decimal('90')
 
 .. _rational-points.scaling:
 
@@ -256,7 +271,6 @@ Certain scalar-valued products, as ordinarily defined, can be taken for pairs of
    ContinuedFraction(7, 5)
 
 and :py:meth:`~continuedfractions.rational_points.RationalPoint.det` which implements the determinant :math:`\text{Det}(P, P') = \begin{vmatrix}\frac{a}{c} & \frac{a'}{c'}\\ \frac{b}{d} & \frac{b'}{d'}\end{vmatrix} = \frac{ab'}{cd'} - \frac{a'b}{c'd} = \frac{ab'c'd - a'bcd'}{cc'dd'}`:
-
 
 .. code:: python
 

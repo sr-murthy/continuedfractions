@@ -321,9 +321,24 @@ class TestRationalPoint:
             (RP(1, -1), D(math.atan2(-1, 1)), -D('45'),),
         ]
     )
-    def test_RationalPoint_angle(self, rational_point, expected_angle, expected_angle_as_degrees):
+    def test_RationalPoint_angle__with_pos_x_axis(self, rational_point, expected_angle, expected_angle_as_degrees):
         assert rational_point.angle() == expected_angle
         assert rational_point.angle(as_degrees=True) == expected_angle_as_degrees
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_angle, expected_angle_as_degrees",
+        [
+            (RP(1, 0), RP(1, 1), D('0.78539816339744827899949086713604629039764404296875'), D('45'),),
+            (RP(1, 0), RP(0, 1), D('1.5707963267948965579989817342720925807952880859375'), D('90'),),
+            (RP(1, 0), RP(-1, 1), D('2.35619449019234483699847260140813887119293212890625'), D('135'),),
+            (RP(1, 0), RP(-1, 0), D('3.141592653589793115997963468544185161590576171875'), D('180'),),
+            (RP(1, 1), RP(-1, 1), D('1.5707963267948965579989817342720925807952880859375'), D('90'),),
+            (RP(1, 1), RP(1, 1), D('0'), D('0'),),
+        ]
+    )
+    def test_RationalPoint_angle__with_another_rational_point(self, rational_point1, rational_point2, expected_angle, expected_angle_as_degrees):
+        assert rational_point1.angle(other=rational_point2) == expected_angle
+        assert rational_point1.angle(other=rational_point2, as_degrees=True) == expected_angle_as_degrees
 
     @pytest.mark.parametrize(
         "rational_point1, rational_point2, expected_dot_product",
@@ -357,7 +372,9 @@ class TestRationalPoint:
             (RP(F(3, 5), F(4, 5)), RP(1, 1), CF(-1, 5),),
             (RP(1, 1), RP(F(5, 4), 2), CF(3, 4),),
             (RP(F(3, 5), F(4, 5)), RP(F(5, 4), 2), CF(1, 5),),
-            (RP(F(1, 2), F(1, 2)), RP(1, 1), CF(0, 1))
+            (RP(F(1, 2), F(1, 2)), RP(1, 1), CF(0, 1)),
+            (RP(1, 1), RP(0, 0), CF(0, 1)),
+            (RP(0, 0), RP(1, 1), CF(0, 1)),
         ]
     )
     def test_RationalPoint_det(self, rational_point1, rational_point2, expected_det):

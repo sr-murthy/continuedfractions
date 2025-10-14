@@ -406,8 +406,8 @@ class RationalPoint(Dim2RationalCoordinates):
         If no second rational point is provided the gradient of this rational
         point is computed with respect to the origin :math:`(0, 0)`: if this
         rational point has a zero :math:`x`-coordinate, i.e. falls on the
-        :math:`y`-axis, then a :py:class:`ZeroDivision` error will be triggered
-        indirectly via ``Fraction(0, <denominator>)``.
+        :math:`y`-axis, then a :py:class:`None` value will be returned, to
+        indicate that the result is undefined.
 
         If another rational point :math:`P' = (x', y')` (as represented by
         ``other``) is provided then the gradient is computed as:
@@ -457,17 +457,16 @@ class RationalPoint(Dim2RationalCoordinates):
         ContinuedFraction(1, 1)
         >>> RP(1, 1).gradient(other=RP(2, 1))
         ContinuedFraction(0, 1)
-        >>> RP(1, 1).gradient(other=RP(2, F(3, 2)))
-        ContinuedFraction(1, 2)
         >>> RP(0, 1).gradient(other=RP(1, 0))
         ContinuedFraction(-1, 1)
+        >>> RP(0, 1).gradient()
         >>> RP(1, 1).gradient(other=RP(1, 2))
         Traceback (most recent call last):
         ...
         ValueError: If a second rational point is provided, it must be a `RationalPoint` instance, and non-vertical with respect to this point.
         """
         if other is None:
-            return ContinuedFraction(self.y, self.x)
+            return ContinuedFraction(self.y, self.x) if self.x != 0 else None
 
         if not isinstance(other, RationalPoint) or other.x == self.x:
             raise ValueError(

@@ -329,6 +329,7 @@ class TestRationalPoint:
             (RP(1, F(1, 2)), CF(1, 2)),
             (RP(1, 2), CF(2, 1)),
             (RP(-1, 1), CF(-1, 1)),
+            (RP(0, 1), None),
         ]
     )
     def test_RationalPoint_gradient__no_other_rational_point(self, rational_point, expected_gradient):

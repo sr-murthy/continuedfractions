@@ -191,7 +191,7 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Simple Plane Geometry: Properties and Methods
 ---------------------------------------------
 
-This is not intended to be a comprehensive library for 2D linear algebra, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, collinearity, angles, dot products, determinants, norms, straight-line distances, and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, in addition to the affine transformation of translation in coordinates.
+While this is not intended to be a comprehensive library for 2D linear algebra, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, collinearity, angles, dot products, determinants, norms, straight-line distances, and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, in addition to the affine transformation of translation in coordinates.
 
 Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
 
@@ -248,7 +248,7 @@ The :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with_o
    >>> RP(1, 2).collinear_with_origin(RP(2, 4), RP(F(-1, 2), -1), RP(1000, -1000))
    False
 
-The implementation of :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with`, which uses the simple gradient method, relies on the fact that collinearity is a transitive relation on triples of plane points, so that if three points :math:`A, B, C` are collinear, and there is another point :math:`D` such that :math:`B, C, D` are collinear, than :math:`A, B, C, D` are collinear. To test the collinearity of :math:`n \geq 1` points :math:`P_1, P_2, \ldots, P_n` points it is thus sufficient to check whether :math:`P_1` and any two other points, :math:`P_j, P_k`, say, with  :math:`1 < j, k \leq n`, are not collinear : if so, the :math:`n` points are not collinear, otherwise they are all collinear.
+The implementation of :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with`, which uses the simple gradient method, relies on the fact that collinearity is a transitive relation on triples of plane points, so that if three points :math:`P, Q, R` are collinear, and there is another point :math:`S` such that :math:`P, Q, S` are collinear, than :math:`P, Q, R, S` are collinear. To test the collinearity of :math:`n \geq 1` points :math:`P_1, P_2, \ldots, P_n` points it is thus sufficient to check whether :math:`P_1` and any two other points, :math:`P_j, P_k`, say, with  :math:`1 < j, k \leq n`, are not collinear : if so, the :math:`n` points are not collinear, otherwise they are all collinear.
 
 .. _rational-points.angles:
 
@@ -474,7 +474,7 @@ It is also possible to compute the perpendicular (or orthogonal) distance :math:
    >>> RP(F(1, 2), F(1, 2)).perpendicular_distance(RP(0, 1))
    Decimal('0.7071067811865475244008443621')
 
-The method returns a :py:class:`~decimal.Decimal` value for this distance, which is computed using a formula for the length of the straight-line segment connecting :math:`P'` with line :math:`\ell_{OP}`, which is perpendicular to the latter, given by :math:`d^{\perp}\left(P, P'\right) = \frac{|P \times P'|}{\|P\|_2}`, where :math:`|P \times P'|` denotes the quantity :math:`|x'y - xy'|` and :math:`P = (x, y), P' = (x', y')`. Note that :math:`d^{\perp}\left(P, P'\right)` is undefined if :math:`P = (0, 0)`, and equal to :math:`0` if :math:`P` and :math:`P'` coincide or, more generally, if they are collinear with the origin.
+The method returns a :py:class:`~decimal.Decimal` value for this distance, which is computed using a formula for the length of the straight-line segment connecting :math:`P'` with line :math:`\ell_{OP}`, which is perpendicular to the latter, given by :math:`d^{\perp}\left(P, P'\right) = \frac{|\text{det}(P, P')|}{\|P\|_2}`, where :math:`|\text{det}(P, P')|` is the determinant :math:`|x'y - xy'|` and :math:`P = (x, y), P' = (x', y')`. Note that :math:`d^{\perp}\left(P, P'\right)` is undefined if :math:`P = (0, 0)`, and equal to :math:`0` if :math:`P` and :math:`P'` coincide or, more generally, if they are collinear with the origin.
 
 .. _rational-points.rectilinear-metrics:
 

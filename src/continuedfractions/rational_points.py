@@ -481,18 +481,6 @@ class RationalPoint(Dim2RationalCoordinates):
     def collinear_with(self, *rational_points: RationalPoint) -> bool:
         """:py:class:`bool` : Tests whether this rational point is collinear with one or more rational points.
 
-        The implementation relies on the fact that collinearity is a
-        transitive relation on triples of plane points, so that if three points
-        :math:`A, B, C` are collinear, and there is another point :math:`D`
-        such that :math:`B, C, D` are collinear, than :math:`A, B, C, D` are
-        collinear.
-
-        To test the collinearity of :math:`n \\geq 1` points
-        :math:`P_1, P_2, \\ldots, P_n` points it is thus sufficient to check
-        whether :math:`P_1` and any two other points, :math:`P_j, P_k`, say,
-        with  :math:`1 < j, k \\leq n`, are not collinear : if so, the
-        :math:`n` points are not collinear, otherwise they are all collinear.
-
         The collinearity test for three points :math:`P_1 = (x_1, y_1)`,
         :math:`P_2 = (x_2, y_2)`, and :math:`P_3 = (x_3, y_3)` uses the
         gradient method:
@@ -1133,12 +1121,11 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           d^{\\perp}\\left(P, P'\\right) = \\frac{|P \\times P'|}{\\|P\\|_2}
+           d^{\\perp}\\left(P, P'\\right) = \\frac{\\lvert\\text{det}(P, P')\\rvert}{\\|P\\|_2}
 
-        where :math:`|P \\times P'|` is defined here as a scalar cross product
-        (not vector cross product) of :math:`P` and :math:`P'`: so, if
-        :math:`P = (x, y), P' = (x', y')` then
-        :math:`|P \\times P'| := |x'y - xy'|`.
+        where :math:`\\lvert\\text{det}(P, P')\\rvert` is the determinant
+        of :math:`P` and :math:`P'` as described in
+        :py:meth:`~continuedfractions.rational_points.RationalPoint.det`.
 
         Returns
         -------

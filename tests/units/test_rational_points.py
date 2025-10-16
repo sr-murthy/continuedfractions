@@ -362,7 +362,9 @@ class TestRationalPoint:
     @pytest.mark.parametrize(
         "rational_point, other_points, expected_collinearity",
         [
+            (RP(1, 1), (RP(2, 2),), True),
             (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)),), True),
+            (RP(1, 1), (RP(-1, -1), RP(-1, -1), RP(2, 2),), True),
             (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)), RP(-3, -3), RP(100, 100),), True),
             (RP(1, 0), (RP(-1, 0), RP(F(1, 2), 0), RP(-3, 0),), True),
             (RP(0, 1), (RP(0, -1), RP(0, F(1, 2)), RP(0, -3),), True),
@@ -385,7 +387,7 @@ class TestRationalPoint:
     )
     def test_RationalPoint_collinear_with_origin__invalid_other_points__value_error_raised(self, rational_point, invalid_other_points):
         with pytest.raises(ValueError):
-            rational_point.collinear_with(*invalid_other_points)
+            rational_point.collinear_with_origin(*invalid_other_points)
 
     @pytest.mark.parametrize(
         "rational_point, other_points, expected_collinearity",

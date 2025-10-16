@@ -18,6 +18,7 @@ import numbers
 import typing
 
 from decimal import Decimal
+from itertools import pairwise
 from typing import Any
 
 # -- 3rd party libraries --
@@ -414,7 +415,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\frac{y' - y}{x' - x}
+           \\frac{y' - y}{x' - x}, \\hskip{3em} x' \\neq x
 
         where :math:`P = (x, y)` is this rational point (as represented by
         ``self``).
@@ -424,7 +425,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\frac{y}{x}
+           \\frac{y}{x}, \\hskip{3em} x \\neq 0
 
         As the gradient of a vertical line is infinite (or undefined) the
         method raises a :py:class:`ValueError`, which occurs whenver the
@@ -476,6 +477,131 @@ class RationalPoint(Dim2RationalCoordinates):
             )
 
         return ContinuedFraction(other.y - self.y, other.x - self.x)
+
+    def collinear_with(self, *rational_points: RationalPoint) -> bool:
+        """:py:class:`bool` : Tests whether this rational point is collinear with one or more rational points.
+
+        The implementation relies on the fact that collinearity is a
+        transitive relation on triples of plane points, so that if three points
+        :math:`A, B, C` are collinear, and there is another point :math:`D`
+        such that :math:`B, C, D` are collinear, than :math:`A, B, C, D` are
+        collinear.
+
+        To test the collinearity of :math:`n \\geq 1` points
+        :math:`P_1, P_2, \\ldots, P_n` points it is thus sufficient to check
+        whether :math:`P_1` and any two other points, :math:`P_j, P_k`, say,
+        with  :math:`1 < j, k \\leq n`, are not collinear : if so, the
+        :math:`n` points are not collinear, otherwise they are all collinear.
+
+        The collinearity test for three points :math:`P_1 = (x_1, y_1)`,
+        :math:`P_2 = (x_2, y_2)`, and :math:`P_3 = (x_3, y_3)` uses the
+        gradient method:
+
+        .. math::
+
+           \\frac{y_2 - y_1}{x_2 - x_1} \\stackrel{?}{=} \\frac{y_3 - y_2}{x_3 - x_2}, \\hskip{3em} x_2 \\neq x_1; x_3 \\neq x_2
+
+        which can be rearranged as the (conditional) equation:
+
+        .. math::
+
+           \\ (y_3 - y_2)(x_2 - x_1) - (y_3 - y_2)(x_3 - x_2) \\stackrel{?}{=} 0
+
+        Note that the other rational points do not need to be given in any
+        particular order.
+
+        Parameters
+        ----------
+        rational_points : RationalPoint
+            One or more rational points to test for collinearity with this
+            point.
+
+        Returns
+        -------
+        bool
+            Whether this point is collinear with the given rational points.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)))
+        True
+        >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(-3, -3))
+        True
+        >>> RP(1, 1).collinear_with(RP(-2, -2), RP(F(1, 2), F(1, 2)), RP(1, 2))
+        False
+        >>> RP(1, 1).collinear_with(RP(F(-1, 2), F(-1, 2)))
+        True
+        >>> RP(1, 1).collinear_with(RP(2, 1))
+        True
+        """
+        if any(not isinstance(P, self.__class__) for P in rational_points):
+            raise ValueError(
+                'One or more non-`RationalPoint` instances detected. Please '
+                'check the inputs and try again.'
+            )
+
+        if len(rational_points) == 1:
+            return True
+
+        def collinear(P1: RationalPoint, P2: RationalPoint, P3: RationalPoint, /) -> bool:
+            """Inner function to test collinearity for exactly three rational points, including this one (``self``).
+            """
+            if (P1 == P2) or (P1 == P3) or (P2 == P3):
+                return True
+
+            x1, y1, x2, y2, x3, y3 = (*P1, *P2, *P3)
+
+            return (y3 - y2) * (x2 - x1) - (y2 - y1) * (x3 - x2) == 0
+
+        for Q, R in pairwise(rational_points):
+            if not collinear(self, Q, R):
+                return False
+
+        return True
+
+    def collinear_with_origin(self, *rational_points: RationalPoint) -> bool:
+        """:py:class:`bool` : Tests whether this rational point is collinear with one or more rational points and the origin :math:`(0, 0)`.
+
+        This is to allow easier checking of collinearity of points falling on a
+        line passing through the origin.
+
+        Note that the other rational points do not need to be given in any
+        particular order.
+
+        Parameters
+        ----------
+        rational_points : RationalPoint
+            One or more rational points to test for collinearity with this
+            point and the origin :math:`(0, 0)`
+
+        Returns
+        -------
+        bool
+            Whether this point is collinear with the given rational points
+            and the origin :math:`(0, 0)`.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(-1, 2)))
+        True
+        >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(1, 2)))
+        False
+        >>> RP(1, 0).collinear_with_origin(RP(-1, 0), RP(F(1, 2), F(1, 2)))
+        False
+        >>> RP(1, 0).collinear_with_origin(RP(-1, 0), RP(F(1, 2), 0))
+        True
+        """
+        if any(not isinstance(P, self.__class__) for P in rational_points):
+            raise ValueError(
+                'One or more non-`RationalPoint` instances detected. Please '
+                'check the inputs and try again.'
+            )
+
+        return self.collinear_with(self.zero(), *rational_points)
 
     def angle(self, /, *, other: RationalPoint = None, as_degrees: bool = False) -> Decimal:
         """:py:class:`~decimal.Decimal`: The radian (or degree) angle between this rational point, as a position vector in :math:`\\mathbb{Q}^2`, and either another rational point or the positive :math:`x`-axis.

@@ -348,6 +348,56 @@ class TestRationalPoint:
         assert rational_point1.gradient(other=rational_point2) == expected_gradient
 
     @pytest.mark.parametrize(
+        "rational_point, invalid_other_points",
+        [
+            (RP(0, 0), (1, RP(1, 1), RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), 1, RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), RP(2, 2), 1,)),
+        ]
+    )
+    def test_RationalPoint_collinear_with__invalid_other_points__value_error_raised(self, rational_point, invalid_other_points):
+        with pytest.raises(ValueError):
+            rational_point.collinear_with(*invalid_other_points)
+
+    @pytest.mark.parametrize(
+        "rational_point, other_points, expected_collinearity",
+        [
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)),), True),
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)), RP(-3, -3), RP(100, 100),), True),
+            (RP(1, 0), (RP(-1, 0), RP(F(1, 2), 0), RP(-3, 0),), True),
+            (RP(0, 1), (RP(0, -1), RP(0, F(1, 2)), RP(0, -3),), True),
+            (RP(1, 1), (RP(-1, -2), RP(F(1, 2), F(1, 2)),), False),
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(-1, 2)), RP(-3, 3), RP(100, 99),), False),
+            (RP(1, 0), (RP(-1, 0), RP(F(1, 2), 0), RP(-3, 1),), False),
+            (RP(0, 1), (RP(0, -1), RP(1, F(1, 2)), RP(0, -3),), False),
+        ]
+    )
+    def test_RationalPoint_collinear_with(self, rational_point, other_points, expected_collinearity):
+            assert rational_point.collinear_with(*other_points) == expected_collinearity
+
+    @pytest.mark.parametrize(
+        "rational_point, invalid_other_points",
+        [
+            (RP(0, 0), (1, RP(1, 1), RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), 1, RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), RP(2, 2), 1,)),
+        ]
+    )
+    def test_RationalPoint_collinear_with_origin__invalid_other_points__value_error_raised(self, rational_point, invalid_other_points):
+        with pytest.raises(ValueError):
+            rational_point.collinear_with(*invalid_other_points)
+
+    @pytest.mark.parametrize(
+        "rational_point, other_points, expected_collinearity",
+        [
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)),), True),
+            (RP(1, 1), (RP(F(1, 2), F(1, 2)), RP(1, -1),), False),
+        ]
+    )
+    def test_RationalPoint_collinear_with_origin(self, rational_point, other_points, expected_collinearity):
+            assert rational_point.collinear_with_origin(*other_points) == expected_collinearity
+
+    @pytest.mark.parametrize(
         "rational_point, expected_angle, expected_angle_as_degrees",
         [
             (RP(1, 0), D('0'), D('0'),),

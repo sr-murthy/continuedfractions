@@ -191,7 +191,7 @@ This should be the preferred method as the Python built-in :py:func:`sum` functi
 Simple Plane Geometry: Properties and Methods
 ---------------------------------------------
 
-This is not intended to be a comprehensive library for 2D linear algebra, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, angles, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and some affine transformations such as translation in coordinates, are also available.
+This is not intended to be a comprehensive library for 2D linear algebra, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, collinearity, angles, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and some affine transformations such as translation in coordinates, are also available.
 
 Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
 
@@ -222,6 +222,33 @@ The second rational point is optional, but if one is provided it must be a :py:c
    >>> RP(1, 1).gradient(1, 0)
    ...
    ValueError: If a second rational point is provided, it must be a `RationalPoint` instance, and non-vertical with respect to this point.
+
+.. _rational-points.collinearity:
+
+Collinearity
+~~~~~~~~~~~~
+
+Collinearity of a rational point with other points - whether they all fall on a single line in the plane - can be determined with the :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with` method. This accepts a variable number of :py:class:`~continuedfractions.rational_points.RationalPoint` instances, given in any order, with which to test collinearity with the original rational point. Some examples are given below:
+
+.. code:: python
+
+   >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, 1000))
+   True
+   >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, -1000))
+   False
+
+The trivial case of a single other rational point is also accepted despite the fact any two points are trivially collinear. Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with` is variadic, i.e. accepts a variable number of arguments. If checking for collinearity with an iterable of points the unpacking operator ``*`` should be used.
+
+The :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with_origin` method is a variant which checks for the collinearity of the given point with other rational points and also the origin :math:`(0, 0)`:
+
+.. code:: python
+
+   >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, 1000)))
+   True
+   >>> RP(1, 2).collinear_with_origin(RP(2, 4), RP(F(-1, 2), -1), RP(1000, -1000))
+   False
+
+The implementation of :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with`, which uses the simple gradient method, relies on the fact that collinearity is a transitive relation on triples of plane points, so that if three points :math:`A, B, C` are collinear, and there is another point :math:`D` such that :math:`B, C, D` are collinear, than :math:`A, B, C, D` are collinear. To test the collinearity of :math:`n \geq 1` points :math:`P_1, P_2, \ldots, P_n` points it is thus sufficient to check whether :math:`P_1` and any two other points, :math:`P_j, P_k`, say, with  :math:`1 < j, k \leq n`, are not collinear : if so, the :math:`n` points are not collinear, otherwise they are all collinear.
 
 .. _rational-points.angles:
 
@@ -524,7 +551,7 @@ The return value of :py:attr:`~continuedfractions.rational_points.RationalPoint.
    >>> hcoords.to_rational_point()
    RationalPoint(3/5, 4/5)
 
-For more background on homogeneous coordinates users can refer to textbooks on algebraic geometry. With respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c}, \frac{b}{d}\right) \longmapsto \left[\frac{a}{c}: \frac{b}{d}: 1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and for a given rational point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` the elements of its image :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]`, under this mapping, are non-zero scalar multiples of each other and are called homogeneous coordinates for :math:`P` in :math:`\mathbb{P}^2(\mathbb{Q})`. In particular, :math:`\left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)` is a scalar multiple of :math:`\left( \frac{a}{c}, \frac{b}{d}, 1 \right)`, where :math:`\lambda = \text{lcm}(c, d) > 0`, and can be taken as a representative sequence of homogeneous coordinates for :math:`P`.
+For more background on homogeneous coordinates users can refer to textbooks on algebraic geometry. With respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c}, \frac{b}{d}\right) \longmapsto \left[\frac{a}{c}: \frac{b}{d}: 1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and for a given rational point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` the elements of its image :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]`, under this mapping, are non-zero scalar multiples of each other and are called homogeneous coordinates for :math:`P` in :math:`\mathbb{P}^2(\mathbb{Q})`. In particular, :math:`\left(\lambda\frac{a}{c}, \lambda\frac{b}{d}, \lambda \right)` is a scalar multiple of :math:`\left( \frac{a}{c}, \frac{b}{d}, 1 \right)`, where :math:`\lambda = \text{lcm}(c, d) > 0`, and can be taken as a representative sequence of homogeneous coordinates for :math:`P`.
 
 :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` simply implements the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right)`, where :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right)` are integers, as :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right) = \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)`, and :math:`\text{gcd}\left(a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda\right) = \text{gcd}\left(|a|\frac{|d|}{\text{gcd}(c, d)}, |b|\frac{|c|}{\text{gcd}(c, d)}, \frac{|c||d|}{\text{gcd}(c, d)} \right) = 1` (from the relation :math:`\text{lcm}(c, d) = \frac{|c||d|}{\text{gcd}(c, d)}`).
 

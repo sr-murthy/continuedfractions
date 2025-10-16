@@ -186,30 +186,100 @@ Note that in relation to addition, specifically, the :py:meth:`~continuedfractio
 
 This should be the preferred method as the Python built-in :py:func:`sum` function sets an internal :py:class:`int` start value of ``0``, which causes it to fail on :py:class:`~continuedfractions.rational_points.RationalPoint` instances.
 
-.. _rational-points.vector-props-and-operations:
+.. _rational-points.plane-geometry:
 
-Vector Properties and Operations
---------------------------------
+Simple Plane Geometry: Properties and Methods
+---------------------------------------------
 
-While this is not intended to be a linear algebra library, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as angle, dot products, norms, straight-line and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, and affine transformations such as translation in coordinates, are also available.
+This is not intended to be a comprehensive library for 2D linear algebra, some basic functionality for treating rational points as (position) vectors of :math:`\mathbb{Q}^2` exists in the form of simple properties and methods, such as gradients, collinearity, angles, dot products, determinants, norms, straight-line distances, and perpendicular distances in relation to other rational points. And some simple linear transformations such as scaling, counter-clockwise rotation through :math:`90` degrees, permuting coordinates are available, in addition to the affine transformation of translation in coordinates.
 
 Norms and distances are discussed :ref:`here <rational-points.euclidean-metrics>` and, in relation to the rectilinear norm, :ref:`here <rational-points.rectilinear-metrics>`.
+
+.. _rational-points.gradients:
+
+Gradients
+~~~~~~~~~
+
+Gradients (or slopes) of lines connecting rational points with either the origin :math:`(0, 0)` or other rational points can be computed with the :py:meth:`~continuedfractions.rational_points.RationalPoint.gradient` method. Some examples are given below:
+
+.. code:: python
+
+   >>> RP(1, 1).gradient()
+   ContinuedFraction(1, 1)
+   >>> RP(1, 1).gradient(other=RP(0, 1))
+   ContinuedFraction(0, 1)
+   >>> RP(1, 1).gradient(other=RP(2, F(3, 2)))
+   ContinuedFraction(1, 2)
+   >>> RP(1, 1).gradient(other=RP(2, 3))
+   ContinuedFraction(2, 1)
+   >>> RP(0, 1).gradient(other=RP(1, 0))
+   ContinuedFraction(-1, 1)
+
+The second rational point is optional, but if one is provided it must be a :py:class:`~continuedfractions.rational_points.RationalPoint` instance, otherwise a :py:class:`ValueError` is raised. This is also the case for vertical lines where the gradient is infinite:
+
+.. code:: python
+
+   >>> RP(1, 1).gradient(1, 0)
+   ...
+   ValueError: If a second rational point is provided, it must be a `RationalPoint` instance, and non-vertical with respect to this point.
+
+.. _rational-points.collinearity:
+
+Collinearity
+~~~~~~~~~~~~
+
+Collinearity of a rational point with other points - whether they all fall on a single line in the plane - can be determined with the :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with` method. This accepts a variable number of :py:class:`~continuedfractions.rational_points.RationalPoint` instances, given in any order, with which to test collinearity with the original rational point. Some examples are given below:
+
+.. code:: python
+
+   >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, 1000))
+   True
+   >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, -1000))
+   False
+
+The trivial case of a single other rational point is also accepted despite the fact any two points are trivially collinear. Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with` is variadic, i.e. accepts a variable number of arguments. If checking for collinearity with an iterable of points the unpacking operator ``*`` should be used.
+
+The :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with_origin` method is a variant which checks for the collinearity of the given point with other rational points and also the origin :math:`(0, 0)`:
+
+.. code:: python
+
+   >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, 1000)))
+   True
+   >>> RP(1, 2).collinear_with_origin(RP(2, 4), RP(F(-1, 2), -1), RP(1000, -1000))
+   False
+
+The implementation of :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with`, which uses the simple gradient method, relies on the fact that collinearity is a transitive relation on triples of plane points, so that if three points :math:`A, B, C` are collinear, and there is another point :math:`D` such that :math:`B, C, D` are collinear, than :math:`A, B, C, D` are collinear. To test the collinearity of :math:`n \geq 1` points :math:`P_1, P_2, \ldots, P_n` points it is thus sufficient to check whether :math:`P_1` and any two other points, :math:`P_j, P_k`, say, with  :math:`1 < j, k \leq n`, are not collinear : if so, the :math:`n` points are not collinear, otherwise they are all collinear.
 
 .. _rational-points.angles:
 
 Angles
 ~~~~~~
 
-Angles (both in radians and degrees) are available via the :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` method:
+Angles of position vectors of rational points, both in radians (default) and degrees, either with respect to the :math:`x`-axis, or to other rational points, can be taken with the :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` method. Below are examples of the first kind:
 
 .. code:: python
 
+   # Radian angle between the position vector of a given rational point and the positive `x`-axis
    >>> RP(1, 0).angle()
    Decimal('0')
    >>> RP(0, 1).angle()
    Decimal('1.5707963267948965579989817342720925807952880859375')
    >>> RP(-1, 0).angle()
    Decimal('3.141592653589793115997963468544185161590576171875')
+
+where the implementation is based on :py:func:`math.atan2`, which respects angle signs in all four quadrants of the plane in computing :math:`\text{arctan}\left(\frac{y}{x}\right)` for a plane point :math:`P = (x, y)` and returns a value in the interval :math:`(-\pi, \pi]`.
+
+Below are examples of the second kind (angles between position vectors of two rational points):
+
+.. code:: python
+
+   # Radian angles between the position vectors of two rational points
+   >>> RP(1, 1).angle(other=RP(0, 1)).angle()
+   Decimal('0.78539816339744827899949086713604629039764404296875')
+   >>> RP(1, 1).angle(other=RP(-1, 1)).angle()
+   Decimal('1.5707963267948965579989817342720925807952880859375')
+
+where the implementation is based on :py:func:`math.acos` and uses the standard formula :math:`\text{cos }\alpha = \frac{P \cdot P'}{\|P\\|\|P'\|}` for the angle :math:`\alpha` between the position vectors of two plane points :math:`P, P'`.
 
 By default :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` returns radian angles. For degrees the ``as_degrees=True`` option can be used:
 
@@ -221,8 +291,8 @@ By default :py:meth:`~continuedfractions.rational_points.RationalPoint.angle` re
    Decimal('90')
    >>> RP(-1, 0).angle(as_degrees=True)
    Decimal('180')
-
-The implementation uses :py:func:`math.atan2` which respects angle signs in all four quadrants of the plane in computing :math:`\text{arctan}\left(\frac{y}{x}\right)` and returns a value in the interval :math:`[-\pi, \pi]`.
+   >>> RP(1, 1).angle(other=RP(-1, 1), as_degrees=True)
+   Decimal('90')
 
 .. _rational-points.scaling:
 
@@ -244,7 +314,7 @@ Scaling by rational values (via scalar left-multiplication), :math:`\left(\lambd
 
 Products
 ~~~~~~~~
-The :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` method implements the standard Euclidean dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`:
+Certain scalar-valued products, as ordinarily defined, can be taken for pairs of rational points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)`, :math:`P' = \left(\frac{a'}{c'}, \frac{b'}{d'}\right) \in \mathbb{Q}^2`, including :py:meth:`~continuedfractions.rational_points.RationalPoint.dot`, which implements the dot product :math:`P \cdot P' = \frac{aa'}{cc'} + \frac{bb'}{dd'}`:
 
 .. code:: python
 
@@ -255,9 +325,16 @@ The :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` method impl
    >>> RP(1, 1).dot(RP(F(3, 5), F(4, 5)))
    ContinuedFraction(7, 5)
 
-As this is rational-valued for rational points, the method return :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances.
+and :py:meth:`~continuedfractions.rational_points.RationalPoint.det` which implements the determinant :math:`\text{Det}(P, P') = \begin{vmatrix}\frac{a}{c} & \frac{a'}{c'}\\ \frac{b}{d} & \frac{b'}{d'}\end{vmatrix} = \frac{ab'}{cd'} - \frac{a'b}{c'd} = \frac{ab'c'd - a'bcd'}{cc'dd'}`:
 
-Note that :py:meth:`~continuedfractions.rational_points.RationalPoint.dot` figures in the computation of norm-squared, :py:attr:`~continuedfractions.rational_points.RationalPoint.norm_squared`, as :math:`\|P\|_{2}^2 = P \cdot P`.
+.. code:: python
+
+   >>> RP(1, 1).det(RP(-1, 1))
+   ContinuedFraction(2, 1)
+   >>> RP(1, 0).det(RP(0, 1))
+   ContinuedFraction(1, 1)
+   >>> RP(1, 0).det(RP(1, 0))
+   ContinuedFraction(0, 1)
 
 .. _rational-points.other-transformations:
 
@@ -313,7 +390,7 @@ Points may be reflected in either axis (:math:`x`- or :math:`y`-) with :py:meth:
 
 These are linear transformations described by the matrices :math:`\begin{bmatrix}1 & 0\\0 & -1\end{bmatrix}`, and :math:`\begin{bmatrix}-1 & 0\\0 & 1\end{bmatrix}` respectively.
 
-Other transformations such as reflection in a given line, and rotation, may be added in the future.
+Other transformations may be added in the future.
 
 .. _rational-points.metrics:
 
@@ -454,11 +531,12 @@ Some examples are given below:
 
 The examples involving ``RP(F(3, 5), F(4, 5))`` and ``RP(F(5, 13), F(12, 13))`` yield the primitive Pythagorean triples :math:`(3, 4, 5)` and :math:`(5, 12, 13)` respectively because the underlying rational points :math:`\left(\frac{3}{5},\frac{4}{5}\right)` and :math:`\left(\frac{5}{13},\frac{12}{13}\right)` fall on the unit circle :math:`x^2 + y^2 = 1` and have numerators which are coprime. The example with ``RP(F(6, 10), F(8, 10))`` yields the non-primitive Pythagorean triple :math:`(6, 8, 10)` which happens to be a scalar multiple :math:`2\cdot(3, 4, 5)` of :math:`(3, 4, 5)`, but both are homogeneous coordinates for the same rational point :math:`\left(\frac{3}{5},\frac{4}{5}\right)`.
 
-Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` returns a :py:class:`~continuedfractions.rational_points.HomogeneousCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for homogenous 3D rational coordinates: the individual components can be accessed from the object using descriptive labels, the coordinates can be scaled and re-scaled any number of times, and the original rational point can be recovered from the coordinates using the :py:meth:`~continuedfractions.rational_points.HomogeneousCoordinates.to_rational_point`, as the examples below demonstrate:
+The return value of :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` is a :py:class:`~continuedfractions.rational_points.HomogeneousCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for homogenous 3D rational coordinates: the individual components can be accessed from the object using descriptive labels, the coordinates can be scaled and re-scaled any number of times, and the original rational point can be recovered from the coordinates using the :py:meth:`~continuedfractions.rational_points.HomogeneousCoordinates.to_rational_point`, as the examples below demonstrate:
 
 .. code:: python
 
-   >>> P = RP(F(3, 5), F(4, 5))
+   >>> P = RP(F(3, 5), F(4, 5)); P
+   RationalPoint(3/5, 4/5)
    >>> P.homogeneous_coordinates
    HomogeneousCoordinates(3, 4, 5)
    >>> P.homogeneous_coordinates.x, P.homogeneous_coordinates.y, P.homogeneous_coordinates.z
@@ -473,9 +551,9 @@ Note that :py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneou
    >>> hcoords.to_rational_point()
    RationalPoint(3/5, 4/5)
 
-For more background on homogeneous coordinates users can refer to textbooks on algebraic geometry. With respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c}, \frac{b}{d}\right) \longmapsto \left[\frac{a}{c}: \frac{b}{d}: 1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and for a given rational point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` the elements of its image :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]`, under this mapping, are non-zero scalar multiples of each other and are called homogeneous coordinates for :math:`P` in :math:`\mathbb{P}^2(\mathbb{Q})`. In particular, :math:`\left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)` is a scalar multiple of :math:`\left( \frac{a}{c}, \frac{b}{d}, 1 \right)`, where :math:`\lambda = \text{lcm}(c, d) > 0`, and can be taken as a representative sequence of homogeneous coordinates for :math:`P`.
+For more background on homogeneous coordinates users can refer to textbooks on algebraic geometry. With respect to rational points in the plane, the basic idea is that they can be identified with certain "points" of :math:`\mathbb{P}^2(\mathbb{Q})` which happen to be equivalence classes of type :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]` (for :math:`\frac{a}{c}, \frac{b}{d} \in \mathbb{Q}`) under :math:`\sim` (the scalar multiple equivalence relation described above): the mapping :math:`\left(\frac{a}{c}, \frac{b}{d}\right) \longmapsto \left[\frac{a}{c}: \frac{b}{d}: 1\right]` is a bijection from :math:`\mathbb{Q}^2` into :math:`\mathbb{P}^2(\mathbb{Q})`, and for a given rational point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` the elements of its image :math:`\left[\frac{a}{c}: \frac{b}{d}: 1\right]`, under this mapping, are non-zero scalar multiples of each other and are called homogeneous coordinates for :math:`P` in :math:`\mathbb{P}^2(\mathbb{Q})`. In particular, :math:`\left(\lambda\frac{a}{c}, \lambda\frac{b}{d}, \lambda \right)` is a scalar multiple of :math:`\left( \frac{a}{c}, \frac{b}{d}, 1 \right)`, where :math:`\lambda = \text{lcm}(c, d) > 0`, and can be taken as a representative sequence of homogeneous coordinates for :math:`P`.
 
-:py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` simply implements the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)`, where, :math:`\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda` are integers, as :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right) = \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)`, and :math:`\text{gcd}\left(a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda\right) = \text{gcd}\left(|a|\frac{|d|}{\text{gcd}(c, d)}, |b|\frac{|c|}{\text{gcd}(c, d)}, \frac{|c||d|}{\text{gcd}(c, d)} \right) = 1` (from the relation :math:`\text{lcm}(c, d) = \frac{|c||d|}{\text{gcd}(c, d)}`).
+:py:attr:`~continuedfractions.rational_points.RationalPoint.homogeneous_coordinates` simply implements the mapping :math:`\left(\frac{a}{c},\frac{b}{d}\right) \longmapsto \left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right)`, where :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right)` are integers, as :math:`\left(\lambda \frac{a}{c}, \lambda \frac{b}{d}, \lambda\right) = \left( a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda \right)`, and :math:`\text{gcd}\left(a\frac{\lambda}{c}, b\frac{\lambda}{d}, \lambda\right) = \text{gcd}\left(|a|\frac{|d|}{\text{gcd}(c, d)}, |b|\frac{|c|}{\text{gcd}(c, d)}, \frac{|c||d|}{\text{gcd}(c, d)} \right) = 1` (from the relation :math:`\text{lcm}(c, d) = \frac{|c||d|}{\text{gcd}(c, d)}`).
 
 .. _rational-points.heights:
 
@@ -531,7 +609,7 @@ Some examples are given below:
 Lattice Points
 --------------
 
-Lattice points, which form an Abelian subgroup of the rational points, are not directly supported by a specific subclass, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_lattice_point` method does provide a way to filter for these:
+Lattice points, which form an Abelian subgroup of the rational points, and lattices aren't currently supported directly by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_lattice_point` method does provide a way to filter for these:
 
 .. code:: python
 
@@ -543,6 +621,8 @@ Lattice points, which form an Abelian subgroup of the rational points, are not d
    False
 
 This may be useful when filtering a large collection of :py:class:`~continuedfractions.rational_points.RationalPoint` instances for lattice points.
+
+Support for representing and operating on rational and integral lattices and lattice points may be added in the future. Contributions would be welcome.
 
 .. _rational-points.rational-points-on-curves:
 
@@ -556,7 +636,7 @@ Rational points on curves forms a large subject that isn't supported directly in
 References
 ----------
 
-[1] Clader, E., Ross, D. (2025 May). Beginning Algebraic Geometry. Springer. https://link.springer.com/content/pdf/10.1007/978-3-031-88819-9.pdf
+[1] Clader, E., Ross, D. (2025 May). Beginning in Algebraic Geometry. Springer. https://link.springer.com/content/pdf/10.1007/978-3-031-88819-9.pdf
 
 [2] Courant, R., Robbins, H., & Stewart, I. (1996). What is mathematics?: An elementary approach to ideas and methods (2nd ed.). Oxford University Press
 

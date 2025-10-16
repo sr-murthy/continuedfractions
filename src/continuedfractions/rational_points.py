@@ -18,6 +18,7 @@ import numbers
 import typing
 
 from decimal import Decimal
+from itertools import pairwise
 from typing import Any
 
 # -- 3rd party libraries --
@@ -400,17 +401,221 @@ class RationalPoint(Dim2RationalCoordinates):
         """
         return Dim2RationalCoordinates(*self)
 
-    def angle(self, /, *, as_degrees: bool = False) -> Decimal:
-        """:py:class:`~decimal.Decimal`: The radian angle :math:`\\theta` between the position vector of the rational point in :math:`\\mathbb{Q}^2` and the positive :math:`x`-axis.
+    def gradient(self, /, *, other: RationalPoint = None) -> ContinuedFraction:
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : Computes the gradient (slope) of the line passing through this rational point and either the origin :math:`(0, 0)` (default) or another point`.
         
-        Uses :py:func:`math.atan2`, which respects angle signs in the four
-        quadrants by using both :math:`x`- and :math:`y`-coordinates of a
-        plane point :math:`P = (x, y)`:
+        If no second rational point is provided the gradient of this rational
+        point is computed with respect to the origin :math:`(0, 0)`: if this
+        rational point has a zero :math:`x`-coordinate, i.e. falls on the
+        :math:`y`-axis, then a :py:class:`None` value will be returned, to
+        indicate that the result is undefined.
 
-        * :math:`0 \\leq \\theta \\leq \\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{I}` (:math:`x, y \\geq 0`)
-        * :math:`\\frac{\\pi}{2} < \\theta \\leq \\pi` for :math:`P` in quadrant :math:`\\text{II}` (:math:`x < 0, y \\geq 0`)
-        * :math:`-\\pi < \\theta \\leq -\\frac{\\pi}{2}` for :math:`P` in quadrant :math:`\\text{III}` (:math:`x \\leq 0, y < 0`)
-        * :math:`-\\frac{\\pi}{2} < \\theta < 0` for :math:`P` in quadrant :math:`\\text{IV}` (:math:`x > 0, y < 0`)
+        If another rational point :math:`P' = (x', y')` (as represented by
+        ``other``) is provided then the gradient is computed as:
+
+        .. math::
+
+           \\frac{y' - y}{x' - x}, \\hskip{3em} x' \\neq x
+
+        where :math:`P = (x, y)` is this rational point (as represented by
+        ``self``).
+
+        If no non-zero second rational point is provided the gradient is
+        computed with respect to the origin:
+
+        .. math::
+
+           \\frac{y}{x}, \\hskip{3em} x \\neq 0
+
+        As the gradient of a vertical line is infinite (or undefined) the
+        method raises a :py:class:`ValueError`, which occurs whenver the
+        second rational point is vertical with respect to this point, i.e.
+        the two points have the same :math:`x`-coordinate.
+
+        Parameters
+        ----------
+        other : RationalPoint, default=None
+            An optional second rational point with respect to which the
+            gradient is computed.
+
+        Returns
+        -------
+        ContinuedFraction
+            The gradient (slope) of the line connecting this rational point and
+            either the origin :math:`(0, 0)` (default) or another point.
+
+        Raises
+        ------
+        ValueError
+            If ``other`` is not a rational point or the point it represents is
+            vertical with respect to this rational point.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 1).gradient()
+        ContinuedFraction(1, 1)
+        >>> RP(1, 1).gradient(other=RP(2, 1))
+        ContinuedFraction(0, 1)
+        >>> RP(0, 1).gradient(other=RP(1, 0))
+        ContinuedFraction(-1, 1)
+        >>> RP(0, 1).gradient()
+        >>> RP(1, 1).gradient(other=RP(1, 2))
+        Traceback (most recent call last):
+        ...
+        ValueError: If a second rational point is provided, it must be a `RationalPoint` instance, and non-vertical with respect to this point.
+        """
+        if other is None:
+            return ContinuedFraction(self.y, self.x) if self.x != 0 else None
+
+        if not isinstance(other, RationalPoint) or other.x == self.x:
+            raise ValueError(
+                'If a second rational point is provided, it must be a '
+                '`RationalPoint` instance, and non-vertical with respect '
+                'to this point.'
+            )
+
+        return ContinuedFraction(other.y - self.y, other.x - self.x)
+
+    def collinear_with(self, *rational_points: RationalPoint) -> bool:
+        """:py:class:`bool` : Tests whether this rational point is collinear with one or more rational points.
+
+        The collinearity test for three points :math:`P_1 = (x_1, y_1)`,
+        :math:`P_2 = (x_2, y_2)`, and :math:`P_3 = (x_3, y_3)` uses the
+        gradient method:
+
+        .. math::
+
+           \\frac{y_2 - y_1}{x_2 - x_1} \\stackrel{?}{=} \\frac{y_3 - y_2}{x_3 - x_2}, \\hskip{3em} x_2 \\neq x_1; x_3 \\neq x_2
+
+        which can be rearranged as the (conditional) equation:
+
+        .. math::
+
+           \\ (y_3 - y_2)(x_2 - x_1) - (y_3 - y_2)(x_3 - x_2) \\stackrel{?}{=} 0
+
+        Note that the other rational points do not need to be given in any
+        particular order.
+
+        Parameters
+        ----------
+        rational_points : RationalPoint
+            One or more rational points to test for collinearity with this
+            point.
+
+        Returns
+        -------
+        bool
+            Whether this point is collinear with the given rational points.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)))
+        True
+        >>> RP(1, 1).collinear_with(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(-3, -3))
+        True
+        >>> RP(1, 1).collinear_with(RP(-2, -2), RP(F(1, 2), F(1, 2)), RP(1, 2))
+        False
+        >>> RP(1, 1).collinear_with(RP(F(-1, 2), F(-1, 2)))
+        True
+        >>> RP(1, 1).collinear_with(RP(2, 1))
+        True
+        """
+        if any(not isinstance(P, self.__class__) for P in rational_points):
+            raise ValueError(
+                'One or more non-`RationalPoint` instances detected. Please '
+                'check the inputs and try again.'
+            )
+
+        if len(rational_points) == 1:
+            return True
+
+        def collinear(P1: RationalPoint, P2: RationalPoint, P3: RationalPoint, /) -> bool:
+            """Inner function to test collinearity for exactly three rational points, including this one (``self``).
+            """
+            if (P1 == P2) or (P1 == P3) or (P2 == P3):
+                return True
+
+            x1, y1, x2, y2, x3, y3 = (*P1, *P2, *P3)
+
+            return (y3 - y2) * (x2 - x1) - (y2 - y1) * (x3 - x2) == 0
+
+        for Q, R in pairwise(rational_points):
+            if not collinear(self, Q, R):
+                return False
+
+        return True
+
+    def collinear_with_origin(self, *rational_points: RationalPoint) -> bool:
+        """:py:class:`bool` : Tests whether this rational point is collinear with one or more rational points and the origin :math:`(0, 0)`.
+
+        This is to allow easier checking of collinearity of points falling on a
+        line passing through the origin.
+
+        Note that the other rational points do not need to be given in any
+        particular order.
+
+        Parameters
+        ----------
+        rational_points : RationalPoint
+            One or more rational points to test for collinearity with this
+            point and the origin :math:`(0, 0)`
+
+        Returns
+        -------
+        bool
+            Whether this point is collinear with the given rational points
+            and the origin :math:`(0, 0)`.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(-1, 2)))
+        True
+        >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(1, 2)))
+        False
+        >>> RP(1, 0).collinear_with_origin(RP(-1, 0), RP(F(1, 2), F(1, 2)))
+        False
+        >>> RP(1, 0).collinear_with_origin(RP(-1, 0), RP(F(1, 2), 0))
+        True
+        """
+        if any(not isinstance(P, self.__class__) for P in rational_points):
+            raise ValueError(
+                'One or more non-`RationalPoint` instances detected. Please '
+                'check the inputs and try again.'
+            )
+
+        return self.collinear_with(self.zero(), *rational_points)
+
+    def angle(self, /, *, other: RationalPoint = None, as_degrees: bool = False) -> Decimal:
+        """:py:class:`~decimal.Decimal`: The radian (or degree) angle between this rational point, as a position vector in :math:`\\mathbb{Q}^2`, and either another rational point or the positive :math:`x`-axis.
+        
+        If another rational point :math:`P'` (as represented by ``other``) is
+        provided, the computed angle is that between the position vector of
+        this rational point :math:`P = (x, y)` (as represented by ``self``) and
+        the other, as given by:
+
+        .. math::
+
+           \\alpha = \\text{arccos}\\left( \\frac{P \\cdot P'}{\\|P\\|\\|P'\\|} \\right)
+
+        If no other rational point is provided the computed angle is that
+        between the position vector of this rational point and the
+        positive :math:`x`-axis, as given by:
+
+        .. math::
+
+           \\alpha = \\text{atan2}\\left(\\frac{y}{x}\\right)
+
+        where :math:`\\text{atan2}` refers to the :math:`\\text{arctan}`
+        extension that uses both :math:`x`- and :math:`y`-coordinates of a plane point
+        :math:`P = (x, y)`, as implemented by :py:func:`math.atan2`. For reference
+        any standard book on trigonometry or plane geometry should contain a
+        definition.
 
         The optional ``as_degrees`` boolean can be used to return the angle in
         degrees.
@@ -423,9 +628,10 @@ class RationalPoint(Dim2RationalCoordinates):
         Returns
         -------
         decimal.Decimal
-           The radian angle :math:`\\theta` between the rational point as a
-           position vector in :math:`\\mathbb{Q}^2` and the positive
-           :math:`x`-axis, where :math:`-\\pi \\leq \\theta \\leq +\\pi`.
+           The angle between this rational point, as a
+           position vector in :math:`\\mathbb{Q}^2`, and either another
+           rational point, if provided, or the positive
+           :math:`x`-axis.
 
         Examples
         --------
@@ -438,8 +644,17 @@ class RationalPoint(Dim2RationalCoordinates):
         Decimal('0.78539816339744827899949086713604629039764404296875')
         >>> RP(1, 1).angle(as_degrees=True)
         Decimal('45')
+        >>> RP(1, 1).angle(other=RP(0, 1))
+        Decimal('0.78539816339744827899949086713604629039764404296875')
+        >>> RP(1, 1).angle(other=RP(0, 1), as_degrees=True)
+        Decimal('45')
         """
-        angle = Decimal(math.atan2(self.y, self.x))
+        if other and other == self:
+            angle = Decimal('0')
+        elif other and other != self: 
+            angle = Decimal(math.acos(self.dot(other).as_decimal() / (self.norm * other.norm)))
+        else:
+            angle = Decimal(math.atan2(self.y, self.x))
 
         if not as_degrees:
             return angle
@@ -671,6 +886,65 @@ class RationalPoint(Dim2RationalCoordinates):
 
         return (self.x * other.x) + (self.y * other.y)
 
+    def det(self, other: RationalPoint, /) -> ContinuedFraction:
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The determinant of the :math:`2 \\times 2` matrix formed by this rational point and another.
+
+        Computes the (rational) determinant:
+
+        .. math::
+
+           \\begin{vmatrix}\\frac{a}{c} & \\frac{a'}{c'}\\\\\\frac{b}{d} & \\frac{b'}{d'}\\end{vmatrix} = \\frac{ab'}{cd'} - \\frac{a'b}{c'd} = \\frac{ab'c'd - a'bcd'}{cc'dd'}
+
+        of the matrix formed by the position vectors of two plane rational
+        points :math:`P = \\left( \\frac{a}{c}, \\frac{b}{d} \\right)` and
+        :math:`P'  = \\left( \\frac{a'}{c'}, \\frac{b'}{d'} \\right)`, where
+        :math:`P` is represented by ``self`` and :math:`P'` by ``other``.
+
+        Geometrically, the quantity represents the signed area of the
+        plane parallelogram formed by the position vectors of :math:`P` and
+        :math:`P'` and the vector sum :math:`P + P'`, where the sign is
+        positive or negative depending on whether
+        :math:`\\frac{bc}{ad} < \\frac{b'c'}{a'd'}` or 
+        :math:`\\frac{bc}{ad} > \\frac{b'c'}{a'd'}` respectively, where
+        :math:`\\frac{bc}{ad}` and :math:`\\frac{b'c'}{a'd'}` are the
+        gradients of the lines passing through the origin :math:`(0, 0)`
+        and :math:`P` and :math:`P'` respectively. The quantity is zero
+        when these lines are collinear, i.e. when :math:`P` and :math:`P'`
+        fall on a single line passing through :math:`(0, 0)`.
+        
+        Returns
+        -------
+        ContinuedFraction
+            The determinant of the :math:`2 \\times 2` matrix formed by the
+            position vector of this rational point and another, as described
+            above.
+
+        Examples
+        --------
+        >>> from fractions import Fraction as F
+        >>> from continuedfractions.rational_points import RationalPoint as RP
+        >>> P, Q, R = RP(F(3, 5), F(4, 5)), RP(1, 1), RP(F(5, 4), 2); P, Q, R
+        (RationalPoint(3/5, 4/5), RationalPoint(1, 1), RationalPoint(5/4, 2))
+        >>> P.det(Q)
+        ContinuedFraction(-1, 5)
+        >>> P.det(R)
+        ContinuedFraction(1, 5)
+        >>> Q.det(R)
+        ContinuedFraction(3, 4)
+        >>> P.det(P)
+        ContinuedFraction(0, 1)
+        """
+        if not isinstance(other, self.__class__):
+            raise ValueError(
+                'The determinant is only defined between `RationalPoint` '
+                'instances.'
+            )
+
+        if self.coordinates == (0, 0) or other.coordinates == (0, 0):
+            return ContinuedFraction(0)
+
+        return (self.x * other.y) - (self.y * other.x)    
+
     @property
     def norm_squared(self) -> ContinuedFraction:
         """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The square of the Euclidean (:math:`\\ell_2`) norm of a rational point in the plane.
@@ -847,12 +1121,11 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           d^{\\perp}\\left(P, P'\\right) = \\frac{|P \\times P'|}{\\|P\\|_2}
+           d^{\\perp}\\left(P, P'\\right) = \\frac{\\lvert\\text{det}(P, P')\\rvert}{\\|P\\|_2}
 
-        where :math:`|P \\times P'|` is defined here as a scalar cross product
-        (not vector cross product) of :math:`P` and :math:`P'`: so, if
-        :math:`P = (x, y), P' = (x', y')` then
-        :math:`|P \\times P'| := |x'y - xy'|`.
+        where :math:`\\lvert\\text{det}(P, P')\\rvert` is the determinant
+        of :math:`P` and :math:`P'` as described in
+        :py:meth:`~continuedfractions.rational_points.RationalPoint.det`.
 
         Returns
         -------
@@ -892,9 +1165,8 @@ class RationalPoint(Dim2RationalCoordinates):
         if a == b or abs(a) + abs(b) == Decimal('180'):
             return Decimal('0')
 
-        # Otherwise compute the value
-        abs_cross_product = abs(self.y * other.x - self.x * other.y)
-        return abs_cross_product.as_decimal() / self.norm
+        # Otherwise compute the value and return
+        return abs(self.det(other)).as_decimal() / self.norm
 
     def is_lattice_point(self) -> bool:
         """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.
@@ -1031,8 +1303,8 @@ class RationalPoint(Dim2RationalCoordinates):
     def height(self) -> int:
         """:py:class:`int` : The (projective) height of the rational point in the projective space :math:`\\mathbb{P}^2`.
 
-        The projective height :math:`H\\left(\\frac{a}{c},\\frac{b}{d}\\right)`
-        of a rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
+        The height :math:`H\\left(\\frac{a}{c},\\frac{b}{d}\\right)` of a
+        rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
         as given by:
 
         .. math::
@@ -1069,7 +1341,7 @@ class RationalPoint(Dim2RationalCoordinates):
     def log_height(self) -> Decimal:
         """:py:class:`~decimal.Decimal` : The natural logarithm of the (projective) height of the rational point as defined above.
 
-        The (natural) logarithm of the projective height of a rational point
+        The (natural) logarithm of the height of a rational point
         :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)` as given by:
 
         .. math::

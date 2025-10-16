@@ -309,6 +309,97 @@ class TestRationalPoint:
         assert RP.sum(*rational_points) == expected_sum
 
     @pytest.mark.parametrize(
+        "rational_point1, invalid_other",
+        [
+            (RP(0, 0), (0, 0),),
+            (RP(1, 1), RP(1, 1),),
+            (RP(1, 1), D('0'),),
+            (RP(1, 1), 1.1,),
+            (RP(1, 1), -1,),
+        ]
+    )
+    def test_RationalPoint_gradient__invalid_other__value_error_raised(self, rational_point1, invalid_other):
+        with pytest.raises(ValueError):
+            rational_point1.gradient(other=invalid_other)
+
+    @pytest.mark.parametrize(
+        "rational_point, expected_gradient",
+        [
+            (RP(1, 1), CF(1, 1)),
+            (RP(1, F(1, 2)), CF(1, 2)),
+            (RP(1, 2), CF(2, 1)),
+            (RP(-1, 1), CF(-1, 1)),
+            (RP(0, 1), None),
+        ]
+    )
+    def test_RationalPoint_gradient__no_other_rational_point(self, rational_point, expected_gradient):
+        assert rational_point.gradient() == expected_gradient
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_gradient",
+        [
+            (RP(1, 1), RP(0, 1), CF(0, 1)),
+            (RP(1, 1), RP(2, 3), CF(2, 1)),
+            (RP(1, 1), RP(2, F(3, 2)), CF(1, 2)),
+            (RP(1, 0), RP(0, 1), CF(-1, 1)),
+        ]
+    )
+    def test_RationalPoint_gradient__other_rational_point(self, rational_point1, rational_point2, expected_gradient):
+        assert rational_point1.gradient(other=rational_point2) == expected_gradient
+
+    @pytest.mark.parametrize(
+        "rational_point, invalid_other_points",
+        [
+            (RP(0, 0), (1, RP(1, 1), RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), 1, RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), RP(2, 2), 1,)),
+        ]
+    )
+    def test_RationalPoint_collinear_with__invalid_other_points__value_error_raised(self, rational_point, invalid_other_points):
+        with pytest.raises(ValueError):
+            rational_point.collinear_with(*invalid_other_points)
+
+    @pytest.mark.parametrize(
+        "rational_point, other_points, expected_collinearity",
+        [
+            (RP(1, 1), (RP(2, 2),), True),
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)),), True),
+            (RP(1, 1), (RP(-1, -1), RP(-1, -1), RP(2, 2),), True),
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)), RP(-3, -3), RP(100, 100),), True),
+            (RP(1, 0), (RP(-1, 0), RP(F(1, 2), 0), RP(-3, 0),), True),
+            (RP(0, 1), (RP(0, -1), RP(0, F(1, 2)), RP(0, -3),), True),
+            (RP(1, 1), (RP(-1, -2), RP(F(1, 2), F(1, 2)),), False),
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(-1, 2)), RP(-3, 3), RP(100, 99),), False),
+            (RP(1, 0), (RP(-1, 0), RP(F(1, 2), 0), RP(-3, 1),), False),
+            (RP(0, 1), (RP(0, -1), RP(1, F(1, 2)), RP(0, -3),), False),
+        ]
+    )
+    def test_RationalPoint_collinear_with(self, rational_point, other_points, expected_collinearity):
+            assert rational_point.collinear_with(*other_points) == expected_collinearity
+
+    @pytest.mark.parametrize(
+        "rational_point, invalid_other_points",
+        [
+            (RP(0, 0), (1, RP(1, 1), RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), 1, RP(2, 2),)),
+            (RP(0, 0), (RP(1, 1), RP(2, 2), 1,)),
+        ]
+    )
+    def test_RationalPoint_collinear_with_origin__invalid_other_points__value_error_raised(self, rational_point, invalid_other_points):
+        with pytest.raises(ValueError):
+            rational_point.collinear_with_origin(*invalid_other_points)
+
+    @pytest.mark.parametrize(
+        "rational_point, other_points, expected_collinearity",
+        [
+            (RP(1, 1), (RP(-1, -1), RP(F(1, 2), F(1, 2)),), True),
+            (RP(1, 1), (RP(F(1, 2), F(1, 2)), RP(1, -1),), False),
+        ]
+    )
+    def test_RationalPoint_collinear_with_origin(self, rational_point, other_points, expected_collinearity):
+            assert rational_point.collinear_with_origin(*other_points) == expected_collinearity
+
+    @pytest.mark.parametrize(
         "rational_point, expected_angle, expected_angle_as_degrees",
         [
             (RP(1, 0), D('0'), D('0'),),
@@ -321,9 +412,24 @@ class TestRationalPoint:
             (RP(1, -1), D(math.atan2(-1, 1)), -D('45'),),
         ]
     )
-    def test_RationalPoint_angle(self, rational_point, expected_angle, expected_angle_as_degrees):
+    def test_RationalPoint_angle__with_pos_x_axis(self, rational_point, expected_angle, expected_angle_as_degrees):
         assert rational_point.angle() == expected_angle
         assert rational_point.angle(as_degrees=True) == expected_angle_as_degrees
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_angle, expected_angle_as_degrees",
+        [
+            (RP(1, 0), RP(1, 1), D('0.78539816339744827899949086713604629039764404296875'), D('45'),),
+            (RP(1, 0), RP(0, 1), D('1.5707963267948965579989817342720925807952880859375'), D('90'),),
+            (RP(1, 0), RP(-1, 1), D('2.35619449019234483699847260140813887119293212890625'), D('135'),),
+            (RP(1, 0), RP(-1, 0), D('3.141592653589793115997963468544185161590576171875'), D('180'),),
+            (RP(1, 1), RP(-1, 1), D('1.5707963267948965579989817342720925807952880859375'), D('90'),),
+            (RP(1, 1), RP(1, 1), D('0'), D('0'),),
+        ]
+    )
+    def test_RationalPoint_angle__with_another_rational_point(self, rational_point1, rational_point2, expected_angle, expected_angle_as_degrees):
+        assert rational_point1.angle(other=rational_point2) == expected_angle
+        assert rational_point1.angle(other=rational_point2, as_degrees=True) == expected_angle_as_degrees
 
     @pytest.mark.parametrize(
         "rational_point1, rational_point2, expected_dot_product",
@@ -338,6 +444,33 @@ class TestRationalPoint:
     )
     def test_RationalPoint_dot(self, rational_point1, rational_point2, expected_dot_product):
         assert rational_point1.dot(rational_point2) == expected_dot_product
+
+    @pytest.mark.parametrize(
+        "rational_point1, invalid_arg",
+        [
+            (RP(1, 1), 2,),
+            (RP(1, 1), 2.0,),
+            (RP(1, 1), D('2'),),
+        ]
+    )
+    def test_RationalPoint_det__invalid_arg__value_error_raised(self, rational_point1, invalid_arg):
+        with pytest.raises(ValueError):
+            rational_point1.det(invalid_arg)
+
+    @pytest.mark.parametrize(
+        "rational_point1, rational_point2, expected_det",
+        [
+            (RP(F(3, 5), F(4, 5)), RP(1, 1), CF(-1, 5),),
+            (RP(1, 1), RP(F(5, 4), 2), CF(3, 4),),
+            (RP(F(3, 5), F(4, 5)), RP(F(5, 4), 2), CF(1, 5),),
+            (RP(F(1, 2), F(1, 2)), RP(1, 1), CF(0, 1)),
+            (RP(1, 1), RP(0, 0), CF(0, 1)),
+            (RP(0, 0), RP(1, 1), CF(0, 1)),
+        ]
+    )
+    def test_RationalPoint_det(self, rational_point1, rational_point2, expected_det):
+        assert rational_point1.det(rational_point2) == expected_det
+
 
     @pytest.mark.parametrize(
         "rational_point, expected_orthogonal",

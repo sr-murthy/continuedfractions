@@ -105,19 +105,10 @@ class Dim2RationalCoordinates(RationalTuple):
     >>> c.y
     Fraction(3, 4)
     """
-    def __new__(cls, *args: numbers.Rational) -> Dim2RationalCoordinates:
+    def __new__(cls, x: numbers.Rational, y: numbers.Rational) -> Dim2RationalCoordinates:
         """Constructor.
         """
-        self = super().__new__(cls, *args)
-
-        if len(self) != 2:
-            raise ValueError(
-                'Exactly two rational values are required, i.e. instances of '
-                '`numbers.Rational`, specifically, `int`, `Fraction`, or '
-                '`ContinuedFraction`.'
-            )
-
-        return self
+        return super().__new__(cls, x, y)
 
     @property
     def x(self) -> numbers.Rational:
@@ -177,19 +168,10 @@ class Dim3RationalCoordinates(RationalTuple):
     >>> c.z
     ContinuedFraction(4, 5)
     """
-    def __new__(cls, *args: numbers.Rational) -> Dim3RationalCoordinates:
+    def __new__(cls, x: numbers.Rational, y: numbers.Rational, z: numbers.Rational) -> Dim3RationalCoordinates:
         """Constructor.
         """
-        self = super().__new__(cls, *args)
-
-        if len(self) != 3:
-            raise ValueError(
-                'Exactly three rational values are required, i.e. instances of '
-                '`numbers.Rational`, specifically, `int`, `Fraction`, or '
-                '`ContinuedFraction`.'
-            )
-
-        return self
+        return super().__new__(cls, x, y, z)
 
     @property
     def x(self) -> numbers.Rational:
@@ -319,16 +301,10 @@ class RationalPoint(Dim2RationalCoordinates):
     >>> RationalPoint(-3, 4)
     RationalPoint(-3, 4)
     """
-    def __new__(cls, *args: int | Fraction | ContinuedFraction) -> RationalPoint:
-      if args is None or len(args) != 2 or any(not isinstance(x, (int, Fraction, ContinuedFraction)) for x in args):
-          raise ValueError(
-              'A `RationalPoint` object must be specified as a pair of '
-              'rational numbers `r` and `s`, each of type either integer '
-              '(`int`), or fraction (`Fraction` or `ContinuedFraction`).'
-          )
-
-      r, s = args
-      return super().__new__(cls, ContinuedFraction(r), ContinuedFraction(s))
+    def __new__(cls, x: int | Fraction | ContinuedFraction, y: int | Fraction | ContinuedFraction) -> RationalPoint:
+        """Constructor.
+        """
+        return super().__new__(cls, ContinuedFraction(x), ContinuedFraction(y))
 
     @classmethod
     def zero(cls) -> RationalPoint:

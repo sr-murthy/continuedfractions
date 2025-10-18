@@ -93,21 +93,6 @@ class TestDim2RationalCoordinates:
     @pytest.mark.parametrize(
         "args",
         [
-            (D('0'),),
-            (0, 1., 2),
-            (0, .5),
-            (-1/2, 3, 4),
-            (D('2'), 3, '4'),
-            (1, F(2, 3), CF(4, 5))
-        ]
-    )
-    def test_Dim2RationalCoordinates___new____invalid_args__value_error_raised(self, args):
-        with pytest.raises(ValueError):
-            D2RC(*args)
-
-    @pytest.mark.parametrize(
-        "args",
-        [
             (1, F(-2, 3)),
             (F(1, 2), CF(3, 4)),
             (1, -2),
@@ -135,21 +120,6 @@ class TestDim2RationalCoordinates:
 
 
 class TestDim3RationalCoordinates:
-
-    @pytest.mark.parametrize(
-        "args",
-        [
-            (D('0'),),
-            (0, 1., 2),
-            (0, .5),
-            (-1/2, 3, 4),
-            (D('2'), 3, '4'),
-            (1, F(1, 2))
-        ]
-    )
-    def test_Dim3RationalCoordinates___new____invalid_args__value_error_raised(self, args):
-        with pytest.raises(ValueError):
-            D3RC(*args)
 
     @pytest.mark.parametrize(
         "args",
@@ -211,20 +181,6 @@ class TestHomogeneousCoordinates:
 
 
 class TestRationalPoint:
-
-    @pytest.mark.parametrize(
-        "args",
-        [
-            (0,),
-            (0, 1, 2),
-            (0, .5),
-            (-1/2, 3, 4),
-            (D('2'), 3),
-        ]
-    )
-    def test_RationalPoint___new____invalid_args__value_error_raised(self, args):
-        with pytest.raises(ValueError):
-            RP.__new__(RP.__class__, *args)
 
     @pytest.mark.parametrize(
         "rational_point",

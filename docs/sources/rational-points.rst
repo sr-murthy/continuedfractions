@@ -89,47 +89,13 @@ The :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` pro
    >>> P.coordinates.y
    ContinuedFraction(4, 5)
 
-.. _rational-points.generic-tuple-props:
-
-Generic Tuple Properties & Operations
--------------------------------------
-
-The :py:class:`~continuedfractions.rational_points.RationalPoint` class is a custom extension of the built-in :py:class:`tuple` type with additional constructor-level enforcements for **length** (must contain exactly 2 values) and **type** (limited to values of type :py:class:`numbers.Rational`). As a subtype of :py:class:`tuple` checks for type and equality in relation to the parent type are always satisfied, and hash values are consistent:
-
-.. code:: python
-
-   >>> P = RP(F(1, 2), F(3, 5)); P
-   RationalPoint(1/2, 3/5)
-   >>> isinstance(P, tuple)
-   True
-   >>> assert hash(P) == hash(tuple(P))
-
-Almost all of the common :py:class:`tuple`-compatible operations are supported, including indexing, sorting, iteration, unpacking:
-
-.. code:: python
-
-   >>> P = RP(1, F(-2, 3)); P
-   RationalPoint(1, -2/3)
-   >>> P[0], P[1]
-   (ContinuedFraction(1, 1), ContinuedFraction(-2, 3))
-   >>> sorted(P)
-   [ContinuedFraction(-2, 3), ContinuedFraction(1, 1)]
-   >>> for x in P:
-   ...     print(x)
-   1
-   -2/3
-   >>> (*P, 4)
-   (ContinuedFraction(1, 1), ContinuedFraction(-2, 3), 4)
-
-**except** for operations such as concatenation with plain tuples, which will fail:
+As a subtype of :py:class:`tuple` the :py:class:`~continuedfractions.rational_points.RationalPoint` instances satisfy all tuple properties and operations except for the concatenation operation ``+`` which is reserved for :py:class:`~continuedfractions.rational_points.RationalPoint` instances only:
 
 .. code:: python
 
    >>> RP(F(1, 2), 3) + (4, 5)
    ...
    TypeError: Addition is defined only between two `RationalPoint` instances.
-
-This is because :py:class:`~continuedfractions.rational_points.RationalPoint` implements a custom :py:meth:`~continuedfractions.rational_points.RationalPoint.__add__` method to implement the natural component-wise addition of rational points which makes them an (additive) Abelian group.
 
 .. _rational-points.rational-ops:
 
@@ -248,7 +214,7 @@ The :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with_o
    >>> RP(1, 2).collinear_with_origin(RP(2, 4), RP(F(-1, 2), -1), RP(1000, -1000))
    False
 
-The implementation of :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with`, which uses the simple gradient method, relies on the fact that collinearity is a transitive relation on triples of plane points, so that if three points :math:`P, Q, R` are collinear, and there is another point :math:`S` such that :math:`P, Q, S` are collinear, than :math:`P, Q, R, S` are collinear. To test the collinearity of :math:`n \geq 1` points :math:`P_1, P_2, \ldots, P_n` points it is thus sufficient to check whether :math:`P_1` and any two other points, :math:`P_j, P_k`, say, with  :math:`1 < j, k \leq n`, are not collinear : if so, the :math:`n` points are not collinear, otherwise they are all collinear.
+The basic collinearity test, which uses the simple gradient method, relies on the transitivity of collinearity on triples of plane points, so that if a point :math:`P` is collinear with points :math:`Q, R, S` then it is collinear with the two pairs :math:`Q, R` and :math:`R, S`.
 
 .. _rational-points.angles:
 

@@ -493,7 +493,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\ (y_3 - y_2)(x_2 - x_1) - (y_3 - y_2)(x_3 - x_2) \\stackrel{?}{=} 0
+           \\ (y_3 - y_2)(x_2 - x_1) - (y_2 - y_1)(x_3 - x_2) \\stackrel{?}{=} 0
 
         Note that the other rational points do not need to be given in any
         particular order.

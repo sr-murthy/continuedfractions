@@ -53,8 +53,7 @@ class RationalTuple(tuple):
         """
         if args is None or any(not isinstance(arg, numbers.Rational) for arg in args):
             raise ValueError(
-                'One or more rational-valued arguments are required, i.e. '
-                'instances of `numbers.Rational`.'
+                'One or more rational-valued arguments are required.'
             )
 
         return super().__new__(cls, args)
@@ -91,7 +90,7 @@ class RationalTuple(tuple):
 
 
 class Dim2RationalCoordinates(RationalTuple):
-    """A thin :py:class:`tuple` wrapper for a sequence of two rational coordinates representing a point in :math:`\\mathbb{Q}^2`.
+    """A simple :py:class:`tuple` subtype for a sequence of two rational coordinates representing a point in :math:`\\mathbb{Q}^2`.
 
     Examples
     --------
@@ -152,7 +151,7 @@ class Dim2RationalCoordinates(RationalTuple):
 
 
 class Dim3RationalCoordinates(RationalTuple):
-    """A thin :py:class:`tuple` wrapper for a sequence of three rational coordinates representing a point in :math:`\\mathbb{Q}^3`.
+    """A simple :py:class:`tuple` subtype for a sequence of three rational coordinates representing a point in :math:`\\mathbb{Q}^3`.
 
     Examples
     --------

@@ -462,13 +462,13 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\frac{y_2 - y_1}{x_2 - x_1} \\stackrel{?}{=} \\frac{y_3 - y_2}{x_3 - x_2}, \\hskip{3em} x_2 \\neq x_1; x_3 \\neq x_2
+           \\frac{y_2 - y_1}{x_2 - x_1} = \\frac{y_3 - y_2}{x_3 - x_2}, \\hskip{3em} x_2 \\neq x_1; x_3 \\neq x_2
 
-        which can be rearranged as the (conditional) equation:
+        which can be rearranged as the equation:
 
         .. math::
 
-           \\ (y_3 - y_2)(x_2 - x_1) - (y_2 - y_1)(x_3 - x_2) \\stackrel{?}{=} 0
+           \\ (y_3 - y_2)(x_2 - x_1) - (y_2 - y_1)(x_3 - x_2) = 0
 
         Note that the other rational points do not need to be given in any
         particular order.
@@ -862,7 +862,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return (self.x * other.x) + (self.y * other.y)
 
     def det(self, other: RationalPoint, /) -> ContinuedFraction:
-        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The determinant of the :math:`2 \\times 2` matrix formed by this rational point and another.
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The determinant of the :math:`2 \\times 2` matrix formed by the position vectors in :math:`\\mathbb{Q}^2` of this rational point and another.
 
         Computes the (rational) determinant:
 

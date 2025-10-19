@@ -214,7 +214,7 @@ The :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with_o
    >>> RP(1, 2).collinear_with_origin(RP(2, 4), RP(F(-1, 2), -1), RP(1000, -1000))
    False
 
-The basic collinearity test, which uses the simple gradient method, relies on the transitivity of collinearity on triples of plane points, so that if a point :math:`P` is collinear with points :math:`Q, R, S` then it is collinear with the two pairs :math:`Q, R` and :math:`R, S`.
+The basic collinearity test, which uses the simple gradient method, relies on the transitivity of collinearity on triples of plane points, so that if a point :math:`P` is collinear with points :math:`Q, R, S` then it is collinear with the two pairs :math:`Q, R` and :math:`R, S`: if the latter condition isn't met then :math:`P, Q, R, S` are not colllinear.
 
 .. _rational-points.angles:
 

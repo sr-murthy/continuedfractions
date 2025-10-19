@@ -575,18 +575,16 @@ Some examples are given below:
 Lattice Points
 --------------
 
-Lattice points, which form an Abelian subgroup of the rational points, and lattices aren't currently supported directly by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_lattice_point` method does provide a way to filter for these:
+Lattice points, which form an Abelian subgroup of the rational points, and lattices aren't currently supported directly by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_integral_lattice_point` method does provide a way to filter for these:
 
 .. code:: python
 
-   >>> RP(0, 0).is_lattice_point()
+   >>> RP(0, 0).is_integral_lattice_point()
    True
-   >>> RP(F(2, 1), 3).is_lattice_point()
-   True
-   >>> RP(F(1, 2), F(3, 4)).is_lattice_point()
+   >>> RP(F(1, 2), F(3, 4)).is_integral_lattice_point()
    False
 
-This may be useful when filtering a large collection of :py:class:`~continuedfractions.rational_points.RationalPoint` instances for lattice points.
+which may be useful when filtering a large collection of :py:class:`~continuedfractions.rational_points.RationalPoint` instances for such points.
 
 Support for representing and operating on rational and integral lattices and lattice points may be added in the future. Contributions would be welcome.
 

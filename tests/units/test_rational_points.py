@@ -625,7 +625,7 @@ class TestRationalPoint:
         assert rational_point1.perpendicular_distance(rational_point2) == expected_perpendicular_distance
 
     @pytest.mark.parametrize(
-        "rational_point, expected_is_lattice_point",
+        "rational_point, expected",
         [
             (RP(0, 0), True),
             (RP(F(2, 1), 5), True),
@@ -634,8 +634,8 @@ class TestRationalPoint:
             (RP(-1, 2), True),
         ]
     )
-    def test_RationalPoint_is_lattice_point(self, rational_point, expected_is_lattice_point):
-        assert rational_point.is_lattice_point() == expected_is_lattice_point
+    def test_RationalPoint_is_integral_lattice_point(self, rational_point, expected):
+        assert rational_point.is_integral_lattice_point() == expected
 
     @pytest.mark.parametrize(
         "rational_point1, invalid_other",

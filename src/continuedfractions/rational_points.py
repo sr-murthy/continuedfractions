@@ -1143,8 +1143,8 @@ class RationalPoint(Dim2RationalCoordinates):
         # Otherwise compute the value and return
         return abs(self.det(other)).as_decimal() / self.norm
 
-    def is_lattice_point(self) -> bool:
-        """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.
+    def is_integral_lattice_point(self) -> bool:
+        """:py:class:`bool` : Whether the rational point is an integral lattice point, i.e. has integer coordinates.
 
         Returns
         -------
@@ -1155,9 +1155,9 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> RationalPoint(1, 2).is_lattice_point()
+        >>> RationalPoint(1, 2).is_integral_lattice_point()
         True
-        >>> RationalPoint(Fraction(1, 2), 2).is_lattice_point()
+        >>> RationalPoint(Fraction(1, 2), 2).is_integral_lattice_point()
         False
         """
         return all(coord.denominator == 1 for coord in self.coordinates)

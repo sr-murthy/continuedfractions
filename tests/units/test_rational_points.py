@@ -733,6 +733,11 @@ class TestRationalPoint:
             D('3') * RP(1, 2)
             .3 * RP(1, 2)
 
+            RP(1, 2) / D('2')
+
+        with pytest.raises(ZeroDivisionError):
+            RP(1, 1) / 0
+
         with pytest.raises(NotImplementedError):
             RP(1, 2) * 3
             RP(3, 4) * RP(1, 2)
@@ -785,4 +790,11 @@ class TestRationalPoint:
         assert 0 * pt2 == r0
         #     distributes over addition of rational points
         assert 2 * (r1 + pt1 + pt2) == 2 * r1 + 2 * pt1 + 2 * pt2
+
+        # Division by non-zero rational scalars
+        assert r0 / 2 == r0
+        assert r1 / 2 == RP(F(1, 2), F(1, 2))
+        assert pt1 / 2 == RP(F(3, 10), F(2, 5))
+        assert pt2 / 2 == RP(F(1, 4), F(3, 8))
+ 
 

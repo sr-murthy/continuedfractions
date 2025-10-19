@@ -1414,7 +1414,7 @@ class RationalPoint(Dim2RationalCoordinates):
         """:py:class:`~continuedfractions.rational_points.RationalPoint` : Component-wise scalar left-multiplication of a rational number by an integer or rational number.
 
         Implements component-wise left-multiplication of a rational point with
-        a rational scalar:
+        a rational scalar :math:`\\lambda`:
 
         .. math::
 
@@ -1440,6 +1440,29 @@ class RationalPoint(Dim2RationalCoordinates):
             return self.__class__(0, 0)
 
         return self.__class__(self.x * other, self.y * other)
+
+    def __truediv__(self, other: int | Fraction | ContinuedFraction):
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Component-wise division by a non-zero rational scalar.
+
+        Implements component-wise division of a rational point by a non-zero
+        rational scalar :math:`\\lambda`:
+
+        .. math::
+
+           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\div \\lambda = \\left(\\frac{a}{\\lambda c}, \\frac{b}{\\lambda d} \\right), \\hspace{1em} \\lambda \\in \\mathbb{Q}\\setminus \\{0\\}
+
+        by scaling the point by :math:`\\frac{1}{\\lambda}`.
+        """
+        if not isinstance(other, (int, Fraction, ContinuedFraction)):
+            raise TypeError(                                                        # pragma: no cover
+                'The scalar must be a rational, specifically, an instance of '
+                '`int`, `fractions.Fraction` or `ContinuedFraction`.'
+            )
+
+        if other == 0:
+            raise ZeroDivisionError('Division by zero.')
+
+        return Fraction(1, other) * self
 
     def __abs__(self) -> Decimal:
         """:py:class:`~decimal.Decimal` : The absolute value of the rational point as the standard Euclidean norm.

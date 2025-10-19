@@ -8,4 +8,4 @@
 
 .. automodule:: continuedfractions.rational_points
     :members:
-    :special-members: __add__, __sub__, __rmul__, __mul__, __neg__, __abs__
+    :special-members: __add__, __sub__, __rmul__, __mul__, __truediv__, __neg__, __abs__

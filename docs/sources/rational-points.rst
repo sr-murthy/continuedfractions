@@ -129,7 +129,7 @@ Some examples are given below.
    # True
 
 Consistent with :math:`\mathbb{Q}^2` being an Abelian group the addition, subtraction, negation, and rational scalar mutiplication operations always produce :py:class:`~continuedfractions.rational_points.RationalPoint` instances. The zero element (the additive identity in :math:`\mathbb{Q}^2` and also the origin of :math:`\mathbb{Q}^2` as a vector space) is represented by the value ``RationalPoint(0, 0)``, as can easily be verified. In particular, addition and subtraction are limited to :py:class:`~continuedfractions.rational_points.RationalPoint` instances, and raise a :py:class:`TypeError` if any other types are attempted, while 
-multiplication is limited to left-multiplication by instances of type :py:class:`int`, :py:class:`~fractions.Fraction` or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`. Only scalar left-multiplication is supported in order to respect the notational convention of scalar-vector multiplication, while division is undefined:
+multiplication is limited to left-multiplication by instances of type :py:class:`int`, :py:class:`~fractions.Fraction` or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`. Only scalar left-multiplication is supported in order to respect the notational convention of scalar-vector multiplication, and scalar division (by non-zero instances of :py:class:`int`, :py:class:`~fractions.Fraction`, or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, is also supported (via scalar left-multiplication by the reciprocal of the scalar):
 
 .. code:: python
 
@@ -138,10 +138,8 @@ multiplication is limited to left-multiplication by instances of type :py:class:
    >>> RP(F(1, 2), 2) * 2
    ...
    NotImplementedError: Only rational scalar left-multiplication is supported. This means the left-most operand must be an instance of `numbers.Rational`, i.e. an `int`, `fractions.Fraction` or `ContinuedFraction`.
-   >>> RP(F(1, 2), F(3, 4)) / RP(2, 3)
-   TypeError: unsupported operand type(s) for /: 'RationalPoint' and 'RationalPoint'
-
-This once again reflects an operational view of :math:`\mathbb{Q}^2` as a vector space over :math:`\mathbb{Q}`, where only a small number of basic and well defined binary and unary operations are supported. Users can implement their own custom subclasses based on :py:class:`~continuedfractions.rational_points.RationalPoint` with additional behaviour if so desired.
+   >>> RP(F(1, 2), F(4, 5)) / -2
+   RationalPoint(-1/4, -2/5)
 
 Note that in relation to addition, specifically, the :py:meth:`~continuedfractions.rational_points.RationalPoint.sum` class method can be used to add arbitary numbers of rational points given variadically:
 

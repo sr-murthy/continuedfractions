@@ -1314,7 +1314,7 @@ class RationalPoint(Dim2RationalCoordinates):
         
     @property
     def log_height(self) -> Decimal:
-        """:py:class:`~decimal.Decimal` : The natural logarithm of the (projective) height of the rational point as defined above.
+        """:py:class:`~decimal.Decimal` : The natural logarithm of the height of the rational point as defined above.
 
         The (natural) logarithm of the height of a rational point
         :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)` as given by:

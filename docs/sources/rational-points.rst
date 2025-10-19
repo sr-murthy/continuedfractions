@@ -440,14 +440,14 @@ It is also possible to compute the perpendicular (or orthogonal) distance :math:
    >>> RP(F(1, 2), F(1, 2)).perpendicular_distance(RP(0, 1))
    Decimal('0.7071067811865475244008443621')
 
-The method returns a :py:class:`~decimal.Decimal` value for this distance, which is computed using a formula for the length of the straight-line segment connecting :math:`P'` with line :math:`\ell_{OP}`, which is perpendicular to the latter, given by :math:`d^{\perp}\left(P, P'\right) = \frac{|\text{det}(P, P')|}{\|P\|_2}`, where :math:`|\text{det}(P, P')|` is the determinant :math:`|x'y - xy'|` and :math:`P = (x, y), P' = (x', y')`. Note that :math:`d^{\perp}\left(P, P'\right)` is undefined if :math:`P = (0, 0)`, and equal to :math:`0` if :math:`P` and :math:`P'` coincide or, more generally, if they are collinear with the origin.
+The method returns a :py:class:`~decimal.Decimal` value for the perpendicular distance between the point :math:`P` represented by the object on which the method is called, and another rational point :math:`P'`, which is the point represented by the argument to the method. This is computed using a formula for the length of the straight-line segment connecting :math:`P'` with line :math:`\ell_{OP}`, which is perpendicular to the latter, given by :math:`d^{\perp}\left(P, P'\right) = \frac{|\text{det}(P, P')|}{\|P\|_2}`, where :math:`\text{det}(P, P')` is the determinant :math:`|x'y - xy'|` and :math:`P = (x, y), P' = (x', y')`. Note that :math:`d^{\perp}\left(P, P'\right)` is not necessarily equal to :math:`d^{\perp}\left(P', P\right)`, is undefined if :math:`P = (0, 0)`, and equal to :math:`0` if :math:`P` and :math:`P'` coincide or, more generally, if they are collinear with the origin.
 
 .. _rational-points.rectilinear-metrics:
 
 Rectilinear Norm and Distance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The rectilinear (or :math:`\ell_1`) norm, also called the taxicab norm, :math:`\|P\|_1` of a rational point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` is defined as the sum of the coordinate lengths, :math:`\lvert\frac{a}{b}\rvert + \lvert\frac{b}{d}\rvert`, and represents the shortest path from the origin :math:`(0, 0)` to the point :math:`P` with steps which are straight-line segments parallel to the coordinate axes. This is implemented by the :py:attr:`~continuedfractions.rational_points.RationalPoint.rectilinear_norm` property. It is thus always a rational number, and is returned as a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` value.
+The rectilinear (or :math:`\ell_1`) norm, also called the taxicab norm, :math:`\|P\|_1` of a rational point :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` is defined as the sum of the coordinate lengths, :math:`\lvert\frac{a}{b}\rvert + \lvert\frac{b}{d}\rvert`, and represents the shortest path from the origin :math:`(0, 0)` to the point :math:`P` with steps which are straight-line segments parallel to one of the coordinate axes. This is implemented by the :py:attr:`~continuedfractions.rational_points.RationalPoint.rectilinear_norm` property. It is thus always a rational number, and is returned as a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` value.
 
 The rectilinear distance, also called the taxicab distance, :math:`\|P - P'\|_1` of two rational points :math:`P = \left(\frac{a}{c}, \frac{b}{d}\right)` and :math:`P' = \left(\frac{a'}{c'}, \frac{b'}{d'}\right)` is defined as the sum of the absolute values of the differences in coordinate lengths, :math:`\lvert \frac{ac' - a'c}{cc'} \rvert + \lvert \frac{bd' - b'd}{dd'} \rvert`, and represents the shortest path from the point :math:`P` to the point :math:`P'` with steps which are straight-line segments parallel to the coordinate axes. This is implemented by the :py:meth:`~continuedfractions.rational_points.RationalPoint.rectilinear_distance` method. It is also always a rational number, and is returned as a :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` value.
 
@@ -570,12 +570,12 @@ Some examples are given below:
    >>> RP(F(5, 13), F(12, 13)).log_height
    Decimal('2.564949357461536738611584951286204159259796142578125')
 
-.. _rational-points.lattice-points:
+.. _rational-points.integral-lattice-points:
 
-Lattice Points
---------------
+Integral Lattice Points
+-----------------------
 
-Lattice points, which form an Abelian subgroup of the rational points, and lattices aren't currently supported directly by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_integral_lattice_point` method does provide a way to filter for these:
+Integral lattice points, which form an Abelian subgroup of the rational points, aren't currently supported directly by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_integral_lattice_point` method does provide a way to filter for these:
 
 .. code:: python
 

@@ -1449,7 +1449,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\div \\lambda = \\left(\\frac{a}{\\lambda c}, \\frac{b}{\\lambda d} \\right), \\hspace{1em} \\lambda \\in \\mathbb{Q}\\setminus \\{0\\}
+           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\div \\lambda = \\frac{1}{\\lambda}\\cdot \\left(\\frac{a}{c}, \\frac{b}{d} \\right) = \\left(\\frac{a}{\\lambda c}, \\frac{b}{\\lambda d} \\right), \\hspace{1em} \\lambda \\in \\mathbb{Q}\\setminus \\{0\\}
 
         by scaling the point by :math:`\\frac{1}{\\lambda}`.
         """

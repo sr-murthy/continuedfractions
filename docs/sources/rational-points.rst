@@ -128,7 +128,7 @@ Some examples are given below.
    >>> assert P - Q == -Q + P
    # True
 
-Consistent with :math:`\mathbb{Q}^2` being an Abelian group the addition, subtraction, negation, and rational scalar mutiplication operations always produce :py:class:`~continuedfractions.rational_points.RationalPoint` instances. The zero element (the additive identity in :math:`\mathbb{Q}^2` and also the origin of :math:`\mathbb{Q}^2` as a vector space) is represented by the value ``RationalPoint(0, 0)``, as can easily be verified. In particular, addition and subtraction are limited to :py:class:`~continuedfractions.rational_points.RationalPoint` instances, and raise a :py:class:`TypeError` if any other types are attempted, while 
+Consistent with :math:`\mathbb{Q}^2` being an Abelian group the addition, subtraction, negation, and rational scalar mutiplication operations always produce :py:class:`~continuedfractions.rational_points.RationalPoint` instances. The zero element (the additive identity in :math:`\mathbb{Q}^2` and also the origin of :math:`\mathbb{Q}^2` as a vector space) is represented by the value ``RationalPoint(0, 0)``, as can easily be verified. In particular, addition and subtraction are limited to :py:class:`~continuedfractions.rational_points. RationalPoint` instances, and raise a :py:class:`TypeError` if any other types are attempted, while 
 multiplication is limited to left-multiplication by instances of type :py:class:`int`, :py:class:`~fractions.Fraction` or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`. Multiplication can take the form of scalar left-multiplication, and its inverse operation, (non-zero) scalar division (by non-zero instances of :py:class:`int`, :py:class:`~fractions.Fraction`, or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, is also supported:
 
 .. code:: python
@@ -139,6 +139,7 @@ multiplication is limited to left-multiplication by instances of type :py:class:
    ...
    NotImplementedError: Only rational scalar left-multiplication is supported. This means the left-most operand must be an instance of `numbers.Rational`, i.e. an `int`, `fractions.Fraction` or `ContinuedFraction`.
    >>> P, Q = RP(F(3, 5), F(4, 5)), RP(F(5, 13), F(12, 13)); P, Q
+   (RationalPoint(3/5, 4/5), RationalPoint(5/13, 12/13))
    >>> (P + Q) / 2
    RationalPoint(32/65, 56/65) 
 

@@ -53,8 +53,7 @@ class RationalTuple(tuple):
         """
         if args is None or any(not isinstance(arg, numbers.Rational) for arg in args):
             raise ValueError(
-                'One or more rational-valued arguments are required, i.e. '
-                'instances of `numbers.Rational`.'
+                'One or more rational-valued arguments are required.'
             )
 
         return super().__new__(cls, args)
@@ -91,7 +90,7 @@ class RationalTuple(tuple):
 
 
 class Dim2RationalCoordinates(RationalTuple):
-    """A thin :py:class:`tuple` wrapper for a sequence of two rational coordinates representing a point in :math:`\\mathbb{Q}^2`.
+    """A simple :py:class:`tuple` subtype for a sequence of two rational coordinates representing a point in :math:`\\mathbb{Q}^2`.
 
     Examples
     --------
@@ -105,19 +104,10 @@ class Dim2RationalCoordinates(RationalTuple):
     >>> c.y
     Fraction(3, 4)
     """
-    def __new__(cls, *args: numbers.Rational) -> Dim2RationalCoordinates:
+    def __new__(cls, x: numbers.Rational, y: numbers.Rational) -> Dim2RationalCoordinates:
         """Constructor.
         """
-        self = super().__new__(cls, *args)
-
-        if len(self) != 2:
-            raise ValueError(
-                'Exactly two rational values are required, i.e. instances of '
-                '`numbers.Rational`, specifically, `int`, `Fraction`, or '
-                '`ContinuedFraction`.'
-            )
-
-        return self
+        return super().__new__(cls, x, y)
 
     @property
     def x(self) -> numbers.Rational:
@@ -161,7 +151,7 @@ class Dim2RationalCoordinates(RationalTuple):
 
 
 class Dim3RationalCoordinates(RationalTuple):
-    """A thin :py:class:`tuple` wrapper for a sequence of three rational coordinates representing a point in :math:`\\mathbb{Q}^3`.
+    """A simple :py:class:`tuple` subtype for a sequence of three rational coordinates representing a point in :math:`\\mathbb{Q}^3`.
 
     Examples
     --------
@@ -177,19 +167,10 @@ class Dim3RationalCoordinates(RationalTuple):
     >>> c.z
     ContinuedFraction(4, 5)
     """
-    def __new__(cls, *args: numbers.Rational) -> Dim3RationalCoordinates:
+    def __new__(cls, x: numbers.Rational, y: numbers.Rational, z: numbers.Rational) -> Dim3RationalCoordinates:
         """Constructor.
         """
-        self = super().__new__(cls, *args)
-
-        if len(self) != 3:
-            raise ValueError(
-                'Exactly three rational values are required, i.e. instances of '
-                '`numbers.Rational`, specifically, `int`, `Fraction`, or '
-                '`ContinuedFraction`.'
-            )
-
-        return self
+        return super().__new__(cls, x, y, z)
 
     @property
     def x(self) -> numbers.Rational:
@@ -319,16 +300,10 @@ class RationalPoint(Dim2RationalCoordinates):
     >>> RationalPoint(-3, 4)
     RationalPoint(-3, 4)
     """
-    def __new__(cls, *args: int | Fraction | ContinuedFraction) -> RationalPoint:
-      if args is None or len(args) != 2 or any(not isinstance(x, (int, Fraction, ContinuedFraction)) for x in args):
-          raise ValueError(
-              'A `RationalPoint` object must be specified as a pair of '
-              'rational numbers `r` and `s`, each of type either integer '
-              '(`int`), or fraction (`Fraction` or `ContinuedFraction`).'
-          )
-
-      r, s = args
-      return super().__new__(cls, ContinuedFraction(r), ContinuedFraction(s))
+    def __new__(cls, x: int | Fraction | ContinuedFraction, y: int | Fraction | ContinuedFraction) -> RationalPoint:
+        """Constructor.
+        """
+        return super().__new__(cls, ContinuedFraction(x), ContinuedFraction(y))
 
     @classmethod
     def zero(cls) -> RationalPoint:
@@ -487,13 +462,13 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\frac{y_2 - y_1}{x_2 - x_1} \\stackrel{?}{=} \\frac{y_3 - y_2}{x_3 - x_2}, \\hskip{3em} x_2 \\neq x_1; x_3 \\neq x_2
+           \\frac{y_2 - y_1}{x_2 - x_1} = \\frac{y_3 - y_2}{x_3 - x_2}, \\hskip{3em} x_2 \\neq x_1; x_3 \\neq x_2
 
-        which can be rearranged as the (conditional) equation:
+        which can be rearranged as the equation:
 
         .. math::
 
-           \\ (y_3 - y_2)(x_2 - x_1) - (y_3 - y_2)(x_3 - x_2) \\stackrel{?}{=} 0
+           (y_3 - y_2)(x_2 - x_1) - (y_2 - y_1)(x_3 - x_2) = 0
 
         Note that the other rational points do not need to be given in any
         particular order.
@@ -887,7 +862,7 @@ class RationalPoint(Dim2RationalCoordinates):
         return (self.x * other.x) + (self.y * other.y)
 
     def det(self, other: RationalPoint, /) -> ContinuedFraction:
-        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The determinant of the :math:`2 \\times 2` matrix formed by this rational point and another.
+        """:py:class:`~continuedfractions.continuedfraction.ContinuedFraction` : The determinant of the :math:`2 \\times 2` matrix formed by the position vectors in :math:`\\mathbb{Q}^2` of this rational point and another.
 
         Computes the (rational) determinant:
 
@@ -1123,7 +1098,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
            d^{\\perp}\\left(P, P'\\right) = \\frac{\\lvert\\text{det}(P, P')\\rvert}{\\|P\\|_2}
 
-        where :math:`\\lvert\\text{det}(P, P')\\rvert` is the determinant
+        where :math:`\\text{det}(P, P')` is the determinant
         of :math:`P` and :math:`P'` as described in
         :py:meth:`~continuedfractions.rational_points.RationalPoint.det`.
 
@@ -1168,8 +1143,8 @@ class RationalPoint(Dim2RationalCoordinates):
         # Otherwise compute the value and return
         return abs(self.det(other)).as_decimal() / self.norm
 
-    def is_lattice_point(self) -> bool:
-        """:py:class:`bool` : Whether the rational point is a lattice point, i.e. has integer coordinates.
+    def is_integral_lattice_point(self) -> bool:
+        """:py:class:`bool` : Whether the rational point is an integral lattice point, i.e. has integer coordinates.
 
         Returns
         -------
@@ -1180,9 +1155,9 @@ class RationalPoint(Dim2RationalCoordinates):
 
         Examples
         --------
-        >>> RationalPoint(1, 2).is_lattice_point()
+        >>> RationalPoint(1, 2).is_integral_lattice_point()
         True
-        >>> RationalPoint(Fraction(1, 2), 2).is_lattice_point()
+        >>> RationalPoint(Fraction(1, 2), 2).is_integral_lattice_point()
         False
         """
         return all(coord.denominator == 1 for coord in self.coordinates)
@@ -1301,7 +1276,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
     @property
     def height(self) -> int:
-        """:py:class:`int` : The (projective) height of the rational point in the projective space :math:`\\mathbb{P}^2`.
+        """:py:class:`int` : The height of the rational point in the projective space :math:`\\mathbb{P}^2`.
 
         The height :math:`H\\left(\\frac{a}{c},\\frac{b}{d}\\right)` of a
         rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`
@@ -1339,7 +1314,7 @@ class RationalPoint(Dim2RationalCoordinates):
         
     @property
     def log_height(self) -> Decimal:
-        """:py:class:`~decimal.Decimal` : The natural logarithm of the (projective) height of the rational point as defined above.
+        """:py:class:`~decimal.Decimal` : The natural logarithm of the height of the rational point as defined above.
 
         The (natural) logarithm of the height of a rational point
         :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)` as given by:
@@ -1439,7 +1414,7 @@ class RationalPoint(Dim2RationalCoordinates):
         """:py:class:`~continuedfractions.rational_points.RationalPoint` : Component-wise scalar left-multiplication of a rational number by an integer or rational number.
 
         Implements component-wise left-multiplication of a rational point with
-        a rational scalar:
+        a rational scalar :math:`\\lambda`:
 
         .. math::
 
@@ -1465,6 +1440,29 @@ class RationalPoint(Dim2RationalCoordinates):
             return self.__class__(0, 0)
 
         return self.__class__(self.x * other, self.y * other)
+
+    def __truediv__(self, other: int | Fraction | ContinuedFraction):
+        """:py:class:`~continuedfractions.rational_points.RationalPoint` : Component-wise division by a non-zero rational scalar.
+
+        Implements component-wise division of a rational point by a non-zero
+        rational scalar :math:`\\lambda`:
+
+        .. math::
+
+           \\left(\\frac{a}{c}, \\frac{b}{d}\\right) \\div \\lambda = \\frac{1}{\\lambda}\\cdot \\left(\\frac{a}{c}, \\frac{b}{d} \\right) = \\left(\\frac{a}{\\lambda c}, \\frac{b}{\\lambda d} \\right), \\hspace{1em} \\lambda \\in \\mathbb{Q}\\setminus \\{0\\}
+
+        by scaling the point by :math:`\\frac{1}{\\lambda}`.
+        """
+        if not isinstance(other, (int, Fraction, ContinuedFraction)):
+            raise TypeError(                                                        # pragma: no cover
+                'The scalar must be a rational, specifically, an instance of '
+                '`int`, `fractions.Fraction` or `ContinuedFraction`.'
+            )
+
+        if other == 0:
+            raise ZeroDivisionError('Division by zero.')
+
+        return Fraction(1, other) * self
 
     def __abs__(self) -> Decimal:
         """:py:class:`~decimal.Decimal` : The absolute value of the rational point as the standard Euclidean norm.

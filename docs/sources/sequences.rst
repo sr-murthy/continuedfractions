@@ -12,19 +12,17 @@ These are described below in some detail.
 
 .. _sequences.rationals:
 
-Counting Rational Numbers
-=========================
+Enumerations
+============
 
-The set of rational numbers, denoted by :math:`\mathbb{Q}`, is the set of all reduced integer fractions :math:`\pm\frac{a}{b}` (fractions with the greatest common divisors divided out), including :math:`0 = \frac{0}{1}`, and is infinite but countable (enumerable). The :doc:`sequences <continuedfractions/sequences>` library contains the :py:meth:`~continuedfractions.sequences.rationals` function for counting the rationals in different ways, as described in more detail below.
-
-First, we note that to count the elements of any set involves putting all of them in a chosen order so that they occur without repetition. The larger the set the larger is the number of possible orderings (enumerations). As :math:`\mathbb{Q}` is countably infinite - its size or cardinality is denoted by :math:`\aleph_0` (pronounced "Aleph 0"), which is the same as that of the integers :math:`\mathbb{Z}` and the natural (counting) numbers :math:`\mathbb{N}` - there are infinitely many enumerations. A few of these, including some which are well-known and others perhaps less well-known, are described in some detail below. Also, note that, generally, in relation to enumeration, the negative rationals are ignored as they mirror the positive rationals, and all references to "rationals" are to the positive rationals (positive reduced integer fractions), unless otherwise stated. 
+The :py:meth:`~continuedfractions.sequences.rationals` function is an enumeration function for the rationals and generates them as :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` objects. There are several different kinds of enumerations, and these are described and depicted in some detail below.
 
 .. _sequences.rationals.cantor-diagonalisation:
 
 Cantor Diagonalisation
 ----------------------
 
-A well known way of counting the rationals is **Cantor diagonalisation** (or Cantor's diagonal method), which is graphically depicted below, with the red arrows indicating the counting direction:
+This is an enumeration described by the diagram below, where the red arrows describe the enumeration path:
 
 .. figure:: ../_static/rationals-cantor-diagonalisation.png
    :align: left

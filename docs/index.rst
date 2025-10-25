@@ -46,8 +46,8 @@ In terms of Python versions, any version from 3.10+ should be fine on any platfo
    sources/continued-fractions
    sources/rational-points
    sources/sequences
-   sources/contributing
    sources/api-reference
+   sources/contributing
 
 Indices and tables
 ==================

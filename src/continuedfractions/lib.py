@@ -768,11 +768,11 @@ def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> F
     return Fraction(a + k * c, b + k * d)
 
 
-#: A :py:func:`functools.partial` binding of :py:func:`mediant` for left-mediants.
+# A :py:func:`functools.partial` binding of :py:func:`mediant` for left-mediants.
 left_mediant = functools.partial(mediant, dir="left")
 
 
-#: A :py:func:`functools.partial` binding of :py:func:`mediant` for right-mediants.
+# A :py:func:`functools.partial` binding of :py:func:`mediant` for right-mediants.
 right_mediant = functools.partial(mediant, dir="right")
 
 

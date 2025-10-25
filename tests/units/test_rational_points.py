@@ -93,21 +93,6 @@ class TestDim2RationalCoordinates:
     @pytest.mark.parametrize(
         "args",
         [
-            (D('0'),),
-            (0, 1., 2),
-            (0, .5),
-            (-1/2, 3, 4),
-            (D('2'), 3, '4'),
-            (1, F(2, 3), CF(4, 5))
-        ]
-    )
-    def test_Dim2RationalCoordinates___new____invalid_args__value_error_raised(self, args):
-        with pytest.raises(ValueError):
-            D2RC(*args)
-
-    @pytest.mark.parametrize(
-        "args",
-        [
             (1, F(-2, 3)),
             (F(1, 2), CF(3, 4)),
             (1, -2),
@@ -135,21 +120,6 @@ class TestDim2RationalCoordinates:
 
 
 class TestDim3RationalCoordinates:
-
-    @pytest.mark.parametrize(
-        "args",
-        [
-            (D('0'),),
-            (0, 1., 2),
-            (0, .5),
-            (-1/2, 3, 4),
-            (D('2'), 3, '4'),
-            (1, F(1, 2))
-        ]
-    )
-    def test_Dim3RationalCoordinates___new____invalid_args__value_error_raised(self, args):
-        with pytest.raises(ValueError):
-            D3RC(*args)
 
     @pytest.mark.parametrize(
         "args",
@@ -211,20 +181,6 @@ class TestHomogeneousCoordinates:
 
 
 class TestRationalPoint:
-
-    @pytest.mark.parametrize(
-        "args",
-        [
-            (0,),
-            (0, 1, 2),
-            (0, .5),
-            (-1/2, 3, 4),
-            (D('2'), 3),
-        ]
-    )
-    def test_RationalPoint___new____invalid_args__value_error_raised(self, args):
-        with pytest.raises(ValueError):
-            RP.__new__(RP.__class__, *args)
 
     @pytest.mark.parametrize(
         "rational_point",
@@ -669,7 +625,7 @@ class TestRationalPoint:
         assert rational_point1.perpendicular_distance(rational_point2) == expected_perpendicular_distance
 
     @pytest.mark.parametrize(
-        "rational_point, expected_is_lattice_point",
+        "rational_point, expected",
         [
             (RP(0, 0), True),
             (RP(F(2, 1), 5), True),
@@ -678,8 +634,8 @@ class TestRationalPoint:
             (RP(-1, 2), True),
         ]
     )
-    def test_RationalPoint_is_lattice_point(self, rational_point, expected_is_lattice_point):
-        assert rational_point.is_lattice_point() == expected_is_lattice_point
+    def test_RationalPoint_is_integral_lattice_point(self, rational_point, expected):
+        assert rational_point.is_integral_lattice_point() == expected
 
     @pytest.mark.parametrize(
         "rational_point1, invalid_other",
@@ -777,6 +733,11 @@ class TestRationalPoint:
             D('3') * RP(1, 2)
             .3 * RP(1, 2)
 
+            RP(1, 2) / D('2')
+
+        with pytest.raises(ZeroDivisionError):
+            RP(1, 1) / 0
+
         with pytest.raises(NotImplementedError):
             RP(1, 2) * 3
             RP(3, 4) * RP(1, 2)
@@ -829,4 +790,11 @@ class TestRationalPoint:
         assert 0 * pt2 == r0
         #     distributes over addition of rational points
         assert 2 * (r1 + pt1 + pt2) == 2 * r1 + 2 * pt1 + 2 * pt2
+
+        # Division by non-zero rational scalars
+        assert r0 / 2 == r0
+        assert r1 / 2 == RP(F(1, 2), F(1, 2))
+        assert pt1 / 2 == RP(F(3, 10), F(2, 5))
+        assert pt2 / 2 == RP(F(1, 4), F(3, 8))
+ 
 

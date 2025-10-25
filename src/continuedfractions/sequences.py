@@ -415,8 +415,8 @@ def _coprime_integers(n: int, /) -> typing.Generator[int, None, None]:
     yield from (m for m in range(n, 0, -1) if math.gcd(m, n) == 1)
 
 
-KSRMTreeNode: typing.TypeAlias = tuple[int, int]        #: Custom type for nodes of the KSRM coprime pairs tree
-KSRMTreeBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generating branches of the KSRM coprime pairs tree
+KSRMTreeNode: typing.TypeAlias = tuple[int, int]        # Custom type for nodes of the KSRM coprime pairs tree
+KSRMTreeBranch: typing.TypeAlias = NamedCallableProxy   # Custom type for generating branches of the KSRM coprime pairs tree
 
 
 class KSRMTree:
@@ -895,10 +895,6 @@ class KSRMTree:
 
 def coprime_pairs(n: int, /) -> typing.Generator[tuple[int, int], None, None]:
     """Generates a sequence (tuple) of all pairs :math:`(a, b)` of (positive) coprime integers :math:`a, b` such that :math:`a, b <= n`.
-
-    This is a simple but fast implementation of the naive :math:`\\bigO(n^2)``
-    algorithm for finding pairs of coprime integers which do not exceed a given
-    positive integer :math:`n`.
 
     It does **not** call on the
     :py:meth:`~continuedfractions.sequences.KSRMTree.search` method, which is

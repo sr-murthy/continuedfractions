@@ -5,27 +5,29 @@ google-site-verification
 
 Contributors and contributions are welcome. Please read these guidelines first.
 
-## Git
+## Git `github`
 
 The project homepage is on [GitHub](https://github.com/sr-murthy/continuedfractions).
 
-Contributors can open pull requests from a fork targeting the parent `main` [branch](https://github.com/sr-murthy/continuedfractions/tree/main). But it may be a good first step to create an
-[issue](https://github.com/sr-murthy/continuedfractions/issues) or open a [discussion topic](https://github.com/sr-murthy/continuedfractions/discussions).
+Contributors can open pull requests from a fork targeting the parent `main`[branch](https://github.com/sr-murthy/continuedfractions/tree/main). But it may be a good first step to create an [issue](https://github.com/sr-murthy/continuedfractions/issues) or open
+a [discussion topic](https://github.com/sr-murthy/continuedfractions/discussions).
 
-## Repo
+## Repo `folder`
 
 You will need to clone the repository first. As there are no dependencies there isn't much to set up, so this should be pretty simple. The minimum recommended version of Python is 3.10 as some of the type hinting may be incompatible with earlier versions.
 
-## Dependencies & PDM
+## Dependencies `cubes`
 
-The package uses only standard libraries, and no third party libraries are used. See the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml) for more information.
+Only standard libraries are used. See the [project TOML](https://github.com/sr-murthy/continuedfractions/blob/main/pyproject.toml)
+for more information.
 
-Some development dependencies are specified in the `[tool.pdm.dev-dependencies]` section of the TOML including some
-`'test'` dependencies, such as [pytest](https://docs.pytest.org/en/8.0.x/) and [pytest-cov](https://pytest-cov.readthedocs.io/).
+Development dependencies are specified in the `[tool.pdm.dev-dependencies]` section of the TOML but these are purely indicative.
 
-[PDM](https://pdm-project.org/latest) is used to manage all dependencies and publish packages to PyPI. It is also used to automate certain tasks, such as running tests, as described in the section.
+[PDM](https://pdm-project.org/latest) is used to manage all dependencies. It is also used to automate certain tasks, such as running
+tests, as described in the section.
 
-There are no root-level `requirements*.txt` files - but only a single (default, version-controlled, cross-platform) [pdm.lock](https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock) lockfile, which defines metadata for all TOML-defined development dependencies, including the currently empty set of production dependencies, and their sub-dependencies etc. This can be used to install all development dependencies, including the project itself, in editable mode where available:
+There are no root-level `requirements*.txt` files - but only a single (default, version-controlled, cross-platform)
+[pdm.lock](https://github.com/sr-murthy/continuedfractions/blob/main/pdm.lock) lockfile. The lockfile is used with PDM to install all development dependencies, including the project itself, in editable mode where available:
 
 ``` shell
 pdm install -v --dev
@@ -56,34 +58,13 @@ pdm export -v -f requirements --dev -o docs/requirements.txt
 
 For more information on PDM lockfiles and installing requirements see the [PDM documentation](https://pdm-project.org/latest/).
 
-## Tests
+## Tests `microscope`
 
-Tests are defined in the `tests` folder, and should be run with [pytest](https://pytest-cov.readthedocs.io/en/latest/).
+Tests are defined in the `tests` folder and can be run directly or via the [Makefile](https://github.com/sr-murthy/continuedfractions/blob/main/Makefile), e.g. `make unitests` will run the unit tests. Linting can be performed with `make lint`, which requires [ruff](https://docs.astral.sh/ruff/) (specified in the dev. dependencies in the TOML). The doctests can be run with `make doctests`.
 
-There is a [Makefile](https://github.com/sr-murthy/continuedfractions/blob/main/Makefile) with different targets for linting (`lint`), running doctests (`doctests`) and unit tests (`unittests`):
+## Documentation `book`
 
-``` shell
-make lint
-make unittests
-make doctests
-```
-
-Unit tests can be run all at once using `make unittests` or individually using `pytest`, e.g. running the test class for the `~continuedfractions.lib.continued_fraction_rational` function:
-
-``` shell
-python -m pytest -sv tests/units/test_lib.py::TestContinuedFractionRational
-```
-
-The doctests are intended to test the docstring code examples, but can also be considered a form of acceptance tests. They can be run all at once using `make doctests`, or individually by library using `python -m doctest`, e.g. running all the doctests in
-`~continuedfractions.sequences` (from the repo root):
-
-``` shell
-PYTHONPATH=src python -m doctest -v src/continuedfractions/sequences.py
-```
-
-## Documentation
-
-[Project documentation](https://continuedfractions.readthedocs.io/en/latest/) is defined and built using [Sphinx](https://www.sphinx-doc.org/en/master/), and deployed to [Read The Docs](https://readthedocs.org). Currently, the building and deployment steps for documentation are manual, and not automated in a CI pipeline.
+[Project documentation](https://continuedfractions.readthedocs.io/en/latest/) is written and built using [Sphinx](https://www.sphinx-doc.org/en/master/), and deployed to [Read The Docs](https://readthedocs.org).
 
 The Sphinx documentation source pages and assets are contained in the `docs/` subfolder. The HTML pages can be built locally on any branch (from the project root) using:
 
@@ -105,14 +86,11 @@ or via [PDM](https://pdm.fming.dev/latest/):
 pdm install -v --dev --no-editable --no-self
 ```
 
-## CI
+## CI `circle-play`
 
 The main CI workflows are defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
 and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml).
-Currently, pipelines for all branches include a tests stage that includes Ruff linting, unit tests,and doctests, in that order.
 
-## Versioning and Releases
+## Versioning and Releases `upload`
 
-The latest release is `1.8.0`.
-
-There is currently no dedicated pipeline for releases - both [GitHub releases](https://github.com/sr-murthy/continuedfractions/releases) and [PyPI packages](https://pypi.org/project/continuedfractions) are published manually, but both have the same version tag.
+The latest release is `1.9.0`, and releases are created, tagged and published manually, not via a workflow.

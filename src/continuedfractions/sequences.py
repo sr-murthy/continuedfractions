@@ -415,8 +415,8 @@ def _coprime_integers(n: int, /) -> typing.Generator[int, None, None]:
     yield from (m for m in range(n, 0, -1) if math.gcd(m, n) == 1)
 
 
-KSRMTreeNode: typing.TypeAlias = tuple[int, int]        #: Custom type for nodes of the KSRM coprime pairs tree
-KSRMTreeBranch: typing.TypeAlias = NamedCallableProxy   #: Custom type for generating branches of the KSRM coprime pairs tree
+KSRMTreeNode: typing.TypeAlias = tuple[int, int]        # Custom type for nodes of the KSRM coprime pairs tree
+KSRMTreeBranch: typing.TypeAlias = NamedCallableProxy   # Custom type for generating branches of the KSRM coprime pairs tree
 
 
 class KSRMTree:

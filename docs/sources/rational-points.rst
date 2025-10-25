@@ -6,7 +6,7 @@
 Rational Points in the Plane
 ============================
 
-The :doc:`rational_points <continuedfractions/rational-points>` library provides a simple object-oriented interface for creating and operating on rational points in the ordinary :math:`xy`-plane, that is, points :math:`P = (x, y) \in \mathbb{R}^2` with rational coordinates :math:`x = \frac{a}{c}, y=\frac{b}{d} \in \mathbb{Q}` (where :math:`x,y` are necessarily reduced form fractions), which are thus elements of :math:`\mathbb{Q}^2`. One of the goals is to allow rational points to described by pairs of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`  objects, and compute with them in an intuitive, stateful way. There are also some features for computing certain arithmetical properties of rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`.
+The :doc:`rational_points <continuedfractions/rational-points>` library provides a simple, low-level, but rich object-oriented interface for creating and operating on rational points in the ordinary :math:`xy`-plane, that is, points :math:`P = (x, y) \in \mathbb{R}^2` with rational coordinates :math:`x = \frac{a}{c}, y=\frac{b}{d} \in \mathbb{Q}` (where :math:`x,y` are necessarily reduced form fractions), which are thus elements of :math:`\mathbb{Q}^2`. One of the goals is to allow rational points to be described by pairs of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`  objects, and compute with them in an intuitive, stateful way. There are also some features for computing certain arithmetical properties of rational points in the setting of projective space :math:`\mathbb{P}^2(\mathbb{Q})`.
 
 .. note::
 
@@ -79,7 +79,7 @@ Internally, the rational components of a :py:class:`~continuedfractions.rational
    >>> P.coordinates
    Dim2RationalCoordinates(3/5, 4/5)
 
-The :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates` object, which is a simple :py:class:`tuple`-based wrapper for 2D rational coordinates, which can also be used to access the rational point coordinates:
+The :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates` object, which is a simple custom :py:class:`tuple` type for 2D rational coordinates, which can also be used to access the rational point coordinates:
 
 .. code:: python
 
@@ -129,7 +129,7 @@ Some examples are given below.
    # True
 
 Consistent with :math:`\mathbb{Q}^2` being an Abelian group the addition, subtraction, negation, and rational scalar mutiplication operations always produce :py:class:`~continuedfractions.rational_points.RationalPoint` instances. The zero element (the additive identity in :math:`\mathbb{Q}^2` and also the origin of :math:`\mathbb{Q}^2` as a vector space) is represented by the value ``RationalPoint(0, 0)``, as can easily be verified. In particular, addition and subtraction are limited to :py:class:`~continuedfractions.rational_points.RationalPoint` instances, and raise a :py:class:`TypeError` if any other types are attempted, while 
-multiplication is limited to left-multiplication by instances of type :py:class:`int`, :py:class:`~fractions.Fraction` or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`. Only scalar left-multiplication is supported in order to respect the notational convention of scalar-vector multiplication, and scalar division (by non-zero instances of :py:class:`int`, :py:class:`~fractions.Fraction`, or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, is also supported (via scalar left-multiplication by the reciprocal of the scalar):
+multiplication is limited to left-multiplication by instances of type :py:class:`int`, :py:class:`~fractions.Fraction` or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`. Multiplication can take the form of scalar left-multiplication, and its inverse operation, (non-zero) scalar division (by non-zero instances of :py:class:`int`, :py:class:`~fractions.Fraction`, or :py:class:`~continuedfractions.continuedfraction.ContinuedFraction`, is also supported:
 
 .. code:: python
 
@@ -138,10 +138,11 @@ multiplication is limited to left-multiplication by instances of type :py:class:
    >>> RP(F(1, 2), 2) * 2
    ...
    NotImplementedError: Only rational scalar left-multiplication is supported. This means the left-most operand must be an instance of `numbers.Rational`, i.e. an `int`, `fractions.Fraction` or `ContinuedFraction`.
-   >>> RP(F(1, 2), F(4, 5)) / -2
-   RationalPoint(-1/4, -2/5)
+   >>> P, Q = RP(F(3, 5), F(4, 5)), RP(F(5, 13), F(12, 13)); P, Q
+   >>> (P + Q) / 2
+   RationalPoint(32/65, 56/65) 
 
-Note that in relation to addition, specifically, the :py:meth:`~continuedfractions.rational_points.RationalPoint.sum` class method can be used to add arbitary numbers of rational points given variadically:
+In relation to addition, specifically, there is a :py:meth:`~continuedfractions.rational_points.RationalPoint.sum` method, which supports variadic addition of rational points:
 
 .. code:: python
 
@@ -212,7 +213,7 @@ The :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with_o
    >>> RP(1, 2).collinear_with_origin(RP(2, 4), RP(F(-1, 2), -1), RP(1000, -1000))
    False
 
-The basic collinearity test, which uses the simple gradient method, relies on the transitivity of collinearity on triples of plane points, so that if a point :math:`P` is collinear with points :math:`Q, R, S` then it is collinear with the two pairs :math:`Q, R` and :math:`R, S`: if the latter condition isn't met then :math:`P, Q, R, S` are not colllinear.
+The basic collinearity test, which uses the simple gradient method, relies on the transitivity of collinearity on triples of plane points, so that if a point :math:`P` is collinear with points :math:`Q, R, S` then it is collinear with the pairs :math:`Q, R` and :math:`R, S`: if the either of the latter conditions isn't met then :math:`P, Q, R, S` cannot be collinear.
 
 .. _rational-points.angles:
 
@@ -573,7 +574,7 @@ Some examples are given below:
 Integral Lattice Points
 -----------------------
 
-Integral lattice points, which form an Abelian subgroup of the rational points, aren't currently supported directly by any class structures, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_integral_lattice_point` method does provide a way to filter for these:
+Integral lattice points, which form an Abelian subgroup of the rational points, aren't currently supported directly by any specific features, but the :py:meth:`~continuedfractions.rational_points.RationalPoint.is_integral_lattice_point` method does provide a way to filter for these:
 
 .. code:: python
 
@@ -582,7 +583,7 @@ Integral lattice points, which form an Abelian subgroup of the rational points, 
    >>> RP(F(1, 2), F(3, 4)).is_integral_lattice_point()
    False
 
-which may be useful when filtering a large collection of :py:class:`~continuedfractions.rational_points.RationalPoint` instances for such points.
+which may be useful when working with a large collection of :py:class:`~continuedfractions.rational_points.RationalPoint` instances.
 
 Support for representing and operating on rational and integral lattices and lattice points may be added in the future. Contributions would be welcome.
 

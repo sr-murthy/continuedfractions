@@ -468,7 +468,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
         .. math::
 
-           \\ (y_3 - y_2)(x_2 - x_1) - (y_2 - y_1)(x_3 - x_2) = 0
+           (y_3 - y_2)(x_2 - x_1) - (y_2 - y_1)(x_3 - x_2) = 0
 
         Note that the other rational points do not need to be given in any
         particular order.
@@ -1098,7 +1098,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
            d^{\\perp}\\left(P, P'\\right) = \\frac{\\lvert\\text{det}(P, P')\\rvert}{\\|P\\|_2}
 
-        where :math:`\\lvert\\text{det}(P, P')\\rvert` is the determinant
+        where :math:`\\text{det}(P, P')` is the determinant
         of :math:`P` and :math:`P'` as described in
         :py:meth:`~continuedfractions.rational_points.RationalPoint.det`.
 
@@ -1276,7 +1276,7 @@ class RationalPoint(Dim2RationalCoordinates):
 
     @property
     def height(self) -> int:
-        """:py:class:`int` : The (projective) height of the rational point in the projective space :math:`\\mathbb{P}^2`.
+        """:py:class:`int` : The height of the rational point in the projective space :math:`\\mathbb{P}^2`.
 
         The height :math:`H\\left(\\frac{a}{c},\\frac{b}{d}\\right)` of a
         rational point :math:`P = \\left(\\frac{a}{c},\\frac{b}{d}\\right)`

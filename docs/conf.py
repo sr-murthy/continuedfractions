@@ -19,10 +19,6 @@ from datetime import datetime
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 # -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.dirname(os.path.abspath('.')))
@@ -56,13 +52,13 @@ master_doc = 'index'
 # Native docs language
 language = 'en'
 
-# Minimum required version of Sphinx
+# Minimum required version of Sphinx - not required ATM
 #needs_sphinx >= '7.2.5'
 
 # Set primary domain to null
 primary_domain = None
 
-# Global substitutions
+# Global substitutions - not all used
 rst_epilog = f"""
 .. |author|                 replace:: **{author}**
 .. |copyright|              replace:: **{copyright}**
@@ -77,9 +73,8 @@ rst_epilog = f"""
 # Publish author(s)
 show_authors = True
 
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
+# Sphinx extensions - not all are used or required, but still listed
+# in case they may be required at some point.
 extensions = ['jupyter_sphinx',
               'matplotlib.sphinxext.plot_directive',
               'myst_parser',
@@ -147,7 +142,6 @@ source_encoding = 'utf-8'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build',
                     'Thumbs.db',
                     '.DS_Store',]
@@ -155,7 +149,7 @@ exclude_patterns = ['_build',
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-# A list of prefixes that are ignored when creating the module index. (new in Sphinx 0.6)
+# A list of prefixes that are ignored when creating the module index.
 modindex_common_prefix = ["continuedfractions."]
 
 doctest_global_setup = "import continuedfractions"
@@ -184,7 +178,7 @@ html_context = {
     'release_target': f'https://github.com/sr-murthy/continuedfractions/releases/tag/{release}'
 }
 
-# -- Options for HTML output -------------------------------------------------
+# -- Options for HTML output ----------------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 # General (non-theme) HTML output options
@@ -194,14 +188,14 @@ html_sidebars = {
     "sources/continued-fractions": [],
     "sources/sequences": [],
     "sources/rational-points": [],
-    "sources/contributing": [],
     "sources/continuedfractions/*": ["sidebar-nav-bs"],
+    "sources/contributing": [],
 }
 
 # HTML theme options
 html_theme = 'pydata_sphinx_theme'
 html_theme_options = {
-    'collapse_navigation': True,
+    'collapse_navigation': False,
     'footer_end': ['author'],
     'footer_start': ['copyright', 'sphinx-version', 'theme-version'],
     'icon_links': [

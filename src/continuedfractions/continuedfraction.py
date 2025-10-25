@@ -973,7 +973,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def height(self) -> int:
-        """:py:class:`int` : The (projective) height of this rational number.
+        """:py:class:`int` : The height of this rational number.
 
         Returns
         -------

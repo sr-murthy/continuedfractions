@@ -93,4 +93,4 @@ and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/bl
 
 ## Versioning and Releases `upload`
 
-The latest release is `1.9.0`, and releases are created, tagged and published manually, not via a workflow.
+The latest release is `1.9.1`, and releases are created, tagged and published manually, not via a workflow.

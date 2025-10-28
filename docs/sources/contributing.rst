@@ -113,4 +113,4 @@ The main CI workflows are defined in the `CI YML <https://github.com/sr-murthy/c
 Versioning and Releases :fas:`upload`
 =====================================
 
-The latest release is ``1.9.0``, and releases are created, tagged and published manually, not via a workflow.
+The latest release is ``1.9.1``, and releases are created, tagged and published manually, not via a workflow.

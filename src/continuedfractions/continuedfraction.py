@@ -15,7 +15,6 @@ import functools
 import math
 import statistics
 import typing
-import warnings
 
 from decimal import Decimal
 from fractions import Fraction
@@ -27,7 +26,7 @@ from continuedfractions.lib import (
     continued_fraction_rational,
     convergent,
     convergents,
-    fraction_from_elements,
+    fraction_from_coefficients,
     left_mediant,
     mediant,
     remainder,
@@ -65,31 +64,6 @@ class ContinuedFraction(Fraction):
       determined in the superclass by the
       :py:data:`fractions._RATIONAL_FORMAT` test
     """
-    @property
-    def elements(self) -> typing.Generator[int, None, None]:
-        """:py:class:`typing.Generator`: A (deprecated) generator of the (ordered) sequence of elements/coefficients of the continued fraction.
-
-        .. warning::
-
-           This property is now deprecated and will be removed in future
-           releases. Please use the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.coefficients`
-           property instead.
-
-        Examples
-        --------
-        >>> cf = ContinuedFraction('.12345')
-        >>> cf
-        ContinuedFraction(2469, 20000)
-        >>> tuple(cf.elements)
-        (0, 8, 9, 1, 21, 1, 1, 5)
-        """
-        warnings.warn(
-            'The `elements` property is deprecated and will be removed in '
-            'future releases. Please use the `coefficients` property, which '
-            'is equivalent.',
-        )
-        yield from continued_fraction_rational(self)
-
     @property
     def coefficients(self) -> typing.Generator[int, None, None]:
         """:py:class:`typing.Generator`: A generator of the (ordered) sequence of coefficients of the continued fraction.
@@ -135,7 +109,7 @@ class ContinuedFraction(Fraction):
 
     @property
     def khinchin_mean(self) -> decimal.Decimal | None:
-        """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all its elements after the 1st.
+        """:py:class:`decimal.Decimal` or :py:data:`None`: The Khinchin mean of the continued fraction, which is defined as the geometric mean of all the tail coefficients.
 
         We define the Khinchin mean :math:`K_n` of a (simple) continued
         fraction :math:`[a_0; a_1, a_2, \\ldots, a_n]` as:
@@ -179,95 +153,6 @@ class ContinuedFraction(Fraction):
             return Decimal(statistics.geometric_mean(coeffs[1:]))
 
     @classmethod
-    def from_elements(cls, *elements: int) -> ContinuedFraction:
-        """Returns a :py:class:`ContinuedFraction` instance from a sequence of (integer) elements of a (finite) simple continued fraction.
-
-        Invalid elements will trigger a :py:class:`ValueError`.
-
-        Parameters
-        ----------
-        *elements : int
-            An ordered sequence of integer elements of a (finite) simple
-            continued fraction.
-
-        Returns
-        -------
-        ContinuedFraction
-            A new and fully initialised instance of :py:class:`ContinuedFraction` with
-            the given element sequence.
-
-        Raises
-        ------
-        ValueError
-            If any elements are not integers, or any elements after the 1st
-            are not positive.
-
-        Examples
-        --------
-        Constructing a continued fraction for the rational :math:`\\frac{649}{200}` using
-        the element sequence :math:`3, 4, 12, 4`.
-
-        >>> c1 = ContinuedFraction.from_elements(3, 4, 12, 4)
-        >>> c1
-        ContinuedFraction(649, 200)
-
-        Constructing the continued fraction of the (multiplicative) inverse :math:`\\frac{200}{649}`
-        using the element sequence :math:`0, 3, 4, 12, 4`.
-
-        >>> c2 = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
-        >>> c2
-        ContinuedFraction(200, 649)
-
-        Validation for elements containing non-integers or negative integers.
-
-        >>> ContinuedFraction.from_elements('0', 1)
-        Traceback (most recent call last):
-        ...
-        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
-        >>> ContinuedFraction.from_elements(0, 1, 2.5)
-        Traceback (most recent call last):
-        ...
-        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
-        >>> ContinuedFraction.from_elements(1, 0)
-        Traceback (most recent call last):
-        ...
-        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
-        >>> ContinuedFraction.from_elements(1, -1)
-        Traceback (most recent call last):
-        ...
-        ValueError: Continued fraction elements must be integers, and all elements after the 1st must be positive
-
-        """
-        # Create a new ``ContinuedFraction`` instance from the given elements
-        # and initialise with elements only - no need to initialise via
-        # ``__init__``
-        warnings.warn(
-            'This method is deprecated and will be removed in future '
-            'releases. Please use the `from_coefficients` method instead.'
-        )
-        if any(not isinstance(e, int) or (e <= 0 and i > 0) for i, e in enumerate(elements)):
-            raise ValueError(
-                "Continued fraction elements must be integers, and all "
-                "elements after the 1st must be positive"
-            )
-
-        # A step to ensure uniqueness of the simple form of the continued
-        # fraction - if the last element is ``1`` it can be "removed" by
-        # adding it to the second last element, thereby shortening the
-        # sequence by one element. The resulting simple continued
-        # fraction becomes unique for the number that is represented.
-        if len(elements) > 1 and elements[-1] == 1:
-            elements = elements[:-2] + (elements[-2] + 1,)
-
-        # Call the superclass constructor with the ``fractions.Fraction``
-        # instance returned by ``lib.fraction_from_elements`` - this will
-        # be the highest-order convergent of the simple continued
-        # fraction represented by the given sequence of elements
-        self = cls(fraction_from_elements(*elements))
-
-        return self
-
-    @classmethod
     def from_coefficients(cls, *coeffs: int) -> ContinuedFraction:
         """Returns a :py:class:`ContinuedFraction` instance from a sequence of (integer) coefficients of a (finite) simple continued fraction.
 
@@ -296,14 +181,14 @@ class ContinuedFraction(Fraction):
         Constructing a continued fraction for the rational :math:`\\frac{649}{200}` using
         the sequence of coefficients :math:`3, 4, 12, 4`.
 
-        >>> c1 = ContinuedFraction.from_elements(3, 4, 12, 4)
+        >>> c1 = ContinuedFraction.from_coefficients(3, 4, 12, 4)
         >>> c1
         ContinuedFraction(649, 200)
 
         Constructing the continued fraction of the (multiplicative) inverse :math:`\\frac{200}{649}`
         using the sequence of coefficients :math:`0, 3, 4, 12, 4`.
 
-        >>> c2 = ContinuedFraction.from_elements(0, 3, 4, 12, 4)
+        >>> c2 = ContinuedFraction.from_coefficients(0, 3, 4, 12, 4)
         >>> c2
         ContinuedFraction(200, 649)
 
@@ -326,13 +211,7 @@ class ContinuedFraction(Fraction):
         ...
         ValueError: Continued fraction coefficients must be integers, and all coefficients from the 1st onwards must be positive.
         """
-        # Create a new ``ContinuedFraction`` instance from the given elements
-        # and initialise with elements only - no need to initialise via
-        # ``__init__``
-        warnings.warn(
-            'This method is deprecated and will be removed in future '
-            'releases. Please use the `from_coefficients` method instead.'
-        )
+        # Create a new ``ContinuedFraction`` instance from the given coefficients
         if any(not isinstance(coeff, int) or (coeff <= 0 and i > 0) for i, coeff in enumerate(coeffs)):
             raise ValueError(
                 "Continued fraction coefficients must be integers, and all "
@@ -348,10 +227,10 @@ class ContinuedFraction(Fraction):
             coeffs = coeffs[:-2] + (coeffs[-2] + 1,)
 
         # Call the superclass constructor with the ``fractions.Fraction``
-        # instance returned by ``lib.fraction_from_elements`` - this will
+        # instance returned by ``lib.fraction_from_coefficients`` - this will
         # be the highest-order convergent of the simple continued
-        # fraction represented by the given sequence of elements
-        self = cls(fraction_from_elements(*coeffs))
+        # fraction represented by the given sequence of coefficients
+        self = cls(fraction_from_coefficients(*coeffs))
 
         return self
 
@@ -429,7 +308,7 @@ class ContinuedFraction(Fraction):
         if len(coeffs) > 1 and coeffs[-1] == 1:
             coeffs = coeffs[:-2] + (coeffs[-2] + 1,)
 
-        fraction = fraction_from_elements(*coeffs)
+        fraction = fraction_from_coefficients(*coeffs)
         self._numerator, self._denominator = fraction.as_integer_ratio()
 
     def truncate(self, *tail_coeffs: int) -> None:
@@ -517,7 +396,7 @@ class ContinuedFraction(Fraction):
         if len(coeffs) > 1 and coeffs[-1] == 1:
             coeffs = coeffs[:-2] + (coeffs[-2] + 1,)
 
-        fraction = fraction_from_elements(*coeffs)
+        fraction = fraction_from_coefficients(*coeffs)
         self._numerator, self._denominator = fraction.as_integer_ratio()
 
     def as_decimal(self) -> Decimal:
@@ -821,12 +700,12 @@ class ContinuedFraction(Fraction):
         >>> tuple(ContinuedFraction(-415, 93).remainders)
         ((4, ContinuedFraction(7, 1)), (3, ContinuedFraction(43, 7)), (2, ContinuedFraction(50, 43)), (1, ContinuedFraction(93, 50)), (0, ContinuedFraction(-415, 93)))
         """
-        elements = tuple(self.coefficients)
-        order = len(elements[1:])
+        coeffs = tuple(self.coefficients)
+        order = len(coeffs[1:])
 
         yield from zip(
             reversed(range(order + 1)),
-            map(self.__class__, remainders(*elements))
+            map(self.__class__, remainders(*coeffs))
         )
 
     @functools.cache

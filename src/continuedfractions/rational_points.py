@@ -299,10 +299,21 @@ class RationalPoint(Dim2RationalCoordinates):
     RationalPoint(3/5, 4)
     >>> RationalPoint(-3, 4)
     RationalPoint(-3, 4)
+    >>> RationalPoint(2, .5)
+    Traceback (most recent call last):
+    ...
+    ValueError: A `RationalPoint` object must be specified as a pair of rational numbers `r` and `s`, each of type either integer (`int`), or fraction (`Fraction` or `ContinuedFraction`).
     """
     def __new__(cls, x: int | Fraction | ContinuedFraction, y: int | Fraction | ContinuedFraction) -> RationalPoint:
         """Constructor.
         """
+        if not isinstance(x, (int, Fraction, ContinuedFraction)) or not isinstance(y, (int, Fraction, ContinuedFraction)):
+            raise ValueError(
+                'A `RationalPoint` object must be specified as a pair of '
+                'rational numbers `r` and `s`, each of type either integer '
+                '(`int`), or fraction (`Fraction` or `ContinuedFraction`).'
+            )
+
         return super().__new__(cls, ContinuedFraction(x), ContinuedFraction(y))
 
     @classmethod

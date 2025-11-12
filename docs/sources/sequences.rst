@@ -213,7 +213,7 @@ The enumeration can be performed with the :py:func:`~continuedfractions.sequence
    >>> rats = rationals(enumeration="rectilinear transposed")
    >>> for i, r in enumerate(rats, start=1):
    ...     print(r, end=', ')
-   ...     if i == 20:
+   ...     if i == 19:
    ...         print(next(rats))
    ...         break
    ... 
@@ -348,14 +348,12 @@ Here are some examples of constructing left-mediants:
    >>> cf1.left_mediant(cf2, k=100)
    ContinuedFraction(103, 205)
    >>> cf1.left_mediant(cf2, k=100).as_decimal()
-   Decimal('0.5024390243902439024390243902439024390243902439024390243902439024390243902439024390243902439024390244')
+   Decimal('0.5024390243902439024390243902')
 
-and right-mediants:
+and right-mediants (with the same two fractions `cf1` and `cf2` as above):
 
 .. code:: python
 
-   >>> cf1 = ContinuedFraction('1/2')
-   >>> cf2 = ContinuedFraction(3, 5)
    # The default `k = 1` gives you the common, simple mediant of the two rationals
    >>> cf1.right_mediant(cf2)
    ContinuedFraction(4, 7)
@@ -391,12 +389,10 @@ thus converging to :math:`\frac{c}{d}`:
 
    \lim_{k \to \infty} \frac{a + kc}{b + kd} = \lim_{k \to \infty} \frac{\frac{a}{k} + c}{\frac{b}{k} + d} = \frac{c}{d}
 
-We can see this with the ``ContinuedFraction(1, 2)`` and ``ContinuedFraction(3, 5)`` instances used in the examples above, starting with the left-mediants:
+We can see this using the same two fractions `cf1` and `cf2` as above, starting with the left-mediants:
 
 .. code:: python
 
-   >>> cf1 = ContinuedFraction(1, 2)
-   >>> cf2 = ContinuedFraction(3, 5)
    >>> cf1.left_mediant(cf2)
    ContinuedFraction(4, 7)
    >>> cf1.left_mediant(cf2).as_decimal()
@@ -410,12 +406,10 @@ We can see this with the ``ContinuedFraction(1, 2)`` and ``ContinuedFraction(3, 
    >>> cf1.left_mediant(cf2, k=10 ** 6).as_decimal()
    Decimal('0.5000002499993750015624960938')
 
-And then the right-mediants:
+and then the right-mediants:
 
 .. code:: python
 
-   >>> cf1 = ContinuedFraction(1, 2)
-   >>> cf2 = ContinuedFraction(3, 5)
    >>> cf1.right_mediant(cf2).as_decimal()
    Decimal('0.5714285714285714285714285714')
    >>> cf1.right_mediant(cf2, k=10).as_decimal()
@@ -449,24 +443,24 @@ The :py:func:`~continuedfractions.sequences.coprime_pairs` function is a simple 
 
 .. code:: python
 
-   >>> tuple(coprime_integers(5))
+   >>> tuple(coprime_pairs(5))
    (1, 1), (2, 1), (3, 1), (3, 2), (4, 1), (4, 3), (5, 1), (5, 2), (5, 3), (5, 4)
 
 It can be verified that the number of coprime pairs returned by the function here, namely, :math:`10`, is indeed equal to :math:`\phi(1) + \phi(2) + \phi(3) + \phi(4) + \phi(5) = 10`, where :math:`\phi(n)` is Euler's totient function that counts the number of (positive) integers coprime to a given integer :math:`n \geq 1`, and :math:`\phi(1) = 1`. The function that counts the value of :math:`\sum_{k=1}^n \phi(k)` for a given :math:`n` is the summatory totient function :math:`\Phi(n)`, and the number of coprime pairs returned by :py:func:`~continuedfractions.sequences.coprime_pairs` is equal to :math:`\Phi(n)`. Here are a few examples for :math:`n = 1,\ldots,5`:
 
 .. code:: python
 
-   >>> sum(1 for _ in coprime_integers(1))
+   >>> sum(1 for _ in coprime_pairs(1))
    1
-   >>> sum(1 for _ in coprime_integers(2))
+   >>> sum(1 for _ in coprime_pairs(2))
    2
-   >>> sum(1 for _ in coprime_integers(3))
+   >>> sum(1 for _ in coprime_pairs(3))
    4
-   >>> sum(1 for _ in coprime_integers(4))
+   >>> sum(1 for _ in coprime_pairs(4))
    6
-   >>> sum(1 for _ in coprime_integers(5))
+   >>> sum(1 for _ in coprime_pairs(5))
    10
-   >>> sum(1 for _ in coprime_integers(10))
+   >>> sum(1 for _ in coprime_pairs(10))
    32
 
 .. _sequences.ksrm-trees:
@@ -551,7 +545,6 @@ The :py:class:`~continuedfractions.sequences.KSRMTree` class contains one main s
 
 .. code:: python
 
-   >>> tree = KSRMTree()
    >>> list(tree.search(1))
    [(1, 1)]
    >>> list(tree.search(2))
@@ -571,7 +564,6 @@ Some examples are given below.
 
 .. code:: python
 
-   >>> tree = KSRMTree()
    >>> list(tree.search_root(5, (2, 1)))
    [(2, 1), (3, 2), (4, 3), (5, 4), (5, 2), (4, 1)]
    >>> assert tree.roots[0] == (2, 1)

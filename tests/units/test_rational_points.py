@@ -183,6 +183,19 @@ class TestHomogeneousCoordinates:
 class TestRationalPoint:
 
     @pytest.mark.parametrize(
+        "args",
+        [
+            (1, 0.5),
+            (1, D('0.5'),),
+            (0.5, 1),
+            (D('0.5'), 1),
+        ]
+    )
+    def test_RationalPoint___new____invalid_args__value_error_raised(self, args):
+        with pytest.raises(ValueError):
+            RP(*args)
+
+    @pytest.mark.parametrize(
         "rational_point",
         [
             (RP(1, 2),),

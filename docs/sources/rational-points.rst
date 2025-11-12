@@ -26,19 +26,15 @@ Some examples are given below:
 .. code:: python
 
    >>> from fractions import Fraction as F
-   >>> from continuedfractions import ContinuedFraction as CF
+   >>> from continuedfractions.continuedfraction import ContinuedFraction as CF
    >>> from continuedfractions.rational_points import RationalPoint as RP
-   >>> O = RP(0, 0)
-   >>> O
+   >>> O = RP(0, 0); O
    RationalPoint(0, 0)
-   >>> I = RP(1, 1)
-   >>> I
+   >>> I = RP(1, 1); I
    RationalPoint(1, 1)
-   >>> P = RP(F(3, 5), F(-4, 5))
-   >>> P
+   >>> P = RP(F(3, 5), F(-4, 5)); P
    RationalPoint(3/5, -4/5)
-   >>> Q = RP(1, CF(2, 3))
-   >>> Q
+   >>> Q = RP(1, CF(2, 3)); Q
    RationalPoint(1, 2/3)
 
 It is not possible to create objects with non-rational values, or with fewer or more than 2 values:
@@ -47,10 +43,10 @@ It is not possible to create objects with non-rational values, or with fewer or 
 
    >>> RP(1)
    ...
-   ValueError: A `RationalPoint` object must be specified as a pair of rational numbers `r` and `s`, each of type either integer (`int`), or fraction (`Fraction` or `ContinuedFraction`).
+   TypeError: RationalPoint.__new__() missing 1 required positional argument: 'y'
    >>> RP(1, 2, 3)
    ...
-   ValueError: A `RationalPoint` object must be specified as a pair of rational numbers `r` and `s`, each of type either integer (`int`), or fraction (`Fraction` or `ContinuedFraction`).
+   TypeError: RationalPoint.__new__() takes 3 positional arguments but 4 were given
    >>> RP(F(1, 3), .5)
    ...
    ValueError: A `RationalPoint` object must be specified as a pair of rational numbers `r` and `s`, each of type either integer (`int`), or fraction (`Fraction` or `ContinuedFraction`).
@@ -76,14 +72,11 @@ Internally, the rational components of a :py:class:`~continuedfractions.rational
    ContinuedFraction(3, 5)
    >>> P.y
    ContinuedFraction(4, 5)
-   >>> P.coordinates
-   Dim2RationalCoordinates(3/5, 4/5)
 
 The :py:attr:`~continuedfractions.rational_points.RationalPoint.coordinates` property returns a :py:class:`~continuedfractions.rational_points.Dim2RationalCoordinates` object, which is a simple custom :py:class:`tuple` type for 2D rational coordinates, which can also be used to access the rational point coordinates:
 
 .. code:: python
 
-   >>> P = RP(F(3, 5), F(4, 5))
    >>> P.coordinates.x
    ContinuedFraction(3, 5)
    >>> P.coordinates.y
@@ -147,7 +140,7 @@ In relation to addition, specifically, there is a :py:meth:`~continuedfractions.
 
 .. code:: python
 
-   >>> RP.sum(RP(0, 0), RP(1, F(-1, 2), RP(F(3, 5, F(4, 5)), RP(F(5, 12), 6))))
+   >>> RP.sum(RP(0, 0), RP(1, F(-1, 2)), RP(F(3, 5), F(4, 5)), RP(F(5, 12), 6))
    RationalPoint(121/60, 63/10)
 
 This should be the preferred method as the Python built-in :py:func:`sum` function sets an internal :py:class:`int` start value of ``0``, which causes it to fail on :py:class:`~continuedfractions.rational_points.RationalPoint` instances.
@@ -185,7 +178,7 @@ The second rational point is optional, but if one is provided it must be a :py:c
 
 .. code:: python
 
-   >>> RP(1, 1).gradient(1, 0)
+   >>> RP(1, 1).gradient(other=RP(1, 0))
    ...
    ValueError: If a second rational point is provided, it must be a `RationalPoint` instance, and non-vertical with respect to this point.
 
@@ -209,7 +202,7 @@ The :py:meth:`~continuedfractions.rational_points.RationalPoint.collinear_with_o
 
 .. code:: python
 
-   >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, 1000)))
+   >>> RP(1, 1).collinear_with_origin(RP(2, 2), RP(F(-1, 2), F(-1, 2)), RP(1000, 1000))
    True
    >>> RP(1, 2).collinear_with_origin(RP(2, 4), RP(F(-1, 2), -1), RP(1000, -1000))
    False
@@ -240,9 +233,9 @@ Below are examples of the second kind (angles between position vectors of two ra
 .. code:: python
 
    # Radian angles between the position vectors of two rational points
-   >>> RP(1, 1).angle(other=RP(0, 1)).angle()
+   >>> RP(1, 1).angle(other=RP(0, 1))
    Decimal('0.78539816339744827899949086713604629039764404296875')
-   >>> RP(1, 1).angle(other=RP(-1, 1)).angle()
+   >>> RP(1, 1).angle(other=RP(-1, 1))
    Decimal('1.5707963267948965579989817342720925807952880859375')
 
 where the implementation is based on :py:func:`math.acos` and uses the standard formula :math:`\text{cos }\alpha = \frac{P \cdot P'}{\|P\\|\|P'\|}` for the angle :math:`\alpha` between the position vectors of two plane points :math:`P, P'`.
@@ -339,7 +332,7 @@ Translation in coordinates is available via :py:meth:`~continuedfractions.ration
 .. code:: python
 
    >>> RP(F(-1, 2), F(3, 4)).translate(x_by=F(-1, 4), y_by=F(1, 2))
-   RationalPoint(-3/4, 7/4)
+   RationalPoint(-3/4, 5/4)
    >>> RP(1, 2).translate()
    RationalPoint(1, 2)
 

@@ -406,7 +406,7 @@ The **order** of a continued fraction is defined to be number of its tail coeffi
 .. code:: python
 
    >>> cf.order
-   3
+   1
 
 All :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances will have a finite sequence of coefficients and thus a finite order. The integers represent the special case of zero-order continued fractions.
 
@@ -653,7 +653,7 @@ The :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` class pr
 
    >>> dict(ContinuedFraction(649, 200).even_order_convergents)
    {0: ContinuedFraction(3, 1), 2: ContinuedFraction(159, 49)}
-   >>> dict(ContinuedFraction(649, 200).odd_convergents)
+   >>> dict(ContinuedFraction(649, 200).odd_order_convergents)
    {1: ContinuedFraction(13, 4), 3: ContinuedFraction(649, 200)}
 
 As with the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.convergents` property the result is a generator of enumerated sequence of :py:class:`~continuedfractions.continuedfraction.ContinuedFraction` instances, where the enumeration is by convergent index.
@@ -929,7 +929,7 @@ Analogous to :ref:`rational points in the plane <rational-points.homogeneous-coo
 
 In this setting, the (projective) height :math:`H(P)` of :math:`P = \frac{a}{c}` is defined as :math:`\text{max}(|a|, |c|)`, and the logarithmic height of :math:`P` is defined as :math:`\text{log}\left(H(P)\right) = \text{log}\left(\text{max}(|a|, |c|)\right)`.
 
-These are implemented by the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.height` and :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.log_height` properties.
+These are implemented by the :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.height` and :py:attr:`~continuedfractions.continuedfraction.ContinuedFraction.log_height` properties respectively.
 
 Some examples are given below.
 
@@ -939,10 +939,12 @@ Some examples are given below.
    1
    >>> ContinuedFraction(2, 3).height
    3
+   >>> ContinuedFraction(3, -2).height
+   3
+   >>> ContinuedFraction(0, 1).log_height
+   Decimal('0')
    >>> ContinuedFraction(2, 3).log_height
-   Decimal('1.0986122886681097821082175869378261268138885498046875')
-   >>> ContinuedFraction(3, -2).log_height
-   >>> 3
+   Decimal('1.0986122886681097821082175869378261268138885498046875')   
    >>> ContinuedFraction(3, -2).log_height
    Decimal('1.0986122886681097821082175869378261268138885498046875')
 

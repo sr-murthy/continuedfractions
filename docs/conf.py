@@ -185,7 +185,8 @@ html_context = {
 html_baseurl = 'https://continuedfractions.readthedocs.io/en/latest/'
 
 html_sidebars = {
-    "sources/continuedfractions/*": ["sidebar-nav-bs"],
+     "sources/api-reference": [],
+     "sources/continuedfractions/*": [],
 }
 
 # HTML theme options

@@ -119,8 +119,7 @@ class ContinuedFraction(Fraction):
            K_n := \\sqrt[n]{a_1a_2 \\cdots a_n} = \\left( a_1a_2 \\cdots a_n \\right)^{\\frac{1}{n}}, \\hskip{3em} n \\geq 1
 
         This property is intended to make it easier to study the limit of
-        :math:`K_n` as :math:`n \\to \\infty`.  See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#khinchin-means-khinchin-s-constant>`_
-        for more details.
+        :math:`K_n` as :math:`n \\to \\infty`.
 
         In the special case of integers or fractions representing integers,
         whose continued fraction representations consist of only a single
@@ -679,9 +678,6 @@ class ContinuedFraction(Fraction):
         :math:`n + 1` remainders :math:`R_0, R_1, \\ldots, R_n`, and the method
         generates these in reverse order :math:`R_0, R_1, \\ldots, R_n`.
 
-        See the `documentation <https://continuedfractions.readthedocs.io/sources/continued-fractions.html#remainders>`_
-        for more details on remainders.
-
         The remainders are generated as tuples of :py:class:`int`
         and :py:class:`~continuedfraction.continuedfraction.ContinuedFraction`
         instances, where the integers represent the indexes of the remainders.
@@ -719,9 +715,6 @@ class ContinuedFraction(Fraction):
         .. math::
 
            \\frac{ka + c}{kb + d}, \\hskip{3em}    k \\geq 1
-
-        For more information consult the
-        `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#sequences-mediants>`_.
 
         Parameters
         ----------
@@ -769,9 +762,6 @@ class ContinuedFraction(Fraction):
         .. math::
 
            \\frac{a + kc}{b + kd}, \\hskip{3em}    k \\geq 1
-
-        For more information consult the
-        `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#sequences-mediants>`_.
 
         Parameters
         ----------
@@ -826,9 +816,6 @@ class ContinuedFraction(Fraction):
         result as the :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.left_mediant`
         or :py:meth:`~continuedfractions.continuedfraction.ContinuedFraction.right_mediant`
         methods where the order :math:`k` is set to :math:`1`.
-
-        For more information consult the
-        `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#sequences-mediants>`_.
 
         Parameters
         ----------
@@ -943,8 +930,7 @@ class ContinuedFraction(Fraction):
 
     def __neg__(self) -> ContinuedFraction:
         """
-        The negation algorithm for a finite simple continued fraction, as
-        described `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/continued-fractions.html#negative-continued-fractions>`_.
+        The negation algorithm for a finite simple continued fraction.
 
         The basic algorithm can be described as follows: if
         :math:`[a_0; a_1,\\ldots, a_n]` is the simple continued fraction of a

@@ -34,8 +34,7 @@ def rationals(
     By default it generates sequences of all positive rational numbers as
     :py:class:`~continuedfractions.continuedfractions.ContinuedFraction`
     objects with the user-specified enumeration on Cantor's 2D
-    representation of the rationals as described in the
-    `documentation <https://continuedfractions.readthedocs.io/sources/sequences.html#rationals>`_.
+    representation of the rationals.
 
     To include negative rationals and :math:`0` set ``positive_only`` to
     ``False``, as described in the documentation and the docstring examples
@@ -112,9 +111,6 @@ def rationals(
         * ``"cantor diagonal transposed"``
         * ``"rectilinear"``
         * ``"rectilinear transposed"``
-
-        These enumerations are described above in the docstring, and also in
-        the `Sphinx documentation <https://continuedfractions.readthedocs.io/sources/pythagorean-triples.html#primitive-pythagorean-triples>`_
 
     positive_only : bool, default=True
         Whether to generate only the positive rationals, which is true by
@@ -439,8 +435,6 @@ class KSRMTree:
        is described clearly in the papers of Saunders and Randall, and of
        Mitchell.
 
-    See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/sequences.html#ksrm-trees>`_
-    for more details.
     """
 
     # The two slots for the private attributes for the key tree features - the
@@ -478,8 +472,6 @@ class KSRMTree:
         * Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
         * Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
 
-        or the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/sequences.html#ksrm-trees>`_.
-
         Examples
         --------
         >>> KSRMTree().roots
@@ -506,8 +498,6 @@ class KSRMTree:
         * Kanga, A. R. (1990). The Family Tree of Pythagorean Triplets. The Mathematical Gazette, 26(15), 15-17.
         * Mitchell, D. W. (2001). An Alternative Characterisation of All Primitive Pythagorean Triples. The Mathematical Gazette, 85(503), 273-275. https://doi.org/10.2307/3622017
         * Saunders, R., & Randall, T. (1994). The family tree of the Pythagorean triplets revisited. The Mathematical Gazette, 78(482), 190-193. https://doi.org/10.2307/3618576
-
-        or the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/sequences.html#ksrm-trees>`_.
 
         Examples
         --------
@@ -961,9 +951,6 @@ def farey_sequence(n: int, /) -> typing.Generator[FareyFraction, None, None]:
     The elements of the sequence are yielded as
     :py:class:`~continuedfractions.sequences.FareyFraction`
     instances, in ascending order of magnitude.
-
-    See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/sequences.html#sequences-farey-sequences>`_
-    for more details.
 
     Parameters
     ----------

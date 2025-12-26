@@ -52,15 +52,6 @@ def continued_fraction_rational(frac: Fraction, /) -> typing.Generator[int, None
 
     Negative rational numbers can also be represented in this way, provided we
     use the `Euclidean division lemma <https://en.wikipedia.org/wiki/Euclid%27s_lemma>`_.
-    This is described in more detail in the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/creating-continued-fractions.html#negative-continued-fractions>`_.
-
-    For a definition of "continued fraction", "coefficient", "order",
-    "finite continued fraction", "simple continued fraction", please consult
-    the
-    `package documentation <https://continuedfractions.readthedocs.io/en/stable>`_,
-    or any online resource such as
-    `Wikipedia <https://en.wikipedia.org/wiki/Continued_fraction>`_, or
-    suitable books on number theory.
 
     Parameters
     ----------
@@ -320,9 +311,6 @@ def convergents(*coeffs: int) -> typing.Generator[Fraction, None, None]:
     given sequence of its coefficients then there are :math:`n + 1` convergents
     :math:`C_0, C_1, \\ldots, C_n`, and the function generates these in that
     order.
-
-    See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#convergents-and-rational-approximations>`_
-    for more details on convergents.
 
     Parameters
     ----------
@@ -605,9 +593,6 @@ def remainders(*coeffs: int) -> typing.Generator[Fraction, None, None]:
     :math:`R_0, R_1, \\ldots, R_n`, and the function generates these in
     reverse order :math:`R_0, R_1, \\ldots, R_n`.
 
-    See the `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/exploring-continued-fractions.html#remainders>`_
-    for more details on remainders.
-
     Parameters
     ----------
     *elements : `int`
@@ -710,9 +695,6 @@ def mediant(r: Fraction, s: Fraction, /, *, dir: str = 'right', k: int = 1) -> F
       \\lim_{k \\to \\infty} \\frac{ka + c}{kb + d} &= \\frac{a}{b} \\\\
       \\lim_{k \\to \\infty} \\frac{a + kc}{b + kd} &= \\frac{c}{d}
       \\end{align}
-
-    For more information consult the
-    `documentation <https://continuedfractions.readthedocs.io/en/latest/sources/mediants.html>`_.
 
     For the left mediant use ``dir="left"``, while for the right use
     ``dir="right"``. The default is ``dir="right"``. For ``k = 1`` the left and

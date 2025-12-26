@@ -27,9 +27,7 @@ or the `main` branch of this repo:
 pip install -U git+https://github.com/sr-murthy/continuedfractions
 ```
 
-See the [project docs](https://continuedfractions.readthedocs.io) for more details, which includes the [API reference](https://continuedfractions.readthedocs.io/sources/api-reference.html).
-
-[Continued fractions](https://en.wikipedia.org/wiki/Continued_fraction) are beautiful and interesting mathematical objects, with many connections in [number theory](https://en.wikipedia.org/wiki/Number_theory) and also very useful practical applications, including the [rational approximation of real numbers](https://en.wikipedia.org/wiki/Continued_fraction#Best_rational_approximations).
+The documentation now consists only of an [API reference](https://continuedfractions.readthedocs.io/sources/api-reference.html). All other previous documentation has been removed to reduce maintenance.
 
 The `continuedfractions` package is aimed at users interested in:
 

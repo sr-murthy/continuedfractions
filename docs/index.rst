@@ -31,23 +31,14 @@ or the ``main`` branch of the repo:
 
    pip install -U git+https://github.com/sr-murthy/continuedfractions
 
-Only standard libraries used, and there are no 3rd party dependencies.
+Only standard libraries are used, and there are no 3rd party dependencies.
 
 In terms of Python versions, any version from 3.10+ should be fine on any platform (Linux, MacOS, Windows etc.). Earlier Python versions may not work because of some aspects of type hinting.
 
-.. note::
+Documentation
+-------------
 
-   All graphs in the documentation are generated using `Graphviz <https://graphviz.org/>`_ (`DOT language <https://graphviz.org/doc/info/lang.html>`_) and the `edotor <https://edotor.net/>`_ graphical editor. The graph source files (:program:`.dot`) can be viewed `here <https://github.com/sr-murthy/continuedfractions/tree/main/docs/_static>`_.
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Contents:
-
-   sources/continued-fractions
-   sources/rational-points
-   sources/sequences
-   sources/api-reference
-   sources/contributing
+Only an :doc:`API reference <sources/api-reference>` is provided. All other documentation has been removed to reduce maintenance.
 
 Indices and tables
 ==================

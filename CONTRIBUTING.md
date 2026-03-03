@@ -88,9 +88,8 @@ pdm install -v --dev --no-editable --no-self
 
 ## CI `circle-play`
 
-The main CI workflows are defined in the [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml)
-and the [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml).
+The main CI workflow is [CI YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/ci.yml), and there is also a static [CodeQL Analysis YML](https://github.com/sr-murthy/continuedfractions/blob/main/.github/workflows/codeql-analysis.yml).
 
 ## Versioning and Releases `upload`
 
-The latest release is `1.10.0`, and releases are created, tagged and published manually, not via a workflow.
+The latest release is `1.11.1`, and releases are created, tagged and published manually, not via a workflow.

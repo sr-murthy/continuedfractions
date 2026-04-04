@@ -92,4 +92,4 @@ The main CI workflow is [CI YML](https://github.com/sr-murthy/continuedfractions
 
 ## Versioning and Releases `upload`
 
-The latest release is `1.11.1`, and releases are created, tagged and published manually, not via a workflow.
+The latest release is `1.12.0`, and releases are created, tagged and published manually, not via a workflow.

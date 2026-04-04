@@ -40,7 +40,7 @@ Documentation
 
 .. note::
 
-   All graphs in the documentation are generated using `Graphviz <https://graphviz.org/>`_ (`DOT language <https://graphviz.org/doc/info/lang.html>`_) and the `edotor <https://edotor.net/>`_ graphical editor. The graph source files (:program:`.dot`) can be viewed `here <https://github.com/sr-murthy/continuedfractions/tree/main/docs/_static>`_.
+   All graphs are generated using `Graphviz <https://graphviz.org/>`_ (`DOT language <https://graphviz.org/doc/info/lang.html>`_) and the `edotor <https://edotor.net/>`_ graphical editor. The graph source files (:program:`.dot`) can be viewed `here <https://github.com/sr-murthy/continuedfractions/tree/main/docs/_static>`_.
 
 .. toctree::
    :maxdepth: 1

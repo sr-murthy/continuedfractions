@@ -11,7 +11,6 @@ __all__ = [
 # -- Standard libraries --
 import collections
 import decimal
-import functools
 import math
 import statistics
 import typing
@@ -426,7 +425,6 @@ class ContinuedFraction(Fraction):
         """
         return Decimal(self.numerator) / Decimal(self.denominator)
 
-    @functools.cache
     def convergent(self, k: int, /) -> ContinuedFraction:
         """Returns the :math:`k`-th (simple) convergent of the continued fraction.
 
@@ -558,7 +556,6 @@ class ContinuedFraction(Fraction):
         """
         yield from (t for t in self.convergents if t[0] % 2)
 
-    @functools.cache
     def semiconvergent(self, k: int, m: int, /) -> ContinuedFraction:
         """Returns the :math:`m`-th semiconvergent of two consecutive convergents :math:`p_{k - 1}` and :math:`p_k` of the continued fraction.
 
@@ -626,7 +623,6 @@ class ContinuedFraction(Fraction):
 
         return self.convergent(k - 1).right_mediant(self.convergent(k), k=m)
 
-    @functools.cache
     def remainder(self, k: int, /) -> ContinuedFraction:
         """Returns the :math:`k`-th remainder of the continued fraction.
 
@@ -704,7 +700,6 @@ class ContinuedFraction(Fraction):
             map(self.__class__, remainders(*coeffs))
         )
 
-    @functools.cache
     def left_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
         """Returns the :math:`k`-th left-mediant of the continued fraction with another rational number.
         
@@ -751,7 +746,6 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__(left_mediant(self, other, k=k))
 
-    @functools.cache
     def right_mediant(self, other: Fraction, /, *, k: int = 1) -> ContinuedFraction:
         """Returns the :math:`k`-th right-mediant of the continued fraction with another rational number.
         
@@ -798,7 +792,6 @@ class ContinuedFraction(Fraction):
         """
         return self.__class__(right_mediant(self, other, k=k))
 
-    @functools.cache
     def mediant(self, other: Fraction, /) -> ContinuedFraction:
         """Returns the simple mediant of the continued fraction with another continued fraction.
         

@@ -38,7 +38,18 @@ In terms of Python versions, any version from 3.10+ should be fine on any platfo
 Documentation
 -------------
 
-Only an :doc:`API reference <sources/api-reference>` is provided. All other documentation has been removed to reduce maintenance.
+.. note::
+
+   All graphs are generated using `Graphviz <https://graphviz.org/>`_ (`DOT language <https://graphviz.org/doc/info/lang.html>`_) and the `edotor <https://edotor.net/>`_ graphical editor. The graph source files (:program:`.dot`) can be viewed `here <https://github.com/sr-murthy/continuedfractions/tree/main/docs/_static>`_.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents:
+
+   sources/continued-fractions
+   sources/rational-points
+   sources/sequences
+   sources/api-reference
 
 Indices and tables
 ==================

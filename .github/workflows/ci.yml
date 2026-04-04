@@ -37,10 +37,10 @@ jobs:
             arch: arm64
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.arch }}
@@ -54,13 +54,13 @@ jobs:
         echo "PIP_CACHE=$(pip cache dir)" >> $GITHUB_OUTPUT
 
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ steps.set_variables.outputs.PIP_CACHE }}
         key: ${{ runner.os }}-pip-${{ steps.set_variables.outputs.PY }}
 
     - name: Cache venv
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
@@ -83,7 +83,7 @@ jobs:
         pdm run -v doctests
 
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         slug: sr-murthy/continuedfractions
         files: ./coverage.xml

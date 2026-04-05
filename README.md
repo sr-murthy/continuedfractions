@@ -26,8 +26,6 @@ or the `main` branch of this repo:
 pip install -U git+https://github.com/sr-murthy/continuedfractions
 ```
 
-The documentation now consists only of an [API reference](https://continuedfractions.readthedocs.io/sources/api-reference.html). All other previous documentation has been removed to reduce maintenance.
-
 The `continuedfractions` package is aimed at users interested in:
 
 * working with (finite, simple) continued fractions as Python objects, in an intuitive object-oriented way
@@ -35,3 +33,5 @@ The `continuedfractions` package is aimed at users interested in:
 * operating on them as rationals and instances of the [`fractions.Fraction`](https://docs.python.org/3/library/fractions.html#fractions.Fraction) standard library class
 * testing approximations for irrational numbers
 * exploring other related objects such as rational points in the plane, enumerations of rational numbers, mediants, and special sequences of rational numbers such as Farey sequences
+
+The [documentation](continuedfractions.readthedocs.io) provides more detailed information on aspects of the package libraries and their implementation.

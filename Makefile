@@ -48,17 +48,15 @@ update_deps:
 # Linting
 lint: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Linting source code with Ruff\n"
-	cd "$(PROJECT_ROOT)" && ruff check src
+	ruff check src
 
 # Running tests
 doctests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running doctests in all core libraries\n"
-	cd "$(PROJECT_ROOT)" && \
 	PYTHONPATH="src" python3 -m doctest -v src/continuedfractions/*.py
 
 unittests: clean
 	@echo "\n$(PACKAGE_NAME)[$(BRANCH)@$(HEAD)]: Running package unit tests + measuring coverage\n"
-	cd "$(PROJECT_ROOT)" && \
 	python3 -m pytest \
 				--cache-clear \
 				--capture=no \

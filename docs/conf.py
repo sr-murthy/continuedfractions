@@ -196,6 +196,7 @@ html_theme = 'pydata_sphinx_theme'
 html_theme_options = {
     'collapse_navigation': False,
     'footer_end': ['author'],
+    'footer_center': ['provenance'],
     'footer_start': ['copyright', 'sphinx-version', 'theme-version'],
     'icon_links': [
         {

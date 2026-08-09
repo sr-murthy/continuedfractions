@@ -10,6 +10,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/continuedfractions?logo=python&color=41bb13)](https://pypi.org/project/continuedfractions)
 [![Downloads](https://img.shields.io/pepy/dt/continuedfractions
 )](https://pypi.org/project/continuedfractions/)
+[![Not By AI](docs/_static/Developed-By-a-Human-Not-By-AI-Badge-black@2x.png)](docs/_static/Developed-By-a-Human-Not-By-AI-Badge-black@2x.png)
 
 </div>
 

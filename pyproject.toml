@@ -185,6 +185,12 @@ markers = [
     # Test tags/labels/markers - not using any currently
 ]
 
+[tool.ruff.lint]
+# Skip unused variable rules (`F841`).
+ignore = ["I001", "RUF022", "PYI041", "PYI034", "TRY004", "FURB157", "FURB163", "RUF013", "UP035", "RUF100", "RUF023", "UP034"]
+
+
+
 # For ``coverage`` configuration see the reference from version ``7.4.1``:
 #
 #     https://coverage.readthedocs.io/en/7.4.1/config.html

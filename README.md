@@ -8,7 +8,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Docs](https://readthedocs.org/projects/continuedfractions/badge/?version=latest)](https://continuedfractions.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://img.shields.io/pypi/v/continuedfractions?logo=python&color=41bb13)](https://pypi.org/project/continuedfractions)
-[![Downloads](https://img.shields.io/badge/PyPI_downloads-166K-green)](https://pypistats.org/packages/continuedfractions)
+[![Downloads](https://static.pepy.tech/personalized-badge/continuedfractions?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pypistats.org/packages/continuedfractions)
 
 [![Not By AI](docs/_static/Developed-By-a-Human-Not-By-AI-Badge-black@2x.png)](docs/_static/Developed-By-a-Human-Not-By-AI-Badge-black@2x.png)
 

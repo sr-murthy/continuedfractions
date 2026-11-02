@@ -9,6 +9,7 @@
 [![Docs](https://readthedocs.org/projects/continuedfractions/badge/?version=latest)](https://continuedfractions.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://img.shields.io/pypi/v/continuedfractions?logo=python&color=41bb13)](https://pypi.org/project/continuedfractions)
 [![Downloads](https://img.shields.io/badge/PyPI_downloads-166K-green)](https://pypistats.org/packages/continuedfractions)
+
 [![Not By AI](docs/_static/Developed-By-a-Human-Not-By-AI-Badge-black@2x.png)](docs/_static/Developed-By-a-Human-Not-By-AI-Badge-black@2x.png)
 
 </div>
